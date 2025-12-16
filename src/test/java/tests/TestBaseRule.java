@@ -17,6 +17,7 @@ import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
+import business_objects.kafka.crm_events.TransferToWaEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.payment.acknowledgement.Acknowledge;
@@ -61,6 +62,12 @@ public class TestBaseRule {
 
     @Step("Produce withdrawal event to crm-events topic")
     public static void produceWithdrawalMessageToCrmPaymentTopic(CrmWithdrawalEvent event)
+            throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
+    }
+
+    @Step("Produce withdrawal event to crm-events topic")
+    public static void produceTransferToWaMessageToCrmPaymentTopic(TransferToWaEvent event)
             throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
     }

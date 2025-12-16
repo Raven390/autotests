@@ -33,7 +33,7 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
-@Story(STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE)
+@Story(STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_PAYMENT)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
@@ -63,7 +63,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         checkElementId("Event_end_2", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -121,7 +121,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         sendRiskApproveDecision(paymentId);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
@@ -160,7 +160,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         sendRiskRejectDecision(paymentId);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
@@ -198,7 +198,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         sendRiskRejectDecision(paymentId);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("Event_1kdk048", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Event_1kdk048", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
         assertEquals(data.crmWithdrawalEvent.getWithdrawalId(), Long.valueOf(events.getFirst().getCrmId()));
@@ -251,7 +251,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         checkElementId("Event_end_2", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "withdrawalNotification");
 
@@ -292,8 +292,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         checkElementId("end_102", data.crmWithdrawalEvent.getId(), "cs_on_withdrawal");
-        checkElementId("Activity_06e7z5l", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
-        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_06e7z5l", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
+        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
@@ -330,8 +330,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         checkElementId("end_102", data.crmWithdrawalEvent.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId("Activity_06e7z5l", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
-        checkElementId("Activity_016fbcu", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_06e7z5l", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
+        checkElementId("Activity_016fbcu", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
@@ -401,8 +401,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
-        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
@@ -410,7 +410,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         Thread.sleep(10_000);
         sendPaymentApproveDecision(paymentId);
 
-        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
     }
 
     @Disabled
@@ -422,8 +422,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
-        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
@@ -431,7 +431,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         Thread.sleep(10_000);
         sendPaymentApproveDecision(paymentId);
 
-        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
     }
 
     @Disabled
@@ -443,8 +443,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
-        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
@@ -452,7 +452,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         Thread.sleep(10_000);
         sendPaymentRejectDecision(paymentId);
 
-        checkElementId("Activity_0hnglsq", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_0hnglsq", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
     }
 
     @Disabled
@@ -464,8 +464,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
-        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
@@ -473,7 +473,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         Thread.sleep(10_000);
         sendPaymentRejectDecision(paymentId);
 
-        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
     }
 
     /// router rule without payment branch
@@ -486,7 +486,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         // Check payment event in PGS DB
         PaymentEventsObject paymentEvent = getPaymentEvent(data.clientHelper.getUcid());
@@ -519,7 +519,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         assertThat("Assert payment details", paymentDetailsObject.getPayload(), containsString("\"withdrawalAmountUSD\": 1."));
 
         // check pending decision
-        List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
+        List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId).stream().filter(decision -> "risk".equals(decision.getDecisionType())).toList();
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
         assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getPaymentId(), is(paymentId));
         assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
@@ -581,7 +581,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         Thread.sleep(20_000);
         sendRiskApproveDecision(paymentId);
 
-        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         // check final decision
         List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb((paymentId), "risk");
@@ -632,14 +632,14 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
         Thread.sleep(20_000);
         sendRiskRejectDecision(paymentId);
 
-        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
     }
 
     @Test
@@ -650,8 +650,8 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("put_approve_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("put_approve_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
 
-        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_TRANSFER_TO_WA.getProcessId());
     }
 }

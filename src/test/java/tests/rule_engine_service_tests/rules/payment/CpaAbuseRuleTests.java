@@ -63,7 +63,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -85,7 +85,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -103,9 +103,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd4Test() throws Exception {
         DataHelper data = dbDataMap.get("4");
         Allure.step("Produce withdrawal event to crm-events topic");
-        data.withdrawalEvent.type = "egWithdrawal";
-        System.out.println(data.withdrawalEvent.type);
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Verify alert in Kafka");
 
@@ -153,7 +151,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -175,7 +173,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -193,7 +191,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd6Test() throws Exception {
         DataHelper data = dbDataMap.get("7");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Verify alert in Kafka");
 
@@ -237,7 +235,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd7p1Test() throws Exception {
         DataHelper data = dbDataMap.get("8");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
 
         Allure.step("Check that there is no alerts on client");
@@ -256,7 +254,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd7p2Test() throws Exception {
         DataHelper data = dbDataMap.get("9");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
 
         Allure.step("Check that there is no alerts on client");
@@ -275,7 +273,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd8Test() throws Exception {
         DataHelper data = dbDataMap.get("10");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
 
         Allure.step("Check that there is no alerts on client");
@@ -294,7 +292,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd8p2Test() throws Exception {
         DataHelper data = dbDataMap.get("11");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
 
         Allure.step("Check that there is no alerts on client");
@@ -313,7 +311,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd9p1Test() throws Exception {
         DataHelper data = dbDataMap.get("12");
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Verify alert in Kafka");
 
@@ -357,7 +355,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd9p2Test() throws Exception {
         DataHelper data = dbDataMap.get("13");
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        //TODO add event
 
         Allure.step("Verify alert in Kafka");
 

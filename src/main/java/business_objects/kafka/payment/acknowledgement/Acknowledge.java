@@ -44,7 +44,7 @@ public class Acknowledge {
     private String timestamp;
 
     @JsonProperty("clientId")
-    private Long clientId;
+    private Integer clientId;
 
     @JsonProperty("paymentId")
     private UUID paymentId;
