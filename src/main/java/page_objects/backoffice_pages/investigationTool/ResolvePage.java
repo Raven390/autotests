@@ -215,6 +215,30 @@ public class ResolvePage extends AbstractPage {
         }
     }
 
+    public void clickInvestigateButton() {
+        Allure.step("Click Investigate button");
+        investigateButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        investigateButton.click();
+    }
+
+    public void clickInvestigateButtonIfPresented() {
+        Allure.step("Click Investigate button");
+        waitForPageToLoad();
+        page.waitForTimeout(200);
+        while (!investigateButton.isVisible()) {
+            if (resolveButton.isVisible()) {
+                break;
+            }
+            if (investigateButton.isVisible()) {
+                investigateButton.click();
+                resolveButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(15_000));
+                page.waitForTimeout(500);
+                resolveButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(15_000));
+                page.waitForTimeout(1000);
+            }
+        }
+    }
+
     @Step("approve all withdrawals")
     public void clickWithdrawalApprove() {
         approveAllwithdrawalsButton.click();
