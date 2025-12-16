@@ -377,7 +377,7 @@ public class Constants {
     public static final String FRAUD_TYPE_SOURCE_INSIGHT = "INSIGHT";
     public static final String FRAUD_TYPE_SOURCE_VINDEX = "VINDEX";
     public static final String FRAUD_TYPE_UNKNOWN = "UNKNOWN";
-    public static final String POTENTIAL_ABUSE = "Potential Abuse";
+    public static final String POTENTIAL_ABUSE = "Potential abuse";
     public static final String RESTRICTION_APPLIED_STATUS = "RESTRICTION_APPLIED";
     public static final String RESTRICTION_REQUESTED_STATUS = "RESTRICTION_REQUESTED";
     public static final String RESTRICTION_TYPE_GENERAL = "GENERAL";

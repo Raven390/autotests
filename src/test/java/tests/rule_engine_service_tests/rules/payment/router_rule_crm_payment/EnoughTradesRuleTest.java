@@ -83,7 +83,7 @@ public class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("")
+    @AllureId("1886")
     @DisplayName("Enough trades rule. Alert 1  . Element id: Event_1gmc8xt")
     void enoughTradesTestAlert1() throws Exception {
         DataHelper data = dbDataMap.get("770");
@@ -94,7 +94,7 @@ public class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("")
+    @AllureId("1887")
     @DisplayName("Enough trades rule. Alert2 . Element id: Event_1mzlm7b")
     void enoughTradesTestAlert2() throws Exception {
         DataHelper data = dbDataMap.get("771");

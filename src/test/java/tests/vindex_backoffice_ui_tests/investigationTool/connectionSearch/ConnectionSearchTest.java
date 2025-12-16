@@ -33,6 +33,7 @@ import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertBy
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.api.AbuseRegistryHelper.setClientStatus;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.ConnectedClientStatus.UNDER_INVESTIGATION;
 import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
@@ -40,6 +41,8 @@ import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.CleanTableHelper.cleanUserRestrictionGeneral;
 import static helpers.database.DbHelper.*;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -57,6 +60,7 @@ class ConnectionSearchTest extends TestBaseWeb {
     private static final ClientHelper connectedClient3 = getRandomVantageClientAllFields(); // lvl 2 potential status client
     private static final ClientHelper connectedClient4 = getRandomVantageClientAllFields(); // lvl 2 potential with abuse
     private static final ClientHelper connectedClient5 = getRandomVantageClientAllFields(); // lvl 3 confirmed fraud
+    private static final ClientHelper connectedClient6 = getRandomVantageClientAllFields(); // lvl 3 alert in investigation
     private static final DecimalFormat formatter = new DecimalFormat("#,###.##");
     private static AccountIbRelationObject relation;
     private static MtMt4TradesCoercedObject trade;
@@ -65,6 +69,7 @@ class ConnectionSearchTest extends TestBaseWeb {
     private static CrmTbUserObject connectedCrmTbUser3;
     private static CrmTbUserObject connectedCrmTbUser4;
     private static CrmTbUserObject connectedCrmTbUser5;
+    private static CrmTbUserObject connectedCrmTbUser6;
     private static CrmTbDepositEntity deposit;
     private static CrmTbWithdrawalEntity withdrawal;
 
@@ -79,25 +84,35 @@ class ConnectionSearchTest extends TestBaseWeb {
         connectedCrmTbUser3.cpaId = getRandomIntPositive();
         connectedCrmTbUser4 = generateUserWithUcidFirstName(connectedClient4);
         connectedCrmTbUser5 = generateUserWithUcidFirstName(connectedClient5);
-        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, connectedCrmTbUser1, connectedCrmTbUser2, connectedCrmTbUser3, connectedCrmTbUser4, connectedCrmTbUser5));
+        connectedCrmTbUser6 = generateUserWithUcidFirstName(connectedClient6);
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, connectedCrmTbUser1, connectedCrmTbUser2, connectedCrmTbUser3, connectedCrmTbUser4, connectedCrmTbUser5, connectedCrmTbUser6));
         // Connections
         ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntry(client, connectedClient1);
         ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(client, connectedClient2);
         ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(connectedClient1, connectedClient3);
         ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntry(connectedClient2, connectedClient4);
         ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntryForUi(connectedClient3, connectedClient5);
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry1, connectionTableEntry2, connectionTableEntry3, connectionTableEntry4, connectionTableEntry5));
-        // Frauds
-        setClientStatus(connectedClient3, POTENTIAL);
-        addFraudsForClient(connectedClient4, List.of(MARKET_MANIPULATION), POTENTIAL);
-        addFraudsForClient(connectedClient5, List.of(GAP_TRADING), CONFIRMED);
+        ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntryForUi(connectedClient3, connectedClient6);
+        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry1, connectionTableEntry2, connectionTableEntry3, connectionTableEntry4, connectionTableEntry5, connectionTableEntry6));
         // Restrictions
         postRestriction(new PostRestrictionRequestBody(
                 connectedClient1.getUcid(), "03", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
+        postRestriction(new PostRestrictionRequestBody(
+                connectedClient3.getUcid(), "03", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
+        ));
+        // Frauds
+        setClientStatus(connectedClient3, POTENTIAL);
+        addFraudsForClient(connectedClient4, List.of(MARKET_MANIPULATION), POTENTIAL);
+        addFraudsForClient(connectedClient5, List.of(GAP_TRADING), CONFIRMED);
         // Alerts
-        RuleAlert alert = generateRuleAlertByUcid(connectedClient2.getUcid());
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+        RuleAlert alert1 = generateRuleAlertByUcid(connectedClient2.getUcid());
+        kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
+        sendSimpleAlert(connectedClient6.getUcid());
+        sendSimplePaymentAlert(connectedClient6.getUcid());
+        sendSimpleAlert(connectedClient4.getUcid());
+        sendSimpleAlert(connectedClient5.getUcid());
+
         // Other data
         // PNL related
         CrmTbAccountObject account = generateCrmTbAccountDataForUi(connectedClient3);
@@ -129,9 +144,13 @@ class ConnectionSearchTest extends TestBaseWeb {
         cleanUserRestrictionGeneral(connectedClient1.getUcid());
         closeAlert(client.getUcid());
         closeAlert(connectedClient2.getUcid());
+        closeAlert(connectedClient4.getUcid());
+        closeAlert(connectedClient6.getUcid());
+        closeAlert(connectedClient5.getUcid());
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", connectedClient3.getUcid()));
+
     }
 
     @BeforeEach
@@ -147,6 +166,10 @@ class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("315")
     @DisplayName("Verify connection search ucids, statuses, order")
     void connectionSearchTest1() {
+        investigationPage.navigateToClient(connectedClient6.getUcid());
+        resolvePage.clickInvestigateButtonIfPresented();
+        connectionPage.navigate(client.getUcid());
+
         // Statuses
         var statusReason = "Verify status shown in the node";
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(client.getUcid()), is(STATUS_NORMAL));
@@ -155,6 +178,8 @@ class ConnectionSearchTest extends TestBaseWeb {
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient3.getUcid()), is(POTENTIAL_ABUSE));
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient4.getUcid()), is(String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName())));
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient5.getUcid()), is(GAP_TRADING.getName()));
+        assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient6.getUcid()), is(UNDER_INVESTIGATION.getDisplayName()));
+
         // Order
         var orderReason = "Verify order of the node in the graph";
         assertThat(orderReason, connectionPage.getOrderByNodeTitle(client.getUcid()), is("0"));
@@ -260,6 +285,10 @@ class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("521")
     @DisplayName("Verify connection table")
     void connectionSearchTest7() {
+        investigationPage.navigateToClient(connectedClient6.getUcid());
+        resolvePage.clickInvestigateButtonIfPresented();
+        connectionPage.navigate(client.getUcid());
+
         connectionPage.openConnectionTable();
         connectionPage.verifyConnectionTableIsRendered();
         connectionPage.openConnectionTable();
@@ -269,7 +298,8 @@ class ConnectionSearchTest extends TestBaseWeb {
         List<String> row3Data = List.of("1", String.format("%s ", connectedClient2.getUcid()), connectedClient2.getUserId().toString(), CONNECTION_TYPE_SAME_PERSON, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", STATUS_SUSPICIOUS, String.format("CPA %s", connectedClient2.getCpaId()), connectedCrmTbUser2.registrationDate);
         List<String> row4Data = List.of("1", String.format("%s ", connectedClient1.getUcid()), connectedClient1.getUserId().toString(), CONNECTION_TYPE_SAME_PERSON, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", STATUS_NORMAL, String.format("CPA %s", connectedClient1.getCpaId()), connectedCrmTbUser1.registrationDate);
         List<String> row5Data = List.of("2", String.format("%s ", connectedClient3.getUcid()), connectedClient3.getUserId().toString(), CONNECTION_TYPE_INDIRECT, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", POTENTIAL_ABUSE, formatter.format(trade.profitUsd), "1 deal", String.format("+%s", formatter.format(deposit.getAmountUsd())), String.format("-%s", formatter.format(withdrawal.getAmountUsd().subtract(withdrawal.getReversedAmountUsd()))), String.format("CPA %s", connectedCrmTbUser3.cpaId), String.format("IB %s", relation.getDirectIbRebateAccount()), connectedCrmTbUser3.registrationDate, trade.closeTime.split(" ")[0], trade.closeTime.split(" ")[1].substring(0, 5));
-        assertThat(connectionPage.getConnectionTableDataByRows(), contains(is(row1Data), containsInAnyOrder(row2Data.toArray()), is(row3Data), is(row4Data), is(row5Data)));
+        List<String> row6Data = List.of("3", String.format("%s ", connectedClient6.getUcid()), connectedClient6.getUserId().toString(), CONNECTION_TYPE_INDIRECT, connectionScore, CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_DIGITAL, CONNECTION_ATTRIBUTE_NAME_EMAIL_ADDRESS, CONNECTION_SEARCH_DATA_EMAIL_HIDDEN, CONNECTION_ATTRIBUTE_NAME_SESSION, CONNECTION_SEARCH_DATA_SESSION, CONNECTION_ATTRIBUTE_NAME_NAME_BIRTH, CONNECTION_SEARCH_DATA_NAME_BIRTH, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_ATTRIBUTE_NAME_DEVICE, CONNECTION_SEARCH_DATA_DEVICE, CONNECTION_ATTRIBUTE_NAME_DOCUMENT_NUMBER, CONNECTION_SEARCH_DATA_DOCUMENT_HIDDEN, CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS, CONNECTION_SEARCH_DATA_IP1, CONNECTION_ATTRIBUTE_NAME_PHONE_NUMBER, CONNECTION_SEARCH_DATA_PHONE_HIDDEN, "", UNDER_INVESTIGATION.getDisplayName(), String.format("CPA %s", connectedClient6.getCpaId()), connectedCrmTbUser6.registrationDate, "backoffice-test backoffice-test");
+        assertThat(connectionPage.getConnectionTableDataByRows(), contains(is(row1Data), containsInAnyOrder(row2Data.toArray()), is(row3Data), containsInAnyOrder(row6Data.toArray()), is(row4Data), is(row5Data)));
     }
 
     @Test

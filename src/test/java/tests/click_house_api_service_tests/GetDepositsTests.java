@@ -29,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
+import static utils.Utils.getRandomIntPositive;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS)
@@ -45,9 +46,12 @@ class GetDepositsTests extends TestBaseApi {
     static void setup() {
         client = getRandomVantageClient();
         deposit1 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit1.setPaymentProfileKey(getRandomIntPositive().toString());
         deposit2 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         deposit2.setCreateTime(OffsetDateTime.now().plusDays(1));
         deposit2.setAmountUsd(BigDecimal.valueOf(3.0));
+        deposit2.setPaymentChannelId(getRandomIntPositive());
+        deposit2.setPaymentProfileKey(getRandomIntPositive().toString());
         insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
     }
 
@@ -180,6 +184,23 @@ class GetDepositsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.getAmountUsd()));
+    }
+
+    @Test
+    @AllureId("1894")
+    @DisplayName("Clickhouse Api. Get Deposits order by paymentProfileKey")
+    void getDepositsOrderByPaymentProfileKeyTest() throws IOException {
+
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", client.getUcid());
+        queryParams.put("paymentProfileKey", deposit1.getPaymentProfileKey());
+        Response response = getDeposits(queryParams);
+
+        assertThat(response.body(), is(notNullValue()));
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(1));
+        assertThat("Assert actualAmountUSD", BigDecimal.valueOf(mappedResponse[0].actualAmountUsd), is((deposit1.getAmountUsd())));
     }
 
     @Test
