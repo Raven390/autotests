@@ -1,7 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.PaymentAlertMessage;
 import business_objects.kafka.alerts.PaymentAlertMessageV2;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,9 +45,9 @@ class SuspiciousClientsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser3);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser4);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser5);
-        RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid);
-        RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid);
-        PaymentAlertMessage alertPayment1 = generatePaymentAlertByUcid(crmTbUser3.ucid);
+        RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid, "transferToWA");
+        RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid, "withdrawalFromWA");
+        PaymentAlertMessageV2 alertPayment1 = generatePaymentAlertByUcidByTrigger(crmTbUser3.ucid, "Registration");
         PaymentAlertMessageV2 alertPayment2 = generatePaymentAlertByUcidByTrigger(crmTbUser4.ucid, "transferToWA");
         PaymentAlertMessageV2 alertPayment3 = generatePaymentAlertByUcidByTrigger(crmTbUser5.ucid, "withdrawalFromWA");
         kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
@@ -145,11 +144,32 @@ class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.waitForPageToLoad();
         investigationPage.clickSelectPaymentInvestigationType();
         investigationPage.waitForPageToLoad();
+        investigationPage.filterAll();
+        investigationPage.waitForPageToLoad();
         List<String> clientIdsFromClientCards = investigationPage.getClientIdsFromClientCards();
         List<Boolean> priorityFromClientCards = investigationPage.getPriorityFromClientCards();
         assertThat("Assert that there is 3 payment suspicious clients", clientIdsFromClientCards.size(), is(3));
         assertThat("Assert that payment suspicious clients in order", clientIdsFromClientCards.stream().map(Integer::parseInt).toList(), containsInRelativeOrder(crmTbUser4.userId, crmTbUser5.userId, crmTbUser3.userId));
         assertThat("Assert that payment suspicious clients in order", priorityFromClientCards, containsInRelativeOrder(true, true, false));
+    }
+
+    @Test
+    @AllureId("1941")
+    @DisplayName("Verify that high priority elements are present and in order for TRADING suspicious clients")
+    void verifyPriorityElementsArePresentForTradingSuspiciousClientsTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
+        investigationPage.waitForPageToLoad();
+        investigationPage.clickSelectTradingInvestigationType();
+        investigationPage.waitForPageToLoad();
+        investigationPage.filterAll();
+        investigationPage.waitForPageToLoad();
+        List<String> clientIdsFromClientCards = investigationPage.getClientIdsFromClientCards();
+        List<Boolean> priorityFromClientCards = investigationPage.getPriorityFromClientCards();
+        assertThat("Assert that there is 2 trading suspicious clients", clientIdsFromClientCards.size(), is(2));
+        assertThat("Assert that payment suspicious clients in order", clientIdsFromClientCards.stream().map(Integer::parseInt).toList(), containsInRelativeOrder(crmTbUser1.userId, crmTbUser2.userId));
+        assertThat("Assert that payment suspicious clients in order", priorityFromClientCards, containsInRelativeOrder(true, true));
     }
 
     @AfterAll

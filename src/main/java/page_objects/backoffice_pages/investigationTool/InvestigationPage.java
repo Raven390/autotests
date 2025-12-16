@@ -170,7 +170,7 @@ public class InvestigationPage extends AbstractPage {
         this.investigateButtonList = page.locator("[data-qa='investigation_tools__client_card_assign_button']");
         this.suspiciousClientsList = page.locator("[data-qa='suspicious_clients__list']");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
-        this.clientContainer = page.locator("//*[@data-qa='data_item_wrapper_container']");
+        this.clientContainer = page.locator("//*[@data-qa='suspicious_clients__list']//*[@data-qa='data_item_wrapper_container']");
         this.brandImage = page.locator("//img[@class='g-avatar__image']");
         this.countryCodeElement = page.locator("//span[contains(@class,'g-text')]");
         this.clientIdElement = page.locator("//div[contains(@class,'g-text_variant_subheader-1')]");
