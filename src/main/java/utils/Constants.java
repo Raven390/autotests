@@ -94,7 +94,9 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_IN_ROUTER_RULE = "Router rule. Withdrawal notification branch.";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_IN_ROUTER_RULE = "Router rule. Mirror trade branch";
     public static final String STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE = "Router rule. Connection search branch";
-    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE = "Router rule.";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_TRANSFER_TO_WA = "Router rule. Transfer to wa";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_PAYMENT = "Router rule. crm payment topic";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_EVENTS = "Router rule. crm events topic";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE = "Router rule. Withdrawal integrity check ";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule ";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule ";

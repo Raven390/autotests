@@ -3,14 +3,12 @@ package helpers.data.rules.trading;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +36,6 @@ public class LossVoucherRuleDataFactory {
         ruleData.crmTbUserObject = generateUserByClient(client);
         ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
         ruleData.mtAccountObject = generateMtAccountByClient(client);
-        ruleData.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
         return ruleData;
     }
 

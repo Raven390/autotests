@@ -41,9 +41,9 @@ import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
-import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
+import business_objects.kafka.crm_events.TransferToWaEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.CustomEvent;
@@ -88,7 +88,6 @@ public class DataHelper {
     public LnSessionParsedObject lnSessionParsedObjectLogin;
     public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
-    public EgWithdrawalEvent withdrawalEvent;
     public CloseTradeMtEvent closeTradeEvent;
     public TradeEvent tradeEvent;
     public List<ClientFraudTypes> clientFraudTypes;
@@ -137,6 +136,7 @@ public class DataHelper {
     public CustomEvent customEvent;
     public MirrorScoreEvent mirrorScoreEvent;
     public InternalHedgeEvent internalHedgeEvent;
+    public TransferToWaEvent transferToWaEvent;
 
     public DataHelper() {
         this.clientFraudTypes = new ArrayList<>();
