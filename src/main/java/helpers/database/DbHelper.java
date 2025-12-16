@@ -487,6 +487,7 @@ public class DbHelper {
         }
     }
 
+
     private static <T> String buildInsertQuery(String tableName, T obj, Map<String, String> fieldMappings)
             throws IllegalAccessException {
         StringJoiner columnNames = new StringJoiner(", ");

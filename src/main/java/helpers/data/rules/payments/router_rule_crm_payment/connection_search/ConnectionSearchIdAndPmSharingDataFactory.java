@@ -3,6 +3,8 @@ package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Country;
 import io.qameta.allure.Description;
 import utils.Utils;
 
@@ -14,9 +16,9 @@ import java.util.Map;
 
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
+import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataHelper.*;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.CRM_WITHDRAWAL_EVENT;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
@@ -81,6 +83,46 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
 
     private static DataHelper getConnectionSearchPmAndIdSharingTest3Data() {
         DataHelper data = getConnectionSearchPmAndIdSharingRuleData(connectionSearchRuleClient3);
+        data.crmWithdrawalEvent.setPaymentMethodCode("CREDIT_CARD");
+
+        for (int i = 0; i < 6; i++) {
+            ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+            addConnectionByPayoutAndNameBirthAttribute(data, connectedClient);
+        }
+
+        //add deposit
+        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
+        data.crmTbDepositObjects.getFirst().setPaymentTypeId(43);
+        data.crmTbDepositObjects.getFirst().setPaymentChannelId(44);
+        data.crmTbDepositObjects.getFirst().setSourceIdSt(7);
+        data.crmTbDepositObjects.getFirst().setBrandUid(3);
+        data.crmTbDepositObjects.getFirst().setStatusId(5);
+
+        //add CRYPTO withdrawal
+        data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
+        data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
+        data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001));
+        data.crmTbWithdrawalObjects.getFirst().setPaymentTypeId(43);
+        data.crmTbWithdrawalObjects.getFirst().setPaymentChannelId(4);
+        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(8);
+        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(8);
+        data.crmTbWithdrawalObjects.getFirst().setBrandUid(3);
+        data.crmTbWithdrawalObjects.getFirst().setStatusId(5);
+
+        // add CRYPTO withdrawals (6 records) with identical parameters
+        data.crmTbWithdrawalObjects = new java.util.ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            data.crmTbWithdrawalObjects.add(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
+            data.crmTbWithdrawalObjects.get(i).setAmountUsd(BigDecimal.valueOf(9999));
+            data.crmTbWithdrawalObjects.get(i).setAmount(BigDecimal.valueOf(9999));
+            data.crmTbWithdrawalObjects.get(i).setPaymentTypeId(43);
+            data.crmTbWithdrawalObjects.get(i).setPaymentChannelId(4);
+            data.crmTbWithdrawalObjects.get(i).setSourceIdSt(8);
+            data.crmTbWithdrawalObjects.get(i).setBrandUid(3);
+            data.crmTbWithdrawalObjects.get(i).setStatusId(5);
+        }
 
         return data;
     }
@@ -195,7 +237,7 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         // Put all the db data for setup in a map
 //        map.put("1", getConnectionSearchPmAndIdSharingTest1Data());
 //        map.put("2", getConnectionSearchPmAndIdSharingTest2Data());
-//        map.put("3", getConnectionSearchPmAndIdSharingTest3Data());
+        map.put("3", getConnectionSearchPmAndIdSharingTest3Data());
         map.put("4", getConnectionSearchPmAndIdSharingTest4Data());
 //        map.put("5", getConnectionSearchPmAndIdSharingTest5Data());
 //        map.put("6", getConnectionSearchPmAndIdSharingTest6Data());
