@@ -33,7 +33,6 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.notNullValue;
 import static tests.TestBaseRule.*;
 import static utils.Constants.*;
-import static utils.Utils.getPaymentProfileCard;
 
 public class ChargebackRuleTest {
 
@@ -525,7 +524,7 @@ public class ChargebackRuleTest {
         assertThat("Verify alert attributes", alert.getAttributes().getSharedCardAcrossUids(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getFailedAttempts(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(3));
-        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(getPaymentProfileCard(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber(), data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardExpiration())));
+        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber()));
     }
 
     @Test
@@ -594,7 +593,7 @@ public class ChargebackRuleTest {
         assertThat("Verify alert attributes", alert.getAttributes().getFailedAttempts(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getIsThereAFraudDecline(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(4));
-        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(getPaymentProfileCard(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber(), data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardExpiration())));
+        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber()));
     }
 
     @Test
@@ -823,7 +822,8 @@ public class ChargebackRuleTest {
         assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getThreeDs(), is("No"));
         assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
-        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(getPaymentProfileCard(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber(), data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardExpiration())));
+        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber()));
+
     }
 
 
@@ -888,7 +888,7 @@ public class ChargebackRuleTest {
         assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
-        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(getPaymentProfileCard(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber(), data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardExpiration())));
+        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber()));
     }
 
     @Test
@@ -952,7 +952,7 @@ public class ChargebackRuleTest {
         assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
-        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(getPaymentProfileCard(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber(), data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardExpiration())));
+        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber()));
     }
 
     @Test
@@ -1016,7 +1016,7 @@ public class ChargebackRuleTest {
         assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
-        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(getPaymentProfileCard(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber(), data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardExpiration())));
+        assertThat("Verify alert attributes", alert.getAttributes().getPaymentProfile(), is(data.callbackEvent.getCallback().getData().getCharge().getAttributes().getCardMaskedNumber()));
     }
 
     @Test
