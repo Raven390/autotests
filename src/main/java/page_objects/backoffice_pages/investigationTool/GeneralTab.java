@@ -10,16 +10,12 @@ import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.Constants.ID_PROOF_TABLE_NAME;
-import static utils.Constants.KYC_FILES_TABLE_NAME;
 import static utils.Utils.roundDouble;
 
 public class GeneralTab extends AbstractPage {
@@ -75,6 +71,7 @@ public class GeneralTab extends AbstractPage {
     private final Locator verificationDrawerListDate;
     private final Locator verificationDrawerListFileNumber;
     private final Locator verificationDrawerPreviewGroups;
+    private final Locator kycStatus;
 
     private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
@@ -126,7 +123,7 @@ public class GeneralTab extends AbstractPage {
         this.originalSizeButton = page.locator(".v-gallery__controls button").nth(1);
         this.rotateButton = page.locator(".v-gallery__controls button").nth(3);
         this.mirrorButton = page.locator(".v-gallery__controls button").nth(4);
-        this.imageFile = page.locator(".v-investigation-tools-kyc-drawer__gallery .v-gallery__image");
+        this.imageFile = page.locator("//div[@class='v-investigation-tools-kyc-drawer__gallery']/descendant::*[@data-qa='gallery__image']");
         this.sliderForwardButton = page.locator(".v-gallery__slides button").nth(0);
         this.sliderBackwardButton = page.locator(".v-gallery__slides button").nth(1);
         this.sliderGalleryCounter = page.locator(".v-gallery__slides .v-gallery__counter");
@@ -159,6 +156,7 @@ public class GeneralTab extends AbstractPage {
         this.verificationDrawerListDate = page.locator("//*[@class='v-pp-verification-files-drawer-list__datetime']");
         this.verificationDrawerListFileNumber = page.locator("//*[@class='v-pp-verification-files-drawer-list__content']/*[contains(@class,'g-label')]");
         this.verificationDrawerPreviewGroups = page.locator("//*[@data-qa='pp_verification_files_drawer__previews']");
+        this.kycStatus = page.locator("//*[@data-qa='investigation_tools_kyc__status']");
     }
 
     @Step("Open users general tab")
@@ -285,7 +283,7 @@ public class GeneralTab extends AbstractPage {
 
     @Step("Check no applied placeholder is visible")
     public void noAppliedIsVisible() {
-        page.waitForSelector(PLACEHOLDER_SELECTOR);
+        kycStatus.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(notAppliedPlaceholder.isVisible());
     }
 
@@ -402,18 +400,6 @@ public class GeneralTab extends AbstractPage {
     @Step("Verify kyc section is visible")
     public void verifyKycSectionIsVisible() {
         assertThat(kyclInfoSection).isVisible();
-    }
-
-    public void deleteClientsPoiAttempts(String ucid) throws SQLException {
-        deleteEntryFromDb(ID_PROOF_TABLE_NAME, "ucid ='" + ucid + "' and file_type_id = 12");
-    }
-
-    public void deleteClientsPofAttempts(String ucid) throws SQLException {
-        deleteEntryFromDb(ID_PROOF_TABLE_NAME, "ucid ='" + ucid + "' and file_type_id = 27");
-    }
-
-    public void deleteClientsPofFileRecord(String ucid) throws SQLException {
-        deleteEntryFromDb(KYC_FILES_TABLE_NAME, "ucid ='" + ucid + "' and file_type_id = 27");
     }
 
     public void checkRightImage(String sourceLinkLastPart) {

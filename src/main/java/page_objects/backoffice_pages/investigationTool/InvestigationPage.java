@@ -12,6 +12,7 @@ import page_objects.backoffice_pages.AbstractPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,8 +102,10 @@ public class InvestigationPage extends AbstractPage {
     private final Locator commentButton;
     private final Locator closeToastButtom;
     private final Locator selectInvestigationTypeDropDown;
-    private final Locator paymentFilterAmountFrom;
-    private final Locator paymentFilterAmountTo;
+    private final Locator filterAmountFrom;
+    private final Locator filterAmountTo;
+    private final Locator amountFilterPresets;
+    private final Locator resetAmountFilterButton;
 
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
@@ -195,9 +198,11 @@ public class InvestigationPage extends AbstractPage {
         this.commentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.selectInvestigationTypeDropDown = page.locator("//button[@data-qa='suspicious_clients__select_type']");
-        this.paymentFilterAmountFrom = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__from']/descendant::input");
-        this.paymentFilterAmountTo = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__to']/descendant::input");
+        this.filterAmountFrom = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__from']/descendant::input");
+        this.filterAmountTo = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__to']/descendant::input");
         this.tabTitle = page.locator(".v-investigation-tools-tabs__marker .g-tabs__item-title");
+        this.amountFilterPresets = page.locator("//div[@data-qa='suspicious_clients__filters__amount__presets']/descendant::*[@class='g-button__text']");
+        this.resetAmountFilterButton = page.locator("//button[@data-qa='suspicious_clients__filters__amount__input__title__reset']");
     }
 
     @Step("Open the autotest login page main page")
@@ -418,10 +423,10 @@ public class InvestigationPage extends AbstractPage {
     }
 
     @Step("Fill amount filter")
-    public void fillAmountFilter(String left, String right) {
+    public void fillAmountFilter(String amountFrom, String amountTo) {
         Allure.step("Fill amount filter");
-        paymentFilterAmountFrom.fill(left);
-        paymentFilterAmountTo.fill(right);
+        filterAmountFrom.fill(amountFrom);
+        filterAmountTo.fill(amountTo);
     }
 
     @Step
@@ -715,7 +720,9 @@ public class InvestigationPage extends AbstractPage {
     public void verifyAllCardsFilteredByRuleName(String name) {
         for (int i = 0; i < clientContainer.count(); i++) {
             clientContainer.nth(i).click();
-            String actualRuleName = new AlertsPage(page).getFirstAlertRuleName();
+            AlertsPage alertsPage = new AlertsPage(page);
+            alertsPage.openAlertsTab();
+            String actualRuleName = alertsPage.getFirstAlertRuleName();
             assertThat("Assert that each client card is filtered by rule name", actualRuleName, equalTo(name));
         }
     }
@@ -999,4 +1006,23 @@ public class InvestigationPage extends AbstractPage {
         assertTrue(page.url().contains(tabName.toLowerCase()));
     }
 
+    @Step("Get amount filter 'from' and 'to' values")
+    public Map<String, String> getAmountFromToValues() {
+        Map<String, String> result = new HashMap<>();
+        String from = filterAmountFrom.getAttribute("value");
+        String to = filterAmountTo.getAttribute("value");
+        result.put("from", from == null ? "" : from);
+        result.put("to", to == null ? "" : to);
+        return result;
+    }
+
+    @Step("Click amount preset by visible name: {presetName}")
+    public void clickAmountPresetByName(String presetName) {
+        amountFilterPresets.getByText(presetName).click();
+    }
+
+    @Step("Reset amount filter")
+    public void resetAmountFilter() {
+        resetAmountFilterButton.click();
+    }
 }

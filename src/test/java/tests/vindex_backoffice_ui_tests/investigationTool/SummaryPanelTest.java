@@ -36,6 +36,8 @@ import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 class SummaryPanelTest extends TestBaseWeb {
     private static final ClientHelper client;
     private static final ClientHelper clientBybit;
@@ -82,8 +84,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1022")
     @Feature("BMS-2765 Clients summary panel")
     @DisplayName("Clients summary panel PNL")
@@ -119,8 +119,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1849")
     @Feature("BMS-2765 Clients summary panel")
     @DisplayName("Clients summary panel Deposits")
@@ -146,8 +144,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1850")
     @Feature("BMS-2765 Clients summary panel")
     @DisplayName("Clients summary panel Deposits Bybit")
@@ -173,8 +169,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1027")
     @Feature("BMS-2765 Clients summary panel")
     @DisplayName("Clients summary panel Withdrawals")
@@ -199,8 +193,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1024")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Segment test")
@@ -219,8 +211,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1025")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud, no frauds")
@@ -235,8 +225,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1026")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud")
@@ -252,8 +240,6 @@ class SummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1055")
     @Feature("BMS-2765 Clients summary panel Revenue section test")
     @DisplayName("Clients summary panel Revenue section test")

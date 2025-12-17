@@ -1,7 +1,5 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import business_objects.db.audit_service_db.AuditEvent;
-import business_objects.db.audit_service_db.EventOld;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.mitigation_service_db.ClientTradingRestriction;
 import business_objects.kafka.restriction_events.*;
@@ -269,64 +267,6 @@ public class RestrictionPage extends AbstractPage {
     }
 
 
-    public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
-        List<EventOld> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'", EventOld.class);
-        String type1 = event.get(2).getType();
-        assertEquals("CANCELLATION_REQUESTED", type1);
-        String details = event.get(2).getDetails();
-        assertEquals(details, detail);
-        String type2 = event.get(3).getType();
-        assertEquals("RESTRICTION_CANCELLED", type2);
-        String system = event.get(2).getInitiatedBySystem();
-        assertEquals("Vindex BO", system);
-    }
-
-    public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
-        List<EventOld> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", EventOld.class);
-        assertNotNull(event);
-        assertNotNull(event.getLast().getKafkaMessageId());
-        assertNotNull(event.getLast().getId());
-        assertNotNull(event.getLast().getUcid());
-        assertNotNull(event.getLast().getType());
-        assertNotNull(event.getLast().getCreatedAt());
-        assertNotNull(event.getLast().getInitiatedBySystem());
-        assertNotNull(event.getLast().getInitiatedByUser());
-        assertNotNull(event.getLast().getComment());
-    }
-
-    public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
-        Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<EventOld> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'", EventOld.class);
-        String type1 = event.get(event.size() - 2).getType();
-        assertEquals(RESTRICTION_REQUESTED_STATUS, type1);
-        String details = event.get(event.size() - 2).getDetails();
-        assertEquals(details, detail);
-        String type2 = event.getLast().getType();
-        assertEquals(RESTRICTION_APPLIED_STATUS, type2);
-        String system = event.getLast().getInitiatedBySystem();
-        assertEquals("Vindex BO", system);
-    }
-
-    public static void checkRestrictionApplymentAudit(String ucid) throws Exception {
-        Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<AuditEvent> events = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
-            if (events.size() >= 2) {
-                break;
-            } else if (i == 9) {
-                assertThat("Assert that there are 3 events in audit", events.size(), greaterThanOrEqualTo(3));
-            }
-            Thread.sleep(1000);
-        }
-        AuditEvent event1 = events.getFirst();
-        AuditEvent event2 = events.get(1);
-        AuditEvent event3 = events.getLast();
-        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
-        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
-        assertThat(event3.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
-    }
-
     public void isPageLoaded() {
         int n = 0;
         page.waitForTimeout(2000);
@@ -397,7 +337,7 @@ public class RestrictionPage extends AbstractPage {
         page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
         applyRestrictionButton.click();
         page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName())).click();
-        activitySection.hover();
+        activitySection.last().hover();
         return tooltip.textContent();
     }
 
