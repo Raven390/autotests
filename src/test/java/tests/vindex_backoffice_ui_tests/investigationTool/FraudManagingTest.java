@@ -95,7 +95,7 @@ class FraudManagingTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraudManagement(CPA_ABUSE, POTENTIAL);
+        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
         String source = VINDEX.getDisplayName();
         resolvePage.selectFraudSourceManage(source);
         String comment = String.valueOf(getCurrentTimestampSeconds());
@@ -128,7 +128,7 @@ class FraudManagingTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraudManagement(CPA_ABUSE, POTENTIAL);
+        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
         String source = RA_RAISE.getDisplayName();
         resolvePage.selectFraudSourceManage(source);
         String comment = String.valueOf(getCurrentTimestampSeconds());
@@ -161,7 +161,7 @@ class FraudManagingTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraudManagement(CPA_ABUSE, POTENTIAL);
+        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
         String source = ADDITIONAL_REVIEW.getDisplayName();
         resolvePage.selectFraudSourceManage(source);
         String comment = String.valueOf(getCurrentTimestampSeconds());
@@ -194,7 +194,7 @@ class FraudManagingTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraudManagement(CPA_ABUSE, POTENTIAL);
+        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
         String source = INSIGHT.getDisplayName();
         resolvePage.selectFraudSourceManage(source);
         String comment = String.valueOf(getCurrentTimestampSeconds());
@@ -227,7 +227,7 @@ class FraudManagingTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraudManagement(CPA_ABUSE, POTENTIAL);
+        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
         String source = FRONTEND.getDisplayName();
         resolvePage.selectFraudSourceManage(source);
         String comment = String.valueOf(getCurrentTimestampSeconds());
