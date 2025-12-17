@@ -90,6 +90,13 @@ public class ChargebackRuleDataFactory {
         callbackEvent = CallbackEvent.builder().id(getRandomUuidString()).brand(data.clientHelper.getBrand()).clientId(data.clientHelper.getUserId().longValue()).type("callback_deposit").regulator(data.clientHelper.getRegulator()).businessOrderId("TST" + getRandomIntPositive()).messageId(getRandomUuidString()).eventDate(Instant.now().toString()).callback(callback).paymentMethodCode("PMC").build();
         data.callbackEvent = callbackEvent;
 
+
+        CrmTbDepositEntity deposit0 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit0.setStatus("Pending");
+        deposit0.setOrderNumber(callbackData.getOrderId());
+        deposit0.setOrderNumber(callbackData.getOrderId());
+        data.crmTbDepositObjects = List.of(deposit0);
+
         return data;
     }
 
@@ -117,7 +124,7 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, "2222"));
-        data.crmTbDepositObjects = List.of(deposit1);
+        data.crmTbDepositObjects.add(deposit1);
 
         return data;
 
@@ -130,7 +137,7 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration));
-        data.crmTbDepositObjects = List.of(deposit1);
+        data.crmTbDepositObjects.add(deposit1);
 
         return data;
     }
@@ -149,7 +156,7 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration));
-        data.crmTbDepositObjects = List.of(deposit1);
+        data.crmTbDepositObjects.add(deposit1);
 
         return data;
 
@@ -162,7 +169,7 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, "2222"));
-        data.crmTbDepositObjects = List.of(deposit1);
+        data.crmTbDepositObjects.add(deposit1);
 
         return data;
 
@@ -180,7 +187,9 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -217,7 +226,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -256,7 +268,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -319,7 +334,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -397,7 +415,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -481,7 +502,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -567,7 +591,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -655,7 +682,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -747,7 +777,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -838,7 +871,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -951,7 +987,6 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
-
         return data;
     }
 
@@ -970,7 +1005,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -1049,7 +1087,10 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3);
+
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -1135,10 +1176,9 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        CrmTbDepositEntity deposit4 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        deposit4.setStatus("Reject");
-        deposit4.setOrderNumber(callbackData.getOrderId());
-        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3, deposit4);
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
@@ -1225,7 +1265,7 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit4 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit4.setStatus("Reject");
         deposit4.setOrderNumber(callbackData.getOrderId());
-        data.crmTbDepositObjects = List.of(deposit4);
+        data.crmTbDepositObjects.add(deposit4);
         data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
