@@ -42,6 +42,8 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 import static utils.Utils.getRandomIntPositive;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 class PaymentsSummaryPanelTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClient();
     private static final ClientHelper clientBybit = getRandomBybitClient();
@@ -109,8 +111,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1860")
     @Feature("BMS-2765 Payments summary deposits panel")
     @DisplayName("Payments summary deposits panel")
@@ -163,8 +163,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1864")
     @Feature("BMS-2765 Payments summary withdrawals panel")
     @DisplayName("Payments summary withdrawals panel")
@@ -218,8 +216,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1868")
     @Feature("BMS-2765 Payments summary trading panel")
     @DisplayName("Payments summary trading panel")
@@ -278,8 +274,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1879")
     @Feature("BMS-2765 Payments summary PNL panel")
     @DisplayName("Payments summary PNL panel")
@@ -325,8 +319,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1880")
     @Feature("BMS-2765 Payments summary V-Wallet panel")
     @DisplayName("Payments summary V-Wallet panel")
@@ -364,8 +356,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1881")
     @Feature("BMS-2765 Payments summary Cost efficiency panel")
     @DisplayName("Payments summary Cost efficiency panel")
@@ -393,8 +383,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1882")
     @Feature("BMS-2765 Payments summary Rewards panel")
     @DisplayName("Payments summary Rewards panel")
@@ -423,8 +411,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1883")
     @Feature("BMS-2765 Payments summary IB rebates panel")
     @DisplayName("Payments summary IB rebates panel")

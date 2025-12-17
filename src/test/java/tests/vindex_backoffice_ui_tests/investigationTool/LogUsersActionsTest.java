@@ -2,6 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.backoffice_db.user_action_audit.UserActionAudit;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,11 +16,11 @@ import tests.TestBaseWeb;
 import java.sql.SQLException;
 import java.util.List;
 
+import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntryFactory.getKycFile;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.ctm_tb_id_proof.IdProofTableEntryFactory.getIdProof;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
@@ -54,8 +55,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUserConnected);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, getConnectionTableEntryForUi(client, connectedClient));
-        insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
-        insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, generateIdProofObjectByClient(client, kycFile));
         insertCrmAccountsToDb(account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -283,8 +285,8 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(CRM_TB_KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(CRM_TB_ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }

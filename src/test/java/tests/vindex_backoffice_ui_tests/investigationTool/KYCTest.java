@@ -1,454 +1,435 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofObject;
-import business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntry;
+import business_objects.db.clickhouse.crm_tb_address_proof.CrmTbAddressProofObject;
+import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
 import io.qameta.allure.AllureId;
-import net.datafaker.Faker;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.util.List;
 
-import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObject;
-import static business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntryFactory.getKycFile;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static helpers.data.enums.Brand.VANTAGE;
-import static helpers.data.enums.Regulator.VFSC2;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_address_proof.CrmTbAddressProofFactory.generateAddressProofObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
-import static utils.Utils.*;
+import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 
-public class KYCTest extends TestBaseWeb {
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
+class KYCTest extends TestBaseWeb {
 
-    static Faker faker = new Faker();
-
-    static ClientHelper pofClient;
-    static {
-        pofClient = ClientHelper.builder().userId(525_210).brand(VANTAGE).regulator(VFSC2).build();
-    }
+    private static final ClientHelper client = getRandomVantageClientAllFields();
+    private static final String DELETE_WHERE = String.format("ucid = '%s'", client.getUcid());
+    private static final String POI = "Proof of identity";
+    private static final String POA = "Proof of address";
+    private static final String POF = "Proof of face";
+    private static final int POF_FILE_TYPE_ID = 27;
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException {
-        CrmTbUserObject pofClientDb = generateStaticUserByClient(pofClient);
-        pofClientDb.firstName = "Face";
-        pofClientDb.lastName = "Mc Shooty";
+    static void setup() throws ReflectiveOperationException, SQLException {
+        CrmTbUserObject pofClientDb = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, pofClientDb);
     }
 
+    @BeforeEach
+    void beforeEach() {
+        deleteEntryFromDb(CRM_TB_ID_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteEntryFromDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteEntryFromDb(CRM_TB_KYC_FILES_TABLE_NAME, DELETE_WHERE);
+    }
+
+    @AfterAll
+    static void teardown() {
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, DELETE_WHERE);
+        deleteEntryFromDb(CRM_TB_ID_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteEntryFromDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteEntryFromDb(CRM_TB_KYC_FILES_TABLE_NAME, DELETE_WHERE);
+    }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("351")
     @DisplayName("Check correct status display Submitted")
-    public void checkCorrectStatusDisplaySubmittedTest() {
+    void checkCorrectStatusDisplaySubmittedTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525206");
-        generalTab.checkKycStatusGeneral("Proof of identity", "Submitted");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POI, "Submitted");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("354")
     @DisplayName("Check correct status display Rejected")
-    public void checkCorrectStatusDisplayRejectedTest() {
+    void checkCorrectStatusDisplayRejectedTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setStatus("REJECTED");
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525208");
-        generalTab.checkKycStatusGeneral("Proof of identity", "Rejected");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POI, "Rejected");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("352")
     @DisplayName("Check correct status display Pending")
-    public void checkCorrectStatusDisplayPendingTest() {
+    void checkCorrectStatusDisplayPendingTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setStatus("PENDING");
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525207");
-        generalTab.checkKycStatusGeneral("Proof of identity", "Pending");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POI, "PENDING");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("353")
     @DisplayName("Check correct status display Completed")
-    public void checkCorrectStatusDisplayCompletedTest() {
+    void checkCorrectStatusDisplayCompletedTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setStatus("COMPLETED");
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525205");
-        generalTab.checkKycStatusGeneral("Proof of identity", "Approved");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POI, "Approved");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("357")
     @DisplayName("KYC File viewer BO user can zoom displayed file using buttons in UI")
-    public void userCanZoomTest() {
+    void userCanZoomTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525204");
-        generalTab.kycDetailsOpen("Proof of identity");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POI);
         generalTab.FVZoomFunctions();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("358")
     @DisplayName("KYC File viewer BO user can rotate displayed file using buttons in UI")
-    public void userCanRotateTest() {
+    void userCanRotateTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525204");
-        generalTab.kycDetailsOpen("Proof of identity");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POI);
         generalTab.FVRotateFunctions();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("359")
     @DisplayName("KYC File viewer BO user can mirror displayed file using buttons in UI")
-    public void userCanMirrorTest() {
+    void userCanMirrorTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525204");
-        generalTab.kycDetailsOpen("Proof of identity");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POI);
         generalTab.FVMirrorFunctions();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("356")
     @DisplayName("KYC File viewer BO user can slide displayed file using buttons in UI")
-    public void userCanSlideTest() {
+    void userCanSlideTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        CrmTbKycFilesObject kycFile2 = generateKycFilesObjectByClient(client);
+        kycFile2.setFileName("/other/5b14c35f65cb4eebb7f4e1f375049c85.jpeg");
+        kycFile2.setFilePath(kycFile2.getFileName());
+        CrmTbIdProofObject idProofObject2 = generateIdProofObjectByClient(client, kycFile2);
+        insertObjectsToDb(CRM_TB_KYC_FILES_TABLE_NAME, List.of(kycFile, kycFile2));
+        insertObjectsToDb(CRM_TB_ID_PROOF_TABLE_NAME, List.of(idProofObject, idProofObject2));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525204");
-        generalTab.kycDetailsOpen("Proof of identity");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POI);
         generalTab.FVSlideFunctions();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("326")
     @DisplayName("User has history drawer")
-    public void userHasHistoryDrawerTest() {
+    void userHasHistoryDrawerTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525204");
-        generalTab.kycDetailsOpen("Proof of identity");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POI);
         generalTab.kycHistoryDrawerDisplayed();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("318")
     @DisplayName("Client without KYC applyment must have placeholder")
-    public void userHavePlaceholderNoKYCTest() {
+    void userHavePlaceholderNoKYCTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525201");
+        generalTab.navigateGeneralTab(client.getUcid());
         generalTab.noAppliedIsVisible();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("321")
     @DisplayName("Client without multiple KYC attempts must have displayed number of attempts")
-    public void userHaveNumberOfAttemptTest() {
+    void userHaveNumberOfAttemptTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        CrmTbKycFilesObject kycFile2 = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject2 = generateIdProofObjectByClient(client, kycFile2);
+        CrmTbKycFilesObject kycFile3 = generateKycFilesObjectByClient(client);
+        CrmTbAddressProofObject addressProofObject = generateAddressProofObjectByClient(client, kycFile3);
+        CrmTbKycFilesObject kycFile4 = generateKycFilesObjectByClient(client);
+        CrmTbAddressProofObject addressProofObject2 = generateAddressProofObjectByClient(client, kycFile4);
+        insertObjectsToDb(CRM_TB_KYC_FILES_TABLE_NAME, List.of(kycFile, kycFile2, kycFile3, kycFile4));
+        insertObjectsToDb(CRM_TB_ID_PROOF_TABLE_NAME, List.of(idProofObject, idProofObject2));
+        insertObjectsToDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, List.of(addressProofObject, addressProofObject2));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525204");
-        generalTab.checkKycAttemptsGeneral("Proof of identity", "2");
-        generalTab.checkKycAttemptsGeneral("Proof of address", "2");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycAttemptsGeneral(POI, "2");
+        generalTab.checkKycAttemptsGeneral(POA, "2");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("320")
     @DisplayName("Client applied ID must have address info on general tab")
-    public void clientHaveAddressInfoGeneralTest() {
+    void clientHaveAddressInfoGeneralTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("vantage-525204");
         generalTab.poaDetailsGeneral("USA, DC, Washington", "321 Main St, 654321");
     }
 
+
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("319")
     @DisplayName("Client applied only POI must have placeholder about POA")
-    public void clientHavePlaceholderPOATest() {
+    void clientHavePlaceholderPOATest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525202");
+        generalTab.navigateGeneralTab(client.getUcid());
         generalTab.poaPlaceholderIsVisible();
     }
 
+
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("320")
     @DisplayName("Client have placeholder if not applied POI")
-    public void clientHavePlaceholderPOI() {
+    void clientHavePlaceholderPOI() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbAddressProofObject addressProofObject = generateAddressProofObjectByClient(client, kycFile);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, addressProofObject);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("vantage-525203");
+        generalTab.navigateGeneralTab(client.getUcid());
         generalTab.poiPlaceholderIsVisible();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("899")
     @DisplayName("KYC - Client not have placeholder if not applied POF")
-    public void clientNotHavePlaceholderPofTest() throws SQLException {
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
+    void clientNotHavePlaceholderPofTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
+        generalTab.navigateGeneralTab(client.getUcid());
         generalTab.pofPlaceholderIsNotVisible();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("902")
     @DisplayName("POF - Check correct status display Submitted")
-    public void checkCorrectStatusDisplaySubmittedPofTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.setFileTypeId(27);
+    void checkCorrectStatusDisplaySubmittedPofTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject.setStatus("SUBMITTED");
 
-        KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.getId();
-        file.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
+        kycFile.setProofId(idProofObject.getId());
+        kycFile.setFileTypeId(POF_FILE_TYPE_ID);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.checkKycStatusGeneral("Proof of face", "Submitted");
-
-        deleteEntryFromDb(KYC_FILES_TABLE_NAME, "id = " + file.id);
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POF, "Submitted");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("903")
     @DisplayName("POF - Check correct status display Rejected")
-    public void checkCorrectStatusDisplayRejectedPofTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.setFileTypeId(27);
+    void checkCorrectStatusDisplayRejectedPofTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject.setStatus("REJECTED");
 
-        KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.getId();
-        file.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
+        kycFile.setProofId(idProofObject.getId());
+        kycFile.setFileTypeId(POF_FILE_TYPE_ID);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.checkKycStatusGeneral("Proof of face", "Rejected");
-
-        deleteEntryFromDb(KYC_FILES_TABLE_NAME, "id = " + file.id);
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POF, "Rejected");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("904")
     @DisplayName("POF - Check correct status display Approved")
-    public void checkCorrectStatusDisplayApprovedPofTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.setFileTypeId(27);
+    void checkCorrectStatusDisplayApprovedPofTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject.setStatus("COMPLETED");
 
-        KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.getId();
-        file.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
+        kycFile.setFileTypeId(POF_FILE_TYPE_ID);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.checkKycStatusGeneral("Proof of face", "Approved");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POF, "Approved");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("905")
     @DisplayName("POF - Check correct status display Pending")
-    public void checkCorrectStatusPendingApprovedPofTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.setFileTypeId(27);
+    void checkCorrectStatusPendingApprovedPofTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject.setStatus("PENDING");
 
-        KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.getId();
-        file.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
+        kycFile.setFileTypeId(POF_FILE_TYPE_ID);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.checkKycStatusGeneral("Proof of face", "Pending");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkKycStatusGeneral(POF, "Pending");
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("906")
     @DisplayName("POF - Check correct image displayed in Viewer")
-    public void checkThatImageDrawerShowsRightImagePofTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.setFileTypeId(27);
+    void checkThatImageDrawerShowsRightImagePofTest() {
+        CrmTbKycFilesObject kycFile = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client, kycFile);
+        idProofObject.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject.setStatus("PENDING");
 
-        KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.getId();
-        file.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
+        kycFile.setFileTypeId(POF_FILE_TYPE_ID);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.kycDetailsOpen("Proof of face");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POF);
         generalTab.checkImageDisplayed();
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("912")
     @DisplayName("POF - viewer show attempt history")
-    public void checkThatImageDrawerShowHistoryTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject1 = generateIdProofObject(pofClient);
-        idProofObject1.setFileTypeId(27);
+    void checkThatImageDrawerShowHistoryTest() {
+        CrmTbKycFilesObject kycFile1 = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject1 = generateIdProofObjectByClient(client, kycFile1);
+        idProofObject1.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject1.setStatus("REJECTED");
 
-        CrmTbIdProofObject idProofObject2 = generateIdProofObject(pofClient);
-        idProofObject2.setFileTypeId(27);
+        CrmTbKycFilesObject kycFile2 = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject2 = generateIdProofObjectByClient(client, kycFile2);
+        idProofObject2.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject2.setStatus("PENDING");
-        idProofObject2.setCreateTime("2024-12-21 11:17:50.030000000");
 
-        KycFilesTableEntry file1 = getKycFile(pofClient);
-        file1.proofId = idProofObject1.getId();
-        file1.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
+        kycFile1.setFileTypeId(POF_FILE_TYPE_ID);
+        kycFile2.setFileTypeId(POF_FILE_TYPE_ID);
 
-        KycFilesTableEntry file2 = getKycFile(pofClient);
-        file2.proofId = idProofObject2.getId();
-        file2.fileTypeId = 27;
-
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file2);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject1);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject2);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile1);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile2);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject1);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject2);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.kycDetailsOpen("Proof of face");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.kycDetailsOpen(POF);
         generalTab.checkNumberOfAttemptsInViewer(2);
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("913")
     @DisplayName("POF - row shows actual data")
-    public void checkThatPofDataInGeneralTest() throws SQLException {
-
-        generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
-
-        CrmTbIdProofObject idProofObject1 = generateIdProofObject(pofClient);
-        idProofObject1.setFileTypeId(27);
+    void checkThatPofDataInGeneralTest() {
+        CrmTbKycFilesObject kycFile1 = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject1 = generateIdProofObjectByClient(client, kycFile1);
+        idProofObject1.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject1.setStatus("REJECTED");
-        idProofObject1.setUpdateTime("2024-11-29 11:17:50.030000000");
-        idProofObject1.setCreateTime("2024-11-29 11:17:50.030000000");
-        idProofObject1.setDateOfBirth(null);
+        idProofObject1.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0));
+        idProofObject1.setUpdateTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0));
 
-        CrmTbIdProofObject idProofObject2 = generateIdProofObject(pofClient);
-        idProofObject2.setFileTypeId(27);
+        CrmTbKycFilesObject kycFile2 = generateKycFilesObjectByClient(client);
+        CrmTbIdProofObject idProofObject2 = generateIdProofObjectByClient(client, kycFile2);
+        idProofObject2.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject2.setStatus("PENDING");
-        idProofObject2.setUpdateTime("2024-12-29 11:17:50.030000000");
-        idProofObject2.setCreateTime("2024-12-29 11:17:50.030000000");
-        idProofObject2.setDateOfBirth(null);
-        idProofObject2.setDocumentType(faker.animal().name());
-        idProofObject2.setDocumentNumber(String.valueOf(getCurrentTimestampSeconds()));
 
-        KycFilesTableEntry file1 = getKycFile(pofClient);
-        file1.proofId = idProofObject1.getId();
-        file1.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
 
-        KycFilesTableEntry file2 = getKycFile(pofClient);
-        file2.proofId = idProofObject2.getId();
-        file2.fileTypeId = 27;
+        kycFile1.setFileTypeId(POF_FILE_TYPE_ID);
+        kycFile2.setFileTypeId(POF_FILE_TYPE_ID);
 
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file2);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject1);
-        page.waitForTimeout(100);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject2);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile1);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, kycFile2);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject1);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject2);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(pofClient.getUcid());
-        generalTab.checkValueKycPofTitle("Proof of face");
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkValueKycPofTitle(POF);
         generalTab.checkValueKycPofStatus(idProofObject2.getStatus());
         generalTab.checkValueKycPofDate(idProofObject2.getUpdateTime());
         generalTab.checkValueKycPofParameters(idProofObject2.getDocumentType() + " " + idProofObject2.getDocumentNumber());

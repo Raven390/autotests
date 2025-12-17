@@ -4,7 +4,7 @@ import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObjec
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntry;
+import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
@@ -21,12 +21,12 @@ import net.datafaker.Faker;
 import java.util.List;
 
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryLvl2;
-import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObject;
+import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntryFactory.getKycFile;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -90,16 +90,13 @@ public class DemoClientCreator {
         ConnectionTableEntry connection2 = getConnectionTableEntryLvl2(client2, client3);
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connection1, connection2));
 
+        CrmTbKycFilesObject file = generateKycFilesObjectByClient(client1);
+        file.setFileTypeId(27);
 
-        CrmTbIdProofObject idProofObject = generateIdProofObject(client1);
-        idProofObject.setFileTypeId(27);
+        CrmTbIdProofObject idProofObject = generateIdProofObjectByClient(client1, file);
         idProofObject.setStatus("SUBMITTED");
-
-        KycFilesTableEntry file = getKycFile(client1);
-        file.proofId = idProofObject.getId();
-        file.fileTypeId = 27;
-        insertObjectToDb(KYC_FILES_TABLE_NAME, file);
-        insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
+        insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, file);
+        insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
         ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 

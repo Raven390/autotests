@@ -169,7 +169,6 @@ public class Constants {
     public static final String AR_PENDING_PROCESSING_TABLE_NAME = "postgres.ar.pending_processing";
     public static final String AR_FRAUD_TYPE_CATEGORY_TABLE_NAME = "postgres.ar.fraud_type_category";
     public static final String AUDIT_EVENT_OLD = "postgres.au.event";
-    public static final String AUDIT_EVENT = "postgres.au.audit_event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String PAYMENT_EVENT_TABLE_NAME = "postgres.paymentgate.payment_events";
     public static final String BO_INVESTIGATION_TABLE_NAME = "postgres.bo.investigation";
@@ -216,9 +215,10 @@ public class Constants {
     public static final String DIGITAL_ID_TABLE_NAME = "data_science.digital_id";
     public static final String DOCUMENT_TABLE_NAME = "data_science.document";
     public static final String EMAIL_TABLE_NAME = "data_science.email";
-    public static final String ID_PROOF_TABLE_NAME = "consolidated.crm___tb_id_proof";
+    public static final String CRM_TB_ID_PROOF_TABLE_NAME = "consolidated.crm___tb_id_proof";
     public static final String IP_TABLE_NAME = "data_science.ip";
-    public static final String KYC_FILES_TABLE_NAME = "consolidated.crm___tb_kyc_files";
+    public static final String CRM_TB_KYC_FILES_TABLE_NAME = "consolidated.crm___tb_kyc_files";
+    public static final String CRM_TB_ADDRESS_PROOF_TABLE_NAME = "consolidated.crm___tb_address_proof";
     public static final String LEXIS_NEXIS_TABLE_NAME = "lexisnexis.ln_session_parsed";
     public static final String MIRROR_LOGIN_TABLE_NAME = "data_science.mirror_login";
     public static final String MIRROR_UCID_TABLE_NAME = "consolidated.mirror_ucid";
@@ -275,7 +275,7 @@ public class Constants {
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files
-    public static final String FILE_KYC_NAME = "/other/5b14c35f65cb4eebb7f4e1f375049c85.jpeg";
+    public static final String FILE_KYC_NAME = "/other/d26364637ea848f0b4d2e363ea761461.png";
 
     // Connection search values
     public static final String CONNECTION_ATTRIBUTE_NAME_DEVICE = "device";
@@ -382,8 +382,11 @@ public class Constants {
     public static final String POTENTIAL_ABUSE = "Potential abuse";
     public static final String RESTRICTION_APPLIED_STATUS = "RESTRICTION_APPLIED";
     public static final String RESTRICTION_REQUESTED_STATUS = "RESTRICTION_REQUESTED";
+    public static final String RESTRICTION_CANCELLED_STATUS = "RESTRICTION_CANCELLED";
+    public static final String CANCELLATION_REQUESTED_STATUS = "CANCELLATION_REQUESTED";
     public static final String RESTRICTION_TYPE_GENERAL = "GENERAL";
     public static final String RESTRICTION_TYPE_TRADING = "TRADING";
+    public static final String RESTRICTION_TYPE_TRADING_ENVIRONMENT = "TRADING_ENVIRONMENT";
     public static final String STATUS_NEW = "new";
     public static final String STATUS_NORMAL = "Normal";
     public static final String STATUS_SUSPICIOUS = "Suspicious";

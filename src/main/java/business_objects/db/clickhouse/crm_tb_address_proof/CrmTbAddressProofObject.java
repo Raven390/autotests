@@ -1,4 +1,4 @@
-package business_objects.db.clickhouse.crm_id_proof;
+package business_objects.db.clickhouse.crm_tb_address_proof;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @NoArgsConstructor
 @Builder
 @Data
-public class CrmTbIdProofObject {
+public class CrmTbAddressProofObject {
 
     private Integer sourceIdSt;
     private Integer brandUid;
@@ -25,10 +25,12 @@ public class CrmTbIdProofObject {
     private String createTimeUtc;
     private String updateTime;
     private String updateTimeUtc;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String dateOfBirth;
+    private String postcode;
+    private Integer countryId;
+    private String country;
+    private String state;
+    private String city;
+    private String address;
     private Integer statusId;
     private String status;
     private String auditor;
@@ -36,10 +38,7 @@ public class CrmTbIdProofObject {
     private Integer pendingReason;
     private Integer rejectReason;
     private String reason;
-    private String documentType;
-    private String documentNumber;
-    private Integer nationalityId;
-    private String nationality;
+    private String translateAddress;
     private Integer auditId;
     private String auditType;
     private Integer fileTypeId;
