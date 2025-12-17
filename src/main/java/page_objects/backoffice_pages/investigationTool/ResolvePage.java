@@ -28,6 +28,8 @@ public class ResolvePage extends AbstractPage {
     public static final String FRAUD_TYPE_STATUS_SELECTOR_FORMATTER = "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
     public static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
     public static final String FRAUD_TYPE_STATUS_FORMAT = "//*[@class='v-menuitem']/*[text()='%s']";
+    public static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT = "//*[@class='v-sub-menu']/*[text()='%s']";
+    public static final String FRAUD_SUBTYPE_FORMAT = "//*[(@class='v-menuitem') and contains(@data-qa, '_fraud_type_selector__submenu_')]/*[text()='%s']";
     public static final String REJECTION_REASON_INPUT_SELECTOR = ".v-rejection-reason-plain-input__input";
     public static final String FRAUD_MENU_ITEM_SELECTOR = "div.g-popup__content div.v-sub-menu__anchor";
     public static final String DRAWER_HEADER_SELECTOR = "[data-qa='drawer_header']";
@@ -94,7 +96,7 @@ public class ResolvePage extends AbstractPage {
     private static final String RESTRICTION_LIST_LOCATOR_ANCESTOR = "//ancestor::*[@class='v-client-restrictions-list-item']";
     private static final String RESTRICTION_LIST_LOCATOR = "//*[@class='v-client-restrictions-list-item']";
     private static final String RESTRICTION_DELETION_POPUP_LOCATOR = "//*[contains(@class,'v-client-restrictions-list-item__popup') and contains(@class,'g-popup ')]";
-    private static final String RESET_FRAUD_CHANGES_BUTTON_LOCATOR = "//button[contains(@data-qa,'raud_type_selector__reset')]";
+    private static final String RESET_FRAUD_CHANGES_BUTTON_LOCATOR = "//button[contains(@data-qa,'client_resolving_drawer__detected_fraud_types') and contains(@data-qa,'__remove')]";
     private static final String RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR = "//button[contains(@data-qa,'restrictions_selector__reset')]";
     private static final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[contains(@data-qa,'client_report_fraud_drawer__reported_fraud_types_list__item')]";
     private static final String FRAUD_TIME_BY_NAME_PATTERN = String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
@@ -353,14 +355,26 @@ public class ResolvePage extends AbstractPage {
 
     public void addFraud(FraudType fraud, FraudTypeStatus status) {
         fraudListButton.click();
-        page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
-        page.locator(FRAUD_TYPE_STATUS_SELECTOR_FORMATTER.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
-    }
-
-    public void addFraudManagement(FraudType fraud, FraudTypeStatus status) {
-        fraudListButton.click();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
         page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
         page.locator(FRAUD_TYPE_STATUS_FORMAT.formatted(status.getDisplayName())).click();
+    }
+
+    public void addFraud(FraudType fraud, FraudTypeStatus status, FraudSubtype subtype) {
+        fraudListButton.click();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
+        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName())).hover();
+        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName())).hover();
+        page.locator(FRAUD_SUBTYPE_FORMAT.formatted(subtype.getName())).click();
+    }
+
+    public void addFraud(FraudType fraud, FraudSubtype subtype) {
+        addFraud(fraud, CONFIRMED, subtype);
+    }
+
+    public void addFraud(FraudType fraud) {
+        addFraud(fraud, CONFIRMED);
     }
 
     public void reportFraud(FraudType fraud, FraudTypeStatus status) {
@@ -368,19 +382,6 @@ public class ResolvePage extends AbstractPage {
         page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
         page.locator(CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
         selectFraudSourceManage("Vindex");
-    }
-
-
-    public void addFraud(FraudType fraud, FraudSubtype subtype) {
-        fraudListButton.click();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
-        page.locator(String.format(CONFIRMED_FRAUD_BUTTON_BY_FRAUD_TYPE_PATTERN, fraud.getCode())).hover();
-        page.locator(String.format(FRAUD_SUBTYPE_BUTTON_BY_FRAUD_TYPE_PATTERN, fraud.getCode())).getByText(subtype.getName()).click();
-    }
-
-    public void addFraud(FraudType fraud) {
-        addFraud(fraud, CONFIRMED);
     }
 
     public void addRestriction(String... addedRestriction) {
@@ -469,7 +470,7 @@ public class ResolvePage extends AbstractPage {
     public List<String> getSelectedRestrictionsList() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < clientRestrictionItem.count(); i++) {
-            list.add(clientRestrictionItem.nth(i).textContent());
+            list.add(clientRestrictionItem.nth(i).locator(".g-color-text_color_primary").textContent());
         }
         return list;
     }

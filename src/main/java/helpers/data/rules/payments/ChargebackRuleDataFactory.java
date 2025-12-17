@@ -62,6 +62,7 @@ public class ChargebackRuleDataFactory {
     private static final ClientHelper chargebackRuleClient20 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient21 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient22 = getRandomVantageClientAllFields();
+    private static final ClientHelper chargebackRuleClient23 = getRandomVantageClientAllFields();
     private static Attributes attributes;
     private static Charge charge;
     private static CallbackData callbackData;
@@ -1294,6 +1295,11 @@ public class ChargebackRuleDataFactory {
         return data;
     }
 
+    private static DataHelper getChargebackTest23Data() {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient23);
+        return data;
+    }
+
     public static Map<String, DataHelper> setupChargebackData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -1320,6 +1326,7 @@ public class ChargebackRuleDataFactory {
         map.put("20", getChargebackTest20Data());
         map.put("21", getChargebackTest21Data());
         map.put("22", getChargebackTest22Data());
+        map.put("23", getChargebackTest23Data());
 
         setupData(map);
 

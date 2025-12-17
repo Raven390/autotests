@@ -139,7 +139,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.CHARGEBACK);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -148,8 +148,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.CPA_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName()));
-        resolvePage.resetRestrictionChanges();
+        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.EXCHANGER);
@@ -157,22 +156,22 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.GAP_TRADING);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
+        resolvePage.addFraud(FraudType.HEDGING, CONFIRMED, FraudSubtype.EXTERNAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.LATENCY_ARBITRAGE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.LOOPHOLE_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -182,7 +181,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.MARKET_MANIPULATION);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -191,22 +190,22 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.NBP_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(CREDIT_AND_BONUS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.NEWS_TRADER, FraudSubtype.BEFORE_NEWS);
+        resolvePage.addFraud(FraudType.NEWS_TRADER, CONFIRMED, FraudSubtype.AFTER_NEWS);
         assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.PRICING_ERROR);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.REBATE_CHURNING);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -214,13 +213,13 @@ public class ResolveTest extends TestBaseWeb {
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.SWAP_ARBITRAGE, FraudSubtype.SINGLE_ACCOUNT);
+        resolvePage.addFraud(FraudType.SWAP_ARBITRAGE, CONFIRMED, FraudSubtype.SINGLE_ACCOUNT);
         assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.TLS_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
