@@ -66,31 +66,31 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade9 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade10 = generateMt4TradesCoercedRandomized(client);
 
-        trade0.profitUsd = 11.18;
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampDbFormat();
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
-        trade2.closeTime = getCurrentTimestampDbFormat();
+        trade0.setProfitUsd(11.18);
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampDbFormat());
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59));
+        trade2.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10);
-        trade3.closeTime = getCurrentTimestampDbFormat();
-        trade4.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59);
-        trade4.closeTime = getCurrentTimestampDbFormat();
+        trade3.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10));
+        trade3.setCloseTime(getCurrentTimestampDbFormat());
+        trade4.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59));
+        trade4.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade5.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30);
-        trade5.closeTime = getCurrentTimestampDbFormat();
-        trade6.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59);
-        trade6.closeTime = getCurrentTimestampDbFormat();
+        trade5.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30));
+        trade5.setCloseTime(getCurrentTimestampDbFormat());
+        trade6.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59));
+        trade6.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade7.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0);
-        trade7.closeTime = getCurrentTimestampDbFormat();
-        trade8.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59);
-        trade8.closeTime = getCurrentTimestampDbFormat();
+        trade7.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0));
+        trade7.setCloseTime(getCurrentTimestampDbFormat());
+        trade8.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59));
+        trade8.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade9.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0);
-        trade9.closeTime = getCurrentTimestampDbFormat();
-        trade10.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1);
-        trade10.closeTime = getCurrentTimestampDbFormat();
+        trade9.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0));
+        trade9.setCloseTime(getCurrentTimestampDbFormat());
+        trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1));
+        trade10.setCloseTime(getCurrentTimestampDbFormat());
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
 
@@ -130,33 +130,33 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade10 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade11 = generateMt4TradesCoercedRandomized(client);
 
-        trade0.profitUsd = 11.18;
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampDbFormat();
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
-        trade2.closeTime = getCurrentTimestampDbFormat();
-        trade11.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
-        trade11.closeTime = getCurrentTimestampDbFormat();
+        trade0.setProfitUsd(11.18);
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampDbFormat());
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59));
+        trade2.setCloseTime(getCurrentTimestampDbFormat());
+        trade11.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59));
+        trade11.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10);
-        trade3.closeTime = getCurrentTimestampDbFormat();
-        trade4.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59);
-        trade4.closeTime = getCurrentTimestampDbFormat();
+        trade3.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10));
+        trade3.setCloseTime(getCurrentTimestampDbFormat());
+        trade4.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59));
+        trade4.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade5.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30);
-        trade5.closeTime = getCurrentTimestampDbFormat();
-        trade6.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59);
-        trade6.closeTime = getCurrentTimestampDbFormat();
+        trade5.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30));
+        trade5.setCloseTime(getCurrentTimestampDbFormat());
+        trade6.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59));
+        trade6.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade7.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0);
-        trade7.closeTime = getCurrentTimestampDbFormat();
-        trade8.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59);
-        trade8.closeTime = getCurrentTimestampDbFormat();
+        trade7.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0));
+        trade7.setCloseTime(getCurrentTimestampDbFormat());
+        trade8.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59));
+        trade8.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade9.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0);
-        trade9.closeTime = getCurrentTimestampDbFormat();
-        trade10.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1);
-        trade10.closeTime = getCurrentTimestampDbFormat();
+        trade9.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0));
+        trade9.setCloseTime(getCurrentTimestampDbFormat());
+        trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1));
+        trade10.setCloseTime(getCurrentTimestampDbFormat());
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11));
 

@@ -73,8 +73,8 @@ public class ResolveTest extends TestBaseWeb {
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         trade1 = generateMt4TradesCoerced(client);
         trade2 = generateMt4TradesCoerced(client);
-        trade1.symbol = "USDEUR";
-        trade2.symbol = "JPYCZK";
+        trade1.setSymbol("USDEUR");
+        trade2.setSymbol("JPYCZK");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2));
         alert.rule.attributes.account = client.getTradingAccount().toString();
     }
@@ -112,7 +112,7 @@ public class ResolveTest extends TestBaseWeb {
         assertThat("Check swap arbitrage subtypes", resolvePage.getFraudSubtypesList(FraudType.SWAP_ARBITRAGE), containsInAnyOrder(FraudSubtype.SINGLE_ACCOUNT.getName(), FraudSubtype.HEDGING_STRATEGY.getName()));
         resolvePage.clickFraudListButton();
         resolvePage.addFraud(FraudType.BONUS_ABUSE);
-        assertThat("Check symbols list", resolvePage.getSymbolsList(), containsInAnyOrder(trade1.symbol, trade2.symbol));
+        assertThat("Check symbols list", resolvePage.getSymbolsList(), containsInAnyOrder(trade1.getSymbol(), trade2.getSymbol()));
         assertThat("Check restrictions list", resolvePage.getRestrictionsList(), containsInAnyOrder(getVisibleRestrictionsList().toArray()));
     }
 

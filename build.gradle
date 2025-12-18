@@ -168,6 +168,10 @@ tasks.named('sonar').configure {
     }
 }
 
+tasks.register('compileOnly') {
+    dependsOn 'testClasses'
+}
+
 tasks.register('createConsumerGroupsFile') {
     def group1 = appProperties.getProperty("testClusterKafkaConsumerGroup1")
     def group2 = appProperties.getProperty("testClusterKafkaConsumerGroup2")

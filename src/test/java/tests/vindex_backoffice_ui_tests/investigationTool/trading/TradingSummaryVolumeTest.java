@@ -60,34 +60,34 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
-        trade14.notionalValueUsd = 3670.415;
-        trade14.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
-        trade13.notionalValueUsd = 50_000d;
-        trade13.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
-        trade12.notionalValueUsd = 3670.415;
-        trade12.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
-        trade11.notionalValueUsd = 70_000d;
-        trade11.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
-        trade10.notionalValueUsd = 3670.415;
-        trade10.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
-        trade9.notionalValueUsd = 30_000d;
-        trade9.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
-        trade8.notionalValueUsd = 2854.345;
-        trade8.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 8, 0, 0);
-        trade7.notionalValueUsd = 884.243;
-        trade7.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0);
-        trade6.notionalValueUsd = 4224.867;
-        trade6.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0);
-        trade5.notionalValueUsd = 908.795;
-        trade5.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
-        trade4.notionalValueUsd = 1338.32;
-        trade4.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 4, 0, 0);
-        trade3.notionalValueUsd = 6673.66;
-        trade3.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 3, 0, 0);
-        trade2.notionalValueUsd = 10_212.975;
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
-        trade1.notionalValueUsd = 3670.415;
-        trade1.closeTime = getCurrentTimestampDbFormat();
+        trade14.setNotionalValueUsd(3670.415);
+        trade14.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0));
+        trade13.setNotionalValueUsd(50_000d);
+        trade13.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0));
+        trade12.setNotionalValueUsd(3670.415);
+        trade12.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0));
+        trade11.setNotionalValueUsd(70_000d);
+        trade11.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0));
+        trade10.setNotionalValueUsd(3670.415);
+        trade10.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0));
+        trade9.setNotionalValueUsd(30_000d);
+        trade9.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0));
+        trade8.setNotionalValueUsd(2854.345);
+        trade8.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 8, 0, 0));
+        trade7.setNotionalValueUsd(884.243);
+        trade7.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0));
+        trade6.setNotionalValueUsd(4224.867);
+        trade6.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0));
+        trade5.setNotionalValueUsd(908.795);
+        trade5.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0));
+        trade4.setNotionalValueUsd(1338.32);
+        trade4.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 4, 0, 0));
+        trade3.setNotionalValueUsd(6673.66);
+        trade3.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 3, 0, 0));
+        trade2.setNotionalValueUsd(10_212.975);
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0));
+        trade1.setNotionalValueUsd(3670.415);
+        trade1.setCloseTime(getCurrentTimestampDbFormat());
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertCrmAccountsToDb(account);
@@ -111,9 +111,9 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("15K"));
-        String maxVolumeDate = transformDate(trade2.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
-        String maxVolume = formatter.format(trade2.notionalValueUsd);
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8).mapToDouble(t -> t.notionalValueUsd).sum());
+        String maxVolumeDate = transformDate(trade2.getCloseTime(), DATE_AND_TIME, MONTH_TEXT_AND_DAY);
+        String maxVolume = formatter.format(trade2.getNotionalValueUsd());
+        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
@@ -143,8 +143,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("35K"));
-        String maxVolume = formatter.format(Stream.of(trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
+        String maxVolume = formatter.format(Stream.of(trade9, trade10).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), matchesPattern(WEEK_LABEL_PATTERN));
@@ -174,9 +174,9 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
-        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
-        String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
+        String maxVolumeDate = transformDate(trade11.getCloseTime(), DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
+        String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
@@ -206,9 +206,9 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("150K"));
-        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, YEAR);
-        String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14).mapToDouble(t -> t.notionalValueUsd).sum());
+        String maxVolumeDate = transformDate(trade11.getCloseTime(), DATE_AND_TIME, YEAR);
+        String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
@@ -238,8 +238,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade22 = generateMt4TradesCoercedRandomized(client);
 
         Symbol simbol1 = Symbol.getRandomSymbol();
-        trade21.symbol = simbol1.getSymbolCode();
-        trade22.symbol = simbol1.getSymbolCode();
+        trade21.setSymbol(simbol1.getSymbolCode());
+        trade22.setSymbol(simbol1.getSymbolCode());
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade21, trade22));
 
@@ -250,7 +250,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.enableViewLots();
         tradingPage.hoverOverVolumeTradedBar(0);
         int expectedVolume2 = tradingPage.calculateLotsByDealInt(trade21, trade22);
-        tradingPage.checkSymbolTradedTooltipValueLots(trade21.symbol, expectedVolume2);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade21.getSymbol(), expectedVolume2);
     }
 
     @AfterAll

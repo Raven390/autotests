@@ -65,31 +65,31 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         MtMt4TradesCoercedObject trade9 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade10 = generateMt4TradesCoercedRandomized(client);
 
-        trade0.profitUsd = 11.18;
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampDbFormat();
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
-        trade2.closeTime = getCurrentTimestampDbFormat();
+        trade0.setProfitUsd(11.18);
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampDbFormat());
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59));
+        trade2.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10);
-        trade3.closeTime = getCurrentTimestampDbFormat();
-        trade4.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59);
-        trade4.closeTime = getCurrentTimestampDbFormat();
+        trade3.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10));
+        trade3.setCloseTime(getCurrentTimestampDbFormat());
+        trade4.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59));
+        trade4.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade5.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30);
-        trade5.closeTime = getCurrentTimestampDbFormat();
-        trade6.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59);
-        trade6.closeTime = getCurrentTimestampDbFormat();
+        trade5.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30));
+        trade5.setCloseTime(getCurrentTimestampDbFormat());
+        trade6.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59));
+        trade6.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade7.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0);
-        trade7.closeTime = getCurrentTimestampDbFormat();
-        trade8.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59);
-        trade8.closeTime = getCurrentTimestampDbFormat();
+        trade7.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0));
+        trade7.setCloseTime(getCurrentTimestampDbFormat());
+        trade8.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59));
+        trade8.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade9.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0);
-        trade9.closeTime = getCurrentTimestampDbFormat();
-        trade10.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1);
-        trade10.closeTime = getCurrentTimestampDbFormat();
+        trade9.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0));
+        trade9.setCloseTime(getCurrentTimestampDbFormat());
+        trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1));
+        trade10.setCloseTime(getCurrentTimestampDbFormat());
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
 
@@ -97,17 +97,17 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.openPnlDurationTooltip("0-10min");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade0.profitUsd + trade0.commissionUsd + trade0.storageUsd) + (trade1.profitUsd + trade1.commissionUsd + trade1.storageUsd) + (trade2.profitUsd + trade2.commissionUsd + trade2.storageUsd));
+        tradingPage.checkTextPnlDurationTooltipAmount((trade0.getProfitUsd() + trade0.getCommissionUsd() + trade0.getStorageUsd()) + (trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd()) + (trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd()));
 //        tradingPage.checkTextPnlDurationTooltipPercentage("75");
         tradingPage.openPnlDurationTooltip("10-30min");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade3.profitUsd + trade3.commissionUsd + trade3.storageUsd) + (trade4.profitUsd + trade4.commissionUsd + trade4.storageUsd));
+        tradingPage.checkTextPnlDurationTooltipAmount((trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd()) + (trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd()));
 //        tradingPage.checkTextPnlDurationTooltipPercentage("25");
         tradingPage.openPnlDurationTooltip("0.5-6h");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade5.profitUsd + trade5.commissionUsd + trade5.storageUsd) + (trade6.profitUsd + trade6.commissionUsd + trade6.storageUsd));
+        tradingPage.checkTextPnlDurationTooltipAmount((trade5.getProfitUsd() + trade5.getCommissionUsd() + trade5.getStorageUsd()) + (trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd()));
         tradingPage.openPnlDurationTooltip("6-24h");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade7.profitUsd + trade7.commissionUsd + trade7.storageUsd) + (trade8.profitUsd + trade8.commissionUsd + trade8.storageUsd) + (trade9.profitUsd + trade9.commissionUsd + trade9.storageUsd));
+        tradingPage.checkTextPnlDurationTooltipAmount((trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd()) + (trade8.getProfitUsd() + trade8.getCommissionUsd() + trade8.getStorageUsd()) + (trade9.getProfitUsd() + trade9.getCommissionUsd() + trade9.getStorageUsd()));
         tradingPage.openPnlDurationTooltip("24h>");
-        tradingPage.checkTextPnlDurationTooltipAmount(trade10.profitUsd + trade10.commissionUsd + trade10.storageUsd);
+        tradingPage.checkTextPnlDurationTooltipAmount(trade10.getProfitUsd() + trade10.getCommissionUsd() + trade10.getStorageUsd());
     }
 
     @Test
@@ -130,31 +130,31 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         MtMt4TradesCoercedObject trade9 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade10 = generateMt4TradesCoercedRandomized(client);
 
-        trade0.profitUsd = 11.18;
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampDbFormat();
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
-        trade2.closeTime = getCurrentTimestampDbFormat();
+        trade0.setProfitUsd(11.18);
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampDbFormat());
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 9, 59));
+        trade2.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10);
-        trade3.closeTime = getCurrentTimestampDbFormat();
-        trade4.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59);
-        trade4.closeTime = getCurrentTimestampDbFormat();
+        trade3.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 10));
+        trade3.setCloseTime(getCurrentTimestampDbFormat());
+        trade4.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 29, 59));
+        trade4.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade5.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30);
-        trade5.closeTime = getCurrentTimestampDbFormat();
-        trade6.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59);
-        trade6.closeTime = getCurrentTimestampDbFormat();
+        trade5.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 30));
+        trade5.setCloseTime(getCurrentTimestampDbFormat());
+        trade6.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 5, 59, 59));
+        trade6.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade7.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0);
-        trade7.closeTime = getCurrentTimestampDbFormat();
-        trade8.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59);
-        trade8.closeTime = getCurrentTimestampDbFormat();
+        trade7.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 6, 0));
+        trade7.setCloseTime(getCurrentTimestampDbFormat());
+        trade8.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 23, 59, 59));
+        trade8.setCloseTime(getCurrentTimestampDbFormat());
 
-        trade9.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0);
-        trade9.closeTime = getCurrentTimestampDbFormat();
-        trade10.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 23, 59, 59);
-        trade10.closeTime = getCurrentTimestampDbFormat();
+        trade9.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 24, 0));
+        trade9.setCloseTime(getCurrentTimestampDbFormat());
+        trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 23, 59, 59));
+        trade10.setCloseTime(getCurrentTimestampDbFormat());
 
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade0);
 
@@ -191,23 +191,23 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
 
-        trade0.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
-        trade0.closeTime = getCurrentTimestampDbFormat();
-        trade0.profitUsd = 5000.0;
-        trade0.storageUsd = 0.0;
-        trade0.commissionUsd = 0.0;
+        trade0.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
+        trade0.setCloseTime(getCurrentTimestampDbFormat());
+        trade0.setProfitUsd(5000.0);
+        trade0.setStorageUsd(0.0);
+        trade0.setCommissionUsd(0.0);
 
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 20, 1);
-        trade1.closeTime = getCurrentTimestampDbFormat();
-        trade1.profitUsd = 200.0;
-        trade1.storageUsd = 0.0;
-        trade1.commissionUsd = 0.0;
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 20, 1));
+        trade1.setCloseTime(getCurrentTimestampDbFormat());
+        trade1.setProfitUsd(200.0);
+        trade1.setStorageUsd(0.0);
+        trade1.setCommissionUsd(0.0);
 
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 3, 11);
-        trade2.closeTime = getCurrentTimestampDbFormat();
-        trade2.profitUsd = -100.0;
-        trade2.storageUsd = 0.0;
-        trade2.commissionUsd = 0.0;
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 3, 11));
+        trade2.setCloseTime(getCurrentTimestampDbFormat());
+        trade2.setProfitUsd(-100.0);
+        trade2.setStorageUsd(0.0);
+        trade2.setCommissionUsd(0.0);
 
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade2, trade1));
@@ -215,8 +215,8 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        tradingPage.checkMaxProfitableValue((trade0.profitUsd + trade0.commissionUsd + trade0.storageUsd));
-        tradingPage.checkMaxLossValue((trade2.profitUsd + trade2.commissionUsd + trade2.storageUsd));
+        tradingPage.checkMaxProfitableValue((trade0.getProfitUsd() + trade0.getCommissionUsd() + trade0.getStorageUsd()));
+        tradingPage.checkMaxLossValue((trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd()));
         tradingPage.checkTopProfitCategory("0-10min");
         tradingPage.checkTopLossCategory("0.5-6h");
     }

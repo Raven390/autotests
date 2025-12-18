@@ -74,9 +74,9 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @DisplayName("Verify Winrate widget 0% in Trading - Summary")
     public void verifyTradingSummaryWinrate2Test() {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
-        trade.profitUsd = 0d;
-        trade.storageUsd = 0d;
-        trade.commissionUsd = 0d;
+        trade.setProfitUsd(0d);
+        trade.setStorageUsd(0d);
+        trade.setCommissionUsd(0d);
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -95,9 +95,9 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @DisplayName("Verify Winrate widget 66.67% in Trading - Summary")
     public void verifyTradingSummaryWinrate3Test() {
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
-        trade1.profitUsd = 0d;
-        trade1.storageUsd = 0d;
-        trade1.commissionUsd = 0d;
+        trade1.setProfitUsd(0d);
+        trade1.setStorageUsd(0d);
+        trade1.setCommissionUsd(0d);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, generateMt4TradesCoerced(client), generateMt4TradesCoerced(client)));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

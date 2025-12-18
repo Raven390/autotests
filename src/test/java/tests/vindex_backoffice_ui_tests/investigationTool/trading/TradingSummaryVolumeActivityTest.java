@@ -299,24 +299,24 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade0.notionalValueUsd = 10.0;
-        trade1.notionalValueUsd = 10.0;
-        trade2.notionalValueUsd = 10.0;
+        trade0.setNotionalValueUsd(10.0);
+        trade1.setNotionalValueUsd(10.0);
+        trade2.setNotionalValueUsd(10.0);
 
 
-        trade0.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1);
-        trade0.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0);
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0);
+        trade0.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
+        trade0.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0));
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0));
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0));
 
         Allure.step("create a one big deals for another day notionalValueUsd of which will be 3 times bigger than sum of first three");
 
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
-        trade3.notionalValueUsd = 90.0;
-        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
-        trade3.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
+        trade3.setNotionalValueUsd(90.0);
+        trade3.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
+        trade3.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 0));
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3));
 
@@ -347,13 +347,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, -1, 0, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, -1, 0, 0, 0, 0);
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 0, 0, 0, 0);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 0, 0, 0, 1);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, -1, 0, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, -1, 0, 0, 0, 0));
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 0, 0, 0, 0));
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 0, 0, 0, 1));
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -379,13 +379,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 29, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 29, 0, 0, 0);
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30, 0, 0, 0);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30, 0, 0, 1);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 29, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 29, 0, 0, 0));
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30, 0, 0, 0));
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30, 0, 0, 1));
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -411,13 +411,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 0, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 0, 0, 0, 0);
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 6, 0, 0, 0, 0);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 6, 0, 0, 0, 1);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 0, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 0, 0, 0, 0));
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 6, 0, 0, 0, 0));
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 6, 0, 0, 0, 1));
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -443,13 +443,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0, 0);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0, 0);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0, 1);
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0, 0));
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0, 0));
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0, 1));
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -475,13 +475,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 89, 0, 0, 1);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 89, 0, 0, 0);
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90, 0, 0, 0);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90, 0, 0, 1);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
+        trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 89, 0, 0, 1));
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 89, 0, 0, 0));
+        trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90, 0, 0, 0));
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90, 0, 0, 1));
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -507,13 +507,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
-        trade1.openTime = "2024-02-13 14:09:35";
-        trade1.closeTime = "2024-02-13 14:09:36";
-        trade2.openTime = "2024-02-13 15:09:33";
-        trade2.closeTime = "2024-02-13 15:09:34";
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
+        trade1.setOpenTime("2024-02-13 14:09:35");
+        trade1.setCloseTime("2024-02-13 14:09:36");
+        trade2.setOpenTime("2024-02-13 15:09:33");
+        trade2.setCloseTime("2024-02-13 15:09:34");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -539,11 +539,11 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade1.symbol = "EURUSD";
-        trade2.symbol = "EURUSD";
-        trade0.symbol = "EURUSD";
+        trade1.setSymbol("EURUSD");
+        trade2.setSymbol("EURUSD");
+        trade0.setSymbol("EURUSD");
 
-        trade2.account = ((long) account2.account);
+        trade2.setAccount(((long) account2.account));
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 

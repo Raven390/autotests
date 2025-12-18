@@ -68,26 +68,26 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         Allure.step("clean client's trade DB and add one trade with negative PNL");
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
-        trade0.commissionUsd = -3.0;
-        trade0.profitUsd = -3.0;
-        trade0.storageUsd = -3.0;
+        trade0.setCommissionUsd(-3.0);
+        trade0.setProfitUsd(-3.0);
+        trade0.setStorageUsd(-3.0);
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade0);
         page.reload();
         Allure.step("reload the page");
         tradingPage.checkProfitPnlBySymbolBarsEmpty();
         tradingPage.checkPnlBySymbolBarDescriptionProfits("No profits");
-        tradingPage.checkPnlBySymbolBarDescriptionLoses(String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.symbol);
+        tradingPage.checkPnlBySymbolBarDescriptionLoses(String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.getSymbol());
         Allure.step("clean client's trade DB and add one trade with positive PNL");
         tradingPage.deleteClientDeals(client.getUcid());
-        trade0.commissionUsd = 3.0;
-        trade0.profitUsd = 3.0;
-        trade0.storageUsd = 3.0;
+        trade0.setCommissionUsd(3.0);
+        trade0.setProfitUsd(3.0);
+        trade0.setStorageUsd(3.0);
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade0);
         page.reload();
         Allure.step("reload the page");
         tradingPage.checkLossesPnlBySymbolBarsEmpty();
         tradingPage.checkPnlBySymbolBarDescriptionLoses("No losses");
-        tradingPage.checkPnlBySymbolBarDescriptionProfits(String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.symbol);
+        tradingPage.checkPnlBySymbolBarDescriptionProfits(String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.getSymbol());
     }
 
     @Test
@@ -100,20 +100,20 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
-        trade1.commissionUsd = 3.0;
-        trade1.profitUsd = 3.0;
-        trade1.storageUsd = 3.0;
-        trade1.symbol = "USDDTS";
+        trade1.setCommissionUsd(3.0);
+        trade1.setProfitUsd(3.0);
+        trade1.setStorageUsd(3.0);
+        trade1.setSymbol("USDDTS");
 
-        trade2.commissionUsd = 4.0;
-        trade2.profitUsd = 3.0;
-        trade2.storageUsd = 3.0;
-        trade2.symbol = "USDDTS";
+        trade2.setCommissionUsd(4.0);
+        trade2.setProfitUsd(3.0);
+        trade2.setStorageUsd(3.0);
+        trade2.setSymbol("USDDTS");
 
-        trade3.commissionUsd = 5.0;
-        trade3.profitUsd = 3.0;
-        trade3.storageUsd = 3.0;
-        trade3.symbol = "EURSUR";
+        trade3.setCommissionUsd(5.0);
+        trade3.setProfitUsd(3.0);
+        trade3.setStorageUsd(3.0);
+        trade3.setSymbol("EURSUR");
         Allure.step("clean client's trade DB, and add one 3 trades with positive PNL, with 2 of them have same symbol");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
 
@@ -123,20 +123,20 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         tradingPage.checkPnlBySymbolBarPositiveCount(2);
         tradingPage.checkPnlBySymbolBarNegativeCount(0);
 
-        trade1.commissionUsd = -3.0;
-        trade1.profitUsd = 3.0;
-        trade1.storageUsd = -3.0;
-        trade1.symbol = "USDDTS";
+        trade1.setCommissionUsd(-3.0);
+        trade1.setProfitUsd(3.0);
+        trade1.setStorageUsd(-3.0);
+        trade1.setSymbol("USDDTS");
 
-        trade2.commissionUsd = -4.0;
-        trade2.profitUsd = 3.0;
-        trade2.storageUsd = -3.0;
-        trade2.symbol = "USDDTS";
+        trade2.setCommissionUsd(-4.0);
+        trade2.setProfitUsd(3.0);
+        trade2.setStorageUsd(-3.0);
+        trade2.setSymbol("USDDTS");
 
-        trade3.commissionUsd = -5.0;
-        trade3.profitUsd = -3.0;
-        trade3.storageUsd = -3.0;
-        trade3.symbol = "EURSUR";
+        trade3.setCommissionUsd(-5.0);
+        trade3.setProfitUsd(-3.0);
+        trade3.setStorageUsd(-3.0);
+        trade3.setSymbol("EURSUR");
         Allure.step("clean client's trade DB, and add one 3 trades with negative PNL, with 2 of them have same symbol");
         tradingPage.deleteClientDeals(client.getUcid());
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
@@ -147,20 +147,20 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         tradingPage.checkPnlBySymbolBarNegativeCount(2);
 
         tradingPage.deleteClientDeals(client.getUcid());
-        trade1.commissionUsd = -3.0;
-        trade1.profitUsd = 3.0;
-        trade1.storageUsd = -3.0;
-        trade1.symbol = "USDDTS";
+        trade1.setCommissionUsd(-3.0);
+        trade1.setProfitUsd(3.0);
+        trade1.setStorageUsd(-3.0);
+        trade1.setSymbol("USDDTS");
 
-        trade2.commissionUsd = -4.0;
-        trade2.profitUsd = 3.0;
-        trade2.storageUsd = -3.0;
-        trade2.symbol = "USDDTS";
+        trade2.setCommissionUsd(-4.0);
+        trade2.setProfitUsd(3.0);
+        trade2.setStorageUsd(-3.0);
+        trade2.setSymbol("USDDTS");
 
-        trade3.commissionUsd = -5.0;
-        trade3.profitUsd = 6.0;
-        trade3.storageUsd = 6.0;
-        trade3.symbol = "USDDTS";
+        trade3.setCommissionUsd(-5.0);
+        trade3.setProfitUsd(6.0);
+        trade3.setStorageUsd(6.0);
+        trade3.setSymbol("USDDTS");
         Allure.step("clean client's trade DB, and add 2 trades with negative PNL and 1 trade with positive PNL, with all of them have same symbol, so sum of PNL of all 3 trades is negative");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
 
@@ -182,20 +182,20 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
-        trade1.commissionUsd = getRandomRoundedDouble(5, 50_000);
-        trade1.profitUsd = getRandomRoundedDouble(5, 50_000);
-        trade1.storageUsd = getRandomRoundedDouble(5, 50_000);
-        trade1.symbol = "USDDTS";
+        trade1.setCommissionUsd(getRandomRoundedDouble(5, 50_000));
+        trade1.setProfitUsd(getRandomRoundedDouble(5, 50_000));
+        trade1.setStorageUsd(getRandomRoundedDouble(5, 50_000));
+        trade1.setSymbol("USDDTS");
 
-        trade2.commissionUsd = getRandomRoundedDouble(5, 50_000);
-        trade2.profitUsd = getRandomRoundedDouble(5, 50_000);
-        trade2.storageUsd = getRandomRoundedDouble(5, 50_000);
-        trade2.symbol = "USDDTS";
+        trade2.setCommissionUsd(getRandomRoundedDouble(5, 50_000));
+        trade2.setProfitUsd(getRandomRoundedDouble(5, 50_000));
+        trade2.setStorageUsd(getRandomRoundedDouble(5, 50_000));
+        trade2.setSymbol("USDDTS");
 
-        trade3.commissionUsd = getRandomRoundedDouble(1, 5);
-        trade3.profitUsd = getRandomRoundedDouble(1, 5);
-        trade3.storageUsd = getRandomRoundedDouble(1, 5);
-        trade3.symbol = "EURSUR";
+        trade3.setCommissionUsd(getRandomRoundedDouble(1, 5));
+        trade3.setProfitUsd(getRandomRoundedDouble(1, 5));
+        trade3.setStorageUsd(getRandomRoundedDouble(1, 5));
+        trade3.setSymbol("EURSUR");
 
         Allure.step("clean client's trade DB, and add one 3 trades with positive PNL, with 2 of them have same symbol");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
@@ -204,7 +204,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverRightPositiveBarPnlSymbol();
-        tradingPage.checkPnlBySymbolTooltipValue(trade1.symbol, tradingPage.calculatePnlByDealInt(trade1, trade2));
+        tradingPage.checkPnlBySymbolTooltipValue(trade1.getSymbol(), tradingPage.calculatePnlByDealInt(trade1, trade2));
 
     }
 
@@ -220,32 +220,32 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
-        trade1.commissionUsd = getRandomRoundedDouble(5, 50_000);
-        trade1.profitUsd = getRandomRoundedDouble(5, 50_000);
-        trade1.storageUsd = getRandomRoundedDouble(5, 50_000);
-        trade1.symbol = "USDDTS";
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0);
-        trade1.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0);
-        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
-        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
+        trade1.setCommissionUsd(getRandomRoundedDouble(5, 50_000));
+        trade1.setProfitUsd(getRandomRoundedDouble(5, 50_000));
+        trade1.setStorageUsd(getRandomRoundedDouble(5, 50_000));
+        trade1.setSymbol("USDDTS");
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0));
+        trade1.setCloseTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0));
+        trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0));
+        trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0));
 
-        trade2.commissionUsd = getRandomRoundedDouble(5, 50_000);
-        trade2.profitUsd = getRandomRoundedDouble(5, 50_000);
-        trade2.storageUsd = getRandomRoundedDouble(5, 50_000);
-        trade2.symbol = "USDDTS";
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0);
-        trade2.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0);
-        trade2.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0);
-        trade2.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0);
+        trade2.setCommissionUsd(getRandomRoundedDouble(5, 50_000));
+        trade2.setProfitUsd(getRandomRoundedDouble(5, 50_000));
+        trade2.setStorageUsd(getRandomRoundedDouble(5, 50_000));
+        trade2.setSymbol("USDDTS");
+        trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0));
+        trade2.setCloseTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0));
+        trade2.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0));
+        trade2.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0));
 
-        trade3.commissionUsd = getRandomRoundedDouble(1, 5000);
-        trade3.profitUsd = getRandomRoundedDouble(1, 5000);
-        trade3.storageUsd = getRandomRoundedDouble(1, 500);
-        trade3.symbol = "USDDTS";
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0);
-        trade1.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0);
-        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0);
-        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0);
+        trade3.setCommissionUsd(getRandomRoundedDouble(1, 5000));
+        trade3.setProfitUsd(getRandomRoundedDouble(1, 5000));
+        trade3.setStorageUsd(getRandomRoundedDouble(1, 500));
+        trade3.setSymbol("USDDTS");
+        trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0));
+        trade1.setCloseTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0));
+        trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0));
+        trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0));
 
         Allure.step("clean client's trade DB, and add one 3 trades with positive PNL and the same symbol");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
@@ -254,7 +254,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverRightPositiveBarPnlSymbol();
-        tradingPage.checkPnlBySymbolTooltipValue(trade1.symbol, tradingPage.calculatePnlByDealInt(trade1, trade2, trade3));
+        tradingPage.checkPnlBySymbolTooltipValue(trade1.getSymbol(), tradingPage.calculatePnlByDealInt(trade1, trade2, trade3));
 
     }
 
@@ -273,45 +273,45 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade12 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade13 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade14 = generateMt4TradesCoercedRandomized(client);
-        trade1.commissionUsd = 80.00;
-        trade1.profitUsd = 80.00;
-        trade1.storageUsd = 80.00;
-        trade1.symbol = "USDDTS";
+        trade1.setCommissionUsd(80.00);
+        trade1.setProfitUsd(80.00);
+        trade1.setStorageUsd(80.00);
+        trade1.setSymbol("USDDTS");
 
-        trade2.commissionUsd = 9.00;
-        trade2.profitUsd = 9.00;
-        trade2.storageUsd = 9.00;
-        trade2.symbol = "USDDT";
+        trade2.setCommissionUsd(9.00);
+        trade2.setProfitUsd(9.00);
+        trade2.setStorageUsd(9.00);
+        trade2.setSymbol("USDDT");
 
-        trade3.commissionUsd = 1.00;
-        trade3.profitUsd = 1.00;
-        trade3.storageUsd = 1.00;
-        trade3.symbol = "EURUS";
+        trade3.setCommissionUsd(1.00);
+        trade3.setProfitUsd(1.00);
+        trade3.setStorageUsd(1.00);
+        trade3.setSymbol("EURUS");
 
-        trade4.commissionUsd = 10.0;
-        trade4.profitUsd = 10.0;
-        trade4.storageUsd = 10.0;
-        trade4.symbol = "EURSUR";
+        trade4.setCommissionUsd(10.0);
+        trade4.setProfitUsd(10.0);
+        trade4.setStorageUsd(10.0);
+        trade4.setSymbol("EURSUR");
 
-        trade11.commissionUsd = -80.00;
-        trade11.profitUsd = -80.00;
-        trade11.storageUsd = -80.00;
-        trade11.symbol = "NEGUSDDTS";
+        trade11.setCommissionUsd(-80.00);
+        trade11.setProfitUsd(-80.00);
+        trade11.setStorageUsd(-80.00);
+        trade11.setSymbol("NEGUSDDTS");
 
-        trade12.commissionUsd = -9.00;
-        trade12.profitUsd = -9.00;
-        trade12.storageUsd = -9.00;
-        trade12.symbol = "NEGUSDDT";
+        trade12.setCommissionUsd(-9.00);
+        trade12.setProfitUsd(-9.00);
+        trade12.setStorageUsd(-9.00);
+        trade12.setSymbol("NEGUSDDT");
 
-        trade13.commissionUsd = -1.00;
-        trade13.profitUsd = -1.00;
-        trade13.storageUsd = -1.00;
-        trade13.symbol = "NEGEURUS";
+        trade13.setCommissionUsd(-1.00);
+        trade13.setProfitUsd(-1.00);
+        trade13.setStorageUsd(-1.00);
+        trade13.setSymbol("NEGEURUS");
 
-        trade14.commissionUsd = -10.0;
-        trade14.profitUsd = -10.0;
-        trade14.storageUsd = -10.0;
-        trade14.symbol = "NEGEURSUR";
+        trade14.setCommissionUsd(-10.0);
+        trade14.setProfitUsd(-10.0);
+        trade14.setStorageUsd(-10.0);
+        trade14.setSymbol("NEGEURSUR");
 
         Allure.step("clean client's trade DB, sdd 4 trades, 2 of with have PNL less than 10% of total PNL");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade11, trade12, trade13, trade14));
@@ -322,8 +322,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         tradingPage.checkPnlBySymbolBarPositiveCount(3);
         tradingPage.hoverOverOtherPositiveBarPnlSymbol();
         tradingPage.checkPnlBySymbolOtherTooltipHeaderValue(2, tradingPage.calculatePnlByDealInt(trade2, trade3));
-        tradingPage.checkPnlBySymbolTooltipValue(1, trade2.symbol, String.valueOf(tradingPage.calculatePnlByDealInt(trade2)));
-        tradingPage.checkPnlBySymbolTooltipValue(2, trade3.symbol, String.valueOf(tradingPage.calculatePnlByDealInt(trade3)));
+        tradingPage.checkPnlBySymbolTooltipValue(1, trade2.getSymbol(), String.valueOf(tradingPage.calculatePnlByDealInt(trade2)));
+        tradingPage.checkPnlBySymbolTooltipValue(2, trade3.getSymbol(), String.valueOf(tradingPage.calculatePnlByDealInt(trade3)));
 
     }
 
@@ -353,91 +353,91 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade32 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade33 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade34 = generateMt4TradesCoercedRandomized(client);
-        trade1.commissionUsd = 80.00;
-        trade1.profitUsd = 80.00;
-        trade1.storageUsd = 80.00;
-        trade1.symbol = "USDDTS";
+        trade1.setCommissionUsd(80.00);
+        trade1.setProfitUsd(80.00);
+        trade1.setStorageUsd(80.00);
+        trade1.setSymbol("USDDTS");
 
-        trade2.commissionUsd = 1.00;
-        trade2.profitUsd = 1.00;
-        trade2.storageUsd = 1.00;
-        trade2.symbol = "USDDT";
+        trade2.setCommissionUsd(1.00);
+        trade2.setProfitUsd(1.00);
+        trade2.setStorageUsd(1.00);
+        trade2.setSymbol("USDDT");
 
-        trade3.commissionUsd = 1.00;
-        trade3.profitUsd = 1.00;
-        trade3.storageUsd = 1.00;
-        trade3.symbol = "EURUS";
+        trade3.setCommissionUsd(1.00);
+        trade3.setProfitUsd(1.00);
+        trade3.setStorageUsd(1.00);
+        trade3.setSymbol("EURUS");
 
-        trade4.commissionUsd = 1.00;
-        trade4.profitUsd = 1.00;
-        trade4.storageUsd = 1.00;
-        trade4.symbol = "SMALQ";
+        trade4.setCommissionUsd(1.00);
+        trade4.setProfitUsd(1.00);
+        trade4.setStorageUsd(1.00);
+        trade4.setSymbol("SMALQ");
 
-        trade5.commissionUsd = 1.00;
-        trade5.profitUsd = 1.00;
-        trade5.storageUsd = 1.00;
-        trade5.symbol = "SMALW";
+        trade5.setCommissionUsd(1.00);
+        trade5.setProfitUsd(1.00);
+        trade5.setStorageUsd(1.00);
+        trade5.setSymbol("SMALW");
 
-        trade6.commissionUsd = 1.00;
-        trade6.profitUsd = 1.00;
-        trade6.storageUsd = 1.00;
-        trade6.symbol = "SMALE";
+        trade6.setCommissionUsd(1.00);
+        trade6.setProfitUsd(1.00);
+        trade6.setStorageUsd(1.00);
+        trade6.setSymbol("SMALE");
 
-        trade7.commissionUsd = 1.00;
-        trade7.profitUsd = 1.00;
-        trade7.storageUsd = 1.00;
-        trade7.symbol = "SMALR";
+        trade7.setCommissionUsd(1.00);
+        trade7.setProfitUsd(1.00);
+        trade7.setStorageUsd(1.00);
+        trade7.setSymbol("SMALR");
 
-        trade8.commissionUsd = 1.00;
-        trade8.profitUsd = 1.00;
-        trade8.storageUsd = 1.00;
-        trade8.symbol = "SMALT";
+        trade8.setCommissionUsd(1.00);
+        trade8.setProfitUsd(1.00);
+        trade8.setStorageUsd(1.00);
+        trade8.setSymbol("SMALT");
 
-        trade9.commissionUsd = 1.00;
-        trade9.profitUsd = 1.00;
-        trade9.storageUsd = 1.00;
-        trade9.symbol = "SMALY";
+        trade9.setCommissionUsd(1.00);
+        trade9.setProfitUsd(1.00);
+        trade9.setStorageUsd(1.00);
+        trade9.setSymbol("SMALY");
 
-        trade10.commissionUsd = 1.00;
-        trade10.profitUsd = 1.00;
-        trade10.storageUsd = 1.00;
-        trade10.symbol = "SMALU";
+        trade10.setCommissionUsd(1.00);
+        trade10.setProfitUsd(1.00);
+        trade10.setStorageUsd(1.00);
+        trade10.setSymbol("SMALU");
 
-        trade11.commissionUsd = 1.00;
-        trade11.profitUsd = 1.00;
-        trade11.storageUsd = 1.00;
-        trade11.symbol = "SMALI";
+        trade11.setCommissionUsd(1.00);
+        trade11.setProfitUsd(1.00);
+        trade11.setStorageUsd(1.00);
+        trade11.setSymbol("SMALI");
 
-        trade12.commissionUsd = 1.00;
-        trade12.profitUsd = 1.00;
-        trade12.storageUsd = 1.00;
-        trade12.symbol = "SMALO";
+        trade12.setCommissionUsd(1.00);
+        trade12.setProfitUsd(1.00);
+        trade12.setStorageUsd(1.00);
+        trade12.setSymbol("SMALO");
 
-        trade13.commissionUsd = 1.00;
-        trade13.profitUsd = 1.00;
-        trade13.storageUsd = 1.00;
-        trade13.symbol = "SMALP";
+        trade13.setCommissionUsd(1.00);
+        trade13.setProfitUsd(1.00);
+        trade13.setStorageUsd(1.00);
+        trade13.setSymbol("SMALP");
 
 
-        trade31.commissionUsd = -80.00;
-        trade31.profitUsd = -80.00;
-        trade31.storageUsd = -80.00;
-        trade31.symbol = "NEGUSDDTS";
+        trade31.setCommissionUsd(-80.00);
+        trade31.setProfitUsd(-80.00);
+        trade31.setStorageUsd(-80.00);
+        trade31.setSymbol("NEGUSDDTS");
 
-        trade32.commissionUsd = -9.00;
-        trade32.profitUsd = -9.00;
-        trade32.storageUsd = -9.00;
-        trade32.symbol = "NEGUSDDT";
+        trade32.setCommissionUsd(-9.00);
+        trade32.setProfitUsd(-9.00);
+        trade32.setStorageUsd(-9.00);
+        trade32.setSymbol("NEGUSDDT");
 
-        trade33.commissionUsd = -1.00;
-        trade33.profitUsd = -1.00;
-        trade33.storageUsd = -1.00;
-        trade33.symbol = "NEGEURUS";
+        trade33.setCommissionUsd(-1.00);
+        trade33.setProfitUsd(-1.00);
+        trade33.setStorageUsd(-1.00);
+        trade33.setSymbol("NEGEURUS");
 
-        trade34.commissionUsd = -10.0;
-        trade34.profitUsd = -10.0;
-        trade34.storageUsd = -10.0;
-        trade34.symbol = "NEGEURSUR";
+        trade34.setCommissionUsd(-10.0);
+        trade34.setProfitUsd(-10.0);
+        trade34.setStorageUsd(-10.0);
+        trade34.setSymbol("NEGEURSUR");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade31, trade32, trade33, trade34));
 
@@ -453,4 +453,3 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
 
     }
 }
-
