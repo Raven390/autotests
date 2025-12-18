@@ -88,9 +88,9 @@ class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
         tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, getRandomRoundedDouble(-9999.99, -1.00), "withdraw");
 
         deal1 = generateMt5DealsObject(client, 1, 0);
-        deal1.setPositionId(trade1.positionId);
+        deal1.setPositionId(trade1.getPositionId());
         deal2 = generateMt5DealsObject(client, 0, 0);
-        deal2.setPositionId(trade2.positionId);
+        deal2.setPositionId(trade2.getPositionId());
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1));
@@ -134,11 +134,11 @@ class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
         resolvePage.clickIllegalProfitAccountsDropdown();
         resolvePage.clickAccountInDropdown(mtAccount1.account.toString());
         resolvePage.clickUseAsIllegalProfit();
-        assertThat("Verify total illegal profit amount", resolvePage.getIllegalProfitAmount(), is(String.format("%s USD illegal profit", formatter.format((trade1.profit + tradeWithdrawal.profit) - tradeWithdrawal.profit))));
+        assertThat("Verify total illegal profit amount", resolvePage.getIllegalProfitAmount(), is(String.format("%s USD illegal profit", formatter.format((trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
 
         List<String> deductionItems = resolvePage.getSuggestedDeductionItems();
         assertThat("Verify amount of deductions", deductionItems.size(), is(1));
-        assertThat("Verify 1st deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount1.account.toString())).toList().getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_ILLEGAL, mtAccount1.account, formatter.format(trade1.profit + tradeWithdrawal.profit), formatter.format((trade1.profit + tradeWithdrawal.profit) - tradeWithdrawal.profit))));
+        assertThat("Verify 1st deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount1.account.toString())).toList().getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_ILLEGAL, mtAccount1.account, formatter.format(trade1.getProfit() + tradeWithdrawal.getProfit()), formatter.format((trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
 
     }
 }

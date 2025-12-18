@@ -87,39 +87,39 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade15 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade16 = generateMt4TradesCoercedRandomized(client);
 
-        trade1.notionalValueUsd = 1.0;
-        trade2.notionalValueUsd = 1.0;
-        trade3.notionalValueUsd = 1.0;
-        trade4.notionalValueUsd = 1.0;
-        trade5.notionalValueUsd = 1.0;
-        trade6.notionalValueUsd = 1.0;
-        trade7.notionalValueUsd = 1.0;
-        trade8.notionalValueUsd = 1.0;
-        trade9.notionalValueUsd = 1.0;
-        trade10.notionalValueUsd = 1.0;
-        trade11.notionalValueUsd = 1.0;
-        trade12.notionalValueUsd = 1.0;
-        trade13.notionalValueUsd = 1.0;
-        trade14.notionalValueUsd = 1.0;
-        trade15.notionalValueUsd = 1.0;
-        trade16.notionalValueUsd = 1.0;
+        trade1.setNotionalValueUsd(1.0);
+        trade2.setNotionalValueUsd(1.0);
+        trade3.setNotionalValueUsd(1.0);
+        trade4.setNotionalValueUsd(1.0);
+        trade5.setNotionalValueUsd(1.0);
+        trade6.setNotionalValueUsd(1.0);
+        trade7.setNotionalValueUsd(1.0);
+        trade8.setNotionalValueUsd(1.0);
+        trade9.setNotionalValueUsd(1.0);
+        trade10.setNotionalValueUsd(1.0);
+        trade11.setNotionalValueUsd(1.0);
+        trade12.setNotionalValueUsd(1.0);
+        trade13.setNotionalValueUsd(1.0);
+        trade14.setNotionalValueUsd(1.0);
+        trade15.setNotionalValueUsd(1.0);
+        trade16.setNotionalValueUsd(1.0);
 
-        trade1.symbol = "USDA";
-        trade2.symbol = "USDB";
-        trade3.symbol = "USDC";
-        trade4.symbol = "USDD";
-        trade5.symbol = "USDE";
-        trade6.symbol = "USDF";
-        trade7.symbol = "USDG";
-        trade8.symbol = "USDH";
-        trade9.symbol = "USDK";
-        trade10.symbol = "USDL";
-        trade11.symbol = "USDM";
-        trade12.symbol = "USDN";
-        trade13.symbol = "USDO";
-        trade14.symbol = "USDP";
-        trade15.symbol = "USDQ";
-        trade16.symbol = "USDR";
+        trade1.setSymbol("USDA");
+        trade2.setSymbol("USDB");
+        trade3.setSymbol("USDC");
+        trade4.setSymbol("USDD");
+        trade5.setSymbol("USDE");
+        trade6.setSymbol("USDF");
+        trade7.setSymbol("USDG");
+        trade8.setSymbol("USDH");
+        trade9.setSymbol("USDK");
+        trade10.setSymbol("USDL");
+        trade11.setSymbol("USDM");
+        trade12.setSymbol("USDN");
+        trade13.setSymbol("USDO");
+        trade14.setSymbol("USDP");
+        trade15.setSymbol("USDQ");
+        trade16.setSymbol("USDR");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14, trade15, trade16));
 
@@ -147,22 +147,22 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
 
-        trade1.notionalValueUsd = 50_000.1;
-        trade1.volumeLots = 10.0;
-        trade2.notionalValueUsd = 50_000.16;
-        trade2.volumeLots = 1.0;
-        trade3.notionalValueUsd = 50_000.14;
-        trade3.volumeLots = 11.14;
-        trade4.notionalValueUsd = 25_000.5;
-        trade4.volumeLots = 25_000.56;
-        trade5.notionalValueUsd = 25_000.2;
-        trade5.volumeLots = 29_000.2;
+        trade1.setNotionalValueUsd(50_000.1);
+        trade1.setVolumeLots(10.0);
+        trade2.setNotionalValueUsd(50_000.16);
+        trade2.setVolumeLots(1.0);
+        trade3.setNotionalValueUsd(50_000.14);
+        trade3.setVolumeLots(11.14);
+        trade4.setNotionalValueUsd(25_000.5);
+        trade4.setVolumeLots(25_000.56);
+        trade5.setNotionalValueUsd(25_000.2);
+        trade5.setVolumeLots(29_000.2);
 
-        trade1.symbol = "FIRST";
-        trade2.symbol = "FIRST";
-        trade3.symbol = "THRIRD";
-        trade4.symbol = "FOURTH";
-        trade5.symbol = "FIFTH";
+        trade1.setSymbol("FIRST");
+        trade2.setSymbol("FIRST");
+        trade3.setSymbol("THRIRD");
+        trade4.setSymbol("FOURTH");
+        trade5.setSymbol("FIFTH");
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
 
@@ -171,18 +171,18 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         tradingPage.navigate(client.getUcid());
         tradingPage.enableViewAmount();
         tradingPage.countSymbolTradedBar(4);
-        tradingPage.checkSymbolTradedHeaderMostTraded(trade1.symbol);
-        tradingPage.checkSymbolTradedHeader(2, trade3.symbol);
-        tradingPage.checkSymbolTradedHeader(3, trade4.symbol);
+        tradingPage.checkSymbolTradedHeaderMostTraded(trade1.getSymbol());
+        tradingPage.checkSymbolTradedHeader(2, trade3.getSymbol());
+        tradingPage.checkSymbolTradedHeader(3, trade4.getSymbol());
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2);
-        tradingPage.checkSymbolTradedGraphDescription(expectedAmount, trade1.symbol);
+        tradingPage.checkSymbolTradedGraphDescription(expectedAmount, trade1.getSymbol());
 
         Allure.step("repeat for volume in lots");
         tradingPage.enableViewLots();
         tradingPage.countSymbolTradedBar(3);
-        tradingPage.checkSymbolTradedHeaderMostTraded(trade5.symbol);
-        tradingPage.checkSymbolTradedHeader(2, trade4.symbol);
-        tradingPage.checkSymbolTradedHeader(3, trade3.symbol);
+        tradingPage.checkSymbolTradedHeaderMostTraded(trade5.getSymbol());
+        tradingPage.checkSymbolTradedHeader(2, trade4.getSymbol());
+        tradingPage.checkSymbolTradedHeader(3, trade3.getSymbol());
     }
 
     @Test
@@ -196,27 +196,27 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
 
-        trade1.notionalValueUsd = 50_000.1;
-        trade1.volumeLots = 253_200.2;
-        trade2.notionalValueUsd = 50_000.16;
-        trade2.volumeLots = 110.16;
-        trade3.notionalValueUsd = 50_000.14;
-        trade3.volumeLots = 5032.14;
-        trade4.notionalValueUsd = 25_000.5;
-        trade4.volumeLots = 21_000.5;
-        trade5.notionalValueUsd = 25_000.2;
-        trade5.volumeLots = 253_200.2;
+        trade1.setNotionalValueUsd(50_000.1);
+        trade1.setVolumeLots(253_200.2);
+        trade2.setNotionalValueUsd(50_000.16);
+        trade2.setVolumeLots(110.16);
+        trade3.setNotionalValueUsd(50_000.14);
+        trade3.setVolumeLots(5032.14);
+        trade4.setNotionalValueUsd(25_000.5);
+        trade4.setVolumeLots(21_000.5);
+        trade5.setNotionalValueUsd(25_000.2);
+        trade5.setVolumeLots(253_200.2);
 
         Symbol simbol1 = Symbol.getRandomSymbol();
         Symbol simbol2 = Symbol.getNextRandomSymbol(simbol1);
         Symbol simbol3 = Symbol.getNextRandomSymbol(simbol1, simbol2);
         Symbol simbol4 = Symbol.getNextRandomSymbol(simbol1, simbol2, simbol3);
 
-        trade1.symbol = simbol1.getSymbolCode();
-        trade2.symbol = simbol1.getSymbolCode();
-        trade3.symbol = simbol2.getSymbolCode();
-        trade4.symbol = simbol3.getSymbolCode();
-        trade5.symbol = simbol4.getSymbolCode();
+        trade1.setSymbol(simbol1.getSymbolCode());
+        trade2.setSymbol(simbol1.getSymbolCode());
+        trade3.setSymbol(simbol2.getSymbolCode());
+        trade4.setSymbol(simbol3.getSymbolCode());
+        trade5.setSymbol(simbol4.getSymbolCode());
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
 
@@ -226,25 +226,25 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2);
-        tradingPage.checkSymbolTradedTooltipValue(trade1.symbol, expectedAmount);
+        tradingPage.checkSymbolTradedTooltipValue(trade1.getSymbol(), expectedAmount);
         tradingPage.hoverOverSymbolTradedBar(1);
-        tradingPage.checkSymbolTradedTooltipValue(trade3.symbol, trade3.notionalValueUsd);
+        tradingPage.checkSymbolTradedTooltipValue(trade3.getSymbol(), trade3.getNotionalValueUsd());
 
         Allure.step("repeat the same for lots view");
         tradingPage.enableViewLots();
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedVolume = tradingPage.calculateLotsByDealInt(trade1, trade2);
-        tradingPage.checkSymbolTradedTooltipValueLots(trade1.symbol, expectedVolume);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade1.getSymbol(), expectedVolume);
         tradingPage.hoverOverSymbolTradedBar(1);
-        tradingPage.checkSymbolTradedTooltipValueLots(trade5.symbol, trade5.volumeLots);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade5.getSymbol(), trade5.getVolumeLots());
 
         Allure.step("now try to repeat with two trades with one symbol and random values");
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade21 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade22 = generateMt4TradesCoercedRandomized(client);
 
-        trade21.symbol = simbol1.getSymbolCode();
-        trade22.symbol = simbol1.getSymbolCode();
+        trade21.setSymbol(simbol1.getSymbolCode());
+        trade22.setSymbol(simbol1.getSymbolCode());
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade21, trade22));
 
@@ -252,12 +252,12 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedAmount2 = tradingPage.calculateNotionValueUsdByDealInt(trade21, trade22);
-        tradingPage.checkSymbolTradedTooltipValue(trade21.symbol, expectedAmount2);
+        tradingPage.checkSymbolTradedTooltipValue(trade21.getSymbol(), expectedAmount2);
 
         tradingPage.enableViewLots();
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedVolume2 = tradingPage.calculateLotsByDealInt(trade21, trade22);
-        tradingPage.checkSymbolTradedTooltipValueLots(trade21.symbol, expectedVolume2);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade21.getSymbol(), expectedVolume2);
     }
 
 }

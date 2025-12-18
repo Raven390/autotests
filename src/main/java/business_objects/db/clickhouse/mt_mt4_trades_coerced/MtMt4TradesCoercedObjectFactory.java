@@ -26,12 +26,12 @@ public class MtMt4TradesCoercedObjectFactory {
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedBalance(ClientHelper client, double profit,
             String comment) {
         MtMt4TradesCoercedObject mtMt4TradesCoercedObject = generateMt4TradesCoerced(client);
-        mtMt4TradesCoercedObject.profit = profit;
-        mtMt4TradesCoercedObject.profitUsd = profit;
-        mtMt4TradesCoercedObject.comment = comment;
-        mtMt4TradesCoercedObject.ticketType = TicketType.BALANCE.getDisplayName();
-        mtMt4TradesCoercedObject.commission = 0.0;
-        mtMt4TradesCoercedObject.storage = 0.0;
+        mtMt4TradesCoercedObject.setProfit(profit);
+        mtMt4TradesCoercedObject.setProfitUsd(profit);
+        mtMt4TradesCoercedObject.setComment(comment);
+        mtMt4TradesCoercedObject.setTicketType(TicketType.BALANCE.getDisplayName());
+        mtMt4TradesCoercedObject.setCommission(0.0);
+        mtMt4TradesCoercedObject.setStorage(0.0);
         return mtMt4TradesCoercedObject;
     }
 
@@ -39,17 +39,17 @@ public class MtMt4TradesCoercedObjectFactory {
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitComment(CrmTbAccountObject account,
             Double profit, String comment) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(getRandomVantageClientAllFields());
-        trade.brand = account.brand;
-        trade.regulator = account.regulator;
-        trade.userId = account.userId.longValue();
-        trade.ucid = account.ucid;
-        trade.account = account.account.longValue();
-        trade.serverId = account.serverIdSt.longValue();
-        trade.ticketType = "Balance";
-        trade.profit = profit;
-        trade.storage = 0d;
-        trade.commission = 0d;
-        trade.comment = comment;
+        trade.setBrand(account.brand);
+        trade.setRegulator(account.regulator);
+        trade.setUserId(account.userId.longValue());
+        trade.setUcid(account.ucid);
+        trade.setAccount(account.account.longValue());
+        trade.setServerId(account.serverIdSt.longValue());
+        trade.setTicketType("Balance");
+        trade.setProfit(profit);
+        trade.setStorage(0d);
+        trade.setCommission(0d);
+        trade.setComment(comment);
         return trade;
     }
 
@@ -57,7 +57,7 @@ public class MtMt4TradesCoercedObjectFactory {
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitCommentBuy(CrmTbAccountObject account,
             Double profit, String comment) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoercedAccountProfitComment(account, profit, comment);
-        trade.ticketType = "Buy";
+        trade.setTicketType("Buy");
         return trade;
     }
 
@@ -65,10 +65,10 @@ public class MtMt4TradesCoercedObjectFactory {
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(ClientHelper client,
             double profitUsd, String closeTime) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
-        trade.storageUsd = 0d;
-        trade.commissionUsd = 0d;
-        trade.profitUsd = profitUsd;
-        trade.closeTime = closeTime;
+        trade.setStorageUsd(0d);
+        trade.setCommissionUsd(0d);
+        trade.setProfitUsd(profitUsd);
+        trade.setCloseTime(closeTime);
         return trade;
     }
 
@@ -78,33 +78,33 @@ public class MtMt4TradesCoercedObjectFactory {
         String reason = (randomEnum(Reason.class).getDisplayName());
         String type = (randomEnum(TicketType.class).getDisplayName());
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
-        trade.symbol = Symbol.getRandomSymbol().getSymbolCode();
-        trade.reasonName = reason;
-        trade.ticketType = type;
-        trade.openPrice = getRandomRoundedDouble(0.00, 5000);
-        trade.stopLoss = getRandomRoundedDouble(0.00, 5000);
-        trade.takeProfit = getRandomRoundedDouble(0.00, 5000);
-        trade.openRateUsdBase = getRandomRoundedDouble(0.00, 5000);
-        trade.openRateUsdQuote = getRandomRoundedDouble(0.00, 5000);
-        trade.openRateUsdAcc = getRandomRoundedDouble(0.00, 5000);
-        trade.volumeLots = getRandomRoundedDouble(0.00, 5000);
-        trade.notionalValueUsd = getRandomRoundedDouble(0.00, 50_000);
-        trade.openNotionalValueUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.closeNotionalValueUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.profit = getRandomRoundedDouble(0.00, 5000);
-        trade.storage = getRandomRoundedDouble(0.00, 5000);
-        trade.commission = getRandomRoundedDouble(0.00, 5000);
-        trade.profitUsd = getRandomRoundedDouble(-5000, 5000);
-        trade.storageUsd = getRandomRoundedDouble(-5000, 5000);
-        trade.commissionUsd = getRandomRoundedDouble(-5000, 5000);
-        trade.closePrice = getRandomRoundedDouble(0.00, 5000);
-        trade.spreadRevenueUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.taxesUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.feeUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.closeTime = getCurrentTimestampDbFormat();
-        trade.closeTimeUtc = getCurrentTimestampDbFormat();
-        trade.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
-        trade.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
+        trade.setSymbol(Symbol.getRandomSymbol().getSymbolCode());
+        trade.setReasonName(reason);
+        trade.setTicketType(type);
+        trade.setOpenPrice(getRandomRoundedDouble(0.00, 5000));
+        trade.setStopLoss(getRandomRoundedDouble(0.00, 5000));
+        trade.setTakeProfit(getRandomRoundedDouble(0.00, 5000));
+        trade.setOpenRateUsdBase(getRandomRoundedDouble(0.00, 5000));
+        trade.setOpenRateUsdQuote(getRandomRoundedDouble(0.00, 5000));
+        trade.setOpenRateUsdAcc(getRandomRoundedDouble(0.00, 5000));
+        trade.setVolumeLots(getRandomRoundedDouble(0.00, 5000));
+        trade.setNotionalValueUsd(getRandomRoundedDouble(0.00, 50_000));
+        trade.setOpenNotionalValueUsd(getRandomRoundedDouble(0.00, 5000));
+        trade.setCloseNotionalValueUsd(getRandomRoundedDouble(0.00, 5000));
+        trade.setProfit(getRandomRoundedDouble(0.00, 5000));
+        trade.setStorage(getRandomRoundedDouble(0.00, 5000));
+        trade.setCommission(getRandomRoundedDouble(0.00, 5000));
+        trade.setProfitUsd(getRandomRoundedDouble(-5000, 5000));
+        trade.setStorageUsd(getRandomRoundedDouble(-5000, 5000));
+        trade.setCommissionUsd(getRandomRoundedDouble(-5000, 5000));
+        trade.setClosePrice(getRandomRoundedDouble(0.00, 5000));
+        trade.setSpreadRevenueUsd(getRandomRoundedDouble(0.00, 5000));
+        trade.setTaxesUsd(getRandomRoundedDouble(0.00, 5000));
+        trade.setFeeUsd(getRandomRoundedDouble(0.00, 5000));
+        trade.setCloseTime(getCurrentTimestampDbFormat());
+        trade.setCloseTimeUtc(getCurrentTimestampDbFormat());
+        trade.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0));
+        trade.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0));
         return trade;
     }
 

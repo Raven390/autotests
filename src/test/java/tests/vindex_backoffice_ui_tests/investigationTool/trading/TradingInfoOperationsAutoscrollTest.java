@@ -47,12 +47,12 @@ class TradingInfoOperationsAutoscrollTest extends TestBaseWeb {
         List<MtMt4TradesCoercedObject> deals = new java.util.ArrayList<>(List.of());
         for (int i = 0; i < 41; i++) {
             MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
-            trade.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 1, 0);
+            trade.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 1, 0));
             deals.add(trade);
         }
 
-        deals.getFirst().openTime = timeFirst;
-        deals.getLast().openTime = timeLast;
+        deals.getFirst().setOpenTime(timeFirst);
+        deals.getLast().setOpenTime(timeLast);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, deals);
     }
 

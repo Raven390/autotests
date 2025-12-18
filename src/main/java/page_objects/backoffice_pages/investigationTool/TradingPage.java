@@ -1546,7 +1546,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public double calculatePnlByDeal(MtMt4TradesCoercedObject deal) {
-        return deal.profitUsd + deal.commissionUsd + deal.storageUsd;
+        return deal.getProfitUsd() + deal.getCommissionUsd() + deal.getStorageUsd();
     }
 
     public double calculatePnlByDeal(Mt5DealsCoercedObject deal) {
@@ -1566,7 +1566,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public int calculatePnlByDealInt(MtMt4TradesCoercedObject deal) {
-        return ((int) Math.round(deal.profitUsd + deal.commissionUsd + deal.storageUsd));
+        return ((int) Math.round(deal.getProfitUsd() + deal.getCommissionUsd() + deal.getStorageUsd()));
     }
 
     public void checkBothPnlBySymbolBarsEmpty() {
@@ -1742,7 +1742,7 @@ public class TradingPage extends AbstractPage {
     public int calculateNotionValueUsdByDealInt(MtMt4TradesCoercedObject... trades) {
         double result = 0;
         for (MtMt4TradesCoercedObject i : trades) {
-            result += i.notionalValueUsd;
+            result += i.getNotionalValueUsd();
         }
         return (int) (Math.round(result));
     }
@@ -1750,7 +1750,7 @@ public class TradingPage extends AbstractPage {
     public int calculateLotsByDealInt(MtMt4TradesCoercedObject... trades) {
         double result = 0;
         for (MtMt4TradesCoercedObject i : trades) {
-            result += i.volumeLots;
+            result += i.getVolumeLots();
         }
         return (int) (Math.round(result));
     }
@@ -1758,7 +1758,7 @@ public class TradingPage extends AbstractPage {
     public double calculateNotionValueUsdByDealDouble(MtMt4TradesCoercedObject... trades) {
         double result = 0;
         for (MtMt4TradesCoercedObject i : trades) {
-            result += i.notionalValueUsd;
+            result += i.getNotionalValueUsd();
         }
         return result;
     }
@@ -2086,21 +2086,21 @@ public class TradingPage extends AbstractPage {
     public void generateDifferentTicketTypes(ClientHelper client) {
         Allure.step("Prepare client test data");
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
-        trade1.ticketType = "Sell Limit";
+        trade1.setTicketType("Sell Limit");
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade2.ticketType = "Buy";
+        trade2.setTicketType("Buy");
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
-        trade3.ticketType = "Balance";
+        trade3.setTicketType("Balance");
         MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
-        trade4.ticketType = "Sell";
+        trade4.setTicketType("Sell");
         MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
-        trade5.ticketType = "Sell Stop";
+        trade5.setTicketType("Sell Stop");
         MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedRandomized(client);
-        trade6.ticketType = "Buy Limit";
+        trade6.setTicketType("Buy Limit");
         MtMt4TradesCoercedObject trade7 = generateMt4TradesCoercedRandomized(client);
-        trade7.ticketType = "Credit";
+        trade7.setTicketType("Credit");
         MtMt4TradesCoercedObject trade8 = generateMt4TradesCoercedRandomized(client);
-        trade8.ticketType = "Buy Stop";
+        trade8.setTicketType("Buy Stop");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
         page.waitForTimeout(1000);
     }
@@ -2109,33 +2109,33 @@ public class TradingPage extends AbstractPage {
     public void generateDifferentReason(ClientHelper client) {
         Allure.step("Prepare client test data");
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
-        trade1.reasonName = "Expert";
+        trade1.setReasonName("Expert");
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade2.reasonName = "Client";
+        trade2.setReasonName("Client");
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
-        trade3.reasonName = "Dealer";
+        trade3.setReasonName("Dealer");
         MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
-        trade4.reasonName = "API";
+        trade4.setReasonName("API");
         MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
-        trade5.reasonName = "Mobile";
+        trade5.setReasonName("Mobile");
         MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedRandomized(client);
-        trade6.reasonName = "Web";
+        trade6.setReasonName("Web");
         MtMt4TradesCoercedObject trade7 = generateMt4TradesCoercedRandomized(client);
-        trade7.reasonName = "Signal";
+        trade7.setReasonName("Signal");
         MtMt4TradesCoercedObject trade8 = generateMt4TradesCoercedRandomized(client);
-        trade8.reasonName = "Stop Loss";
+        trade8.setReasonName("Stop Loss");
         MtMt4TradesCoercedObject trade9 = generateMt4TradesCoercedRandomized(client);
-        trade9.reasonName = "Take Profit";
+        trade9.setReasonName("Take Profit");
         MtMt4TradesCoercedObject trade10 = generateMt4TradesCoercedRandomized(client);
-        trade10.reasonName = "Stop-Out";
+        trade10.setReasonName("Stop-Out");
         MtMt4TradesCoercedObject trade11 = generateMt4TradesCoercedRandomized(client);
-        trade11.reasonName = "External client";
+        trade11.setReasonName("External client");
         MtMt4TradesCoercedObject trade12 = generateMt4TradesCoercedRandomized(client);
-        trade12.reasonName = "Symbol split";
+        trade12.setReasonName("Symbol split");
         MtMt4TradesCoercedObject trade13 = generateMt4TradesCoercedRandomized(client);
-        trade13.reasonName = "Gateway";
+        trade13.setReasonName("Gateway");
         MtMt4TradesCoercedObject trade14 = generateMt4TradesCoercedRandomized(client);
-        trade14.reasonName = "Migration";
+        trade14.setReasonName("Migration");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14));
         page.waitForTimeout(1000);
     }
