@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
+import static utils.Utils.getCurrentTimestampMillis;
+
 public class CancelRestrictionByBitRequest {
 
     @JsonProperty("id")
@@ -14,6 +16,12 @@ public class CancelRestrictionByBitRequest {
 
     @JsonProperty("updatedBy")
     public UpdatedBy updatedBy;
+
+    @JsonProperty("correlationType")
+    public String correlationType;
+
+    @JsonProperty("correlationId")
+    public String correlationId;
 
     public Integer getId() {
         return id;
@@ -46,6 +54,8 @@ public class CancelRestrictionByBitRequest {
         this.id = id;
         this.cancelReason = cancelReason;
         this.updatedBy = updatedBy;
+        this.correlationType = "INVESTIGATION";
+        this.correlationId = String.valueOf(getCurrentTimestampMillis());
     }
 
     public static class UpdatedBy {

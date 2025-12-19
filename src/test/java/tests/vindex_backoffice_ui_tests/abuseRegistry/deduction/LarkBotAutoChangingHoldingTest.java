@@ -1,7 +1,7 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
 import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
-import business_objects.api.lark.chatHistory.ByBitRestrictionCancellationMessage;
+import business_objects.api.lark.chatHistory.ByBitRestrictionBotMessage;
 import business_objects.api.lark.chatHistory.ChatHistoryResponse;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
@@ -214,7 +214,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
         List<ChatHistoryResponse.LarkApiDataItem> items = responseLark.getData().getItems();
         List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered = items.stream().filter(i -> i.getBody().getContent().contains(client.getUserId().toString())).toList();
         String clearedContent = itemsFiltered.getFirst().getBody().getContent().toString().replace("\\n", "").replace("\\", "");
-        ByBitRestrictionCancellationMessage message = objectMapper.readValue(clearedContent, ByBitRestrictionCancellationMessage.class);
+        ByBitRestrictionBotMessage message = objectMapper.readValue(clearedContent, ByBitRestrictionBotMessage.class);
         Allure.step("check that message contains accountId");
         assertEquals(": " + client.getTradingAccount(), message.getElements().getFirst().get(1).getText());
         Allure.step("check that message contains Server name");
