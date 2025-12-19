@@ -1,5 +1,7 @@
 package helpers.api;
 
+import business_objects.api.mitigation_service.MitigationServiceRequest;
+import business_objects.api.mitigation_service.NewTradingEnvRestrictionRequestBody;
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
@@ -94,5 +96,26 @@ public class RestrictionHelper {
         Integer restrictionId = postRestriction(client, type, code).id;
         //cancel bonus restriction
         assertThat("Assert response code", cancelRestriction(restrictionId).code(), is(204));
+    }
+
+    @Step
+    public static Response putRestrictionV3(NewTradingEnvRestrictionRequestBody putRestrictionRequestBody)
+            throws IOException {
+        Allure.step("Set trading env restriction through API");
+        Response response = MitigationServiceRequest.putRestrictionV3(putRestrictionRequestBody);
+        assertNotNull(response);
+        assertEquals(200, response.code());
+        return response;
+
+    }
+
+    @Step
+    public static Response getClientRestrictionsV3(String ucid) throws IOException {
+        Allure.step("Get client's restrictions through API");
+        Response response = MitigationServiceRequest.getRestrictionsByUcidV3(ucid);
+        assertNotNull(response);
+        assertEquals(200, response.code());
+        return response;
+
     }
 }

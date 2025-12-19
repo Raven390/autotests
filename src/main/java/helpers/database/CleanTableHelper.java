@@ -176,6 +176,33 @@ public class CleanTableHelper {
         }
     }
 
+    @Step("Clean client's trading env restriction for ucid '{ucid}'")
+    public static void cleanUserRestrictionTradingEnv(String ucid) throws Exception {
+        var sqlClientTradingEnvRestrictionDelete = """
+                with deleted_client_trading_env_restriction_ids as (
+                    delete from postgres.mi.client_trading_environment_restriction
+                    where ucid = '%s'
+                    returning id
+                ),
+                deleted_actions as (
+                    delete from postgres.mi.client_trading_environment_restriction_action
+                    where client_restriction_id in (select id from deleted_client_trading_env_restriction_ids)
+                ),
+                deleted_kafka_requests as (
+                    delete from postgres.mi.client_trading_environment_restriction_kafka_request
+                    where client_restriction_id in (select id from deleted_client_trading_env_restriction_ids)
+                )
+                delete from postgres.mi.client_trading_environment_restriction_kafka_response
+                where client_restriction_id in (select id from deleted_client_trading_env_restriction_ids)
+                """;
+        var sqlQueueEventDelete = """
+                delete from postgres.mi.client_trading_environment_restriction_queue
+                where ucid = '%s'
+                """;
+        DbHelper.executeQueryToDb(POSTGRES, String.format(sqlClientTradingEnvRestrictionDelete, ucid));
+        DbHelper.executeQueryToDb(POSTGRES, String.format(sqlQueueEventDelete, ucid));
+    }
+
     // Audit db
 
     @Step("Clean users audit history")

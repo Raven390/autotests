@@ -190,6 +190,30 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull(testRestriction.sites);
     }
 
+    public static void checkKafkaRequestApplyTradingEnv(ApplyTradingEnvironmentRestrictionMessage expected)
+            throws JsonProcessingException,
+            InterruptedException {
+        Allure.step("Check request message for trading env restriction apply for account in kafka");
+        String accountId = String.valueOf(expected.getAccountId());
+        KafkaHelper helper = new KafkaHelper();
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_TRADING_ENV_RESTRICTIONS_APPLY, String.valueOf(accountId));
+        String kafkaResponse = kafkaResponses.getLast();
+        writeLog("Tested message is " + kafkaResponse);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        ApplyTradingEnvironmentRestrictionMessage actual = objectMapper.readValue(kafkaResponse, ApplyTradingEnvironmentRestrictionMessage.class);
+        assertNotNull(actual);
+        assertNotNull(actual.getRestriction());
+        assertNotNull(actual.getTimestamp());
+        assertNotNull(actual.getMessageId());
+        assertNotNull(actual.getModifier());
+        expected.getRestriction().setRestrictionId(actual.getRestriction().getRestrictionId());
+        expected.setTimestamp(actual.getTimestamp());
+        expected.setMessageId(actual.getMessageId());
+        expected.setModifier(actual.getModifier());
+        assertEquals(expected, actual);
+    }
+
 
     public void checkKafkaRequestCancelAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction cancellation for account in kafka");
