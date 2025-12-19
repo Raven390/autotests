@@ -104,6 +104,7 @@ public class ConfigFactory {
     public static final String MITIGATION_SERVICE_INSIGHT_BASE_PATH = CONFIG.mitigationServiceInsightBasePath();
     public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog();
     public static final String MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions();
+    public static final String MITIGATION_SERVICE_RESTRICTIONS_V3 = CONFIG.mitigationServiceRestrictionsV3();
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction();
     public static final String MITIGATION_SERVICE_RESTRICTIONS_BYBIT = CONFIG.mitigationServiceRestrictionsByBit();
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION_BYBIT = CONFIG.mitigationServiceCancelRestrictionsByBit();
@@ -485,6 +486,9 @@ public class ConfigFactory {
 
         @Key("mitigationServiceRestrictions")
         String mitigationServiceRestrictions();
+
+        @Key("mitigationServiceRestrictionsV3")
+        String mitigationServiceRestrictionsV3();
 
         @Key("mitigationServiceRestrictionsByBit")
         String mitigationServiceRestrictionsByBit();

@@ -136,6 +136,7 @@ public class Constants {
     public static final String KAFKA_NO_PARAMETERS_PROVIDED = "No search parameters provided.";
     public static final String KAFKA_SOME_PARAMETERS_FOUND = "Some of the parameters were not found in messages.";
     public static final String KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY = "account.restrictions.apply";
+    public static final String KAFKA_TOPIC_TRADING_ENV_RESTRICTIONS_APPLY = "env.restrictions.apply";
     public static final String KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL = "account.restrictions.cancel";
     public static final String KAFKA_TOPIC_ALERTS = "alerts";
     public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY = "client.restrictions.apply";

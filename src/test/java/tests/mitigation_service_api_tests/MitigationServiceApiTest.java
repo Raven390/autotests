@@ -3,12 +3,14 @@ package tests.mitigation_service_api_tests;
 import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
 import business_objects.api.lark.chatHistory.ByBitRestrictionCancellationMessage;
 import business_objects.api.lark.chatHistory.ChatHistoryResponse;
-import business_objects.api.mitigation_service.CancelRestrictionByBitRequest;
-import business_objects.api.mitigation_service.PostRestrictionRequestBody;
+import business_objects.api.mitigation_service.*;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.mitigation_service_db.ClientBybitRestriction;
+import business_objects.kafka.restriction_events.ApplyTradingEnvironmentRestrictionMessage;
 import business_objects.kafka.restriction_events.ClientRestrictionApply;
+import com.fasterxml.jackson.core.type.TypeReference;
+import helpers.api.RestrictionHelper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
@@ -22,14 +24,19 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
 import okhttp3.Response;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.investigationTool.RestrictionPage;
 import tests.TestBaseApi;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static business_objects.api.lark.LarkRequest.getMessagesChatLast10Minutes;
 import static business_objects.api.lark.LarkRequest.getTenantToken;
@@ -64,6 +71,7 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @BeforeAll
     static void initialSetup() throws IOException, InterruptedException {
+        objectMapper.findAndRegisterModules();
         Response response = enableCRMEmulator();
         assertNotNull(response);
         CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
@@ -77,6 +85,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     void before() throws Exception {
         CleanTableHelper.cleanUserRestrictionGeneral(restrictionClient.getUcid());
         CleanTableHelper.cleanUserRestrictionTrading(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserRestrictionTradingEnv(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
     }
 
@@ -85,6 +94,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         CleanTableHelper.cleanUserRestrictionGeneral(restrictionClient.getUcid());
         CleanTableHelper.cleanUserRestrictionGeneral(byBitClient.getUcid());
         CleanTableHelper.cleanUserRestrictionTrading(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserRestrictionTradingEnv(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(byBitClient.getUcid());
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", byBitClient.getUcid()));
@@ -489,5 +499,48 @@ class MitigationServiceApiTest extends TestBaseApi {
         assertEquals(": " + applyReason, message.getElements().getFirst().get(5).getText());
     }
 
-
+    @Test
+    @DisplayName("Put worse trading restriction V3 test")
+    @Feature("BMS-2921 Put worse trading restriction V3")
+    @AllureId("1940")
+    void putWorseTradingRestrictionV3() throws Exception {
+        var timeout = 20_000;
+        var rq1 = new NewTradingEnvRestrictionRequestBody(
+                "Application reason", "LOW", restrictionClient.getServerId(), new BigInteger(restrictionClient.getTradingAccount() + ""), Collections.emptyList(), new UpdatedBy().system("Rule Engine"), UUID.randomUUID().toString(), CorrelationType.RULE_ENGINE, "Comment 1", "23", restrictionClient.getUcid(), RestrictionType.TRADING_ENVIRONMENT);
+        try (var response1 = RestrictionHelper.putRestrictionV3(rq1)) {
+            Awaitility.await().pollDelay(Duration.ofMillis(timeout / 20)).pollInterval(Duration.ofMillis(timeout / 20)).atMost(Duration.ofMillis(timeout)).until(() -> RestrictionHelper.getClientRestrictionsV3(restrictionClient.getUcid()), getResponse -> {
+                try (getResponse) {
+                    assertNotNull(getResponse);
+                    assertEquals(200, response1.code());
+                    assertNotNull(getResponse.body());
+                    var restrictionsJson = getResponse.body().string();
+                    var listReference = new TypeReference<List<ClientRestriction>>() {
+                    };
+                    var actual = objectMapper.readValue(restrictionsJson, listReference);
+                    return actual.stream().filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT).map(ClientTradingEnvironmentRestriction.class::cast).anyMatch(r -> Objects.equals(r.getLevel(), "LOW") && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        RestrictionPage.checkKafkaRequestApplyTradingEnv(ApplyTradingEnvironmentRestrictionMessage.builder().clientId(new BigInteger(restrictionClient.getUserId() + "")).brand(restrictionClient.getBrand()).accountId(new BigInteger(restrictionClient.getTradingAccount() + "")).serverId(restrictionClient.getServerId()).initialBanDurationInMinutes(525_600).restriction(ApplyTradingEnvironmentRestrictionMessage.TradingEnvironmentRestriction.builder().restrictionCode("23").riskLevel("low").build()).build());
+        var rq2 = new NewTradingEnvRestrictionRequestBody(
+                "Application reason", "LOW", restrictionClient.getServerId(), new BigInteger(restrictionClient.getTradingAccount() + ""), Collections.emptyList(), new UpdatedBy().system("Rule Engine"), UUID.randomUUID().toString(), CorrelationType.RULE_ENGINE, "Comment 1", "23", restrictionClient.getUcid(), RestrictionType.TRADING_ENVIRONMENT);
+        try (var response2 = RestrictionHelper.putRestrictionV3(rq2)) {
+            Awaitility.await().pollDelay(Duration.ofMillis(timeout / 20)).pollInterval(Duration.ofMillis(timeout / 20)).atMost(Duration.ofMillis(timeout)).until(() -> RestrictionHelper.getClientRestrictionsV3(restrictionClient.getUcid()), getResponse -> {
+                try (getResponse) {
+                    assertNotNull(getResponse);
+                    assertEquals(200, response2.code());
+                    assertNotNull(getResponse.body());
+                    var restrictionsJson = getResponse.body().string();
+                    var listReference = new TypeReference<List<ClientRestriction>>() {
+                    };
+                    var actual = objectMapper.readValue(restrictionsJson, listReference);
+                    return actual.stream().filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT).map(ClientTradingEnvironmentRestriction.class::cast).anyMatch(r -> Objects.equals(r.getLevel(), "LOW") && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
 }

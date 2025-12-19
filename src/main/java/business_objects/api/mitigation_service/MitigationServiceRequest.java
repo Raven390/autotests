@@ -33,8 +33,17 @@ public class MitigationServiceRequest {
         return new HttpHelper().sendPutRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, putRestrictionRequestBody);
     }
 
+    public static Response putRestrictionV3(NewTradingEnvRestrictionRequestBody putRestrictionRequestBody)
+            throws IOException {
+        return new HttpHelper().sendPutRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3, null, null, putRestrictionRequestBody);
+    }
+
     public static Response getRestrictionsByUcid(String ucid) throws IOException {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, Map.of("ucid", ucid));
+    }
+
+    public static Response getRestrictionsByUcidV3(String ucid) throws IOException {
+        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3, null, Map.of("ucid", ucid));
     }
 
     public static Response cancelRestriction(Integer restrictionId)
