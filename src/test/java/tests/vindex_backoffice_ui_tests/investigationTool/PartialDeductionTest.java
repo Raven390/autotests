@@ -272,14 +272,14 @@ class PartialDeductionTest extends TestBaseWeb {
         assertThat("Verify quantity of illegal trades", tradingPage.getSelectedIllegalTradesCounter(), is("3 selected"));
         tradingPage.clickSaveAsIllegalProfit();
         List<IllegalTrades> illegalTrades = getObjectsFromDB(POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), IllegalTrades.class);
-        IllegalTrades illegalTrade1 = new IllegalTrades(mtAccount1.account.toString(), mtAccount1.sourceIdSt, trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), String.format("[%s, %s]", trade1.getTicket(), trade2.getTicket()), String.format("[%s]", trade1.getSymbol()), null, client.getUcid());
-        IllegalTrades illegalTrade1Alternate = new IllegalTrades(mtAccount1.account.toString(), mtAccount1.sourceIdSt, trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), String.format("[%s, %s]", trade2.getTicket(), trade1.getTicket()), String.format("[%s]", trade1.getSymbol()), null, client.getUcid());
-        IllegalTrades illegalTrade2 = new IllegalTrades(mtAccount2.account.toString(), mtAccount2.sourceIdSt, trade3.getProfit(), trade3.getProfit(), String.format("[%s]", trade3.getTicket()), String.format("[%s]", trade3.getSymbol()), null, client.getUcid());
+        IllegalTrades illegalTrade1 = new IllegalTrades(mtAccount1.account.toString(), mtAccount1.sourceIdSt, trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), String.format("[%s, %s]", trade1.getTicket(), trade2.getTicket()), String.format("[%s]", trade1.getSymbol()), null, client.getUcid(), 2);
+        IllegalTrades illegalTrade1Alternate = new IllegalTrades(mtAccount1.account.toString(), mtAccount1.sourceIdSt, trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), String.format("[%s, %s]", trade2.getTicket(), trade1.getTicket()), String.format("[%s]", trade1.getSymbol()), null, client.getUcid(), 2);
+        IllegalTrades illegalTrade2 = new IllegalTrades(mtAccount2.account.toString(), mtAccount2.sourceIdSt, trade3.getProfit(), trade3.getProfit(), String.format("[%s]", trade3.getTicket()), String.format("[%s]", trade3.getSymbol()), null, client.getUcid(), 1);
         assertThat("Verify data in illegal_trades table", illegalTrades, anyOf(containsInAnyOrder(illegalTrade1, illegalTrade2), containsInAnyOrder(illegalTrade1Alternate, illegalTrade2)));
         tradingPage.selectIllegalTradeByTicket(trade5.getTicket());
         tradingPage.clickSaveAsIllegalProfit();
         illegalTrades = getObjectsFromDB(POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), IllegalTrades.class);
-        IllegalTrades illegalTrade3 = new IllegalTrades(mtAccount3.account.toString(), mtAccount3.sourceIdSt, trade5.getProfit(), null, String.format("[%s]", trade5.getTicket()), String.format("[%s]", trade5.getSymbol()), null, client.getUcid());
+        IllegalTrades illegalTrade3 = new IllegalTrades(mtAccount3.account.toString(), mtAccount3.sourceIdSt, trade5.getProfit(), null, String.format("[%s]", trade5.getTicket()), String.format("[%s]", trade5.getSymbol()), null, client.getUcid(), 1);
         assertThat("Verify data in illegal_trades table", illegalTrades, contains(illegalTrade3));
     }
 

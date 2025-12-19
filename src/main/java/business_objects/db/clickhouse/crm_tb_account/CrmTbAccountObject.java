@@ -1,7 +1,12 @@
 package business_objects.db.clickhouse.crm_tb_account;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Setter
+@Getter
 public class CrmTbAccountObject {
 
     public Integer sourceIdSt;

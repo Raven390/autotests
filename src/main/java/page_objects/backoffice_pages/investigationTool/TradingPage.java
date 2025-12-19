@@ -201,6 +201,9 @@ public class TradingPage extends AbstractPage {
     private final Locator saveIllegalProfitButton;
     private final Locator toastMessage;
     private final Locator selectedTradesCounter;
+    private final Locator selectedIllegalProfitAmout;
+    private final Locator selectedIllegalProfitAccountCount;
+    private final Locator illegalProfitSelectAllCheckBox;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
@@ -465,6 +468,9 @@ public class TradingPage extends AbstractPage {
         this.selectedTradesCounter = page.locator("//div[@data-qa='trading_deals__multiselect_panel__counter']");
         this.scrollOperationsListUpButton = page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[1]");
         this.scrollOperationsListDownButton = page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[2]");
+        this.illegalProfitSelectAllCheckBox = page.locator("//div[@data-qa='trading_deals__table__header__checkbox']");
+        this.selectedIllegalProfitAmout = page.locator("//span[@data-qa='trading_deals__multiselect_panel__illegal_profit_amount']");
+        this.selectedIllegalProfitAccountCount = page.locator("//span[@data-qa='trading_deals__multiselect_panel__account_count_string']");
     }
 
     public void navigate(String ucid) {
@@ -2328,6 +2334,21 @@ public class TradingPage extends AbstractPage {
         super.waitForPageToLoad();
         illegalProfitButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(illegalProfitButton.isVisible());
+    }
+
+    @Step("Click select all trades as illegal button")
+    public void clickSelectAllTradesAsIllegal() {
+        illegalProfitSelectAllCheckBox.click();
+    }
+
+    @Step("Get selected illegal profit amount")
+    public String getSelectedIllegalProfitAmount() {
+        return selectedIllegalProfitAmout.textContent();
+    }
+
+    @Step("Get selected illegal profit accounts quantity")
+    public String getSelectedIllegalProfitAccountsQuantity() {
+        return selectedIllegalProfitAccountCount.textContent();
     }
 }
 
