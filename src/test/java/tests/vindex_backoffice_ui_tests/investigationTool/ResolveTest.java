@@ -539,7 +539,5 @@ public class ResolveTest extends TestBaseWeb {
         assertEquals(investigation.getId().toString(), restriction.getCorrelationId());
         assertEquals("INVESTIGATION", history.getCorrelationType());
         assertEquals("INVESTIGATION", restriction.getCorrelationType());
-
-
     }
 }

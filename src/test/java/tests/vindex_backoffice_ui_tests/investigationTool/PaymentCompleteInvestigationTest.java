@@ -3,6 +3,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.audit_service_db.AuditEvent;
 import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
@@ -164,6 +165,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @AllureId("1610")
     @DisplayName("Verify complete investigation with withdrawals for payment team and investigation for trading is not closed")
     void completeInvestigationFlowTest() throws Exception {
+        String longResolveComment = "I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk.";
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -178,7 +180,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.addFraud();
-        resolvePage.resolveNoActionsPayment("test comment");
+        resolvePage.resolveNoActionsPayment(longResolveComment);
 
         //check investigation in db
         List<Investigation> clientsInvestigationsDb = getClientsInvestigationsDb(client.getUcid(), AlertType.PAYMENT);
@@ -200,6 +202,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+        AuditEvent audit = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_TABLE, String.format("ucid = '%s' AND type = '%s'", client.getUcid(), COMMENT_ADDED_TYPE), AuditEvent.class).getFirst();
+        assertThat("Verify comment was saved until 500th character", audit.getComment(), is(longResolveComment.substring(0, 500)));
     }
 
     @Order(2)
