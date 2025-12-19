@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class ByBitRestrictionCancellationMessage {
+public class ByBitRestrictionBotMessage {
 
     @JsonProperty("title")
     private String title;
