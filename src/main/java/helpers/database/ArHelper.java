@@ -61,7 +61,7 @@ public class ArHelper {
                 if (!messageIds.isEmpty()) {
                     String whereMessageId = String.format(
                             "message_id IN ('%s')",
-                            messageIds.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+                            messageIds.stream().map(String::valueOf).collect(Collectors.joining("', '")));
                     deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_REQUEST_TABLE_NAME, whereMessageId);
                     deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, whereMessageId);
                 }

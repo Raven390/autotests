@@ -32,10 +32,10 @@ class PaymentSeniorDeleteConfirmedFraudTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
 
     @BeforeAll
-    static void setup() throws IOException {
+    static void setup() throws IOException, InterruptedException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        addFraudsForClient(client.getUcid(), List.of(CHARGEBACK, ATO), POTENTIAL);
-        addFraudsForClient(client.getUcid(), List.of(EXCHANGER, UPGRADER), CONFIRMED);
+        addFraudsForClient(client, List.of(CHARGEBACK, ATO), POTENTIAL);
+        addFraudsForClient(client, List.of(EXCHANGER, UPGRADER), CONFIRMED);
     }
 
     @AfterAll
