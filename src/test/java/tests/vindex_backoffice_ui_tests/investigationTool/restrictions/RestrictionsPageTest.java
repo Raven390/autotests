@@ -93,7 +93,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove account restriction UI")
     void cancelAccountRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), ACCOUNT_CREATION.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -121,7 +120,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Transfer Restriction UI")
     void cancelTransferRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), INTERNAL_TRANSFER.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -149,7 +147,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Deposits restriction UI")
     void cancelDepositsRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), DEPOSITS.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -177,7 +174,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Withdrawals restriction UI")
     void cancelWithdrawalsRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), WITHDRAWALS.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -205,7 +201,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Login CRM restriction UI")
     void cancelLoginCRMRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), LOGIN_CRM.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -233,7 +228,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Credit and Bonus restriction UI client without transactions")
     void cancelCreditAndBonusRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), CREDIT_AND_BONUS.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -261,7 +255,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI")
     void cancelManualWithdrawalRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -276,7 +269,6 @@ class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Note for withdrawals restriction UI")
     void cancelNoteForWithdrawalsRestrictionUITest() throws Exception {
         setRestrictionAPIGeneral(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -308,7 +300,6 @@ class RestrictionsPageTest extends TestBaseWeb {
                 restrictionClient.getTradingAccount(),
                 restrictionClient.getServerId(),
                 CLOSE_ONLY_MODE.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -340,7 +331,6 @@ class RestrictionsPageTest extends TestBaseWeb {
                 restrictionClient.getTradingAccount(),
                 restrictionClient.getServerId(),
                 OFF_QUOTES.getCode());
-        cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
