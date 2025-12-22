@@ -52,8 +52,8 @@ public class AuHelper {
         List<AuditEvent> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             events = getObjectsFromDB(
-                    POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
-            if (events.size() >= 2) {
+                    POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at DESC", AuditEvent.class);
+            if (events.size() >= 6) {
                 break;
             } else if (i == 9) {
                 assertThat("Assert that there are 3 events in audit", events.size(), greaterThanOrEqualTo(3));
@@ -62,7 +62,7 @@ public class AuHelper {
         }
         AuditEvent event1 = events.getFirst();
         AuditEvent event2 = events.get(1);
-        AuditEvent event3 = events.getLast();
+        AuditEvent event3 = events.get(2);
         assertThat(
                 event1.getType(),
                 is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));

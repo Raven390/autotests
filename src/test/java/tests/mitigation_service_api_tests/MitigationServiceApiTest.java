@@ -551,8 +551,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1075")
     @DisplayName("Verify logic for internalReason field with check format")
     void internalReasonTest() throws IOException, InterruptedException {
@@ -598,8 +596,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1972")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName("Verify logic for internalReason field restriction AccountCreation, fraud Hedging potential")
     void internalReasonTest1() throws IOException, InterruptedException {
         String fraudCode = HEDGING.getCode();
@@ -635,8 +631,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1973")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction INTERNAL_TRANSFER, fraud LATENCY_ARBITRAGE confirmed, CPA_ABUSE potential")
     void internalReasonTest2() throws IOException, InterruptedException {
@@ -677,8 +671,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1973")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud -BONUS_ABUSE,NBP_ABUSE , LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest3() throws IOException, InterruptedException {
@@ -723,8 +715,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1974")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud - for each frauds not exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest4() throws Exception {
@@ -773,8 +763,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1974")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction DEPOSITS, Potential fraud - for each frauds not exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING confirmed")
     void internalReasonTest5() throws Exception {
@@ -823,8 +811,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1979")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction DEPOSITS, Potential fraud - for each frauds exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING confirmed")
     void internalReasonTest6() throws Exception {
@@ -873,8 +859,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1980")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud - EXCHANGER UPGRADER, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest8() throws Exception {
@@ -923,8 +907,6 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @Test
     @AllureId("1981")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName(
             "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud Chargeback, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest7() throws Exception {
