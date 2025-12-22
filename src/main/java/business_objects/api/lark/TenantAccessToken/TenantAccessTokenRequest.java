@@ -1,7 +1,6 @@
 package business_objects.api.lark.TenantAccessToken;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class TenantAccessTokenRequest {
@@ -44,8 +43,7 @@ public class TenantAccessTokenRequest {
         return "TenantAccessTokenRequest{" + "appId='" + appId + '\'' + ", appSecret='" + appSecret + '\'' + '}';
     }
 
-    public TenantAccessTokenRequest() {
-    }
+    public TenantAccessTokenRequest() {}
 
     public TenantAccessTokenRequest(String appId, String appSecret) {
         this.appId = appId;

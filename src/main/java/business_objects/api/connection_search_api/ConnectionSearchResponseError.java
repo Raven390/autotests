@@ -1,7 +1,6 @@
 package business_objects.api.connection_search_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class ConnectionSearchResponseError {
@@ -30,11 +29,17 @@ public class ConnectionSearchResponseError {
     @JsonProperty("instance")
     public String instance;
 
-    public ConnectionSearchResponseError() {
-    }
+    public ConnectionSearchResponseError() {}
 
-    public ConnectionSearchResponseError(String timestamp, Integer status, String error, String path, String type,
-            String title, String detail, String instance) {
+    public ConnectionSearchResponseError(
+            String timestamp,
+            Integer status,
+            String error,
+            String path,
+            String type,
+            String title,
+            String detail,
+            String instance) {
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;
@@ -50,7 +55,14 @@ public class ConnectionSearchResponseError {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConnectionSearchResponseError that = (ConnectionSearchResponseError) o;
-        return Objects.equals(timestamp, that.timestamp) && Objects.equals(status, that.status) && Objects.equals(error, that.error) && Objects.equals(path, that.path) && Objects.equals(type, that.type) && Objects.equals(title, that.title) && Objects.equals(detail, that.detail) && Objects.equals(instance, that.instance);
+        return Objects.equals(timestamp, that.timestamp)
+                && Objects.equals(status, that.status)
+                && Objects.equals(error, that.error)
+                && Objects.equals(path, that.path)
+                && Objects.equals(type, that.type)
+                && Objects.equals(title, that.title)
+                && Objects.equals(detail, that.detail)
+                && Objects.equals(instance, that.instance);
     }
 
     @Override
@@ -60,6 +72,8 @@ public class ConnectionSearchResponseError {
 
     @Override
     public String toString() {
-        return "GetConnectionsResponseError{" + "timestamp='" + timestamp + '\'' + ", status=" + status + ", error='" + error + '\'' + ", path='" + path + '\'' + ", type='" + type + '\'' + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
+        return "GetConnectionsResponseError{" + "timestamp='" + timestamp + '\'' + ", status=" + status + ", error='"
+                + error + '\'' + ", path='" + path + '\'' + ", type='" + type + '\'' + ", title='" + title + '\''
+                + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
     }
 }

@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +90,10 @@ public class ClientTradingRestriction extends ClientRestriction {
             return false;
         }
         ClientTradingRestriction clientTradingRestriction = (ClientTradingRestriction) o;
-        return Objects.equals(this.accountId, clientTradingRestriction.accountId) && Objects.equals(this.serverId, clientTradingRestriction.serverId) && Objects.equals(this.status, clientTradingRestriction.status) && super.equals(o);
+        return Objects.equals(this.accountId, clientTradingRestriction.accountId)
+                && Objects.equals(this.serverId, clientTradingRestriction.serverId)
+                && Objects.equals(this.status, clientTradingRestriction.status)
+                && super.equals(o);
     }
 
     @Override

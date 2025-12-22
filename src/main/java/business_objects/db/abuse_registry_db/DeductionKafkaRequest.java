@@ -9,8 +9,7 @@ public class DeductionKafkaRequest {
     private String payload;
     private Timestamp createdAt;
 
-    public DeductionKafkaRequest() {
-    }
+    public DeductionKafkaRequest() {}
 
     public DeductionKafkaRequest(String messageId, Integer deductionId, String payload, Timestamp createdAt) {
         this.messageId = messageId;
@@ -55,7 +54,10 @@ public class DeductionKafkaRequest {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DeductionKafkaRequest that = (DeductionKafkaRequest) o;
-        return Objects.equals(messageId, that.messageId) && Objects.equals(deductionId, that.deductionId) && Objects.equals(payload, that.payload) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(messageId, that.messageId)
+                && Objects.equals(deductionId, that.deductionId)
+                && Objects.equals(payload, that.payload)
+                && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
@@ -65,6 +67,7 @@ public class DeductionKafkaRequest {
 
     @Override
     public String toString() {
-        return "DeductionKafkaRequest{" + "messageId='" + messageId + '\'' + ", deductionId=" + deductionId + ", payload='" + payload + '\'' + ", createdAt='" + createdAt + '\'' + '}';
+        return "DeductionKafkaRequest{" + "messageId='" + messageId + '\'' + ", deductionId=" + deductionId
+                + ", payload='" + payload + '\'' + ", createdAt='" + createdAt + '\'' + '}';
     }
 }

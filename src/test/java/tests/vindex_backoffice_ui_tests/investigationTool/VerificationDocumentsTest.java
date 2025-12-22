@@ -1,16 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_files.CrmTbFilesEntry;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_files.CrmTbFilesFactory.generateCrmTbFilesByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -19,6 +8,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+
+import business_objects.db.clickhouse.crm_tb_files.CrmTbFilesEntry;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -45,13 +44,27 @@ class VerificationDocumentsTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
         assertThat("Verify other documents section title", generalTab.getVerificationRowTitle(), is("Other documents"));
-        assertThat("Verify other documents section file count", generalTab.getVerificationRowFilesCount(), is("2 files"));
+        assertThat(
+                "Verify other documents section file count", generalTab.getVerificationRowFilesCount(), is("2 files"));
         generalTab.clickVerificationFilesRow();
         generalTab.waitForFilesToLoad();
-        assertThat("Verify verification drawer title", generalTab.getVerificationDrawerTitle(), is("Other attached documents"));
-        assertThat("Verify verification drawer subheader", generalTab.getVerificationDrawerSubheader(), is(String.format("%s %s, %s, %s", crmUser.firstName, crmUser.lastName, crmUser.birthday, crmUser.nationality)));
-        assertThat("Verify verification drawer file dates", generalTab.getVerificationDrawerFileDates(), contains(crmFiles1.getUploadTimeUtc().format(DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm"))));
-        assertThat("Verify verification drawer file count", generalTab.getVerificationDrawerFileNumbers(), contains("2 files"));
+        assertThat(
+                "Verify verification drawer title",
+                generalTab.getVerificationDrawerTitle(),
+                is("Other attached documents"));
+        assertThat(
+                "Verify verification drawer subheader",
+                generalTab.getVerificationDrawerSubheader(),
+                is(String.format(
+                        "%s %s, %s, %s", crmUser.firstName, crmUser.lastName, crmUser.birthday, crmUser.nationality)));
+        assertThat(
+                "Verify verification drawer file dates",
+                generalTab.getVerificationDrawerFileDates(),
+                contains(crmFiles1.getUploadTimeUtc().format(DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm"))));
+        assertThat(
+                "Verify verification drawer file count",
+                generalTab.getVerificationDrawerFileNumbers(),
+                contains("2 files"));
         generalTab.checkImageDisplayed();
         generalTab.clickFilePreviewByGroupAndFileIndex(0, 1);
         generalTab.waitForFilesToLoad();

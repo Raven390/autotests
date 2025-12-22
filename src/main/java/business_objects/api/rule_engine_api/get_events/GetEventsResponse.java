@@ -1,7 +1,6 @@
 package business_objects.api.rule_engine_api.get_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetEventsResponse {
@@ -11,8 +10,7 @@ public class GetEventsResponse {
     @JsonProperty("type")
     public String type;
 
-    public GetEventsResponse() {
-    }
+    public GetEventsResponse() {}
 
     public GetEventsResponse(String name, String type) {
         this.name = name;

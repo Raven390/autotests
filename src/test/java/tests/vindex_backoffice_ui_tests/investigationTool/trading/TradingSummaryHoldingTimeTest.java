@@ -1,23 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -28,11 +10,37 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import tests.TestBaseWeb;
+
 public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(202_006).uid("e5880ca5-8578-4a1e-969d-7a64716ca50f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_006_001).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(202_006)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca50f")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .tradingAccount(202_006_001)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account1);
@@ -92,7 +100,9 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
         trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1));
         trade10.setCloseTime(getCurrentTimestampDbFormat());
 
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -158,7 +168,11 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
         trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1));
         trade10.setCloseTime(getCurrentTimestampDbFormat());
 
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(
+                        trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10,
+                        trade11));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

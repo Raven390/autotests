@@ -34,11 +34,19 @@ public class AbuserHistory {
         this.correlationId = correlationId;
     }
 
-    public AbuserHistory() {
-    }
+    public AbuserHistory() {}
 
-    public AbuserHistory(Integer id, String ucid, String fraudTypeCode, String status, String source, String comment,
-            String modifiedByUser, String modifiedBySystem, Timestamp timestamp, String fraudSubtypeCode,
+    public AbuserHistory(
+            Integer id,
+            String ucid,
+            String fraudTypeCode,
+            String status,
+            String source,
+            String comment,
+            String modifiedByUser,
+            String modifiedBySystem,
+            Timestamp timestamp,
+            String fraudSubtypeCode,
             String symbols) {
         this.id = id;
         this.ucid = ucid;
@@ -145,16 +153,41 @@ public class AbuserHistory {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AbuserHistory that = (AbuserHistory) o;
-        return Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(fraudTypeCode, that.fraudTypeCode) && Objects.equals(status, that.status) && Objects.equals(source, that.source) && Objects.equals(comment, that.comment) && Objects.equals(modifiedByUser, that.modifiedByUser) && Objects.equals(modifiedBySystem, that.modifiedBySystem) && Objects.equals(timestamp, that.timestamp) && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode) && Objects.equals(symbols, that.symbols);
+        return Objects.equals(id, that.id)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(fraudTypeCode, that.fraudTypeCode)
+                && Objects.equals(status, that.status)
+                && Objects.equals(source, that.source)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(modifiedByUser, that.modifiedByUser)
+                && Objects.equals(modifiedBySystem, that.modifiedBySystem)
+                && Objects.equals(timestamp, that.timestamp)
+                && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode)
+                && Objects.equals(symbols, that.symbols);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ucid, fraudTypeCode, status, source, comment, modifiedByUser, modifiedBySystem, timestamp, fraudSubtypeCode, symbols);
+        return Objects.hash(
+                id,
+                ucid,
+                fraudTypeCode,
+                status,
+                source,
+                comment,
+                modifiedByUser,
+                modifiedBySystem,
+                timestamp,
+                fraudSubtypeCode,
+                symbols);
     }
 
     @Override
     public String toString() {
-        return "AbuserHistory{" + "id=" + id + ", ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", status='" + status + '\'' + ", source='" + source + '\'' + ", comment='" + comment + '\'' + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", timestamp=" + timestamp + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", symbols='" + symbols + '\'' + '}';
+        return "AbuserHistory{" + "id=" + id + ", ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\''
+                + ", status='" + status + '\'' + ", source='" + source + '\'' + ", comment='" + comment + '\''
+                + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\''
+                + ", timestamp=" + timestamp + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", symbols='"
+                + symbols + '\'' + '}';
     }
 }

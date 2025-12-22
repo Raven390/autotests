@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.crm_tb_credit_card_table;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
-
-import static utils.Utils.*;
 
 public class CrmTbCreditCardObjectFactory {
     @Step("Generate credit card object by user id")

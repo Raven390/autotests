@@ -1,7 +1,6 @@
 package business_objects.api.rule_engine_api.rule_deployments;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class PostRuleDeploymentResponse {
@@ -30,12 +29,17 @@ public class PostRuleDeploymentResponse {
     @JsonProperty("comment")
     String comment;
 
-    public PostRuleDeploymentResponse() {
-    }
+    public PostRuleDeploymentResponse() {}
 
     public PostRuleDeploymentResponse(
-            String uuid, String authorName, String processId, String ruleName, Integer zeebeRevision,
-            String lastUpdate, String status, String comment) {
+            String uuid,
+            String authorName,
+            String processId,
+            String ruleName,
+            Integer zeebeRevision,
+            String lastUpdate,
+            String status,
+            String comment) {
         this.uuid = uuid;
         this.authorName = authorName;
         this.processId = processId;
@@ -50,10 +54,14 @@ public class PostRuleDeploymentResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PostRuleDeploymentResponse that = (PostRuleDeploymentResponse) o;
-        return Objects.equals(uuid, that.uuid) && Objects.equals(authorName, that.authorName) && Objects.equals(
-                processId, that.processId) && Objects.equals(ruleName, that.ruleName) && Objects.equals(
-                        zeebeRevision, that.zeebeRevision) && Objects.equals(lastUpdate, that.lastUpdate) && Objects.equals(
-                                status, that.status) && Objects.equals(comment, that.comment);
+        return Objects.equals(uuid, that.uuid)
+                && Objects.equals(authorName, that.authorName)
+                && Objects.equals(processId, that.processId)
+                && Objects.equals(ruleName, that.ruleName)
+                && Objects.equals(zeebeRevision, that.zeebeRevision)
+                && Objects.equals(lastUpdate, that.lastUpdate)
+                && Objects.equals(status, that.status)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
@@ -63,7 +71,10 @@ public class PostRuleDeploymentResponse {
 
     @Override
     public String toString() {
-        return "PostRuleDeploymentResponse{" + "uuid='" + uuid + '\'' + ", authorName='" + authorName + '\'' + ", processId='" + processId + '\'' + ", ruleName='" + ruleName + '\'' + ", zeebeRevision=" + zeebeRevision + ", lastUpdate='" + lastUpdate + '\'' + ", status='" + status + '\'' + ", comment='" + comment + '\'' + '}';
+        return "PostRuleDeploymentResponse{" + "uuid='" + uuid + '\'' + ", authorName='" + authorName + '\''
+                + ", processId='" + processId + '\'' + ", ruleName='" + ruleName + '\'' + ", zeebeRevision="
+                + zeebeRevision + ", lastUpdate='" + lastUpdate + '\'' + ", status='" + status + '\'' + ", comment='"
+                + comment + '\'' + '}';
     }
 
     public String getUuid() {

@@ -1,10 +1,9 @@
 package business_objects.db.payment_gate.d_status;
 
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Objects;
 
 @Builder
 @Getter
@@ -17,8 +16,7 @@ public class DStatusObject {
     private String dateCreated;
     private String dateUpdated;
 
-    public DStatusObject() {
-    }
+    public DStatusObject() {}
 
     public DStatusObject(Integer id, String status, String description, String dateCreated, String dateUpdated) {
         this.id = id;
@@ -31,9 +29,11 @@ public class DStatusObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DStatusObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(status, that.status) && Objects.equals(
-                description, that.description) && Objects.equals(dateCreated, that.dateCreated) && Objects.equals(
-                        dateUpdated, that.dateUpdated);
+        return Objects.equals(id, that.id)
+                && Objects.equals(status, that.status)
+                && Objects.equals(description, that.description)
+                && Objects.equals(dateCreated, that.dateCreated)
+                && Objects.equals(dateUpdated, that.dateUpdated);
     }
 
     @Override
@@ -43,6 +43,7 @@ public class DStatusObject {
 
     @Override
     public String toString() {
-        return "DStatusObject{" + "id=" + id + ", status='" + status + '\'' + ", description='" + description + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + '}';
+        return "DStatusObject{" + "id=" + id + ", status='" + status + '\'' + ", description='" + description + '\''
+                + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + '}';
     }
 }

@@ -1,7 +1,6 @@
 package business_objects.api.abuse_registry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class PostAbuserStatusRequestBody {
@@ -18,8 +17,7 @@ public class PostAbuserStatusRequestBody {
     @JsonProperty("status")
     private String status;
 
-    public PostAbuserStatusRequestBody() {
-    }
+    public PostAbuserStatusRequestBody() {}
 
     public PostAbuserStatusRequestBody(String actor, String system, String comment, String status) {
         this.actor = actor;
@@ -64,7 +62,10 @@ public class PostAbuserStatusRequestBody {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PostAbuserStatusRequestBody that = (PostAbuserStatusRequestBody) o;
-        return Objects.equals(actor, that.actor) && Objects.equals(system, that.system) && Objects.equals(comment, that.comment) && Objects.equals(status, that.status);
+        return Objects.equals(actor, that.actor)
+                && Objects.equals(system, that.system)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(status, that.status);
     }
 
     @Override
@@ -74,6 +75,7 @@ public class PostAbuserStatusRequestBody {
 
     @Override
     public String toString() {
-        return "PostAbuserStatusRequestBody{" + "actor='" + actor + '\'' + ", system='" + system + '\'' + ", comment='" + comment + '\'' + ", status='" + status + '\'' + '}';
+        return "PostAbuserStatusRequestBody{" + "actor='" + actor + '\'' + ", system='" + system + '\'' + ", comment='"
+                + comment + '\'' + ", status='" + status + '\'' + '}';
     }
 }

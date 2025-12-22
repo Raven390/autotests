@@ -1,12 +1,11 @@
 package business_objects.api.rule_engine_api.get_events;
 
+import static utils.ConfigFactory.*;
+
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.Step;
-import okhttp3.Response;
-
 import java.io.IOException;
-
-import static utils.ConfigFactory.*;
+import okhttp3.Response;
 
 public class GetEventsRequest {
     @Step("Get events")

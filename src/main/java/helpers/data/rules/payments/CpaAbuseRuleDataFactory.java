@@ -1,40 +1,38 @@
 package helpers.data.rules.payments;
 
-import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-
-import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.enums.FraudTypeOld;
-import helpers.data.DataHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.Step;
-import utils.Utils;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
 import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.*;
 import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
-import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.kafka.crm_events.CrmWithdrawalEvent;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import helpers.data.enums.FraudTypeOld;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import utils.Utils;
 
 @RuleTestData("cpa-abuse")
 public class CpaAbuseRuleDataFactory {
@@ -57,40 +55,45 @@ public class CpaAbuseRuleDataFactory {
         DataHelper data = new DataHelper();
         createClient(data, client);
         data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4",                            // accountType
-                Utils.getRandomIntPositive().toString(),      // binNumber
-                data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // checkName
-                data.clientHelper.getUserId(),                // clientId
-                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
-                "4",                                          // expMonth
-                "2030",                                       // expYear
-                data.clientHelper.getFirstName(),             // fullName
-                getRandomUuidString(),                        // id
-                "VTSG" + getRandomIntPositive(),              // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(),        // mt4Account
-                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
-                "-",                                 // paymentChannelName
-                "CREDIT_CARD",                       // paymentMethodCode
-                "WEB",                               // platform
-                data.clientHelper.getRegulator(),    // regulator
-                "1.0",                               // schemaVersion
-                CRM_WITHDRAWAL_EVENT,                // type
-                1,                                   // withdrawalAmount
-                Instant.now().toString(),               // withdrawalApplicationTime
-                "EUR",                               // withdrawalCurrency
-                getRandomIntPositive()               // withdrawalId
-        );
+                "MT4", // accountType
+                Utils.getRandomIntPositive().toString(), // binNumber
+                data.clientHelper.getBrand().toLowerCase(), // brand
+                "", // checkName
+                data.clientHelper.getUserId(), // clientId
+                Instant.now().toString(), // eventDate (you can format if you need +03:00)
+                "4", // expMonth
+                "2030", // expYear
+                data.clientHelper.getFirstName(), // fullName
+                getRandomUuidString(), // id
+                "VTSG" + getRandomIntPositive(), // merchantOrderId (example)
+                data.clientHelper.getTradingAccount(), // mt4Account
+                PAYMENT_PROVIDER_FASAPAY, // paymentChannelCode
+                "-", // paymentChannelName
+                PAYMENT_METHOD_CODE_CREDIT_CARD, // paymentMethodCode
+                "WEB", // platform
+                data.clientHelper.getRegulator(), // regulator
+                "1.0", // schemaVersion
+                CRM_WITHDRAWAL_EVENT, // type
+                1, // withdrawalAmount
+                Instant.now().toString(), // withdrawalApplicationTime
+                "EUR", // withdrawalCurrency
+                getRandomIntPositive() // withdrawalId
+                );
         return data;
     }
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
         return new ConnectionTableEntry(
-                fromClient.getUcid(), toClient.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, 1d, List.of(
-                        new ConnectionTableEntry.ConnectionInfo(
-                                CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT
-                        )), getCurrentTimestampDbFormat()
-        );
+                fromClient.getUcid(),
+                toClient.getUcid(),
+                CONNECTION_TYPE_SAME_IDENTITY,
+                1d,
+                List.of(new ConnectionTableEntry.ConnectionInfo(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT,
+                        CONNECTION_SEARCH_DATA_CARD_NUMBER,
+                        CONNECTION_SEARCH_DATA_CARD_NUMBER,
+                        CONNECTION_TYPE_RELATION_TYPE_EXACT)),
+                getCurrentTimestampDbFormat());
     }
 
     private static DataHelper getCpaAbuseRuleExitEventEnd1Data() {
@@ -126,8 +129,7 @@ public class CpaAbuseRuleDataFactory {
         DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient3);
         Allure.step("Create user object with no CPA");
 
-
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient3);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 59, 13, 59));
@@ -151,14 +153,17 @@ public class CpaAbuseRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
-        );
+                connectedClient.getUcid(),
+                FraudTypeOld.CPA_ABUSE.getKey(),
+                FRAUD_TYPE_SOURCE_VINDEX,
+                0,
+                getCurrentTimestampDbFormat());
         CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
         data.connectedUsers.add(connectedUserCrmTbUserObject);
 
         data.clientFraudTypes.add(clientFraudTypes);
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient4);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -179,7 +184,7 @@ public class CpaAbuseRuleDataFactory {
         DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient5);
         Allure.step("Send alert");
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient5);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -198,7 +203,7 @@ public class CpaAbuseRuleDataFactory {
         DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient6);
         Allure.step("Send alert");
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient6);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -240,7 +245,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient7);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -278,7 +283,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient8);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -326,7 +331,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient9);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -374,7 +379,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
-        //MT5 trade with current time
+        // MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient10);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
@@ -584,18 +589,18 @@ public class CpaAbuseRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
-//        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
-//        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
-//        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
-//        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
-//        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
-//        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
-//        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
-//        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
-//        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
-//        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
-//        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
-//        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
+        //        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
+        //        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
+        //        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
+        //        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
+        //        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
+        //        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
+        //        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
+        //        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
+        //        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
+        //        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
+        //        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
+        //        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
 
         // Loop through the list with data and insert all the data into the according tables
         setupData(map);

@@ -16,12 +16,19 @@ public class RuleDeploymentObject {
     Integer status;
     String comment;
 
-    public RuleDeploymentObject() {
-    }
+    public RuleDeploymentObject() {}
 
     public RuleDeploymentObject(
-            UUID uuid, String authorName, String version, Integer zeebeRevision, String processId, String ruleName,
-            byte[] ruleBody, LocalDateTime lastUpdate, Integer status, String comment) {
+            UUID uuid,
+            String authorName,
+            String version,
+            Integer zeebeRevision,
+            String processId,
+            String ruleName,
+            byte[] ruleBody,
+            LocalDateTime lastUpdate,
+            Integer status,
+            String comment) {
         this.uuid = uuid;
         this.authorName = authorName;
         this.version = version;
@@ -118,20 +125,29 @@ public class RuleDeploymentObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RuleDeploymentObject that = (RuleDeploymentObject) o;
-        return Objects.equals(uuid, that.uuid) && Objects.equals(authorName, that.authorName) && Objects.equals(
-                version, that.version) && Objects.equals(zeebeRevision, that.zeebeRevision) && Objects.equals(
-                        processId, that.processId) && Objects.equals(ruleName, that.ruleName) && Objects.equals(
-                                ruleBody, that.ruleBody) && Objects.equals(lastUpdate, that.lastUpdate) && Objects.equals(status, that.status) && Objects.equals(
-                                        comment, that.comment);
+        return Objects.equals(uuid, that.uuid)
+                && Objects.equals(authorName, that.authorName)
+                && Objects.equals(version, that.version)
+                && Objects.equals(zeebeRevision, that.zeebeRevision)
+                && Objects.equals(processId, that.processId)
+                && Objects.equals(ruleName, that.ruleName)
+                && Objects.equals(ruleBody, that.ruleBody)
+                && Objects.equals(lastUpdate, that.lastUpdate)
+                && Objects.equals(status, that.status)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, authorName, version, zeebeRevision, processId, ruleName, ruleBody, lastUpdate, status, comment);
+        return Objects.hash(
+                uuid, authorName, version, zeebeRevision, processId, ruleName, ruleBody, lastUpdate, status, comment);
     }
 
     @Override
     public String toString() {
-        return "RuleDeploymentObject{" + "uuid='" + uuid + '\'' + ", authorName='" + authorName + '\'' + ", version='" + version + '\'' + ", zeebeRevision=" + zeebeRevision + ", precessId='" + processId + '\'' + ", ruleName='" + ruleName + '\'' + ", ruleBody='" + ruleBody + '\'' + ", lastUpdate='" + lastUpdate + '\'' + ", status=" + status + ", comment='" + comment + '\'' + '}';
+        return "RuleDeploymentObject{" + "uuid='" + uuid + '\'' + ", authorName='" + authorName + '\'' + ", version='"
+                + version + '\'' + ", zeebeRevision=" + zeebeRevision + ", precessId='" + processId + '\''
+                + ", ruleName='" + ruleName + '\'' + ", ruleBody='" + ruleBody + '\'' + ", lastUpdate='" + lastUpdate
+                + '\'' + ", status=" + status + ", comment='" + comment + '\'' + '}';
     }
 }

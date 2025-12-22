@@ -1,20 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import business_objects.ui.user.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generatePgsWithdrawalNotificationAlert;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
@@ -27,6 +12,20 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 import static utils.Utils.getRandomUuid;
+
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.RuleAlert;
+import business_objects.ui.user.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -182,8 +181,10 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
         withdrawalAlert1.rule.attributes.currency = "USD";
         withdrawalAlert2.rule.attributes.amount = "11000";
         withdrawalAlert2.rule.attributes.currency = "USD";
-        kafka.produceMessage(withdrawalAlert1.alertId, objectMapper.writeValueAsString(withdrawalAlert1), KAFKA_TOPIC_ALERTS);
-        kafka.produceMessage(withdrawalAlert2.alertId, objectMapper.writeValueAsString(withdrawalAlert2), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                withdrawalAlert1.alertId, objectMapper.writeValueAsString(withdrawalAlert1), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                withdrawalAlert2.alertId, objectMapper.writeValueAsString(withdrawalAlert2), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -191,8 +192,14 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.fillAmountFilter("0", "10000");
         investigationPage.clickApplyFiltrationButton();
-        assertThat("Verify client card that fits the selection is visible", investigationPage.getClientIdsFromClientCards(), hasItem(client1.getUserId().toString()));
-        assertThat("Verify client card that doesn't fit the selection is not visible", investigationPage.getClientIdsFromClientCards(), not(hasItem(client2.getUserId().toString())));
+        assertThat(
+                "Verify client card that fits the selection is visible",
+                investigationPage.getClientIdsFromClientCards(),
+                hasItem(client1.getUserId().toString()));
+        assertThat(
+                "Verify client card that doesn't fit the selection is not visible",
+                investigationPage.getClientIdsFromClientCards(),
+                not(hasItem(client2.getUserId().toString())));
 
         investigationPage.clickSuspiciousClientsFiltration();
         Map<String, String> amountFilterValues;

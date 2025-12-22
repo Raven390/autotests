@@ -1,5 +1,6 @@
 package helpers.database;
 
 public enum DbName {
-    CLICKHOUSE, POSTGRES
+    CLICKHOUSE,
+    POSTGRES
 }

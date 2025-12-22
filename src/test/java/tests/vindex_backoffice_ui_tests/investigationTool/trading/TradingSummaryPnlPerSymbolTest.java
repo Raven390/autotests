@@ -1,5 +1,14 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static utils.Constants.*;
+import static utils.Utils.*;
+import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
@@ -11,31 +20,29 @@ import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
-import static utils.Constants.*;
-import static utils.Utils.*;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
-
 public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
 
-
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(202_002).uid("e5880ca5-8578-4a1e-969d-7a64716ca40f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_002_001).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(202_002)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca40f")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .tradingAccount(202_002_001)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
 
@@ -76,7 +83,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         Allure.step("reload the page");
         tradingPage.checkProfitPnlBySymbolBarsEmpty();
         tradingPage.checkPnlBySymbolBarDescriptionProfits("No profits");
-        tradingPage.checkPnlBySymbolBarDescriptionLoses(String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.getSymbol());
+        tradingPage.checkPnlBySymbolBarDescriptionLoses(
+                String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.getSymbol());
         Allure.step("clean client's trade DB and add one trade with positive PNL");
         tradingPage.deleteClientDeals(client.getUcid());
         trade0.setCommissionUsd(3.0);
@@ -87,7 +95,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         Allure.step("reload the page");
         tradingPage.checkLossesPnlBySymbolBarsEmpty();
         tradingPage.checkPnlBySymbolBarDescriptionLoses("No losses");
-        tradingPage.checkPnlBySymbolBarDescriptionProfits(String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.getSymbol());
+        tradingPage.checkPnlBySymbolBarDescriptionProfits(
+                String.valueOf(tradingPage.calculatePnlByDealInt(trade0)), trade0.getSymbol());
     }
 
     @Test
@@ -161,7 +170,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade3.setProfitUsd(6.0);
         trade3.setStorageUsd(6.0);
         trade3.setSymbol("USDDTS");
-        Allure.step("clean client's trade DB, and add 2 trades with negative PNL and 1 trade with positive PNL, with all of them have same symbol, so sum of PNL of all 3 trades is negative");
+        Allure.step(
+                "clean client's trade DB, and add 2 trades with negative PNL and 1 trade with positive PNL, with all of them have same symbol, so sum of PNL of all 3 trades is negative");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
 
         page.reload();
@@ -174,8 +184,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     @AllureId("944")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that tooltip show correct data PNL by symbol")
-    public void pnlBySymbolTooltipShowCorrectDataTest() throws SQLException,
-            InterruptedException {
+    public void pnlBySymbolTooltipShowCorrectDataTest() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
@@ -205,15 +214,13 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverRightPositiveBarPnlSymbol();
         tradingPage.checkPnlBySymbolTooltipValue(trade1.getSymbol(), tradingPage.calculatePnlByDealInt(trade1, trade2));
-
     }
 
     @Test
     @AllureId("1033")
     @Feature("BMS-929 Trading Summary. PnL per Symbol chart")
     @DisplayName("Test that PNL by symbol uses not cumulative values")
-    public void pnlBySymbolTooltipShowCorrectDataAndNotCumulativeTest() throws SQLException,
-            InterruptedException {
+    public void pnlBySymbolTooltipShowCorrectDataAndNotCumulativeTest() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
@@ -225,7 +232,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade1.setStorageUsd(getRandomRoundedDouble(5, 50_000));
         trade1.setSymbol("USDDTS");
         trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0));
-        trade1.setCloseTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0));
+        trade1.setCloseTimeUtc(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0));
         trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0));
         trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0));
 
@@ -234,7 +242,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade2.setStorageUsd(getRandomRoundedDouble(5, 50_000));
         trade2.setSymbol("USDDTS");
         trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0));
-        trade2.setCloseTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0));
+        trade2.setCloseTimeUtc(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0));
         trade2.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0));
         trade2.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0));
 
@@ -243,7 +252,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade3.setStorageUsd(getRandomRoundedDouble(1, 500));
         trade3.setSymbol("USDDTS");
         trade1.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0));
-        trade1.setCloseTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0));
+        trade1.setCloseTimeUtc(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0));
         trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0));
         trade1.setOpenTimeUtc(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0));
 
@@ -254,8 +264,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverRightPositiveBarPnlSymbol();
-        tradingPage.checkPnlBySymbolTooltipValue(trade1.getSymbol(), tradingPage.calculatePnlByDealInt(trade1, trade2, trade3));
-
+        tradingPage.checkPnlBySymbolTooltipValue(
+                trade1.getSymbol(), tradingPage.calculatePnlByDealInt(trade1, trade2, trade3));
     }
 
     @Test
@@ -314,7 +324,9 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade14.setSymbol("NEGEURSUR");
 
         Allure.step("clean client's trade DB, sdd 4 trades, 2 of with have PNL less than 10% of total PNL");
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade11, trade12, trade13, trade14));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(trade1, trade2, trade3, trade4, trade11, trade12, trade13, trade14));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -322,18 +334,17 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         tradingPage.checkPnlBySymbolBarPositiveCount(3);
         tradingPage.hoverOverOtherPositiveBarPnlSymbol();
         tradingPage.checkPnlBySymbolOtherTooltipHeaderValue(2, tradingPage.calculatePnlByDealInt(trade2, trade3));
-        tradingPage.checkPnlBySymbolTooltipValue(1, trade2.getSymbol(), String.valueOf(tradingPage.calculatePnlByDealInt(trade2)));
-        tradingPage.checkPnlBySymbolTooltipValue(2, trade3.getSymbol(), String.valueOf(tradingPage.calculatePnlByDealInt(trade3)));
-
+        tradingPage.checkPnlBySymbolTooltipValue(
+                1, trade2.getSymbol(), String.valueOf(tradingPage.calculatePnlByDealInt(trade2)));
+        tradingPage.checkPnlBySymbolTooltipValue(
+                2, trade3.getSymbol(), String.valueOf(tradingPage.calculatePnlByDealInt(trade3)));
     }
 
     @Test
     @AllureId("942")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that tooltip for 'other' tab have counter of symbols and shows more as 10 symbols as other")
-    public void pnlBySymbolOtherBarTooltipTest() throws SQLException,
-            InterruptedException {
-
+    public void pnlBySymbolOtherBarTooltipTest() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
@@ -418,7 +429,6 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade13.setStorageUsd(1.00);
         trade13.setSymbol("SMALP");
 
-
         trade31.setCommissionUsd(-80.00);
         trade31.setProfitUsd(-80.00);
         trade31.setStorageUsd(-80.00);
@@ -439,17 +449,20 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade34.setStorageUsd(-10.0);
         trade34.setSymbol("NEGEURSUR");
 
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade31, trade32, trade33, trade34));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(
+                        trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11,
+                        trade12, trade13, trade31, trade32, trade33, trade34));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.checkPnlBySymbolBarPositiveCount(2);
         tradingPage.hoverOverOtherPositiveBarPnlSymbol();
-        int expectedAmountHeader = tradingPage.calculatePnlByDealInt(trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13);
+        int expectedAmountHeader = tradingPage.calculatePnlByDealInt(
+                trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13);
         tradingPage.checkPnlBySymbolOtherTooltipHeaderValue(12, expectedAmountHeader);
         tradingPage.checkPnlBySymbolOtherTooltipLinesCount(12);
-
-
     }
 }

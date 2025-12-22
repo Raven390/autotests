@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -30,6 +14,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingInfoAccountsTest extends TestBaseWeb {
 
@@ -96,34 +95,115 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openAccountsTab();
         // Verify 1st account card
-        assertThat("Assert that account balance in card view is as expected", tradingPage.getAccountBalance(account1.account), equalTo(String.format("%s %s", account1.balance, account1.currency)));
-        assertThat("Assert that account balance usd in card view is as expected", tradingPage.getAccountBalanceUsd(account1.account), equalTo(String.format("%s %s", account1.balanceUsd, "USD")));
-        assertThat("Assert that account status in card view is as expected", tradingPage.getAccountStatus(account1.account), equalTo(account1.accountStatus));
-        assertThat("Assert that account platform in card view is as expected", tradingPage.getAccountPlatform(account1.account), equalTo(account1.platform));
-        assertThat("Assert that account type in card view is as expected", tradingPage.getAccountType(account1.account), equalTo(account1.accountType));
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTradingPnl(account1.account), equalTo(String.format("%s %s", trade1.getProfitUsd(), CURRENCY_USD)));
-        assertThat("Assert that account equity in card view is as expected", tradingPage.getAccountEquity(account1.account), equalTo(String.format("%s %s", account1.equity, account1.currency)));
-        assertThat("Assert that account credit in card view is as expected", tradingPage.getAccountCredit(account1.account), equalTo(String.format("%s %s", account1.credit, account1.currency)));
-        assertThat("Assert that account leverage in card view is as expected", tradingPage.getAccountLeverage(account1.account), equalTo(account1.leverage.toString()));
-        assertThat("Assert that account margin free in card view is as expected", tradingPage.getAccountMarginFree(account1.account), equalTo(String.format("%s %s", account1.marginFree, account1.currency)));
-        assertThat("Assert that account server in card view is as expected", tradingPage.getAccountServer(account1.account), equalTo(account1.serverName));
-        assertThat("Assert that account group in card view is as expected", tradingPage.getAccountGroup(account1.account), equalTo(account1.accountGroup));
-        assertThat("Assert that account created time in card view is as expected", tradingPage.getAccountCreatedTime(account1.account), equalTo(account1.createTimeUtc));
-        assertThat("Assert that account updated time in card view is as expected", tradingPage.getAccountUpdatedTime(account1.account), equalTo(account1.lastUpdated));
+        assertThat(
+                "Assert that account balance in card view is as expected",
+                tradingPage.getAccountBalance(account1.account),
+                equalTo(String.format("%s %s", account1.balance, account1.currency)));
+        assertThat(
+                "Assert that account balance usd in card view is as expected",
+                tradingPage.getAccountBalanceUsd(account1.account),
+                equalTo(String.format("%s %s", account1.balanceUsd, "USD")));
+        assertThat(
+                "Assert that account status in card view is as expected",
+                tradingPage.getAccountStatus(account1.account),
+                equalTo(account1.accountStatus));
+        assertThat(
+                "Assert that account platform in card view is as expected",
+                tradingPage.getAccountPlatform(account1.account),
+                equalTo(account1.platform));
+        assertThat(
+                "Assert that account type in card view is as expected",
+                tradingPage.getAccountType(account1.account),
+                equalTo(account1.accountType));
+        assertThat(
+                "Assert that account total pnl in card view is as expected",
+                tradingPage.getAccountTradingPnl(account1.account),
+                equalTo(String.format("%s %s", trade1.getProfitUsd(), CURRENCY_USD)));
+        assertThat(
+                "Assert that account equity in card view is as expected",
+                tradingPage.getAccountEquity(account1.account),
+                equalTo(String.format("%s %s", account1.equity, account1.currency)));
+        assertThat(
+                "Assert that account credit in card view is as expected",
+                tradingPage.getAccountCredit(account1.account),
+                equalTo(String.format("%s %s", account1.credit, account1.currency)));
+        assertThat(
+                "Assert that account leverage in card view is as expected",
+                tradingPage.getAccountLeverage(account1.account),
+                equalTo(account1.leverage.toString()));
+        assertThat(
+                "Assert that account margin free in card view is as expected",
+                tradingPage.getAccountMarginFree(account1.account),
+                equalTo(String.format("%s %s", account1.marginFree, account1.currency)));
+        assertThat(
+                "Assert that account server in card view is as expected",
+                tradingPage.getAccountServer(account1.account),
+                equalTo(account1.serverName));
+        assertThat(
+                "Assert that account group in card view is as expected",
+                tradingPage.getAccountGroup(account1.account),
+                equalTo(account1.accountGroup));
+        assertThat(
+                "Assert that account created time in card view is as expected",
+                tradingPage.getAccountCreatedTime(account1.account),
+                equalTo(account1.createTimeUtc));
+        assertThat(
+                "Assert that account updated time in card view is as expected",
+                tradingPage.getAccountUpdatedTime(account1.account),
+                equalTo(account1.lastUpdated));
         // Verify 2nd account card
-        assertThat("Assert that account balance in card view is as expected", tradingPage.getAccountBalance(account2.account), equalTo(String.format("%s %s", account2.balance, account2.currency)));
-        assertThat("Assert that account status in card view is as expected", tradingPage.getAccountStatus(account2.account), equalTo(account2.accountStatus));
-        assertThat("Assert that account platform in card view is as expected", tradingPage.getAccountPlatform(account2.account), equalTo(account2.platform));
-        assertThat("Assert that account type in card view is as expected", tradingPage.getAccountType(account2.account), equalTo(account2.accountType));
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTradingPnl(account2.account), equalTo(String.format("%s %s", trade2.getProfitUsd(), CURRENCY_USD)));
-        assertThat("Assert that account equity in card view is as expected", tradingPage.getAccountEquity(account2.account), equalTo(String.format("%s %s", account2.equity, account2.currency)));
-        assertThat("Assert that account credit in card view is as expected", tradingPage.getAccountCredit(account2.account), equalTo(String.format("%s %s", account2.credit, account2.currency)));
-        assertThat("Assert that account leverage in card view is as expected", tradingPage.getAccountLeverage(account2.account), equalTo(account2.leverage.toString()));
-        assertThat("Assert that account margin free in card view is as expected", tradingPage.getAccountMarginFree(account2.account), equalTo(String.format("%s %s", account2.marginFree, account2.currency)));
-        assertThat("Assert that account server in card view is as expected", tradingPage.getAccountServer(account2.account), equalTo(account2.serverName));
-        assertThat("Assert that account group in card view is as expected", tradingPage.getAccountGroup(account2.account), equalTo(account2.accountGroup));
-        assertThat("Assert that account created time in card view is as expected", tradingPage.getAccountCreatedTime(account2.account), equalTo(account2.createTimeUtc));
-        assertThat("Assert that account updated time in card view is as expected", tradingPage.getAccountUpdatedTime(account2.account), equalTo(account2.lastUpdated));
+        assertThat(
+                "Assert that account balance in card view is as expected",
+                tradingPage.getAccountBalance(account2.account),
+                equalTo(String.format("%s %s", account2.balance, account2.currency)));
+        assertThat(
+                "Assert that account status in card view is as expected",
+                tradingPage.getAccountStatus(account2.account),
+                equalTo(account2.accountStatus));
+        assertThat(
+                "Assert that account platform in card view is as expected",
+                tradingPage.getAccountPlatform(account2.account),
+                equalTo(account2.platform));
+        assertThat(
+                "Assert that account type in card view is as expected",
+                tradingPage.getAccountType(account2.account),
+                equalTo(account2.accountType));
+        assertThat(
+                "Assert that account total pnl in card view is as expected",
+                tradingPage.getAccountTradingPnl(account2.account),
+                equalTo(String.format("%s %s", trade2.getProfitUsd(), CURRENCY_USD)));
+        assertThat(
+                "Assert that account equity in card view is as expected",
+                tradingPage.getAccountEquity(account2.account),
+                equalTo(String.format("%s %s", account2.equity, account2.currency)));
+        assertThat(
+                "Assert that account credit in card view is as expected",
+                tradingPage.getAccountCredit(account2.account),
+                equalTo(String.format("%s %s", account2.credit, account2.currency)));
+        assertThat(
+                "Assert that account leverage in card view is as expected",
+                tradingPage.getAccountLeverage(account2.account),
+                equalTo(account2.leverage.toString()));
+        assertThat(
+                "Assert that account margin free in card view is as expected",
+                tradingPage.getAccountMarginFree(account2.account),
+                equalTo(String.format("%s %s", account2.marginFree, account2.currency)));
+        assertThat(
+                "Assert that account server in card view is as expected",
+                tradingPage.getAccountServer(account2.account),
+                equalTo(account2.serverName));
+        assertThat(
+                "Assert that account group in card view is as expected",
+                tradingPage.getAccountGroup(account2.account),
+                equalTo(account2.accountGroup));
+        assertThat(
+                "Assert that account created time in card view is as expected",
+                tradingPage.getAccountCreatedTime(account2.account),
+                equalTo(account2.createTimeUtc));
+        assertThat(
+                "Assert that account updated time in card view is as expected",
+                tradingPage.getAccountUpdatedTime(account2.account),
+                equalTo(account2.lastUpdated));
         // Verify tooltips
         tradingPage.verifyAccountIdPopup();
         tradingPage.verifyBalancePopup(account1.account);
@@ -151,32 +231,110 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         // Verify table headers
         tradingPage.verifyAccountTableHeaders();
         // Verify 1st account row
-        assertThat("Assert that account platform in table view is as expected", tradingPage.getAccountTablePlatform(account1.account), equalTo(account1.platform));
-        assertThat("Assert that account type in table view is as expected", tradingPage.getAccountTableType(account1.account), equalTo(account1.accountType));
-        assertThat("Assert that account status in table view is as expected", tradingPage.getAccountTableStatus(account1.account), equalTo(account1.accountStatus));
-        assertThat("Assert that account created time in table view is as expected", tradingPage.getAccountTableCreated(account1.account), equalTo(account1.createTimeUtc.replace(" ", "")));
-        assertThat("Assert that account updated time in table view is as expected", tradingPage.getAccountTableUpdated(account1.account), equalTo(account1.lastUpdated.replace(" ", "")));
-        assertThat("Assert that account balance in table view is as expected", tradingPage.getAccountTableBalance(account1.account), equalTo(String.format("%s %s%s %s", account1.balance, account1.currency, account1.balanceUsd, "USD")));
-        assertThat("Assert that account total pnl in table view is as expected", tradingPage.getAccountTableTotalPnl(account1.account), equalTo(String.format("%s %s", account1.pnl, account1.currency)));
-        assertThat("Assert that account equity in table view is as expected", tradingPage.getAccountTableEquity(account1.account), equalTo(String.format("%s %s", account1.equity, account1.currency)));
-        assertThat("Assert that account credit in table view is as expected", tradingPage.getAccountTableCredit(account1.account), equalTo(String.format("%s %s", account1.credit, account1.currency)));
-        assertThat("Assert that account leverage in table view is as expected", tradingPage.getAccountTableLeverage(account1.account), equalTo(account1.leverage.toString()));
-        assertThat("Assert that account margin free in table view is as expected", tradingPage.getAccountTableMarginFree(account1.account), equalTo(String.format("%s %s", account1.marginFree, account1.currency)));
-        assertThat("Assert that account server in table view is as expected", tradingPage.getAccountTableServer(account1.account), equalTo(account1.serverName));
-        assertThat("Assert that account group in table view is as expected", tradingPage.getAccountTableGroup(account1.account), equalTo(account1.accountGroup));
+        assertThat(
+                "Assert that account platform in table view is as expected",
+                tradingPage.getAccountTablePlatform(account1.account),
+                equalTo(account1.platform));
+        assertThat(
+                "Assert that account type in table view is as expected",
+                tradingPage.getAccountTableType(account1.account),
+                equalTo(account1.accountType));
+        assertThat(
+                "Assert that account status in table view is as expected",
+                tradingPage.getAccountTableStatus(account1.account),
+                equalTo(account1.accountStatus));
+        assertThat(
+                "Assert that account created time in table view is as expected",
+                tradingPage.getAccountTableCreated(account1.account),
+                equalTo(account1.createTimeUtc.replace(" ", "")));
+        assertThat(
+                "Assert that account updated time in table view is as expected",
+                tradingPage.getAccountTableUpdated(account1.account),
+                equalTo(account1.lastUpdated.replace(" ", "")));
+        assertThat(
+                "Assert that account balance in table view is as expected",
+                tradingPage.getAccountTableBalance(account1.account),
+                equalTo(String.format("%s %s%s %s", account1.balance, account1.currency, account1.balanceUsd, "USD")));
+        assertThat(
+                "Assert that account total pnl in table view is as expected",
+                tradingPage.getAccountTableTotalPnl(account1.account),
+                equalTo(String.format("%s %s", account1.pnl, account1.currency)));
+        assertThat(
+                "Assert that account equity in table view is as expected",
+                tradingPage.getAccountTableEquity(account1.account),
+                equalTo(String.format("%s %s", account1.equity, account1.currency)));
+        assertThat(
+                "Assert that account credit in table view is as expected",
+                tradingPage.getAccountTableCredit(account1.account),
+                equalTo(String.format("%s %s", account1.credit, account1.currency)));
+        assertThat(
+                "Assert that account leverage in table view is as expected",
+                tradingPage.getAccountTableLeverage(account1.account),
+                equalTo(account1.leverage.toString()));
+        assertThat(
+                "Assert that account margin free in table view is as expected",
+                tradingPage.getAccountTableMarginFree(account1.account),
+                equalTo(String.format("%s %s", account1.marginFree, account1.currency)));
+        assertThat(
+                "Assert that account server in table view is as expected",
+                tradingPage.getAccountTableServer(account1.account),
+                equalTo(account1.serverName));
+        assertThat(
+                "Assert that account group in table view is as expected",
+                tradingPage.getAccountTableGroup(account1.account),
+                equalTo(account1.accountGroup));
         // Verify 2nd account row
-        assertThat("Assert that account platform in table view is as expected", tradingPage.getAccountTablePlatform(account2.account), equalTo(account2.platform));
-        assertThat("Assert that account type in table view is as expected", tradingPage.getAccountTableType(account2.account), equalTo(account2.accountType));
-        assertThat("Assert that account status in table view is as expected", tradingPage.getAccountTableStatus(account2.account), equalTo(account2.accountStatus));
-        assertThat("Assert that account created time in table view is as expected", tradingPage.getAccountTableCreated(account2.account), equalTo(account2.createTimeUtc.replace(" ", "")));
-        assertThat("Assert that account updated time in table view is as expected", tradingPage.getAccountTableUpdated(account2.account), equalTo(account2.lastUpdated.replace(" ", "")));
-        assertThat("Assert that account balance in table view is as expected", tradingPage.getAccountTableBalance(account2.account), equalTo(String.format("%s %s", account2.balance, account2.currency)));
-        assertThat("Assert that account total pnl in table view is as expected", tradingPage.getAccountTableTotalPnl(account2.account), equalTo(String.format("%s %s", account2.pnl, account2.currency)));
-        assertThat("Assert that account equity in table view is as expected", tradingPage.getAccountTableEquity(account2.account), equalTo(String.format("%s %s", account2.equity, account2.currency)));
-        assertThat("Assert that account credit in table view is as expected", tradingPage.getAccountTableCredit(account2.account), equalTo(String.format("%s %s", account2.credit, account2.currency)));
-        assertThat("Assert that account leverage in table view is as expected", tradingPage.getAccountTableLeverage(account2.account), equalTo(account2.leverage.toString()));
-        assertThat("Assert that account margin free in table view is as expected", tradingPage.getAccountTableMarginFree(account2.account), equalTo(String.format("%s %s", account2.marginFree, account2.currency)));
-        assertThat("Assert that account server in table view is as expected", tradingPage.getAccountTableServer(account2.account), equalTo(account2.serverName));
-        assertThat("Assert that account group in table view is as expected", tradingPage.getAccountTableGroup(account2.account), equalTo(account2.accountGroup));
+        assertThat(
+                "Assert that account platform in table view is as expected",
+                tradingPage.getAccountTablePlatform(account2.account),
+                equalTo(account2.platform));
+        assertThat(
+                "Assert that account type in table view is as expected",
+                tradingPage.getAccountTableType(account2.account),
+                equalTo(account2.accountType));
+        assertThat(
+                "Assert that account status in table view is as expected",
+                tradingPage.getAccountTableStatus(account2.account),
+                equalTo(account2.accountStatus));
+        assertThat(
+                "Assert that account created time in table view is as expected",
+                tradingPage.getAccountTableCreated(account2.account),
+                equalTo(account2.createTimeUtc.replace(" ", "")));
+        assertThat(
+                "Assert that account updated time in table view is as expected",
+                tradingPage.getAccountTableUpdated(account2.account),
+                equalTo(account2.lastUpdated.replace(" ", "")));
+        assertThat(
+                "Assert that account balance in table view is as expected",
+                tradingPage.getAccountTableBalance(account2.account),
+                equalTo(String.format("%s %s", account2.balance, account2.currency)));
+        assertThat(
+                "Assert that account total pnl in table view is as expected",
+                tradingPage.getAccountTableTotalPnl(account2.account),
+                equalTo(String.format("%s %s", account2.pnl, account2.currency)));
+        assertThat(
+                "Assert that account equity in table view is as expected",
+                tradingPage.getAccountTableEquity(account2.account),
+                equalTo(String.format("%s %s", account2.equity, account2.currency)));
+        assertThat(
+                "Assert that account credit in table view is as expected",
+                tradingPage.getAccountTableCredit(account2.account),
+                equalTo(String.format("%s %s", account2.credit, account2.currency)));
+        assertThat(
+                "Assert that account leverage in table view is as expected",
+                tradingPage.getAccountTableLeverage(account2.account),
+                equalTo(account2.leverage.toString()));
+        assertThat(
+                "Assert that account margin free in table view is as expected",
+                tradingPage.getAccountTableMarginFree(account2.account),
+                equalTo(String.format("%s %s", account2.marginFree, account2.currency)));
+        assertThat(
+                "Assert that account server in table view is as expected",
+                tradingPage.getAccountTableServer(account2.account),
+                equalTo(account2.serverName));
+        assertThat(
+                "Assert that account group in table view is as expected",
+                tradingPage.getAccountTableGroup(account2.account),
+                equalTo(account2.accountGroup));
     }
 }

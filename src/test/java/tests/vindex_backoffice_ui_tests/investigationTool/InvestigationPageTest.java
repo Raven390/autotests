@@ -12,17 +12,24 @@ import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Muted;
+import java.io.IOException;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
-import java.io.IOException;
-
 public class InvestigationPageTest extends TestBaseWeb {
 
     static ClientHelper restrictionClient;
+
     static {
-        restrictionClient = ClientHelper.builder().userId(424_343).uid("062cde3b-ea8d-48b5-8e2c-98f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(424_343_101).serverId(42).build();
+        restrictionClient = ClientHelper.builder()
+                .userId(424_343)
+                .uid("062cde3b-ea8d-48b5-8e2c-98f3d5f67999")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(424_343_101)
+                .serverId(42)
+                .build();
     }
 
     @BeforeAll
@@ -54,7 +61,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("negative login test")
     void NegativeLoginUITest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginWeb("WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb(
+                "WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
         investigationPage.isNotLoggedIn(); // check some simple and bulletproof marker of logging error
         keycloackPage.errorMessageIsShown();
     }
@@ -117,7 +125,6 @@ public class InvestigationPageTest extends TestBaseWeb {
         investigationPage.colorThemeSwitch();
     }
 
-
     @Test
     @Disabled("disabled in UI")
     @Muted
@@ -164,7 +171,6 @@ public class InvestigationPageTest extends TestBaseWeb {
         investigationPage.filterAssignedMe();
         investigationPage.filterUnassigned();
         investigationPage.filterAll();
-
     }
 
     @Test
@@ -226,6 +232,4 @@ public class InvestigationPageTest extends TestBaseWeb {
         investigationPage.navigateToClient(restrictionClient.getUcid());
         investigationPage.checkOpenedTab("audit");
     }
-
-
 }

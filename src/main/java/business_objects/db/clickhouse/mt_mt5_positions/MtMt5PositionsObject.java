@@ -51,20 +51,55 @@ public class MtMt5PositionsObject {
     private String lastUpdated;
     private String internalComment;
 
-    public MtMt5PositionsObject() {
-    }
+    public MtMt5PositionsObject() {}
 
     public MtMt5PositionsObject(
-            String brand, String regulator, Integer userId, String ucid, Integer account, String platform,
+            String brand,
+            String regulator,
+            Integer userId,
+            String ucid,
+            Integer account,
+            String platform,
             Integer serverId,
-            String serverName, String accountType, String accountGroup, String accountCurrency, Long positionId,
-            Integer action, Integer reason, Double contractSize, String timeCreate, String timeCreateUtc,
+            String serverName,
+            String accountType,
+            String accountGroup,
+            String accountCurrency,
+            Long positionId,
+            Integer action,
+            Integer reason,
+            Double contractSize,
+            String timeCreate,
+            String timeCreateUtc,
             String timeUpdate,
-            String timeUpdateUtc, String symbol, String symbolUnderlying, String baseCurrency, String quoteCurrency,
-            Double rateUsdBase, Double rateUsdQuote, Double rateUsdAcc, Double priceOpen, Double priceCurrent,
-            Double volume, Double volumeLots, Double notionalValueUsd, Double profit, Double storage, Double profitUsd,
-            Double storageUsd, String comment, Double sl, Double tp, Long expertId, Long expertPositionId,
-            Integer dealer, Integer rateProfit, Integer rateMargin, String op, Integer isDeleted, String lastUpdated,
+            String timeUpdateUtc,
+            String symbol,
+            String symbolUnderlying,
+            String baseCurrency,
+            String quoteCurrency,
+            Double rateUsdBase,
+            Double rateUsdQuote,
+            Double rateUsdAcc,
+            Double priceOpen,
+            Double priceCurrent,
+            Double volume,
+            Double volumeLots,
+            Double notionalValueUsd,
+            Double profit,
+            Double storage,
+            Double profitUsd,
+            Double storageUsd,
+            String comment,
+            Double sl,
+            Double tp,
+            Long expertId,
+            Long expertPositionId,
+            Integer dealer,
+            Integer rateProfit,
+            Integer rateMargin,
+            String op,
+            Integer isDeleted,
+            String lastUpdated,
             String internalComment) {
         this.brand = brand;
         this.regulator = regulator;
@@ -119,38 +154,126 @@ public class MtMt5PositionsObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         MtMt5PositionsObject that = (MtMt5PositionsObject) o;
-        return Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(
-                userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(
-                        platform, that.platform) && Objects.equals(serverId, that.serverId) && Objects.equals(
-                                serverName, that.serverName) && Objects.equals(accountType, that.accountType) && Objects.equals(
-                                        accountGroup, that.accountGroup) && Objects.equals(accountCurrency, that.accountCurrency) && Objects.equals(
-                                                positionId, that.positionId) && Objects.equals(action, that.action) && Objects.equals(
-                                                        reason, that.reason) && Objects.equals(contractSize, that.contractSize) && Objects.equals(timeCreate, that.timeCreate) && Objects.equals(
-                                                                timeCreateUtc, that.timeCreateUtc) && Objects.equals(timeUpdate, that.timeUpdate) && Objects.equals(
-                                                                        timeUpdateUtc, that.timeUpdateUtc) && Objects.equals(symbol, that.symbol) && Objects.equals(
-                                                                                symbolUnderlying, that.symbolUnderlying) && Objects.equals(baseCurrency, that.baseCurrency) && Objects.equals(
-                                                                                        quoteCurrency, that.quoteCurrency) && Objects.equals(rateUsdBase, that.rateUsdBase) && Objects.equals(
-                                                                                                rateUsdQuote, that.rateUsdQuote) && Objects.equals(rateUsdAcc, that.rateUsdAcc) && Objects.equals(
-                                                                                                        priceOpen, that.priceOpen) && Objects.equals(priceCurrent, that.priceCurrent) && Objects.equals(
-                                                                                                                volume, that.volume) && Objects.equals(volumeLots, that.volumeLots) && Objects.equals(
-                                                                                                                        notionalValueUsd, that.notionalValueUsd) && Objects.equals(profit, that.profit) && Objects.equals(
-                                                                                                                                storage, that.storage) && Objects.equals(profitUsd, that.profitUsd) && Objects.equals(
-                                                                                                                                        storageUsd, that.storageUsd) && Objects.equals(comment, that.comment) && Objects.equals(
-                                                                                                                                                sl, that.sl) && Objects.equals(tp, that.tp) && Objects.equals(expertId, that.expertId) && Objects.equals(
-                                                                                                                                                        expertPositionId, that.expertPositionId) && Objects.equals(dealer, that.dealer) && Objects.equals(
-                                                                                                                                                                rateProfit, that.rateProfit) && Objects.equals(rateMargin, that.rateMargin) && Objects.equals(op, that.op) && Objects.equals(
-                                                                                                                                                                        isDeleted, that.isDeleted) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(
-                                                                                                                                                                                internalComment, that.internalComment);
+        return Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(accountType, that.accountType)
+                && Objects.equals(accountGroup, that.accountGroup)
+                && Objects.equals(accountCurrency, that.accountCurrency)
+                && Objects.equals(positionId, that.positionId)
+                && Objects.equals(action, that.action)
+                && Objects.equals(reason, that.reason)
+                && Objects.equals(contractSize, that.contractSize)
+                && Objects.equals(timeCreate, that.timeCreate)
+                && Objects.equals(timeCreateUtc, that.timeCreateUtc)
+                && Objects.equals(timeUpdate, that.timeUpdate)
+                && Objects.equals(timeUpdateUtc, that.timeUpdateUtc)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(symbolUnderlying, that.symbolUnderlying)
+                && Objects.equals(baseCurrency, that.baseCurrency)
+                && Objects.equals(quoteCurrency, that.quoteCurrency)
+                && Objects.equals(rateUsdBase, that.rateUsdBase)
+                && Objects.equals(rateUsdQuote, that.rateUsdQuote)
+                && Objects.equals(rateUsdAcc, that.rateUsdAcc)
+                && Objects.equals(priceOpen, that.priceOpen)
+                && Objects.equals(priceCurrent, that.priceCurrent)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(volumeLots, that.volumeLots)
+                && Objects.equals(notionalValueUsd, that.notionalValueUsd)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(storage, that.storage)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(storageUsd, that.storageUsd)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(sl, that.sl)
+                && Objects.equals(tp, that.tp)
+                && Objects.equals(expertId, that.expertId)
+                && Objects.equals(expertPositionId, that.expertPositionId)
+                && Objects.equals(dealer, that.dealer)
+                && Objects.equals(rateProfit, that.rateProfit)
+                && Objects.equals(rateMargin, that.rateMargin)
+                && Objects.equals(op, that.op)
+                && Objects.equals(isDeleted, that.isDeleted)
+                && Objects.equals(lastUpdated, that.lastUpdated)
+                && Objects.equals(internalComment, that.internalComment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, regulator, userId, ucid, account, platform, serverId, serverName, accountType, accountGroup, accountCurrency, positionId, action, reason, contractSize, timeCreate, timeCreateUtc, timeUpdate, timeUpdateUtc, symbol, symbolUnderlying, baseCurrency, quoteCurrency, rateUsdBase, rateUsdQuote, rateUsdAcc, priceOpen, priceCurrent, volume, volumeLots, notionalValueUsd, profit, storage, profitUsd, storageUsd, comment, sl, tp, expertId, expertPositionId, dealer, rateProfit, rateMargin, op, isDeleted, lastUpdated, internalComment);
+        return Objects.hash(
+                brand,
+                regulator,
+                userId,
+                ucid,
+                account,
+                platform,
+                serverId,
+                serverName,
+                accountType,
+                accountGroup,
+                accountCurrency,
+                positionId,
+                action,
+                reason,
+                contractSize,
+                timeCreate,
+                timeCreateUtc,
+                timeUpdate,
+                timeUpdateUtc,
+                symbol,
+                symbolUnderlying,
+                baseCurrency,
+                quoteCurrency,
+                rateUsdBase,
+                rateUsdQuote,
+                rateUsdAcc,
+                priceOpen,
+                priceCurrent,
+                volume,
+                volumeLots,
+                notionalValueUsd,
+                profit,
+                storage,
+                profitUsd,
+                storageUsd,
+                comment,
+                sl,
+                tp,
+                expertId,
+                expertPositionId,
+                dealer,
+                rateProfit,
+                rateMargin,
+                op,
+                isDeleted,
+                lastUpdated,
+                internalComment);
     }
 
     @Override
     public String toString() {
-        return "MtMt5PositionsObject{" + "brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", platform='" + platform + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", accountType='" + accountType + '\'' + ", accountGroup='" + accountGroup + '\'' + ", accountCurrency='" + accountCurrency + '\'' + ", positionId=" + positionId + ", action=" + action + ", reason=" + reason + ", contractSize=" + contractSize + ", timeCreate='" + timeCreate + '\'' + ", timeCreateUtc='" + timeCreateUtc + '\'' + ", timeUpdate='" + timeUpdate + '\'' + ", timeUpdateUtc='" + timeUpdateUtc + '\'' + ", symbol='" + symbol + '\'' + ", symbolUnderlying='" + symbolUnderlying + '\'' + ", baseCurrency='" + baseCurrency + '\'' + ", quoteCurrency='" + quoteCurrency + '\'' + ", rateUsdBase=" + rateUsdBase + ", rateUsdQuote=" + rateUsdQuote + ", rateUsdAcc=" + rateUsdAcc + ", priceOpen=" + priceOpen + ", priceCurrent=" + priceCurrent + ", volume=" + volume + ", volumeLots=" + volumeLots + ", notionalValueUsd=" + notionalValueUsd + ", profit=" + profit + ", storage=" + storage + ", profitUsd=" + profitUsd + ", storageUsd=" + storageUsd + ", comment='" + comment + '\'' + ", sl=" + sl + ", tp=" + tp + ", expertId=" + expertId + ", expertPositionId=" + expertPositionId + ", dealer=" + dealer + ", rateProfit=" + rateProfit + ", rateMargin=" + rateMargin + ", op='" + op + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
+        return "MtMt5PositionsObject{" + "brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId="
+                + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", platform='" + platform + '\''
+                + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", accountType='" + accountType
+                + '\'' + ", accountGroup='" + accountGroup + '\'' + ", accountCurrency='" + accountCurrency + '\''
+                + ", positionId=" + positionId + ", action=" + action + ", reason=" + reason + ", contractSize="
+                + contractSize + ", timeCreate='" + timeCreate + '\'' + ", timeCreateUtc='" + timeCreateUtc + '\''
+                + ", timeUpdate='" + timeUpdate + '\'' + ", timeUpdateUtc='" + timeUpdateUtc + '\'' + ", symbol='"
+                + symbol + '\'' + ", symbolUnderlying='" + symbolUnderlying + '\'' + ", baseCurrency='" + baseCurrency
+                + '\'' + ", quoteCurrency='" + quoteCurrency + '\'' + ", rateUsdBase=" + rateUsdBase + ", rateUsdQuote="
+                + rateUsdQuote + ", rateUsdAcc=" + rateUsdAcc + ", priceOpen=" + priceOpen + ", priceCurrent="
+                + priceCurrent + ", volume=" + volume + ", volumeLots=" + volumeLots + ", notionalValueUsd="
+                + notionalValueUsd + ", profit=" + profit + ", storage=" + storage + ", profitUsd=" + profitUsd
+                + ", storageUsd=" + storageUsd + ", comment='" + comment + '\'' + ", sl=" + sl + ", tp=" + tp
+                + ", expertId=" + expertId + ", expertPositionId=" + expertPositionId + ", dealer=" + dealer
+                + ", rateProfit=" + rateProfit + ", rateMargin=" + rateMargin + ", op='" + op + '\'' + ", isDeleted="
+                + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\''
+                + '}';
     }
 
     public String getBrand() {

@@ -17,12 +17,20 @@ public class ClientsRestrictionOld {
     public String createdAt;
     public String updatedAt;
 
-    public ClientsRestrictionOld() {
-    }
+    public ClientsRestrictionOld() {}
 
-    public ClientsRestrictionOld(Long id, String ucid, String regulator, Long accountId, Long serverId,
+    public ClientsRestrictionOld(
+            Long id,
+            String ucid,
+            String regulator,
+            Long accountId,
+            Long serverId,
             Long restrictionId,
-            String applicationReason, String status, String cancellationReason, String failReason, String createdAt,
+            String applicationReason,
+            String status,
+            String cancellationReason,
+            String failReason,
+            String createdAt,
             String updatedAt) {
         this.id = id;
         this.ucid = ucid;
@@ -38,8 +46,8 @@ public class ClientsRestrictionOld {
         this.updatedAt = updatedAt;
     }
 
-    public ClientsRestrictionOld(String ucid, String regulator, Long restrictionId, String applicationReason,
-            String status) {
+    public ClientsRestrictionOld(
+            String ucid, String regulator, Long restrictionId, String applicationReason, String status) {
         this.ucid = ucid;
         this.regulator = regulator;
         this.restrictionId = restrictionId;
@@ -52,7 +60,10 @@ public class ClientsRestrictionOld {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientsRestrictionOld that = (ClientsRestrictionOld) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(status, that.status);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(restrictionId, that.restrictionId)
+                && Objects.equals(status, that.status);
     }
 
     @Override
@@ -62,6 +73,10 @@ public class ClientsRestrictionOld {
 
     @Override
     public String toString() {
-        return "ClientsRestriction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", regulator='" + regulator + '\'' + ", accountId=" + accountId + ", serverId=" + serverId + ", restrictionId=" + restrictionId + ", applicationReason='" + applicationReason + '\'' + ", status='" + status + '\'' + ", cancellationReason='" + cancellationReason + '\'' + ", failReason='" + failReason + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
+        return "ClientsRestriction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", regulator='" + regulator + '\''
+                + ", accountId=" + accountId + ", serverId=" + serverId + ", restrictionId=" + restrictionId
+                + ", applicationReason='" + applicationReason + '\'' + ", status='" + status + '\''
+                + ", cancellationReason='" + cancellationReason + '\'' + ", failReason='" + failReason + '\''
+                + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
     }
 }

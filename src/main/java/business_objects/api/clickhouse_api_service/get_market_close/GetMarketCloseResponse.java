@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_market_close;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetMarketCloseResponse {
@@ -9,8 +8,7 @@ public class GetMarketCloseResponse {
     @JsonProperty("marketCloseTime")
     private String marketCloseTime;
 
-    public GetMarketCloseResponse() {
-    }
+    public GetMarketCloseResponse() {}
 
     public GetMarketCloseResponse(String marketCloseTime) {
         this.marketCloseTime = marketCloseTime;

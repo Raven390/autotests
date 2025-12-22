@@ -1,10 +1,10 @@
 package business_objects.db.clickhouse.s3___dim_client;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 import net.datafaker.Faker;
-
-import static utils.Utils.*;
 
 public class S3DimClientFactory {
 

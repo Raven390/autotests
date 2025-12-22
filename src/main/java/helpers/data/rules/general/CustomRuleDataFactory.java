@@ -1,21 +1,21 @@
 package helpers.data.rules.general;
 
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.*;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+
 import business_objects.kafka.CustomEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import utils.Utils;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.*;
-import static helpers.database.DbHelper.startSshTunnel;
+import utils.Utils;
 
 @RuleTestData("custom-rule")
 public class CustomRuleDataFactory {
@@ -54,7 +54,8 @@ public class CustomRuleDataFactory {
         data.customEvent.setClientId(data.clientHelper.getUserId().toString());
         data.customEvent.setBrand(data.clientHelper.getBrand());
         data.customEvent.setFraudType("HEDGING");
-        data.customEvent.setAlert("Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
+        data.customEvent.setAlert(
+                "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
         data.customEvent.setRestriction("WR");
         return data;
     }
@@ -65,7 +66,8 @@ public class CustomRuleDataFactory {
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
         data.customEvent.setTradingAccount(data.clientHelper.getTradingAccount().toString());
         data.customEvent.setFraudType("HEDGING");
-        data.customEvent.setAlert("Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
+        data.customEvent.setAlert(
+                "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
         data.customEvent.setRestriction("WR");
         return data;
     }
@@ -93,7 +95,8 @@ public class CustomRuleDataFactory {
         DataHelper data = getCustomRuleData(customRuleTest5Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
         data.customEvent.setTradingAccount(data.clientHelper.getTradingAccount().toString());
-        data.customEvent.setAlert("Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
+        data.customEvent.setAlert(
+                "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
         return data;
     }
 
@@ -111,5 +114,4 @@ public class CustomRuleDataFactory {
 
         return map;
     }
-
 }

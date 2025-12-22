@@ -1,7 +1,7 @@
 package business_objects.api.rule_engine_api.get_rules;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class GetRulesResponse {
 

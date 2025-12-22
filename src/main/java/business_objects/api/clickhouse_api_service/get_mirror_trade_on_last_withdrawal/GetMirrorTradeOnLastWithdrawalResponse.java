@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 public class GetMirrorTradeOnLastWithdrawalResponse {
@@ -15,6 +14,5 @@ public class GetMirrorTradeOnLastWithdrawalResponse {
     @JsonProperty("withdrawalApplicationTime")
     private String withdrawalApplicationTime;
 
-    public GetMirrorTradeOnLastWithdrawalResponse() {
-    }
+    public GetMirrorTradeOnLastWithdrawalResponse() {}
 }

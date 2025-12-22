@@ -3,7 +3,6 @@ package business_objects.db.clickhouse.segmentation_table;
 import lombok.Builder;
 import lombok.Data;
 
-
 @Data
 @Builder
 public class SegmentationTableObject {
@@ -12,6 +11,4 @@ public class SegmentationTableObject {
     private Double netDeposit;
     private String segment;
     private String date;
-
 }
-

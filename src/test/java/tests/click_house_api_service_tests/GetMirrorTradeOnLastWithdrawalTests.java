@@ -1,21 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
-import business_objects.api.clickhouse_api_service.get_mirror_trade_on_last_withdrawal.GetMirrorTradeOnLastWithdrawalResponse;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.List;
-
 import static business_objects.api.clickhouse_api_service.get_mirror_trade_on_last_withdrawal.GetMirrorTradeOnLastWithdrawalRequest.getMirrorTradesOnLastWithdrawal;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -29,6 +13,21 @@ import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_CLICKHOUSE_API_SERVICE;
+
+import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.clickhouse_api_service.get_mirror_trade_on_last_withdrawal.GetMirrorTradeOnLastWithdrawalResponse;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.List;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL)
@@ -56,7 +55,8 @@ class GetMirrorTradeOnLastWithdrawalTests extends TestBaseApi {
         crmTbUserObject3 = generateUserByClient(client3);
         crmTbAccountObject2 = generateAccountByClient(client2, false);
 
-        insertObjectsToDb(DbName.CLICKHOUSE, CRM_USER_TABLE_NAME, List.of(crmTbUserObject1, crmTbUserObject2, crmTbUserObject3));
+        insertObjectsToDb(
+                DbName.CLICKHOUSE, CRM_USER_TABLE_NAME, List.of(crmTbUserObject1, crmTbUserObject2, crmTbUserObject3));
         insertObjectsToDb(DbName.CLICKHOUSE, CRM_TB_ACCOUNT_TABLE_NAME, List.of(crmTbAccountObject2));
     }
 
@@ -72,7 +72,8 @@ class GetMirrorTradeOnLastWithdrawalTests extends TestBaseApi {
     void getMirrorTradeOnLastWithdrawalTest1() throws IOException {
         Response response = getMirrorTradesOnLastWithdrawal(client1.getUcid());
         assertThat(response.body(), is(notNullValue()));
-        GetMirrorTradeOnLastWithdrawalResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorTradeOnLastWithdrawalResponse.class);
+        GetMirrorTradeOnLastWithdrawalResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorTradeOnLastWithdrawalResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.getSuspiciousFlag(), is(true));
         assertThat("Assert response length", mappedResponse.getSuspiciousFlag(), is(notNullValue()));
@@ -84,7 +85,8 @@ class GetMirrorTradeOnLastWithdrawalTests extends TestBaseApi {
     void getMirrorTradeOnLastWithdrawalTest2() throws IOException {
         Response response = getMirrorTradesOnLastWithdrawal(client2.getUcid());
         assertThat(response.body(), is(notNullValue()));
-        GetMirrorTradeOnLastWithdrawalResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorTradeOnLastWithdrawalResponse.class);
+        GetMirrorTradeOnLastWithdrawalResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorTradeOnLastWithdrawalResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.getSuspiciousFlag(), is(false));
         assertThat("Assert response length", mappedResponse.getSuspiciousFlag(), is(notNullValue()));
@@ -96,9 +98,13 @@ class GetMirrorTradeOnLastWithdrawalTests extends TestBaseApi {
     void getMirrorTradeOnLastWithdrawalTest3() throws IOException {
         Response response = getMirrorTradesOnLastWithdrawal("ucid-1234");
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(404));
-        assertThat("Assert response error", mappedResponse.getError(), is("TradingAccount or serverId not found for client ucid-1234."));
+        assertThat(
+                "Assert response error",
+                mappedResponse.getError(),
+                is("TradingAccount or serverId not found for client ucid-1234."));
         assertThat("Assert response length", mappedResponse.getStatus(), is(404));
     }
 }

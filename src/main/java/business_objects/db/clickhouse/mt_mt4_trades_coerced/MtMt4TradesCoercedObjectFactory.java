@@ -1,5 +1,8 @@
 package business_objects.db.clickhouse.mt_mt4_trades_coerced;
 
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
@@ -7,24 +10,73 @@ import helpers.data.enums.Reason;
 import helpers.data.enums.Symbol;
 import helpers.data.enums.TicketType;
 import io.qameta.allure.Step;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static utils.Utils.*;
-
 public class MtMt4TradesCoercedObjectFactory {
-
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
     public static MtMt4TradesCoercedObject generateMt4TradesCoerced(ClientHelper client) {
-        return new MtMt4TradesCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId().longValue(), client.getUcid(), client.getTradingAccount().longValue(), "MT4", client.getServerId().longValue(), "serverName", "accountType", "accountGroup", "USD", getRandomIntPositive().longValue(), 1L, "Buy", 1L, "Client", 1L, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.55, 33.44, 55.66, "EURUSD", "GBPJPY", "EUR", "GBP", 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1L, 87.43, 76.54, 1.1, 1.1, 1.1, 1.1, 1.1, 78.99, 22.33, 11.22, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.66, 1L, "comment_autotest", 123.78, 32.56, 12.98, 0L, getCurrentTimestampDbFormat(), "internalComment");
+        return new MtMt4TradesCoercedObject(
+                client.getBrand(),
+                client.getRegulator(),
+                client.getUserId().longValue(),
+                client.getUcid(),
+                client.getTradingAccount().longValue(),
+                "MT4",
+                client.getServerId().longValue(),
+                "serverName",
+                "accountType",
+                "accountGroup",
+                "USD",
+                getRandomIntPositive().longValue(),
+                1L,
+                "Buy",
+                1L,
+                "Client",
+                1L,
+                getCurrentTimestampDbFormat(),
+                getCurrentTimestampDbFormat(),
+                1234.55,
+                33.44,
+                55.66,
+                "EURUSD",
+                "GBPJPY",
+                "EUR",
+                "GBP",
+                1.1,
+                1.1,
+                1.1,
+                1.1,
+                1.1,
+                1.1,
+                1L,
+                87.43,
+                76.54,
+                1.1,
+                1.1,
+                1.1,
+                1.1,
+                1.1,
+                78.99,
+                22.33,
+                11.22,
+                getCurrentTimestampDbFormat(),
+                getCurrentTimestampDbFormat(),
+                1234.66,
+                1L,
+                "comment_autotest",
+                123.78,
+                32.56,
+                12.98,
+                0L,
+                getCurrentTimestampDbFormat(),
+                "internalComment");
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
-    public static MtMt4TradesCoercedObject generateMt4TradesCoercedBalance(ClientHelper client, double profit,
-            String comment) {
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedBalance(
+            ClientHelper client, double profit, String comment) {
         MtMt4TradesCoercedObject mtMt4TradesCoercedObject = generateMt4TradesCoerced(client);
         mtMt4TradesCoercedObject.setProfit(profit);
         mtMt4TradesCoercedObject.setProfitUsd(profit);
@@ -36,8 +88,8 @@ public class MtMt4TradesCoercedObjectFactory {
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object and profit")
-    public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitComment(CrmTbAccountObject account,
-            Double profit, String comment) {
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitComment(
+            CrmTbAccountObject account, Double profit, String comment) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(getRandomVantageClientAllFields());
         trade.setBrand(account.brand);
         trade.setRegulator(account.regulator);
@@ -54,16 +106,16 @@ public class MtMt4TradesCoercedObjectFactory {
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object and profit")
-    public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitCommentBuy(CrmTbAccountObject account,
-            Double profit, String comment) {
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitCommentBuy(
+            CrmTbAccountObject account, Double profit, String comment) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoercedAccountProfitComment(account, profit, comment);
         trade.setTicketType("Buy");
         return trade;
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
-    public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(ClientHelper client,
-            double profitUsd, String closeTime) {
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(
+            ClientHelper client, double profitUsd, String closeTime) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
         trade.setStorageUsd(0d);
         trade.setCommissionUsd(0d);
@@ -72,8 +124,9 @@ public class MtMt4TradesCoercedObjectFactory {
         return trade;
     }
 
-
-    @Step("Generate mt___mt4_trades_coerced object by client object")//todo add enums for types, currencies(to create pairs), and logic based on type to select limits for values
+    @Step("Generate mt___mt4_trades_coerced object by client object") // todo add enums for types, currencies(to
+    // create pairs), and logic based on type to
+    // select limits for values
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedRandomized(ClientHelper client) {
         String reason = (randomEnum(Reason.class).getDisplayName());
         String type = (randomEnum(TicketType.class).getDisplayName());

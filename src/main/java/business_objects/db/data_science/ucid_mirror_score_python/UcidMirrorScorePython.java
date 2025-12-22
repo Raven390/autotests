@@ -1,6 +1,5 @@
 package business_objects.db.data_science.ucid_mirror_score_python;
 
-
 public class UcidMirrorScorePython {
     String ucid;
     String id;
@@ -12,12 +11,18 @@ public class UcidMirrorScorePython {
     Integer cumsumScore;
     Double ucidScore;
 
-    public UcidMirrorScorePython() {
-    }
+    public UcidMirrorScorePython() {}
 
     public UcidMirrorScorePython(
-            String ucid, String id, Integer action, String timeUtc, String insertTimeUtc, Double modelScore,
-            Integer countAction, Integer cumsumScore, Double ucidScore) {
+            String ucid,
+            String id,
+            Integer action,
+            String timeUtc,
+            String insertTimeUtc,
+            Double modelScore,
+            Integer countAction,
+            Integer cumsumScore,
+            Double ucidScore) {
         this.ucid = ucid;
         this.id = id;
         this.action = action;
@@ -28,5 +33,4 @@ public class UcidMirrorScorePython {
         this.cumsumScore = cumsumScore;
         this.ucidScore = ucidScore;
     }
-
 }

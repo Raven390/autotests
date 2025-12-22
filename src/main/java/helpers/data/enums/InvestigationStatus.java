@@ -1,7 +1,9 @@
 package helpers.data.enums;
 
 public enum InvestigationStatus {
-    ACTIVE("ACTIVE"), COMPLETED("COMPLETED"), NEW("NEW");
+    ACTIVE("ACTIVE"),
+    COMPLETED("COMPLETED"),
+    NEW("NEW");
 
     private final String displayName;
 

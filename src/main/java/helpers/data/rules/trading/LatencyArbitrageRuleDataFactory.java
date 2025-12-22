@@ -1,19 +1,5 @@
 package helpers.data.rules.trading;
 
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.kafka.mt_events.CloseTradeMtEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.DataHelper;
-import io.qameta.allure.Description;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
@@ -26,11 +12,23 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.addAlert;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.ShortToxicityInserter.insertShortToxicityOrdersData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Description;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RuleTestData("latency-arbitrage")
 public class LatencyArbitrageRuleDataFactory {
@@ -55,10 +53,19 @@ public class LatencyArbitrageRuleDataFactory {
         ruleData.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(client));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         ruleData.closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), ruleData.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), ruleData.mt5DealsCoercedObjects.getFirst().getVolumeLots(), ruleData.mt5DealsCoercedObjects.getFirst().getSymbol(), ruleData.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+                getRandomUuidString(),
+                Instant.now().toString(),
+                ruleData.mt5DealsCoercedObjects.getFirst().getPositionId(),
+                client.getTradingAccount(),
+                ruleData.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
+                ruleData.mt5DealsCoercedObjects.getFirst().getSymbol(),
+                ruleData.clientHelper.getServerId(),
+                MT_CLOSE_TRADE_EVENT,
+                Instant.now().toString(),
+                metadata,
+                Instant.now().toString());
         return ruleData;
     }
-
 
     @Description("Latency arbitrage rule rule. Exit without alert if user is a test/st user")
     private static DataHelper getLatencyArbitrageRuleTest1Data() {
@@ -74,7 +81,8 @@ public class LatencyArbitrageRuleDataFactory {
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
         // Generate deals
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
         // Generate ib commission
@@ -82,8 +90,8 @@ public class LatencyArbitrageRuleDataFactory {
         data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(300d);
         data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(300d);
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -103,7 +111,8 @@ public class LatencyArbitrageRuleDataFactory {
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
         // Generate deals
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
         // Generate ib commission
@@ -111,8 +120,8 @@ public class LatencyArbitrageRuleDataFactory {
         data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(300d);
         data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(300d);
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -122,7 +131,8 @@ public class LatencyArbitrageRuleDataFactory {
         return data;
     }
 
-    @Description("Latency arbitrage rule. Rebate Latency Branch. Total Profit / Cumulative deposit =< 0.2. ElementId: Event_1jau96v")
+    @Description(
+            "Latency arbitrage rule. Rebate Latency Branch. Total Profit / Cumulative deposit =< 0.2. ElementId: Event_1jau96v")
     private static DataHelper getLatencyArbitrageRuleTest4Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest4Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
@@ -130,7 +140,8 @@ public class LatencyArbitrageRuleDataFactory {
         return data;
     }
 
-    @Description("Latency arbitrage rule. Rebate Latency Branch. rebates(client) / profit(client) < 0.3?. ElementId: Event_0cyuekk")
+    @Description(
+            "Latency arbitrage rule. Rebate Latency Branch. rebates(client) / profit(client) < 0.3?. ElementId: Event_0cyuekk")
     private static DataHelper getLatencyArbitrageRuleTest5Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest5Client);
 
@@ -139,10 +150,11 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -159,10 +171,11 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -172,7 +185,8 @@ public class LatencyArbitrageRuleDataFactory {
         return data;
     }
 
-    @Description("Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
+    @Description(
+            "Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
     private static DataHelper getLatencyArbitrageRuleTest7Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest7Client);
 
@@ -181,10 +195,11 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -205,10 +220,11 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -229,10 +245,11 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
@@ -261,5 +278,4 @@ public class LatencyArbitrageRuleDataFactory {
 
         return map;
     }
-
 }

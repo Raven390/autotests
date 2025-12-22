@@ -1,21 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.get_unclosed_trades_by_symbol.GetUnclosedTradesBySymbolResponse;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_unclosed_trades_by_symbol.GetUnclosedTradesBySymbolRequest.getUnclosedTradesBySymbol;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -28,6 +12,21 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_CLICKHOUSE_API_SERVICE;
 import static utils.Utils.getRandomLongPositive;
+
+import business_objects.api.clickhouse_api_service.get_unclosed_trades_by_symbol.GetUnclosedTradesBySymbolResponse;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_UNCLOSED_TRADES_BY_SYMBOL)
@@ -96,12 +95,14 @@ class GetUnclosedTradesBySymbolTests extends TestBaseApi {
         trade8.setPositionId(getRandomLongPositive());
         trade8.setSymbol("USDJPY");
 
-        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
+        insertObjectsToDb(
+                MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }
 
     @AfterAll
     static void delete() throws Exception {
-        cleanMt5CoercedTableByAccount(client1.getTradingAccount(), client2.getTradingAccount(), client3.getTradingAccount());
+        cleanMt5CoercedTableByAccount(
+                client1.getTradingAccount(), client2.getTradingAccount(), client3.getTradingAccount());
     }
 
     @Test
@@ -114,7 +115,9 @@ class GetUnclosedTradesBySymbolTests extends TestBaseApi {
         Response response = getUnclosedTradesBySymbol(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class)).toList();
+        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
         assertThat("Assert symbol", mappedResponse.getFirst().symbol, is("EURUSD"));
@@ -131,7 +134,9 @@ class GetUnclosedTradesBySymbolTests extends TestBaseApi {
         Response response = getUnclosedTradesBySymbol(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class)).toList();
+        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(0));
     }
@@ -146,7 +151,9 @@ class GetUnclosedTradesBySymbolTests extends TestBaseApi {
         Response response = getUnclosedTradesBySymbol(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class)).toList();
+        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
@@ -171,10 +178,15 @@ class GetUnclosedTradesBySymbolTests extends TestBaseApi {
         Response response = getUnclosedTradesBySymbol(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class)).toList();
+        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
-        assertThat("Assert EURUSD count in range", mappedResponse.get(0).tradeCount + mappedResponse.get(1).tradeCount, is(3));
+        assertThat(
+                "Assert EURUSD count in range",
+                mappedResponse.get(0).tradeCount + mappedResponse.get(1).tradeCount,
+                is(3));
     }
 
     @Test
@@ -187,7 +199,9 @@ class GetUnclosedTradesBySymbolTests extends TestBaseApi {
         Response response = getUnclosedTradesBySymbol(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class)).toList();
+        List<GetUnclosedTradesBySymbolResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetUnclosedTradesBySymbolResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(0));
     }

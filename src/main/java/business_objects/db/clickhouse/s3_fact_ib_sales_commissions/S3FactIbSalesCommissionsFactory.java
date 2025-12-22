@@ -1,10 +1,10 @@
 package business_objects.db.clickhouse.s3_fact_ib_sales_commissions;
 
-import helpers.data.ClientHelper;
-import io.qameta.allure.Step;
-
 import static utils.Utils.getCurrentDate;
 import static utils.Utils.getCurrentTimestampDbFormat;
+
+import helpers.data.ClientHelper;
+import io.qameta.allure.Step;
 
 public class S3FactIbSalesCommissionsFactory {
     @Step("Generate IB sale commission data")
@@ -22,5 +22,4 @@ public class S3FactIbSalesCommissionsFactory {
         commission.setIbUserId(123);
         return commission;
     }
-
 }

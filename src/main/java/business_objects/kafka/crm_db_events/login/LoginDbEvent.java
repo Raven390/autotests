@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_db_events.login;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class LoginDbEvent {
@@ -12,8 +11,7 @@ public class LoginDbEvent {
     @JsonProperty("metadata")
     public LoginDbEventMetadata metadata;
 
-    public LoginDbEvent() {
-    }
+    public LoginDbEvent() {}
 
     public LoginDbEvent(LoginDbEventData data, LoginDbEventMetadata metadata) {
         this.data = data;

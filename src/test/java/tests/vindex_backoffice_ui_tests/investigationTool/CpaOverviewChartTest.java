@@ -1,29 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_extends.CrmTbUserExtendsObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_extends.CrmTbUserExtendsObjectFactory.generateCrmTbUserExtendsByClient;
@@ -42,6 +18,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_extends.CrmTbUserExtendsObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CpaOverviewChartTest extends TestBaseWeb {
@@ -133,8 +132,12 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         factLoginMetrics5.setDailyNetClosedPnl(453.2);
         factLoginMetrics5.setDailyNetDeposit(35.45);
         insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission1);
-        insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
-        insertObjectsToDb(S3_FACT_CPA_COMMISSIONS, List.of(cpaCommission1, cpaCommission2, cpaCommission3, cpaCommission4, cpaCommission5));
+        insertObjectsToDb(
+                S3_FACT_LOGIN_METRICS_TABLE_NAME,
+                List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
+        insertObjectsToDb(
+                S3_FACT_CPA_COMMISSIONS,
+                List.of(cpaCommission1, cpaCommission2, cpaCommission3, cpaCommission4, cpaCommission5));
 
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -157,14 +160,25 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         generalTab.clickGeneralTabButton();
         generalTab.clickCpaOverviewButton();
         ibCpaOverviewPage.waitForPageToLoad();
-        cpaCommissionsList.addAll(List.of(cpaCommission1, cpaCommission2, cpaCommission3, cpaCommission4, cpaCommission5));
-        loginMetricsList.addAll(List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
+        cpaCommissionsList.addAll(
+                List.of(cpaCommission1, cpaCommission2, cpaCommission3, cpaCommission4, cpaCommission5));
+        loginMetricsList.addAll(
+                List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
         Double totalRebates = calculateTotalRebates(cpaCommissionsList);
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
-        assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
+        assertThat(
+                "Verify CPA overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sCPA rebates", formatter.format(totalRebates)),
+                        String.format("%sNet PNL", formatter.format(totalPnl)),
+                        String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2.5K"));
-        assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify X axis labels",
+                ibCpaOverviewPage.getChartXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(2)
@@ -196,9 +210,18 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         Double totalRebates = calculateTotalRebates(cpaCommissionsList);
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
-        assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
+        assertThat(
+                "Verify CPA overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sCPA rebates", formatter.format(totalRebates)),
+                        String.format("%sNet PNL", formatter.format(totalPnl)),
+                        String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7K"));
-        assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify X axis labels",
+                ibCpaOverviewPage.getChartXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(3)
@@ -230,21 +253,45 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         Double totalRebates = calculateTotalRebates(cpaCommissionsList);
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
-        assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
+        assertThat(
+                "Verify CPA overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sCPA rebates", formatter.format(totalRebates)),
+                        String.format("%sNet PNL", formatter.format(totalPnl)),
+                        String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45K"));
-        assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+        assertThat(
+                "Verify X axis labels",
+                ibCpaOverviewPage.getChartXAxisLabels(),
+                everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     private static Double calculateTotalRebates(List<S3FactCpaCommissionsObject> commissionsList) {
-        return commissionsList.stream().map(S3FactCpaCommissionsObject::getCommission).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+        return commissionsList.stream()
+                .map(S3FactCpaCommissionsObject::getCommission)
+                .map(value ->
+                        BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue())
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     private static Double calculateTotalPnl(List<S3FactLoginMetricsObject> loginMetricsList) {
-        return loginMetricsList.stream().map(S3FactLoginMetricsObject::getDailyNetClosedPnl).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+        return loginMetricsList.stream()
+                .map(S3FactLoginMetricsObject::getDailyNetClosedPnl)
+                .map(value ->
+                        BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue())
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     private static Double calculateTotalDeposit(List<S3FactLoginMetricsObject> loginMetricsList) {
-        return loginMetricsList.stream().map(S3FactLoginMetricsObject::getDailyNetDeposit).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+        return loginMetricsList.stream()
+                .map(S3FactLoginMetricsObject::getDailyNetDeposit)
+                .map(value ->
+                        BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue())
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     @AfterAll

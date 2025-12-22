@@ -1,20 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
@@ -28,6 +13,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingSummaryWinrateTest extends TestBaseWeb {
 
@@ -98,7 +97,9 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
         trade1.setProfitUsd(0d);
         trade1.setStorageUsd(0d);
         trade1.setCommissionUsd(0d);
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, generateMt4TradesCoerced(client), generateMt4TradesCoerced(client)));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(trade1, generateMt4TradesCoerced(client), generateMt4TradesCoerced(client)));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);

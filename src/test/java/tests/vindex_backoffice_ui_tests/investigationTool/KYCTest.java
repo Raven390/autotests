@@ -1,18 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofObject;
-import business_objects.db.clickhouse.crm_tb_address_proof.CrmTbAddressProofObject;
-import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_address_proof.CrmTbAddressProofFactory.generateAddressProofObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
@@ -21,6 +8,18 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+
+import business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofObject;
+import business_objects.db.clickhouse.crm_tb_address_proof.CrmTbAddressProofObject;
+import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -234,7 +233,6 @@ class KYCTest extends TestBaseWeb {
         generalTab.poaDetailsGeneral("USA, DC, Washington", "321 Main St, 654321");
     }
 
-
     @Test
     @AllureId("319")
     @DisplayName("Client applied only POI must have placeholder about POA")
@@ -248,7 +246,6 @@ class KYCTest extends TestBaseWeb {
         generalTab.navigateGeneralTab(client.getUcid());
         generalTab.poaPlaceholderIsVisible();
     }
-
 
     @Test
     @AllureId("320")
@@ -409,14 +406,15 @@ class KYCTest extends TestBaseWeb {
         CrmTbIdProofObject idProofObject1 = generateIdProofObjectByClient(client, kycFile1);
         idProofObject1.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject1.setStatus("REJECTED");
-        idProofObject1.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0));
-        idProofObject1.setUpdateTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0));
+        idProofObject1.setCreateTime(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0));
+        idProofObject1.setUpdateTime(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0));
 
         CrmTbKycFilesObject kycFile2 = generateKycFilesObjectByClient(client);
         CrmTbIdProofObject idProofObject2 = generateIdProofObjectByClient(client, kycFile2);
         idProofObject2.setFileTypeId(POF_FILE_TYPE_ID);
         idProofObject2.setStatus("PENDING");
-
 
         kycFile1.setFileTypeId(POF_FILE_TYPE_ID);
         kycFile2.setFileTypeId(POF_FILE_TYPE_ID);
@@ -432,7 +430,8 @@ class KYCTest extends TestBaseWeb {
         generalTab.checkValueKycPofTitle(POF);
         generalTab.checkValueKycPofStatus(idProofObject2.getStatus());
         generalTab.checkValueKycPofDate(idProofObject2.getUpdateTime());
-        generalTab.checkValueKycPofParameters(idProofObject2.getDocumentType() + " " + idProofObject2.getDocumentNumber());
+        generalTab.checkValueKycPofParameters(
+                idProofObject2.getDocumentType() + " " + idProofObject2.getDocumentNumber());
         generalTab.checkValueKycPofAttempts("2 attempts");
     }
 }

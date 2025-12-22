@@ -1,25 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -37,6 +17,25 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -50,7 +49,8 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
     private static final MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
     private static final List<String> withdrawalData1 = new ArrayList<>();
     private static PaymentEventsObject paymentEventsObject1 = setupDataPGS();
-    private static final RuleAlert withdrawalAlert1 = generatePgsWithdrawalNotificationAlert(client, paymentEventsObject1.getPaymentId());
+    private static final RuleAlert withdrawalAlert1 =
+            generatePgsWithdrawalNotificationAlert(client, paymentEventsObject1.getPaymentId());
     private static final DecimalFormat formatter = new DecimalFormat("#,###.##");
 
     @BeforeAll
@@ -59,7 +59,7 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
         insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
 
-        //data from pgs event payload
+        // data from pgs event payload
         withdrawalData1.add("2025-05-20");
         withdrawalData1.add("17:30:00");
         withdrawalData1.add("Credit card");
@@ -73,7 +73,8 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
 
         List<RuleAlert> withdrawalAlertList = List.of(withdrawalAlert1);
         for (RuleAlert withdrawalAlert : withdrawalAlertList) {
-            kafka.produceMessage(withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
+            kafka.produceMessage(
+                    withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         }
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
@@ -83,7 +84,8 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
     static PaymentEventsObject setupDataPGS() {
         paymentEventsObject1 = generatePaymentEventsObject(client);
         var paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client);
-        paymentDetailsObject1.setPayload("{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
+        paymentDetailsObject1.setPayload(
+                "{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
         var paymentDecisionsObject1 = generateRiskPaymentDecisionObject(paymentEventsObject1);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
@@ -98,7 +100,10 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
         closeAlert(crmTbUser.ucid);
-        cleanPaymentGateData(client.getUcid(), client.getUserId(), paymentEventsObject1.getPaymentId().toString());
+        cleanPaymentGateData(
+                client.getUcid(),
+                client.getUserId(),
+                paymentEventsObject1.getPaymentId().toString());
     }
 
     @Test
@@ -112,9 +117,15 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
         paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.clickPaymentsTabButton();
         paymentsPage.clickWithdrawalsTabButton();
-        assertThat("Verify table headers", paymentsPage.getTableHeaders(), containsInAnyOrder("DATE", "TYPE", "AMOUNT", "ACCOUNT", "CHECK", "STATUS"));
+        assertThat(
+                "Verify table headers",
+                paymentsPage.getTableHeaders(),
+                containsInAnyOrder("DATE", "TYPE", "AMOUNT", "ACCOUNT", "CHECK", "STATUS"));
         assertThat("Verify rows count", paymentsPage.getRowsCount(), is(1));
-        assertThat("Verify data in table", paymentsPage.getAllRowsData(), hasItems(withdrawalData1.toArray(String[]::new)));
+        assertThat(
+                "Verify data in table",
+                paymentsPage.getAllRowsData(),
+                hasItems(withdrawalData1.toArray(String[]::new)));
     }
 
     @Test
@@ -144,8 +155,13 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove("COMMENT");
 
-        //PGS decision check in db
-        List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", paymentEventsObject1.getPaymentId().toString()), PaymentDecisionsObject.class);
+        // PGS decision check in db
+        List<PaymentDecisionsObject> decisions = getObjectsFromDB(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format(
+                        "payment_id = '%s'", paymentEventsObject1.getPaymentId().toString()),
+                PaymentDecisionsObject.class);
         assertThat("Verify that decision is saved in db", decisions.size(), is(1));
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is approved", actualDecision.getDecisionCode(), is(1));

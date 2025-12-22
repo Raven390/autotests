@@ -7,7 +7,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Status of the restriction
  */
 public enum RestrictionStatus {
-    APPLY_REQUESTED("APPLY_REQUESTED"), APPLIED("APPLIED"), APPLY_FAILED("APPLY_FAILED"), CANCEL_REQUESTED("CANCEL_REQUESTED"), CANCELLED("CANCELLED");
+    APPLY_REQUESTED("APPLY_REQUESTED"),
+    APPLIED("APPLIED"),
+    APPLY_FAILED("APPLY_FAILED"),
+    CANCEL_REQUESTED("CANCEL_REQUESTED"),
+    CANCELLED("CANCELLED");
 
     private String value;
 

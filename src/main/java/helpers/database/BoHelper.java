@@ -1,5 +1,14 @@
 package helpers.database;
 
+import static business_objects.ui.user.UserFactory.autotestUserOne;
+import static helpers.database.DbHelper.*;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbName.POSTGRES;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.Constants.*;
+import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.writeLog;
+
 import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.backoffice_db.backoffice_user.BackofficeUser;
@@ -11,18 +20,8 @@ import helpers.data.enums.AlertType;
 import helpers.data.enums.InvestigationStatus;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static business_objects.ui.user.UserFactory.autotestUserOne;
-import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbName.POSTGRES;
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.writeLog;
 
 public class BoHelper {
 
@@ -33,14 +32,21 @@ public class BoHelper {
     public static void closeAlert(String ucid) {
         try {
             executeQueryToDb(
-                    POSTGRES, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", ucid
-                    )
-            );
+                    POSTGRES,
+                    String.format(
+                            "UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'",
+                            BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", ucid));
             String userId = getUserIdByUser(autotestUserOne());
             executeQueryToDb(
-                    POSTGRES, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE client_ucid = '%s'", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), ucid
-                    )
-            );
+                    POSTGRES,
+                    String.format(
+                            "UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE client_ucid = '%s'",
+                            BO_INVESTIGATION_TABLE_NAME,
+                            userId,
+                            userId,
+                            getCurrentTimestampDbFormat(),
+                            getCurrentTimestampDbFormat(),
+                            ucid));
         } catch (Exception e) {
             writeLog("Error closing alert");
         }
@@ -53,13 +59,21 @@ public class BoHelper {
 
     @Step("Wait for alerts to close for user {ucid}")
     public static void waitForAlertsToClose(String ucid) throws Exception {
-        List<Alert> openAlertList = getObjectsFromDB(POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid ='%s' and status = 'OPEN'", ucid), Alert.class);
+        List<Alert> openAlertList = getObjectsFromDB(
+                POSTGRES,
+                BO_ALERT_TABLE_NAME,
+                String.format("client_ucid ='%s' and status = 'OPEN'", ucid),
+                Alert.class);
         for (int i = 0; i < 5; i++) {
             if (openAlertList.isEmpty()) {
                 break;
             } else {
                 Thread.sleep(1000);
-                openAlertList = getObjectsFromDB(POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid ='%s' and status = 'OPEN'", ucid), Alert.class);
+                openAlertList = getObjectsFromDB(
+                        POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format("client_ucid ='%s' and status = 'OPEN'", ucid),
+                        Alert.class);
             }
         }
     }
@@ -68,10 +82,16 @@ public class BoHelper {
     public static void deleteUserBO(String ucid) {
         try {
             Allure.step("delete user from BO");
-            List<Investigation> investigations = getObjectsFromDB(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
+            List<Investigation> investigations = getObjectsFromDB(
+                    POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
             if (!investigations.isEmpty()) {
-                String investigationIds = investigations.stream().map(inv -> String.valueOf(inv.getId())).collect(Collectors.joining(","));
-                deleteEntryFromDb(POSTGRES, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id IN (" + investigationIds + ")");
+                String investigationIds = investigations.stream()
+                        .map(inv -> String.valueOf(inv.getId()))
+                        .collect(Collectors.joining(","));
+                deleteEntryFromDb(
+                        POSTGRES,
+                        BO_INVESTIGATION_HISTORY_TABLE_NAME,
+                        "investigation_id IN (" + investigationIds + ")");
             }
             deleteEntryFromDb(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
             deleteEntryFromDb(POSTGRES, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
@@ -99,10 +119,13 @@ public class BoHelper {
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         writeLog(CLIENT_ID_IN_BO + boId);
-        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientsFraudTypes.class);
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(
+                POSTGRES,
+                BO_CLIENTS_FRAUD_TYPES_TABLE_NAME,
+                "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'",
+                ClientsFraudTypes.class);
         fraud = clientsFraudTypes.getFirst().getFraudTypeId();
         writeLog("FRAUD ID " + fraud);
-
     }
 
     @Step("Check that user NOT have records about frauds in db")
@@ -111,7 +134,8 @@ public class BoHelper {
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         writeLog(CLIENT_ID_IN_BO + boId);
-        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(
+                POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
         assertEquals(clientsFraudTypes.size(), 0);
         assertTrue(clientsFraudTypes.isEmpty());
     }
@@ -124,7 +148,6 @@ public class BoHelper {
         }
         Thread.sleep(100);
     }
-
 
     @Step("Check confirmation status of alert in DB")
     public static void checkUserAlertConfirmation(String ucid, String expectedConfirmation) throws Exception {
@@ -143,16 +166,26 @@ public class BoHelper {
     @Step("Get user_id from bo db by user")
     public static String getUserIdByUser(User user) throws Exception {
         return getObjectsFromDB(
-                POSTGRES, BO_BACKOFFICE_USER_TABLE_NAME, String.format("first_name = '%s' and last_name = '%s'", user.getFirstName(), user.getLastName()), BackofficeUser.class
-        ).getFirst().id;
+                        POSTGRES,
+                        BO_BACKOFFICE_USER_TABLE_NAME,
+                        String.format(
+                                "first_name = '%s' and last_name = '%s'", user.getFirstName(), user.getLastName()),
+                        BackofficeUser.class)
+                .getFirst()
+                .id;
     }
 
     public static List<Investigation> getClientsInvestigationsDb(String ucid) throws Exception {
-        return getObjectsFromDB(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
+        return getObjectsFromDB(
+                POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
     }
 
     public static List<Investigation> getClientsInvestigationsDb(String ucid, AlertType type) throws Exception {
-        return getObjectsFromDB(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "' and type ='" + type + "'", Investigation.class);
+        return getObjectsFromDB(
+                POSTGRES,
+                BO_INVESTIGATION_TABLE_NAME,
+                "client_ucid = '" + ucid + "' and type ='" + type + "'",
+                Investigation.class);
     }
 
     public static List<Alert> getClientsAlertsDb(String ucid) throws Exception {
@@ -160,16 +193,31 @@ public class BoHelper {
     }
 
     public static List<Alert> getClientsAlertsDb(String ucid, AlertType type) throws Exception {
-        return getObjectsFromDB(POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "' and type ='" + type + "'", Alert.class);
+        return getObjectsFromDB(
+                POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "' and type ='" + type + "'", Alert.class);
     }
 
     public static Long countInvestigationsDb(AlertType type, InvestigationStatus status) throws Exception {
-        List<Investigation> investigations = getObjectsFromDB(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "status = '" + status + "'  and type = '" + type + "'", Investigation.class);
-        return investigations.stream().map(Investigation::getClientUcid).distinct().count();
+        List<Investigation> investigations = getObjectsFromDB(
+                POSTGRES,
+                BO_INVESTIGATION_TABLE_NAME,
+                "status = '" + status + "'  and type = '" + type + "'",
+                Investigation.class);
+        return investigations.stream()
+                .map(Investigation::getClientUcid)
+                .distinct()
+                .count();
     }
 
     public static Long countUsersInvestigationsDb(AlertType type, String boUserId) throws Exception {
-        List<Investigation> investigations = getObjectsFromDB(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "status = 'ACTIVE'  and type = '" + type + "' and assigned_user_id ='" + boUserId + "'", Investigation.class);
-        return investigations.stream().map(Investigation::getClientUcid).distinct().count();
+        List<Investigation> investigations = getObjectsFromDB(
+                POSTGRES,
+                BO_INVESTIGATION_TABLE_NAME,
+                "status = 'ACTIVE'  and type = '" + type + "' and assigned_user_id ='" + boUserId + "'",
+                Investigation.class);
+        return investigations.stream()
+                .map(Investigation::getClientUcid)
+                .distinct()
+                .count();
     }
 }

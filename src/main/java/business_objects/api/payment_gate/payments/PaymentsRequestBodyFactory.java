@@ -1,10 +1,10 @@
 package business_objects.api.payment_gate.payments;
 
+import static utils.Constants.PAYMENT_METHOD_CODE_CREDIT_CARD;
+import static utils.Utils.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-
-import static utils.Utils.*;
 
 public class PaymentsRequestBodyFactory {
 
@@ -31,7 +31,7 @@ public class PaymentsRequestBodyFactory {
         body.setWithdrawalCurrency("USD");
         body.setWithdrawalAmount(new BigDecimal("1500.00"));
         body.setWithdrawalAmountUSD(new BigDecimal("1500.00"));
-        body.setPaymentMethodCode("CREDIT_CARD");
+        body.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
         body.setPaymentChannelCode(1);
         body.setPaymentChannelName("Credit card");
         body.setPaymentTypeName("Credit card");
@@ -40,16 +40,19 @@ public class PaymentsRequestBodyFactory {
         body.setStatusKYC("Confirmed");
         body.setCost(new BigDecimal("0.56"));
 
-        // Card details - using constructor since nested class is private, populate via public constructor in the outer class
+        // Card details - using constructor since nested class is private, populate via public constructor in the outer
+        // class
         // Build card via the all-args constructor inside PostPaymentsRequestBody and assign
         try {
-            java.lang.reflect.Constructor<?> ctor = Class.forName("business_objects.api.payment_gate.payments.PostPaymentsRequestBody$Card").getDeclaredConstructor(String.class, String.class, String.class, String.class, String.class, Integer.class);
+            java.lang.reflect.Constructor<?> ctor = Class.forName(
+                            "business_objects.api.payment_gate.payments.PostPaymentsRequestBody$Card")
+                    .getDeclaredConstructor(
+                            String.class, String.class, String.class, String.class, String.class, Integer.class);
             ctor.setAccessible(true);
-            Object card = ctor.newInstance(
-                    "654321", "1225", "4", "2029", "sheryar shah", 0
-            );
+            Object card = ctor.newInstance("654321", "1225", "4", "2029", "sheryar shah", 0);
             // use reflection to call setCard to avoid referencing private nested type in signature
-            Class<?> cardClass = Class.forName("business_objects.api.payment_gate.payments.PostPaymentsRequestBody$Card");
+            Class<?> cardClass =
+                    Class.forName("business_objects.api.payment_gate.payments.PostPaymentsRequestBody$Card");
             java.lang.reflect.Method setCard = PostPaymentsRequestBody.class.getDeclaredMethod("setCard", cardClass);
             setCard.invoke(body, card);
         } catch (Exception e) {
@@ -76,5 +79,4 @@ public class PaymentsRequestBodyFactory {
         body.setDecisionId(decisionId);
         return body;
     }
-
 }

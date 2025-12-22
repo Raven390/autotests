@@ -1,7 +1,6 @@
 package business_objects.api.rule_engine_api.get_brands;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetBrandsResponse {
@@ -11,8 +10,7 @@ public class GetBrandsResponse {
     @JsonProperty("code")
     public String code;
 
-    public GetBrandsResponse() {
-    }
+    public GetBrandsResponse() {}
 
     public GetBrandsResponse(String name, String code) {
         this.name = name;

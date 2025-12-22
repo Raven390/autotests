@@ -1,7 +1,6 @@
 package business_objects.api.lark.chatHistory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -94,7 +93,9 @@ public class ChatHistoryResponse {
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
             LarkApiData that = (LarkApiData) o;
-            return Objects.equals(hasMore, that.hasMore) && Objects.equals(pageToken, that.pageToken) && Objects.equals(items, that.items);
+            return Objects.equals(hasMore, that.hasMore)
+                    && Objects.equals(pageToken, that.pageToken)
+                    && Objects.equals(items, that.items);
         }
 
         @Override
@@ -104,7 +105,8 @@ public class ChatHistoryResponse {
 
         @Override
         public String toString() {
-            return "LarkApiData{" + "hasMore=" + hasMore + ", pageToken='" + pageToken + '\'' + ", items=" + items + '}';
+            return "LarkApiData{" + "hasMore=" + hasMore + ", pageToken='" + pageToken + '\'' + ", items=" + items
+                    + '}';
         }
     }
 
@@ -124,10 +126,10 @@ public class ChatHistoryResponse {
         @JsonProperty("msg_type")
         String msgType;
 
-        @JsonProperty("create_time")//Message generation timestamp (in ms)
+        @JsonProperty("create_time") // Message generation timestamp (in ms)
         Long createTime;
 
-        @JsonProperty("update_time")//Message update timestamp (in ms)
+        @JsonProperty("update_time") // Message update timestamp (in ms)
         Long updateTime;
 
         @JsonProperty("deleted")
@@ -267,17 +269,48 @@ public class ChatHistoryResponse {
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
             LarkApiDataItem that = (LarkApiDataItem) o;
-            return Objects.equals(messageId, that.messageId) && Objects.equals(rootId, that.rootId) && Objects.equals(parentId, that.parentId) && Objects.equals(threadId, that.threadId) && Objects.equals(msgType, that.msgType) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime) && Objects.equals(deleted, that.deleted) && Objects.equals(updated, that.updated) && Objects.equals(chatId, that.chatId) && Objects.equals(sender, that.sender) && Objects.equals(body, that.body) && Objects.equals(mentions, that.mentions) && Objects.equals(upperMessageId, that.upperMessageId);
+            return Objects.equals(messageId, that.messageId)
+                    && Objects.equals(rootId, that.rootId)
+                    && Objects.equals(parentId, that.parentId)
+                    && Objects.equals(threadId, that.threadId)
+                    && Objects.equals(msgType, that.msgType)
+                    && Objects.equals(createTime, that.createTime)
+                    && Objects.equals(updateTime, that.updateTime)
+                    && Objects.equals(deleted, that.deleted)
+                    && Objects.equals(updated, that.updated)
+                    && Objects.equals(chatId, that.chatId)
+                    && Objects.equals(sender, that.sender)
+                    && Objects.equals(body, that.body)
+                    && Objects.equals(mentions, that.mentions)
+                    && Objects.equals(upperMessageId, that.upperMessageId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(messageId, rootId, parentId, threadId, msgType, createTime, updateTime, deleted, updated, chatId, sender, body, mentions, upperMessageId);
+            return Objects.hash(
+                    messageId,
+                    rootId,
+                    parentId,
+                    threadId,
+                    msgType,
+                    createTime,
+                    updateTime,
+                    deleted,
+                    updated,
+                    chatId,
+                    sender,
+                    body,
+                    mentions,
+                    upperMessageId);
         }
 
         @Override
         public String toString() {
-            return "LarkApiDataItem{" + "messageId='" + messageId + '\'' + ", rootId='" + rootId + '\'' + ", parentId='" + parentId + '\'' + ", threadId='" + threadId + '\'' + ", msgType='" + msgType + '\'' + ", createTime=" + createTime + ", updateTime=" + updateTime + ", deleted=" + deleted + ", updated=" + updated + ", chatId='" + chatId + '\'' + ", sender=" + sender + ", body=" + body + ", mentions=" + mentions + ", upperMessageId='" + upperMessageId + '\'' + '}';
+            return "LarkApiDataItem{" + "messageId='" + messageId + '\'' + ", rootId='" + rootId + '\'' + ", parentId='"
+                    + parentId + '\'' + ", threadId='" + threadId + '\'' + ", msgType='" + msgType + '\''
+                    + ", createTime=" + createTime + ", updateTime=" + updateTime + ", deleted=" + deleted
+                    + ", updated=" + updated + ", chatId='" + chatId + '\'' + ", sender=" + sender + ", body=" + body
+                    + ", mentions=" + mentions + ", upperMessageId='" + upperMessageId + '\'' + '}';
         }
     }
 
@@ -330,7 +363,10 @@ public class ChatHistoryResponse {
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
             LarkApiDataItemSender that = (LarkApiDataItemSender) o;
-            return Objects.equals(id, that.id) && Objects.equals(idType, that.idType) && Objects.equals(senderType, that.senderType) && Objects.equals(tenantKey, that.tenantKey);
+            return Objects.equals(id, that.id)
+                    && Objects.equals(idType, that.idType)
+                    && Objects.equals(senderType, that.senderType)
+                    && Objects.equals(tenantKey, that.tenantKey);
         }
 
         @Override
@@ -340,7 +376,8 @@ public class ChatHistoryResponse {
 
         @Override
         public String toString() {
-            return "LarkApiDataItemSender{" + "id='" + id + '\'' + ", idType='" + idType + '\'' + ", senderType='" + senderType + '\'' + ", tenantKey='" + tenantKey + '\'' + '}';
+            return "LarkApiDataItemSender{" + "id='" + id + '\'' + ", idType='" + idType + '\'' + ", senderType='"
+                    + senderType + '\'' + ", tenantKey='" + tenantKey + '\'' + '}';
         }
     }
 
@@ -434,7 +471,11 @@ public class ChatHistoryResponse {
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
             LarkApiDataItemMention that = (LarkApiDataItemMention) o;
-            return Objects.equals(key, that.key) && Objects.equals(id, that.id) && Objects.equals(idType, that.idType) && Objects.equals(name, that.name) && Objects.equals(tenantKey, that.tenantKey);
+            return Objects.equals(key, that.key)
+                    && Objects.equals(id, that.id)
+                    && Objects.equals(idType, that.idType)
+                    && Objects.equals(name, that.name)
+                    && Objects.equals(tenantKey, that.tenantKey);
         }
 
         @Override
@@ -444,7 +485,8 @@ public class ChatHistoryResponse {
 
         @Override
         public String toString() {
-            return "LarkApiDataItemMention{" + "key='" + key + '\'' + ", id='" + id + '\'' + ", idType='" + idType + '\'' + ", name='" + name + '\'' + ", tenantKey='" + tenantKey + '\'' + '}';
+            return "LarkApiDataItemMention{" + "key='" + key + '\'' + ", id='" + id + '\'' + ", idType='" + idType
+                    + '\'' + ", name='" + name + '\'' + ", tenantKey='" + tenantKey + '\'' + '}';
         }
     }
 }

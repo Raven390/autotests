@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
-import business_objects.db.abuse_registry_db.AbuserDeduction;
-import business_objects.db.abuse_registry_db.AbuserHistory;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.deduction.*;
-import helpers.database.DbName;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
@@ -36,6 +20,20 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
+import business_objects.db.abuse_registry_db.AbuserDeduction;
+import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.deduction.*;
+import helpers.database.DbName;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -49,7 +47,6 @@ class BatchDeductionEquityValidationTest extends TestBaseWeb {
     private static final CrmTbAccountObject account2 = generateAdditionalCrmTbAccountDataForUi(client);
     private static AbuserDeduction deduction;
     private static AbuserDeduction deduction2;
-
 
     @BeforeAll
     static void setup() throws Exception {
@@ -67,8 +64,13 @@ class BatchDeductionEquityValidationTest extends TestBaseWeb {
         Thread.sleep(2000);
         addFraudForClient(client, HEDGING, INTERNAL, CONFIRMED, null);
         addFraudForClient(client, CPA_ABUSE, null, CONFIRMED, null);
-        List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s' and source = 'FRAUD_TYPE_STATUS'", client.getUcid()), AbuserHistory.class);
-        deduction = generateAbuserDeductionByAccount(account, abuserHistory.getFirst().getId());
+        List<AbuserHistory> abuserHistory = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                String.format("ucid = '%s' and source = 'FRAUD_TYPE_STATUS'", client.getUcid()),
+                AbuserHistory.class);
+        deduction = generateAbuserDeductionByAccount(
+                account, abuserHistory.getFirst().getId());
         deduction.setIllegalProfit(1000d);
         deduction.setIllegalProfitUsd(1100d);
         deduction.setSuggestedDeduction(1000d);
@@ -88,7 +90,8 @@ class BatchDeductionEquityValidationTest extends TestBaseWeb {
         deduction.setTypeAccount(DeductionTypeAccount.ILLEGAL_PROFIT.getDisplayName());
         deduction.setDeductionType(DeductionType.FULL_DEDUCTION.getDisplayName());
         deduction.setDeleted(false);
-        deduction2 = generateAbuserDeductionByAccount(account2, abuserHistory.getLast().getId());
+        deduction2 = generateAbuserDeductionByAccount(
+                account2, abuserHistory.getLast().getId());
         deduction2.setIllegalProfit(1000d);
         deduction2.setIllegalProfitUsd(1100d);
         deduction2.setSuggestedDeduction(1000d);
@@ -130,10 +133,19 @@ class BatchDeductionEquityValidationTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         deductionPage.clickAbuseRegistryButton();
         deductionPage.clickBatchDeductionButton();
-        deductionPage.fillBatchDeductionAccountsList(String.format("%s %s%n%s %s", account.serverName, account.account, account2.serverName, account2.account));
+        deductionPage.fillBatchDeductionAccountsList(String.format(
+                "%s %s%n%s %s", account.serverName, account.account, account2.serverName, account2.account));
         deductionPage.clickBatchDeductionApproveAllButton();
         deductionPage.clickBatchDeductionConfirmApproveButton();
-        assertThat("Verify validation for only 1 account was triggered", deductionPage.getBatchDeductionValidationItems(), hasSize(1));
-        assertThat("Verify triggered validation text", deductionPage.getBatchDeductionValidationItems().getFirst(), is(String.format("%s %s%nNo equity%nEquity is 0 or negative. Deduction is not possible", account.serverName, account.account)));
+        assertThat(
+                "Verify validation for only 1 account was triggered",
+                deductionPage.getBatchDeductionValidationItems(),
+                hasSize(1));
+        assertThat(
+                "Verify triggered validation text",
+                deductionPage.getBatchDeductionValidationItems().getFirst(),
+                is(String.format(
+                        "%s %s%nNo equity%nEquity is 0 or negative. Deduction is not possible",
+                        account.serverName, account.account)));
     }
 }

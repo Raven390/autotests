@@ -1,20 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -31,6 +16,20 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingInfoOperationsTest extends TestBaseWeb {
 
@@ -64,7 +63,8 @@ public class TradingInfoOperationsTest extends TestBaseWeb {
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
         alert.rule.attributes.ticketId = trade1.getTicket().toString();
-        new KafkaHelper().produceMessage(alert.alertId, new ObjectMapper().writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+        new KafkaHelper()
+                .produceMessage(alert.alertId, new ObjectMapper().writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -82,40 +82,120 @@ public class TradingInfoOperationsTest extends TestBaseWeb {
         // Verify table headers
         tradingPage.verifyHeaders();
         // Verify 1st row data
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert value in type column for the 1st operation is as expected", tradingPage.getOperationTypeByIndex(0), equalTo(String.format("%s%s", trade2.getSymbol(), trade2.getTicketType())));
-        assertThat("Assert that the deal is without alert (no lightning icon)", tradingPage.isOperationWithAlert(0), equalTo(false));
-        assertThat("Assert value in volume column for the 1st operation is as expected", tradingPage.getOperationVolumeByIndex(0), equalTo(String.format("%s lots%s USD", trade2.getVolumeLots(), trade2.getNotionalValueUsd())));
-        assertThat("Assert value in profit column for the 1st operation is as expected", tradingPage.getOperationProfitByIndex(0), equalTo(String.format("%s USD", trade2.getProfitUsd().toString())));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in type column for the 1st operation is as expected",
+                tradingPage.getOperationTypeByIndex(0),
+                equalTo(String.format("%s%s", trade2.getSymbol(), trade2.getTicketType())));
+        assertThat(
+                "Assert that the deal is without alert (no lightning icon)",
+                tradingPage.isOperationWithAlert(0),
+                equalTo(false));
+        assertThat(
+                "Assert value in volume column for the 1st operation is as expected",
+                tradingPage.getOperationVolumeByIndex(0),
+                equalTo(String.format("%s lots%s USD", trade2.getVolumeLots(), trade2.getNotionalValueUsd())));
+        assertThat(
+                "Assert value in profit column for the 1st operation is as expected",
+                tradingPage.getOperationProfitByIndex(0),
+                equalTo(String.format("%s USD", trade2.getProfitUsd().toString())));
         DecimalFormat formatter = new DecimalFormat("#,##0.00");
-        assertThat("Assert value in open column for the 1st operation is as expected", tradingPage.getOperationOpenByIndex(0), equalTo(String.format("%s%s", trade2.getOpenTime(), formatter.format(trade2.getOpenPrice()))));
-        assertThat("Assert value in close column for the 1st operation is as expected", tradingPage.getOperationCloseByIndex(0), equalTo(String.format("%s%s", trade2.getCloseTime(), formatter.format(trade2.getClosePrice()))));
-        assertThat("Assert value in tp/sl column for the 1st operation is as expected", tradingPage.getOperationTpSlByIndex(0), equalTo(String.format("TP %sSL %s", trade2.getTakeProfit(), trade2.getStopLoss())));
-        assertThat("Assert value in swap column for the 1st operation is as expected", tradingPage.getOperationSwapByIndex(0), equalTo(String.format("%s USD", trade2.getStorageUsd().toString())));
-        assertThat("Assert value in sr column for the 1st operation is as expected", tradingPage.getOperationSrByIndex(0), equalTo(String.format("%s USD", trade2.getSpreadRevenueUsd().toString())));
-        assertThat("Assert value in commission column for the 1st operation is as expected", tradingPage.getOperationCommissionByIndex(0), equalTo(String.format("%s USD", trade2.getCommissionUsd().toString())));
-        assertThat("Assert value in method column for the 1st operation is as expected", tradingPage.getOperationMethodByIndex(0), equalTo(trade2.getReasonName()));
-        assertThat("Assert value in comment column for the 1st operation is as expected", tradingPage.getOperationCommentByIndex(0), equalTo(trade2.getComment()));
+        assertThat(
+                "Assert value in open column for the 1st operation is as expected",
+                tradingPage.getOperationOpenByIndex(0),
+                equalTo(String.format("%s%s", trade2.getOpenTime(), formatter.format(trade2.getOpenPrice()))));
+        assertThat(
+                "Assert value in close column for the 1st operation is as expected",
+                tradingPage.getOperationCloseByIndex(0),
+                equalTo(String.format("%s%s", trade2.getCloseTime(), formatter.format(trade2.getClosePrice()))));
+        assertThat(
+                "Assert value in tp/sl column for the 1st operation is as expected",
+                tradingPage.getOperationTpSlByIndex(0),
+                equalTo(String.format("TP %sSL %s", trade2.getTakeProfit(), trade2.getStopLoss())));
+        assertThat(
+                "Assert value in swap column for the 1st operation is as expected",
+                tradingPage.getOperationSwapByIndex(0),
+                equalTo(String.format("%s USD", trade2.getStorageUsd().toString())));
+        assertThat(
+                "Assert value in sr column for the 1st operation is as expected",
+                tradingPage.getOperationSrByIndex(0),
+                equalTo(String.format("%s USD", trade2.getSpreadRevenueUsd().toString())));
+        assertThat(
+                "Assert value in commission column for the 1st operation is as expected",
+                tradingPage.getOperationCommissionByIndex(0),
+                equalTo(String.format("%s USD", trade2.getCommissionUsd().toString())));
+        assertThat(
+                "Assert value in method column for the 1st operation is as expected",
+                tradingPage.getOperationMethodByIndex(0),
+                equalTo(trade2.getReasonName()));
+        assertThat(
+                "Assert value in comment column for the 1st operation is as expected",
+                tradingPage.getOperationCommentByIndex(0),
+                equalTo(trade2.getComment()));
         // Verify 2nd row data
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert value in type column for the 2nd operation is as expected", tradingPage.getOperationTypeByIndex(1), equalTo(String.format("%s%s", trade1.getSymbol(), trade1.getTicketType())));
-        assertThat("Assert that the deal is with alert (lightning icon)", tradingPage.isOperationWithAlert(0), equalTo(false));
-        assertThat("Assert value in volume column for the 2nd operation is as expected", tradingPage.getOperationVolumeByIndex(1), equalTo(String.format("%s lots%s USD", trade1.getVolumeLots(), trade1.getNotionalValueUsd())));
-        assertThat("Assert value in profit column for the 2nd operation is as expected", tradingPage.getOperationProfitByIndex(1), equalTo(String.format("%s USD", trade1.getProfitUsd().toString())));
-        assertThat("Assert value in open column for the 2nd operation is as expected", tradingPage.getOperationOpenByIndex(1), equalTo(String.format("%s%s", trade1.getOpenTime(), formatter.format(trade1.getOpenPrice()))));
-        assertThat("Assert value in close column for the 2nd operation is as expected", tradingPage.getOperationCloseByIndex(1), equalTo(String.format("%s%s", trade1.getCloseTime(), formatter.format(trade1.getClosePrice()))));
-        assertThat("Assert value in tp/sl column for the 2nd operation is as expected", tradingPage.getOperationTpSlByIndex(1), equalTo(String.format("TP %sSL %s", trade1.getTakeProfit(), trade1.getStopLoss())));
-        assertThat("Assert value in swap column for the 2nd operation is as expected", tradingPage.getOperationSwapByIndex(1), equalTo(String.format("%s USD", trade1.getStorageUsd().toString())));
-        assertThat("Assert value in sr column for the 2nd operation is as expected", tradingPage.getOperationSrByIndex(1), equalTo(String.format("%s USD", trade1.getSpreadRevenueUsd().toString())));
-        assertThat("Assert value in commission column for the 2nd operation is as expected", tradingPage.getOperationCommissionByIndex(1), equalTo(String.format("%s USD", trade1.getCommissionUsd().toString())));
-        assertThat("Assert value in method column for the 2nd operation is as expected", tradingPage.getOperationMethodByIndex(1), equalTo(trade1.getReasonName()));
-        assertThat("Assert value in comment column for the 2nd operation is as expected", tradingPage.getOperationCommentByIndex(1), equalTo(trade1.getComment()));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in type column for the 2nd operation is as expected",
+                tradingPage.getOperationTypeByIndex(1),
+                equalTo(String.format("%s%s", trade1.getSymbol(), trade1.getTicketType())));
+        assertThat(
+                "Assert that the deal is with alert (lightning icon)",
+                tradingPage.isOperationWithAlert(0),
+                equalTo(false));
+        assertThat(
+                "Assert value in volume column for the 2nd operation is as expected",
+                tradingPage.getOperationVolumeByIndex(1),
+                equalTo(String.format("%s lots%s USD", trade1.getVolumeLots(), trade1.getNotionalValueUsd())));
+        assertThat(
+                "Assert value in profit column for the 2nd operation is as expected",
+                tradingPage.getOperationProfitByIndex(1),
+                equalTo(String.format("%s USD", trade1.getProfitUsd().toString())));
+        assertThat(
+                "Assert value in open column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenByIndex(1),
+                equalTo(String.format("%s%s", trade1.getOpenTime(), formatter.format(trade1.getOpenPrice()))));
+        assertThat(
+                "Assert value in close column for the 2nd operation is as expected",
+                tradingPage.getOperationCloseByIndex(1),
+                equalTo(String.format("%s%s", trade1.getCloseTime(), formatter.format(trade1.getClosePrice()))));
+        assertThat(
+                "Assert value in tp/sl column for the 2nd operation is as expected",
+                tradingPage.getOperationTpSlByIndex(1),
+                equalTo(String.format("TP %sSL %s", trade1.getTakeProfit(), trade1.getStopLoss())));
+        assertThat(
+                "Assert value in swap column for the 2nd operation is as expected",
+                tradingPage.getOperationSwapByIndex(1),
+                equalTo(String.format("%s USD", trade1.getStorageUsd().toString())));
+        assertThat(
+                "Assert value in sr column for the 2nd operation is as expected",
+                tradingPage.getOperationSrByIndex(1),
+                equalTo(String.format("%s USD", trade1.getSpreadRevenueUsd().toString())));
+        assertThat(
+                "Assert value in commission column for the 2nd operation is as expected",
+                tradingPage.getOperationCommissionByIndex(1),
+                equalTo(String.format("%s USD", trade1.getCommissionUsd().toString())));
+        assertThat(
+                "Assert value in method column for the 2nd operation is as expected",
+                tradingPage.getOperationMethodByIndex(1),
+                equalTo(trade1.getReasonName()));
+        assertThat(
+                "Assert value in comment column for the 2nd operation is as expected",
+                tradingPage.getOperationCommentByIndex(1),
+                equalTo(trade1.getComment()));
     }
 
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("account = %s OR account = %s", account1.account, account2.account));
+        deleteEntryFromDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);
     }
 }

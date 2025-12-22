@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.backoffice_db.Investigation;
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.ui.user.UserFactory.autotestUserOPS24;
 import static helpers.data.ClientFactory.getRandomVantageClient;
@@ -31,6 +15,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 
+import business_objects.db.backoffice_db.Investigation;
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -38,7 +36,6 @@ import static utils.Constants.*;
 class Ops24PermissionsTest extends TestBaseWeb {
     static ClientHelper client = getRandomVantageClient();
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
-
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -49,14 +46,16 @@ class Ops24PermissionsTest extends TestBaseWeb {
 
     @Test
     @AllureId("1733")
-    @DisplayName("BO user with OPS24 role can assign suspicious client with the active trading alert to himself to perform investigation ")
+    @DisplayName(
+            "BO user with OPS24 role can assign suspicious client with the active trading alert to himself to perform investigation ")
     void assignClientCardBothTypesAlertsViewerRoleTradingTest() throws Exception {
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsOps24User();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
-        Investigation investigation = getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
+        Investigation investigation =
+                getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that investigation is assigned to current user");
         assertEquals(autotestUserOPS24().getId(), investigation.getAssignedUserId());
         assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
@@ -158,5 +157,4 @@ class Ops24PermissionsTest extends TestBaseWeb {
         alertHistoryPage.navigateAlertHistory();
         alertHistoryPage.notHaveQc();
     }
-
 }

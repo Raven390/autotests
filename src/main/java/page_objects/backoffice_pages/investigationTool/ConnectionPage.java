@@ -1,16 +1,5 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import com.microsoft.playwright.*;
-import com.microsoft.playwright.options.WaitForSelectorState;
-import helpers.data.ClientHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.Step;
-import org.hamcrest.MatcherAssert;
-import page_objects.backoffice_pages.AbstractPage;
-import utils.Utils;
-
-import java.util.*;
-
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
@@ -18,6 +7,16 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Utils.*;
+
+import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.ClientHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
+import java.util.*;
+import org.hamcrest.MatcherAssert;
+import page_objects.backoffice_pages.AbstractPage;
+import utils.Utils;
 
 public class ConnectionPage extends AbstractPage {
 
@@ -117,39 +116,67 @@ public class ConnectionPage extends AbstractPage {
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
     private static final String CONNECTION_GRAPH_SELECTOR = ".v-graph-canvas-v2";
-    private static final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//span[text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
-    private static final String FILTER_CONTAINER_BY_TITLE_PATTERN = "//div[@class='v-text-with-icon__text' and text()='%s']/ancestor::div[@class='v-filter-container']";
+    private static final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN =
+            "//span[text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
+    private static final String FILTER_CONTAINER_BY_TITLE_PATTERN =
+            "//div[@class='v-text-with-icon__text' and text()='%s']/ancestor::div[@class='v-filter-container']";
     private static final String FILTER_CONTAINER = "//div[@class='v-drawer-content-wrapper__content']";
-    private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::span[text()='%s']";
-    private static final String CHECKBOX_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::div[text()='%s']/ancestor::div[@class='v-checkbox-list__item']/descendant::input[@type='checkbox']";
-    private static final String RESET_BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::span[text()='Reset']";
-    private static final String CHECKBOX_BY_LABEL_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::input[@type='checkbox']";
+    private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN =
+            FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::span[text()='%s']";
+    private static final String CHECKBOX_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN
+            + "/descendant::div[text()='%s']/ancestor::div[@class='v-checkbox-list__item']/descendant::input[@type='checkbox']";
+    private static final String RESET_BUTTON_BY_LABEL_PATTERN =
+            FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::span[text()='Reset']";
+    private static final String CHECKBOX_BY_LABEL_PATTERN =
+            FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::input[@type='checkbox']";
     private static final String BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::button";
-    private static final String ATTRIBUTE_FILTER_NAME_PATTERN = "//div[@class='v-drop-down-menu__menu']/descendant::div[text()='%s']";
-    private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
+    private static final String ATTRIBUTE_FILTER_NAME_PATTERN =
+            "//div[@class='v-drop-down-menu__menu']/descendant::div[text()='%s']";
+    private static final String ATTRIBUTE_FILTER_VALUE_PATTERN =
+            "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
     private static final String CONNECTION_TABLE_ROW = "//div[contains(@class,'v-body-row')]";
     private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls-v2__zoom-controls']";
-    private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
-    private static final String CONNECTION_SCORE_FILTER_PRESETS = "//div[@class='v-connection-search-filter-score-presets-v2']";
-    private static final String CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN = CONNECTION_SCORE_FILTER_PRESETS + "/descendant::span[@class='g-button__text' and text()='%s']/..";
-    private static final String GRAPH_NODE_BY_ORDER = "//div[@class='graph-block-container undefined' and contains(@style,'--graph-block-order: %s;')]";
-    private static final String GRAPH_NODE_SECTION_BY_NAME = "//div[text()='%s']/ancestor::div[@class='v-graph-node-details-section-v2']";
-    private static final String GRAPH_NODE_GENERAL_INFO_SECTION = String.format(GRAPH_NODE_SECTION_BY_NAME, "General info");
-    private static final String GRAPH_NODE_DIRECT_CONNECTIONS_SECTION = String.format(GRAPH_NODE_SECTION_BY_NAME, "Direct connections");
-    private static final String GRAPH_NODE_VALUE_BY_TITLE = "/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']/descendant::*[contains(@class,'g-text')]";
-    private static final String GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME = "/descendant::div[text()='%s']/ancestor::div[@class='v-graph-node-details-connection-data-v2']";
-    private static final String GRAPH_NODE_GENERAL_INFO_VALUE_BY_TITLE = String.format("%s%s", GRAPH_NODE_GENERAL_INFO_SECTION, GRAPH_NODE_VALUE_BY_TITLE);
-    private static final String GRAPH_NODE_DIRECT_CONNECTIONS_VALUE_BY_CLIENT_AND_TITLE = String.format("%s%s%s", GRAPH_NODE_DIRECT_CONNECTIONS_SECTION, GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME, GRAPH_NODE_VALUE_BY_TITLE);
-    private static final String GRAPH_NODE_CONTAINER_BY_TITLE = "//div[contains(@class,'v-graph-node-v2__title-text') and contains(text(),'%s')]/ancestor::div[@class='graph-block-container undefined']";
-    private static final String CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME = "//span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
+    private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN =
+            "//div[contains(@class,'header-cell') and text()='%s']";
+    private static final String CONNECTION_SCORE_FILTER_PRESETS =
+            "//div[@class='v-connection-search-filter-score-presets-v2']";
+    private static final String CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN =
+            CONNECTION_SCORE_FILTER_PRESETS + "/descendant::span[@class='g-button__text' and text()='%s']/..";
+    private static final String GRAPH_NODE_BY_ORDER =
+            "//div[@class='graph-block-container undefined' and contains(@style,'--graph-block-order: %s;')]";
+    private static final String GRAPH_NODE_SECTION_BY_NAME =
+            "//div[text()='%s']/ancestor::div[@class='v-graph-node-details-section-v2']";
+    private static final String GRAPH_NODE_GENERAL_INFO_SECTION =
+            String.format(GRAPH_NODE_SECTION_BY_NAME, "General info");
+    private static final String GRAPH_NODE_DIRECT_CONNECTIONS_SECTION =
+            String.format(GRAPH_NODE_SECTION_BY_NAME, "Direct connections");
+    private static final String GRAPH_NODE_VALUE_BY_TITLE =
+            "/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']/descendant::*[contains(@class,'g-text')]";
+    private static final String GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME =
+            "/descendant::div[text()='%s']/ancestor::div[@class='v-graph-node-details-connection-data-v2']";
+    private static final String GRAPH_NODE_GENERAL_INFO_VALUE_BY_TITLE =
+            String.format("%s%s", GRAPH_NODE_GENERAL_INFO_SECTION, GRAPH_NODE_VALUE_BY_TITLE);
+    private static final String GRAPH_NODE_DIRECT_CONNECTIONS_VALUE_BY_CLIENT_AND_TITLE = String.format(
+            "%s%s%s",
+            GRAPH_NODE_DIRECT_CONNECTIONS_SECTION,
+            GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME,
+            GRAPH_NODE_VALUE_BY_TITLE);
+    private static final String GRAPH_NODE_CONTAINER_BY_TITLE =
+            "//div[contains(@class,'v-graph-node-v2__title-text') and contains(text(),'%s')]/ancestor::div[@class='graph-block-container undefined']";
+    private static final String CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME =
+            "//span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
     private static final String CARD_BRAND_VALUE = String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Brand");
     private static final String CARD_COUNTRY_VALUE = String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Country");
-    private static final String DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME = "//div[contains(text(),'%s')]/ancestor::div[@class='v-graph-node-details-connection-data-v2']/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
+    private static final String DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME =
+            "//div[contains(text(),'%s')]/ancestor::div[@class='v-graph-node-details-connection-data-v2']/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
     private static final String LINK_WITH_TEXT_PATTERN = "//a[text()='%s' and text()='%s']";
-    private static final String FRAUD_SELECTION_OPTION_PATTERN = "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
-    private static final String STATUS_SELECTION_OPTION_PATTERN = "//*[contains(@class, 'v-dropdown-select-item__sub-menu_isHovered')]//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item__submenu']//*[text()='%s']";
+    private static final String FRAUD_SELECTION_OPTION_PATTERN =
+            "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
+    private static final String STATUS_SELECTION_OPTION_PATTERN =
+            "//*[contains(@class, 'v-dropdown-select-item__sub-menu_isHovered')]//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item__submenu']//*[text()='%s']";
     private static final String FRAUD = "Fraud";
-    private static final String CHECKBOX_BY_UCID_PATTERN = "//div[@data-qa='virtualized_table__rows__%s__checkbox']/descendant::input";
+    private static final String CHECKBOX_BY_UCID_PATTERN =
+            "//div[@data-qa='virtualized_table__rows__%s__checkbox']/descendant::input";
 
     public ConnectionPage(Page page) {
         super(page);
@@ -166,20 +193,31 @@ public class ConnectionPage extends AbstractPage {
         this.ibHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CPA/IB"));
         this.registeredHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "REGISTERED"));
         this.lastLoginHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "LAST LOGIN"));
-        this.unmaskConnectionCardDataButton = page.locator("//div[@class='v-graph-node-details-header-v2__buttons']/button");
+        this.unmaskConnectionCardDataButton =
+                page.locator("//div[@class='v-graph-node-details-header-v2__buttons']/button");
         this.connectionTableAttribute = page.locator("//div[@class='v-table-view-v2__attributes-list']/div");
-        this.unmaskConnectionTableDataButton = page.locator("//div[contains(@class,'v-table-view-v2__custom-header-cell')]");
+        this.unmaskConnectionTableDataButton =
+                page.locator("//div[contains(@class,'v-table-view-v2__custom-header-cell')]");
         this.filterButton = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/button");
         this.filterOptionButton = page.locator("//span[@class='g-button__text']");
         this.filterCheckboxListOption = page.locator("//span[@class='g-control-label__text']/div");
         this.filterSliderRange = page.locator("//div[contains(@class,'g-text_ws_nowrap')]");
         this.filterSlider = page.locator("//div[@class='g-slider']");
-        this.attributeFilterDropdown = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Attribute")).locator("//input");
-        this.dropdownMenuItems = page.locator("//div[@class='v-drop-down-menu__menu']/div/div/div[@class='v-drop-down-menu-item-base__text']");
-        this.activeRestrictionsSwitch = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Active restrictions")).locator("//input[@role='switch']/..");
-        this.pnlFilterFromInput = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "PNL")).locator("//input").first();
-        this.pnlFilterToInput = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "PNL")).locator("//input").last();
-        this.lastLoginDatePicker = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Last login")).locator("//input");
+        this.attributeFilterDropdown = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Attribute"))
+                .locator("//input");
+        this.dropdownMenuItems = page.locator(
+                "//div[@class='v-drop-down-menu__menu']/div/div/div[@class='v-drop-down-menu-item-base__text']");
+        this.activeRestrictionsSwitch = page.locator(
+                        String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Active restrictions"))
+                .locator("//input[@role='switch']/..");
+        this.pnlFilterFromInput = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "PNL"))
+                .locator("//input")
+                .first();
+        this.pnlFilterToInput = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "PNL"))
+                .locator("//input")
+                .last();
+        this.lastLoginDatePicker = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Last login"))
+                .locator("//input");
         this.resetLevelButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Level"));
         this.resetConnectionTypeButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Connection type"));
         this.resetScoreToInitialButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Score to initial"));
@@ -195,56 +233,88 @@ public class ConnectionPage extends AbstractPage {
         this.graphNodesUnhidden = page.locator("//div[contains(@class,'v-graph-node-v2__title-text')]");
         this.applyFiltersButton = page.locator("//div[@data-qa='drawer_body']/div/button");
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
-        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'client')]/descendant::span[contains(@class,'g-color-text_color_secondary')]"));
-        this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
+        this.connectionTableUserIds = page.locator(
+                String.format(
+                        "%s%s",
+                        CONNECTION_TABLE_ROW,
+                        "/descendant::a[contains(@class,'client')]/descendant::span[contains(@class,'g-color-text_color_secondary')]"));
+        this.appliedFilters = page.locator(
+                "//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/div");
-        this.zoomInButton = page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
+        this.zoomInButton =
+                page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
         this.zoomValue = page.locator(String.format("%s/div/descendant::span", ZOOM_CONTROLS));
         this.tooltip = page.locator("//div[@class='v-tooltip-content']");
-        this.connectionScoreFilterPresetsOptions = page.locator(String.format("%s/descendant::span[@class='g-button__text']", CONNECTION_SCORE_FILTER_PRESETS));
+        this.connectionScoreFilterPresetsOptions = page.locator(
+                String.format("%s/descendant::span[@class='g-button__text']", CONNECTION_SCORE_FILTER_PRESETS));
         this.multiselectButton = page.locator("//span[contains(text(),'Multiselect')]/ancestor::button");
-        this.multiselectSelectAllCheckbox = page.locator("//input[@type='checkbox']").first();
+        this.multiselectSelectAllCheckbox =
+                page.locator("//input[@type='checkbox']").first();
         this.multiselectCounter = page.locator("//div[@class='v-multiselect-panel__counter']");
         this.multiselectCommentButton = page.locator("//div[@class='v-multiselect-panel__body']/button");
-        this.multiselectCommentInput = page.locator("//div[@class='v-connection-search-multiselect-panel-v2__input']/descendant::input");
-        this.multiselectAddCommentButton = page.locator("//div[@class='v-connection-search-multiselect-panel-v2__buttons']/button");
-        this.graphNodeStatus = page.locator("//div[@class='v-graph-node-v2__status-line']/div[contains(@class,'g-text')]");
+        this.multiselectCommentInput =
+                page.locator("//div[@class='v-connection-search-multiselect-panel-v2__input']/descendant::input");
+        this.multiselectAddCommentButton =
+                page.locator("//div[@class='v-connection-search-multiselect-panel-v2__buttons']/button");
+        this.graphNodeStatus =
+                page.locator("//div[@class='v-graph-node-v2__status-line']/div[contains(@class,'g-text')]");
         this.graphNodeExpand = page.locator("//button[contains(@class,'v-graph-node-v2__expand-button')]");
         this.graphNodeAttributes = page.locator("//div[@class='v-graph-node-attributes-v2__attribute']");
         this.cardClientName = page.locator("//div[contains(@class,'v-graph-node-details-header-v2__client-name')]");
-        this.cardClientId = page.locator("//div[@class='v-graph-node-details-header-v2']/descendant::div[contains(@class,'g-color-text_color_secondary')]");
-        this.cardConnectionLevel = page.locator("//div[@class='v-graph-node-details-header-v2__attributes']/descendant::span[1]");
-        this.cardConnectionScore = page.locator("//div[@class='v-graph-node-details-header-v2__attributes']/descendant::span[2]");
-        this.cardOpenInNewTabButton = page.locator("//div[@class='v-graph-node-details-header-v2__buttons']/descendant::a");
+        this.cardClientId = page.locator(
+                "//div[@class='v-graph-node-details-header-v2']/descendant::div[contains(@class,'g-color-text_color_secondary')]");
+        this.cardConnectionLevel =
+                page.locator("//div[@class='v-graph-node-details-header-v2__attributes']/descendant::span[1]");
+        this.cardConnectionScore =
+                page.locator("//div[@class='v-graph-node-details-header-v2__attributes']/descendant::span[2]");
+        this.cardOpenInNewTabButton =
+                page.locator("//div[@class='v-graph-node-details-header-v2__buttons']/descendant::a");
         this.valueIcon = page.locator("//*[name()='svg']");
         this.valueText = page.locator("//*[contains(@class,'g-text')]");
         this.cardBrandIcon = page.locator(CARD_BRAND_VALUE).locator(valueIcon);
         this.cardBrandText = page.locator(CARD_BRAND_VALUE).locator(valueText);
         this.cardCountryIcon = page.locator(CARD_COUNTRY_VALUE).locator(valueIcon);
         this.cardCountryText = page.locator(CARD_COUNTRY_VALUE).locator(valueText);
-        this.cardEmail = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Email")).locator(valueText);
-        this.cardCpa = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "CPA")).locator(valueText);
-        this.cardIb = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "IB")).locator(valueText);
-        this.cardRegistered = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Registered")).locator(valueText);
-        this.cardLastLogin = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Last login")).locator(valueText);
-        this.cardTrading = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Trading")).locator(valueText);
-        this.cardTotalPnl = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Total PNL")).locator(valueText);
-        this.cardDeposit = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Deposit")).locator(valueText);
-        this.cardWithdrawal = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Withdrawal")).locator(valueText);
-        this.cardFraud = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, FRAUD)).first();
+        this.cardEmail = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Email"))
+                .locator(valueText);
+        this.cardCpa = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "CPA"))
+                .locator(valueText);
+        this.cardIb = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "IB"))
+                .locator(valueText);
+        this.cardRegistered = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Registered"))
+                .locator(valueText);
+        this.cardLastLogin = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Last login"))
+                .locator(valueText);
+        this.cardTrading = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Trading"))
+                .locator(valueText);
+        this.cardTotalPnl = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Total PNL"))
+                .locator(valueText);
+        this.cardDeposit = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Deposit"))
+                .locator(valueText);
+        this.cardWithdrawal = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Withdrawal"))
+                .locator(valueText);
+        this.cardFraud = page.locator(String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, FRAUD))
+                .first();
         this.directConnectionsAmount = page.locator("//div[text()='Direct connections']/../descendant::span");
         this.zoomOptions = page.locator("//span[@class='g-select-list__option-default-label']");
         this.cardAttributeName = page.locator("//div[@class='v-graph-attribute-details-v2__attribute-name']");
-        this.cardAttributeClient = page.locator("//div[@class='v-graph-attribute-details-v2__header']/div[contains(@class,'g-color-text_color_secondary')]");
+        this.cardAttributeClient = page.locator(
+                "//div[@class='v-graph-attribute-details-v2__header']/div[contains(@class,'g-color-text_color_secondary')]");
         this.cardAttributeValue = page.locator("//div[@class='v-graph-node-details-section-v2__title']");
-        this.connectionTableRowData = page.locator("//div[@class='v-body-cell']/descendant::*[contains(@class,'g-text')]");
-        this.addFraudRestrictionsButton = page.locator("//button[@data-qa=\"connections__multiselect_panel__report_fraud\"]");
-        this.addFraudRestrictionsDrawer = page.locator("//*[@data-qa='drawer_container']//*[text() = 'Apply fraud and restrictions']");
-        this.addFraudRestrictionsComment = page.locator("//*[@data-qa=\"connections__report_fraud__comment_input\"]//textarea");
+        this.connectionTableRowData =
+                page.locator("//div[@class='v-body-cell']/descendant::*[contains(@class,'g-text')]");
+        this.addFraudRestrictionsButton =
+                page.locator("//button[@data-qa=\"connections__multiselect_panel__report_fraud\"]");
+        this.addFraudRestrictionsDrawer =
+                page.locator("//*[@data-qa='drawer_container']//*[text() = 'Apply fraud and restrictions']");
+        this.addFraudRestrictionsComment =
+                page.locator("//*[@data-qa=\"connections__report_fraud__comment_input\"]//textarea");
         this.addFraudRestrictionsSubmitButton = page.locator("//button[@data-qa=\"connections__report_fraud__apply\"]");
-        this.fraudSelectButton = page.locator("[data-qa='connection_search_report_fraud_drawer__fraud_type_selector__anchor']");
+        this.fraudSelectButton =
+                page.locator("[data-qa='connection_search_report_fraud_drawer__fraud_type_selector__anchor']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
-        this.fraudTypes = page.locator("//div[@class='v-drop-down-menu-2__content']/descendant::div[contains(@class,'g-text')]");
+        this.fraudTypes =
+                page.locator("//div[@class='v-drop-down-menu-2__content']/descendant::div[contains(@class,'g-text')]");
     }
 
     @Step("Click connections tab")
@@ -297,20 +367,23 @@ public class ConnectionPage extends AbstractPage {
 
     public void checkDirectConnectionRows(String clientToName, String rowTitle, String expectedValue) {
         Allure.step(String.format("Check direct connection values, connect to user in field %s", rowTitle));
-        assertThat(page.locator(String.format(GRAPH_NODE_DIRECT_CONNECTIONS_VALUE_BY_CLIENT_AND_TITLE, clientToName, rowTitle))).hasText(expectedValue);
+        assertThat(page.locator(
+                        String.format(GRAPH_NODE_DIRECT_CONNECTIONS_VALUE_BY_CLIENT_AND_TITLE, clientToName, rowTitle)))
+                .hasText(expectedValue);
     }
 
     public void checkGeneralInfoRows(String rowTitle, String expectedValue) {
         Allure.step(String.format("Check general data values, field %s", rowTitle));
-        assertThat(page.locator(String.format(GRAPH_NODE_GENERAL_INFO_VALUE_BY_TITLE, rowTitle))).hasText(expectedValue);
-
+        assertThat(page.locator(String.format(GRAPH_NODE_GENERAL_INFO_VALUE_BY_TITLE, rowTitle)))
+                .hasText(expectedValue);
     }
 
     @Step("Click unmask button in card view")
     public void clickUnmaskConnectionCardDataButton() {
         unmaskConnectionCardDataButton.click();
         page.waitForCondition(() -> {
-            String attributeValue = (String) unmaskConnectionCardDataButton.evaluate("el => el.getAttribute('disabled')");
+            String attributeValue =
+                    (String) unmaskConnectionCardDataButton.evaluate("el => el.getAttribute('disabled')");
             return attributeValue == null; // Check if the attribute is no longer present
         });
     }
@@ -318,7 +391,8 @@ public class ConnectionPage extends AbstractPage {
     @Step("Get attributes from connection table by client")
     public List<String> getConnectionTableAttributesList(ClientHelper client) {
         List<String> connectionTableAttributesList = new ArrayList<>();
-        Locator attributes = page.locator(String.format(CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN, client.getUserId())).locator(connectionTableAttribute);
+        Locator attributes = page.locator(String.format(CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN, client.getUserId()))
+                .locator(connectionTableAttribute);
         for (int i = 0; i < attributes.count(); i++) {
             connectionTableAttributesList.add(attributes.nth(i).textContent());
         }
@@ -338,14 +412,16 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Wait until filter is visible")
     public void waitForFilterToLoad() {
-        page.waitForSelector(FILTER_CONTAINER, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
+        page.waitForSelector(
+                FILTER_CONTAINER, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Get list of options for Level filter")
     public List<String> getLevelFilterOptions() {
         waitForFilterToLoad();
         List<String> optionsList = new ArrayList<>();
-        Locator options = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Level")).locator(filterOptionButton);
+        Locator options = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Level"))
+                .locator(filterOptionButton);
         for (int i = 0; i < options.count(); i++) {
             optionsList.add(options.nth(i).textContent());
         }
@@ -356,7 +432,8 @@ public class ConnectionPage extends AbstractPage {
     public List<String> getConnectionTypeFilterOptions() {
         waitForFilterToLoad();
         List<String> optionsList = new ArrayList<>();
-        Locator options = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Connection type")).locator(filterCheckboxListOption);
+        Locator options = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Connection type"))
+                .locator(filterCheckboxListOption);
         for (int i = 0; i < options.count(); i++) {
             optionsList.add(options.nth(i).textContent());
         }
@@ -366,13 +443,17 @@ public class ConnectionPage extends AbstractPage {
     @Step("Get current range for Score to initial filter")
     public String getScoreToInitialFilterCurrentRange() {
         waitForFilterToLoad();
-        return page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Score to initial")).locator(filterSliderRange).textContent();
+        return page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Score to initial"))
+                .locator(filterSliderRange)
+                .textContent();
     }
 
     @Step("Is Score to initial filter slider visible")
     public Boolean isScoreToInitialFilterSliderVisible() {
         waitForFilterToLoad();
-        return page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Score to initial")).locator(filterSliderRange).isVisible();
+        return page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Score to initial"))
+                .locator(filterSliderRange)
+                .isVisible();
     }
 
     @Step("Get Attribute filter dropdown placeholder")
@@ -401,7 +482,8 @@ public class ConnectionPage extends AbstractPage {
     public List<String> getBehaviorFilterOptions() {
         waitForFilterToLoad();
         List<String> optionsList = new ArrayList<>();
-        Locator options = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Behavior")).locator(filterCheckboxListOption);
+        Locator options = page.locator(String.format(FILTER_CONTAINER_BY_TITLE_PATTERN, "Behavior"))
+                .locator(filterCheckboxListOption);
         for (int i = 0; i < options.count(); i++) {
             optionsList.add(options.nth(i).textContent());
         }
@@ -430,36 +512,49 @@ public class ConnectionPage extends AbstractPage {
     public void verifyPresetOptionsLastLoginFilter() {
         waitForFilterToLoad();
         String lastLogin = "Last login";
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Today")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Today"))
+                .click();
         assertThat(lastLoginDatePicker).hasValue(Utils.getCurrentDate());
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Yesterday")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Yesterday"))
+                .click();
         assertThat(lastLoginDatePicker).hasValue(Utils.getYesterdayDate());
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 7 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 14 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious14DaysDate(), Utils.getCurrentDate()));
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 30 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 90 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious90DaysDateUtc(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 7 days"))
+                .click();
+        assertThat(lastLoginDatePicker)
+                .hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 14 days"))
+                .click();
+        assertThat(lastLoginDatePicker)
+                .hasValue(String.format("%s to %s", getPrevious14DaysDate(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 30 days"))
+                .click();
+        assertThat(lastLoginDatePicker)
+                .hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 90 days"))
+                .click();
+        assertThat(lastLoginDatePicker)
+                .hasValue(String.format("%s to %s", getPrevious90DaysDateUtc(), Utils.getCurrentDate()));
     }
 
     @Step("Select Level filter option")
     public void selectLevelFilterOption(String option) {
         waitForFilterToLoad();
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, "Level", option)).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, "Level", option))
+                .click();
     }
 
     @Step("Select Connection type filter option")
     public void selectConnectionTypeFilterOption(String option) {
         waitForFilterToLoad();
-        page.locator(String.format(CHECKBOX_BY_LABEL_AND_VALUE_PATTERN, "Connection type", option)).click();
+        page.locator(String.format(CHECKBOX_BY_LABEL_AND_VALUE_PATTERN, "Connection type", option))
+                .click();
     }
 
     @Step("Select Behavior filter option")
     public void selectBehaviorFilterOption(String option) {
         waitForFilterToLoad();
-        page.locator(String.format(CHECKBOX_BY_LABEL_AND_VALUE_PATTERN, "Behavior", option)).click();
+        page.locator(String.format(CHECKBOX_BY_LABEL_AND_VALUE_PATTERN, "Behavior", option))
+                .click();
     }
 
     @Step("Click active restrictions switch")
@@ -490,7 +585,10 @@ public class ConnectionPage extends AbstractPage {
         waitForFilterToLoad();
         for (int i = 0; i < levelFilterButtons.count(); i++) {
             Locator button = levelFilterButtons.nth(i);
-            MatcherAssert.assertThat("Assert that each level button is not selected", button.getAttribute("class"), not(containsString("action")));
+            MatcherAssert.assertThat(
+                    "Assert that each level button is not selected",
+                    button.getAttribute("class"),
+                    not(containsString("action")));
         }
     }
 
@@ -498,7 +596,10 @@ public class ConnectionPage extends AbstractPage {
         waitForFilterToLoad();
         for (int i = 0; i < connectionTypeFilterButtons.count(); i++) {
             Locator checkbox = connectionTypeFilterButtons.nth(i);
-            MatcherAssert.assertThat("Assert that each Connection type checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+            MatcherAssert.assertThat(
+                    "Assert that each Connection type checkbox is not selected",
+                    checkbox.isChecked(),
+                    not(equalTo(true)));
         }
     }
 
@@ -506,7 +607,8 @@ public class ConnectionPage extends AbstractPage {
         waitForFilterToLoad();
         for (int i = 0; i < behaviorFilterButtons.count(); i++) {
             Locator checkbox = behaviorFilterButtons.nth(i);
-            MatcherAssert.assertThat("Assert that each Behavior checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+            MatcherAssert.assertThat(
+                    "Assert that each Behavior checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
         }
     }
 
@@ -525,8 +627,11 @@ public class ConnectionPage extends AbstractPage {
     public void selectAttribute(String attribute, String value) {
         waitForFilterToLoad();
         clickAttributeFilterDropdown();
-        page.locator(String.format(ATTRIBUTE_FILTER_NAME_PATTERN, attribute)).first().hover();
-        page.locator(String.format(ATTRIBUTE_FILTER_VALUE_PATTERN, attribute, value)).click();
+        page.locator(String.format(ATTRIBUTE_FILTER_NAME_PATTERN, attribute))
+                .first()
+                .hover();
+        page.locator(String.format(ATTRIBUTE_FILTER_VALUE_PATTERN, attribute, value))
+                .click();
     }
 
     public void verifyNoAttributesAreSelected() {
@@ -705,7 +810,8 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Click connection score filter preset")
     public void clickConnectionScoreFilterPresetByText(String preset) {
-        page.locator(String.format(CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN, preset)).click();
+        page.locator(String.format(CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN, preset))
+                .click();
     }
 
     @Step("Click multiselect button")
@@ -745,22 +851,29 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Get status by node title")
     public String getStatusByNodeTitle(String title) {
-        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title)).locator(graphNodeStatus).textContent();
+        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+                .locator(graphNodeStatus)
+                .textContent();
     }
 
     @Step("Get order by node title")
     public String getOrderByNodeTitle(String title) {
-        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title)).evaluate("el => getComputedStyle(el).getPropertyValue('--graph-block-order')").toString();
+        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+                .evaluate("el => getComputedStyle(el).getPropertyValue('--graph-block-order')")
+                .toString();
     }
 
     @Step("Click expand node by title")
     public void clickExpandNodeByTitle(String title) {
-        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title)).locator(graphNodeExpand).click();
+        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+                .locator(graphNodeExpand)
+                .click();
     }
 
     @Step("Get node attributes by title")
     public List<String> getNodeAttributesByTitle(String title) {
-        Locator attributes = page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title)).locator(graphNodeAttributes);
+        Locator attributes = page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+                .locator(graphNodeAttributes);
         List<String> list = new ArrayList<>();
         for (int i = 0; i < attributes.count(); i++) {
             list.add(attributes.nth(i).textContent());
@@ -895,62 +1008,84 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Get card direct connection Type")
     public String getDirectConnectionType(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Type")).textContent();
+        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Type"))
+                .textContent();
     }
 
     @Step("Get card direct connection Score")
     public String getDirectConnectionScore(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Score")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Score"))
+                .textContent();
     }
 
     @Step("Get card direct connection payoutId")
     public String getDirectConnectionPayoutId(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "payoutId")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "payoutId"))
+                .textContent();
     }
 
     @Step("Get card direct connection emailAddress")
     public String getDirectConnectionEmailAddress(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "emailAddress")).textContent();
+        return page.locator(String.format(
+                        DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "emailAddress"))
+                .textContent();
     }
 
     @Step("Get card direct connection digital")
     public String getDirectConnectionDigital(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "digital")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "digital"))
+                .textContent();
     }
 
     @Step("Get card direct connection session")
     public String getDirectConnectionSession(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "session")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "session"))
+                .textContent();
     }
 
     @Step("Get card direct connection phoneNumber")
     public String getDirectConnectionPhoneNumber(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "phoneNumber")).textContent();
+        return page.locator(String.format(
+                        DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "phoneNumber"))
+                .textContent();
     }
 
     @Step("Get card direct connection nameBirth")
     public String getDirectConnectionNameBirth(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "nameBirth")).textContent();
+        return page.locator(String.format(
+                        DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "nameBirth"))
+                .textContent();
     }
 
     @Step("Get card direct connection documentNumber")
     public String getDirectConnectionDocumentNumber(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "documentNumber")).textContent();
+        return page.locator(String.format(
+                        DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "documentNumber"))
+                .textContent();
     }
 
     @Step("Get card direct connection ipAddress")
     public String getDirectConnectionIpAddress(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "ipAddress")).textContent();
+        return page.locator(String.format(
+                        DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "ipAddress"))
+                .textContent();
     }
 
     @Step("Get card direct connection device")
     public String getDirectConnectionDevice(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "device")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "device"))
+                .textContent();
     }
 
     @Step("Get card direct connection Fraud")
     public String getDirectConnectionFraud(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, FRAUD)).textContent();
+        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, FRAUD))
+                .textContent();
     }
 
     @Step("Get zoom preset options")
@@ -964,7 +1099,10 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Click node attribute by name")
     public void clickNodeAttributeByName(String clientName, String attribute) {
-        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, clientName)).locator(graphNodeAttributes).getByText(attribute).click();
+        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, clientName))
+                .locator(graphNodeAttributes)
+                .getByText(attribute)
+                .click();
     }
 
     @Step("Get connection card attribute name")
@@ -984,17 +1122,22 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Get connection card Match")
     public String getConnectionMatch(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Match")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Match"))
+                .textContent();
     }
 
     @Step("Get connection card Value")
     public String getConnectionValue(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Value")).textContent();
+        return page.locator(
+                        String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, "Value"))
+                .textContent();
     }
 
     @Step("Get connection card Fraud")
     public String getConnectionFraud(String clientName) {
-        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, FRAUD)).textContent();
+        return page.locator(String.format(DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME, clientName, FRAUD))
+                .textContent();
     }
 
     @Step("Get connection table data by rows")
@@ -1077,7 +1220,8 @@ public class ConnectionPage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         String s = successToast.textContent();
         MatcherAssert.assertThat(s, containsString("Request received"));
-        MatcherAssert.assertThat(s, containsString(String.format("%d deductions were created automatically", deductionsCount)));
+        MatcherAssert.assertThat(
+                s, containsString(String.format("%d deductions were created automatically", deductionsCount)));
     }
 
     public void addFraud(String fraud) {

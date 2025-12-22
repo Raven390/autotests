@@ -1,24 +1,5 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
-import business_objects.db.abuse_registry_db.AbuserDeduction;
-import business_objects.db.abuse_registry_db.AbuserHistory;
-import business_objects.db.abuse_registry_db.PendingProcessing;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.FraudType;
-import helpers.data.enums.deduction.DeductionType;
-import helpers.database.DbName;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -42,6 +23,24 @@ import static org.hamcrest.Matchers.nullValue;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampSeconds;
 import static utils.Utils.getRandomIntPositive;
+
+import business_objects.db.abuse_registry_db.AbuserDeduction;
+import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.abuse_registry_db.PendingProcessing;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.FraudType;
+import helpers.data.enums.deduction.DeductionType;
+import helpers.database.DbName;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -78,7 +77,8 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
         tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, -10_000d, "withdraw");
 
-        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedAccountProfitComment(account2, 500.12 + 10_000d, comment);
+        MtMt4TradesCoercedObject trade2 =
+                generateMt4TradesCoercedAccountProfitComment(account2, 500.12 + 10_000d, comment);
         var tradeWithdrawal2 = generateMt4TradesCoercedAccountProfitComment(account2, -10_000d, "withdraw");
         var trade3 = generateMt4TradesCoercedAccountProfitComment(account3, 1800.45, comment);
         var trade4 = generateMt4TradesCoercedAccountProfitComment(account4, 1800.45, comment);
@@ -86,17 +86,36 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         CrmTbUserObject crmClient3 = generateUserByClient(client3);
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, crmClient2, crmClient3));
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4));
-        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account1), generateAccountForMtByAccount(account2), generateAccountForMtByAccount(account3), generateAccountForMtByAccount(account4)));
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
+                List.of(
+                        generateAccountForMtByAccount(account1),
+                        generateAccountForMtByAccount(account2),
+                        generateAccountForMtByAccount(account3),
+                        generateAccountForMtByAccount(account4)));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4));
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, tradeWithdrawal, trade2, trade3, tradeWithdrawal2, trade4));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(trade1, tradeWithdrawal, trade2, trade3, tradeWithdrawal2, trade4));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client1);
         MtMt5PositionsObject position2 = generateMtMt5PositionsObject(client2);
         MtMt5PositionsObject position3 = generateMtMt5PositionsObject(client3);
         insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position2, position3));
-        executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount2.account));
-        executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount3.account));
-        executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount4.account));
-
+        executeQueryToDb(
+                DbName.CLICKHOUSE,
+                String.format(
+                        "UPDATE %s SET is_deleted = 1 WHERE account = %s",
+                        MT5_POSITIONS_TABLE_NAME, mtAccount2.account));
+        executeQueryToDb(
+                DbName.CLICKHOUSE,
+                String.format(
+                        "UPDATE %s SET is_deleted = 1 WHERE account = %s",
+                        MT5_POSITIONS_TABLE_NAME, mtAccount3.account));
+        executeQueryToDb(
+                DbName.CLICKHOUSE,
+                String.format(
+                        "UPDATE %s SET is_deleted = 1 WHERE account = %s",
+                        MT5_POSITIONS_TABLE_NAME, mtAccount4.account));
     }
 
     @AfterAll
@@ -136,13 +155,16 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<PendingProcessing> pendingProcessing = getObjectsFromDB(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, String.format("ucid in ('%s')", client1.getUcid()), PendingProcessing.class);
+        List<PendingProcessing> pendingProcessing = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_PENDING_PROCESSING_TABLE_NAME,
+                String.format("ucid in ('%s')", client1.getUcid()),
+                PendingProcessing.class);
         assertThat(pendingProcessing.size(), is(1));
         PendingProcessing pending = pendingProcessing.getFirst();
         assertThat(pending.getUcid(), is(client1.getUcid()));
         assertThat(pending.getFraudTypeCode(), is(fraudTypeOld.getCode()));
         assertThat(pendingProcessing.getFirst().getFraudSubtypeCode(), nullValue());
-
     }
 
     @Test
@@ -157,10 +179,11 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.typeServerNameAcc(account1.serverName, account1.account.toString(), account2.serverName, account2.account.toString());
+        fraudstersPage.typeServerNameAcc(
+                account1.serverName, account1.account.toString(), account2.serverName, account2.account.toString());
         fraudstersPage.clickAddFraudButton();
         FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
-        //Partial Deduction
+        // Partial Deduction
         fraudstersPage.addSelectedFraudAdd(fraudType.getName(), "Confirmed");
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
@@ -168,23 +191,101 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         fraudstersPage.verifySuccessMessageUpload(3);
         page.waitForTimeout(1000);
 
-        List<PendingProcessing> pendingProcessing = getObjectsFromDB(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, String.format("ucid in ('%s')", client1.getUcid()), PendingProcessing.class);
+        List<PendingProcessing> pendingProcessing = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_PENDING_PROCESSING_TABLE_NAME,
+                String.format("ucid in ('%s')", client1.getUcid()),
+                PendingProcessing.class);
         assertThat(pendingProcessing.size(), is(0));
 
-        List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()), AbuserHistory.class);
+        List<AbuserHistory> abuserHistory = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                String.format("ucid = '%s'", client2.getUcid()),
+                AbuserHistory.class);
 
         AbuserDeduction expected = new AbuserDeduction(
-                client2.getUcid(), abuserHistory.getLast().getId(), account2.account.toString(), account2.serverIdSt, account2.serverName, "USD", "Vantage", NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), commentary, 10_500.12, 10_500.12, 500.12, 500.12, null, null, null, null, "backoffice-test backoffice-test", "Vindex BO", "ILLEGAL_PROFIT", null, null, 500.12, 500.12, client2.getUserId().toString(), 500.12, 500.12, false, DeductionType.FULL_DEDUCTION.getDisplayName()
-        );
+                client2.getUcid(),
+                abuserHistory.getLast().getId(),
+                account2.account.toString(),
+                account2.serverIdSt,
+                account2.serverName,
+                "USD",
+                "Vantage",
+                NOT_HOLDING.getDisplayName(),
+                NOT_SENT.getDisplayName(),
+                TO_BE_DEDUCTED.getDisplayName(),
+                AWAITING_APPROVAL.getDisplayName(),
+                commentary,
+                10_500.12,
+                10_500.12,
+                500.12,
+                500.12,
+                null,
+                null,
+                null,
+                null,
+                "backoffice-test backoffice-test",
+                "Vindex BO",
+                "ILLEGAL_PROFIT",
+                null,
+                null,
+                500.12,
+                500.12,
+                client2.getUserId().toString(),
+                500.12,
+                500.12,
+                false,
+                DeductionType.FULL_DEDUCTION.getDisplayName());
         AbuserDeduction expected2 = new AbuserDeduction(
-                client2.getUcid(), abuserHistory.getLast().getId(), account3.account.toString(), account3.serverIdSt, account3.serverName, "USD", "Vantage", NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), commentary, 0.0, 0.0, 1800.45, 1800.45, null, null, null, null, "backoffice-test backoffice-test", "Vindex BO", "NO_ILLEGAL_PROFIT", null, null, 1800.45, 1800.45, client2.getUserId().toString(), null, null, false, DeductionType.FULL_DEDUCTION.getDisplayName()
-        );
+                client2.getUcid(),
+                abuserHistory.getLast().getId(),
+                account3.account.toString(),
+                account3.serverIdSt,
+                account3.serverName,
+                "USD",
+                "Vantage",
+                NOT_HOLDING.getDisplayName(),
+                NOT_SENT.getDisplayName(),
+                TO_BE_DEDUCTED.getDisplayName(),
+                AWAITING_APPROVAL.getDisplayName(),
+                commentary,
+                0.0,
+                0.0,
+                1800.45,
+                1800.45,
+                null,
+                null,
+                null,
+                null,
+                "backoffice-test backoffice-test",
+                "Vindex BO",
+                "NO_ILLEGAL_PROFIT",
+                null,
+                null,
+                1800.45,
+                1800.45,
+                client2.getUserId().toString(),
+                null,
+                null,
+                false,
+                DeductionType.FULL_DEDUCTION.getDisplayName());
 
-        List<AbuserDeduction> deductionList = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()), AbuserDeduction.class);
+        List<AbuserDeduction> deductionList = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_DEDUCTION_TABLE_NAME,
+                String.format("ucid = '%s'", client2.getUcid()),
+                AbuserDeduction.class);
         assertThat(deductionList.size(), is(2));
         System.out.println(account3.account);
-        AbuserDeduction actualDeduction = deductionList.stream().filter(abuserDeduction -> abuserDeduction.getAccount().equals(account2.account.toString())).findFirst().get();
-        AbuserDeduction actualDeduction2 = deductionList.stream().filter(abuserDeduction -> abuserDeduction.getAccount().equals(account3.account.toString())).findFirst().get();
+        AbuserDeduction actualDeduction = deductionList.stream()
+                .filter(abuserDeduction -> abuserDeduction.getAccount().equals(account2.account.toString()))
+                .findFirst()
+                .get();
+        AbuserDeduction actualDeduction2 = deductionList.stream()
+                .filter(abuserDeduction -> abuserDeduction.getAccount().equals(account3.account.toString()))
+                .findFirst()
+                .get();
         assertThat(actualDeduction, is(expected));
         assertThat(actualDeduction2, is(expected2));
     }
@@ -209,7 +310,11 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
 
         page.waitForTimeout(2000);
 
-        var deductions = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", client3.getUcid()), AbuserDeduction.class);
+        var deductions = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_DEDUCTION_TABLE_NAME,
+                String.format("ucid = '%s'", client3.getUcid()),
+                AbuserDeduction.class);
 
         assertThat(deductions.size(), is(1));
         var deduction = deductions.getFirst();

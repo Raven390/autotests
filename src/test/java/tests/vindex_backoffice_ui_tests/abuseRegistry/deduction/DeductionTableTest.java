@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
-import business_objects.db.abuse_registry_db.AbuserDeduction;
-import business_objects.db.abuse_registry_db.AbuserHistory;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.text.DecimalFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -37,6 +21,20 @@ import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 import static utils.Utils.writeLog;
 
+import business_objects.db.abuse_registry_db.AbuserDeduction;
+import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 class DeductionTableTest extends TestBaseWeb {
 
@@ -45,7 +43,6 @@ class DeductionTableTest extends TestBaseWeb {
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
     private static final DecimalFormat formatter = new DecimalFormat("#,###.##");
     private static AbuserDeduction deduction;
-
 
     @BeforeAll
     static void setup() throws Exception {
@@ -56,8 +53,13 @@ class DeductionTableTest extends TestBaseWeb {
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         Thread.sleep(2000);
         addFraudForClient(client, HEDGING, INTERNAL, CONFIRMED, List.of("EURUSD", "GBPUSD"));
-        List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserHistory.class);
-        deduction = generateAbuserDeductionByAccount(account, abuserHistory.getLast().getId());
+        List<AbuserHistory> abuserHistory = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                String.format("ucid = '%s'", client.getUcid()),
+                AbuserHistory.class);
+        deduction = generateAbuserDeductionByAccount(
+                account, abuserHistory.getLast().getId());
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, deduction);
     }
 
@@ -80,11 +82,55 @@ class DeductionTableTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         deductionPage.clickAbuseRegistryButton();
-        assertThat("Check table headers", deductionPage.getDeductionTableHeaders(), contains("CLIENT", "ACCOUNT", "BEHAVIOR", "STATUS", "EMAIL", "ILLEGAL PROFIT", "SUGGESTION", "DEDUCTION", "CREATED", "NOTE"));
+        assertThat(
+                "Check table headers",
+                deductionPage.getDeductionTableHeaders(),
+                contains(
+                        "CLIENT",
+                        "ACCOUNT",
+                        "BEHAVIOR",
+                        "STATUS",
+                        "EMAIL",
+                        "ILLEGAL PROFIT",
+                        "SUGGESTION",
+                        "DEDUCTION",
+                        "CREATED",
+                        "NOTE"));
         writeLog(deductionPage.getDeductionTableDataByRows().getFirst());
-        assertThat("Check table data", deductionPage.getDeductionTableDataByRows().getFirst(), contains(
-                String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName), client.getUserId().toString(), account.account.toString(), account.serverName, "", String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "Deduction failed", "Approved", client.getBrand(), String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency), String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), USD.getCode()), String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), USD.getCode()), String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), USD.getCode()), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalDate().toString(), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), deduction.getComment(), deduction.getCommentDeduction()
-        ));
+        assertThat(
+                "Check table data",
+                deductionPage.getDeductionTableDataByRows().getFirst(),
+                contains(
+                        String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName),
+                        client.getUserId().toString(),
+                        account.account.toString(),
+                        account.serverName,
+                        "",
+                        String.format(
+                                "%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()),
+                        "Deduction failed",
+                        "Approved",
+                        client.getBrand(),
+                        String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency),
+                        String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), USD.getCode()),
+                        String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency),
+                        String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), USD.getCode()),
+                        String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency),
+                        String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), USD.getCode()),
+                        deduction
+                                .getCreatedAt()
+                                .toLocalDateTime()
+                                .plusHours(3)
+                                .toLocalDate()
+                                .toString(),
+                        deduction
+                                .getCreatedAt()
+                                .toLocalDateTime()
+                                .plusHours(3)
+                                .toLocalTime()
+                                .format(DateTimeFormatter.ofPattern("HH:mm")),
+                        deduction.getComment(),
+                        deduction.getCommentDeduction()));
     }
 
     @Test
@@ -102,7 +148,16 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickAbuseRegistryButton();
         deductionPage.clickDeductionTabButton();
         deductionPage.clickStatusFilter();
-        assertThat("Check options in status filter", deductionPage.getFilterOptions(), contains(NO_DEDUCTION.getDisplayName(), HOLDING.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), DEDUCTED.getDisplayName(), PROCESSING.getDisplayName(), DEDUCTION_FAILED.getDisplayName()));
+        assertThat(
+                "Check options in status filter",
+                deductionPage.getFilterOptions(),
+                contains(
+                        NO_DEDUCTION.getDisplayName(),
+                        HOLDING.getDisplayName(),
+                        TO_BE_DEDUCTED.getDisplayName(),
+                        DEDUCTED.getDisplayName(),
+                        PROCESSING.getDisplayName(),
+                        DEDUCTION_FAILED.getDisplayName()));
     }
 
     @Test
@@ -120,7 +175,15 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickAbuseRegistryButton();
         deductionPage.clickDeductionTabButton();
         deductionPage.clickEmailFilter();
-        assertThat("Check options in email filter", deductionPage.getFilterOptions(), contains(NO_EMAIL_SENT.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), REJECTED.getDisplayName(), APPROVED.getDisplayName(), EMAIL_SENT.getDisplayName()));
+        assertThat(
+                "Check options in email filter",
+                deductionPage.getFilterOptions(),
+                contains(
+                        NO_EMAIL_SENT.getDisplayName(),
+                        AWAITING_APPROVAL.getDisplayName(),
+                        REJECTED.getDisplayName(),
+                        APPROVED.getDisplayName(),
+                        EMAIL_SENT.getDisplayName()));
     }
 
     @Test
@@ -140,7 +203,10 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickStatusFilter();
         deductionPage.clickFilterOptionByText(DEDUCTION_FAILED.getDisplayName());
         deductionPage.waitForPageToLoad();
-        assertThat("Check all statuses in the table are as selected", deductionPage.getStatusValues(), everyItem(is(DEDUCTION_FAILED.getDisplayName())));
+        assertThat(
+                "Check all statuses in the table are as selected",
+                deductionPage.getStatusValues(),
+                everyItem(is(DEDUCTION_FAILED.getDisplayName())));
     }
 
     @Test
@@ -160,7 +226,10 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickEmailFilter();
         deductionPage.clickFilterOptionByText(APPROVED.getDisplayName());
         deductionPage.waitForPageToLoad();
-        assertThat("Check all email statuses in the table are as selected", deductionPage.getEmailValues(), everyItem(is(APPROVED.getDisplayName())));
+        assertThat(
+                "Check all email statuses in the table are as selected",
+                deductionPage.getEmailValues(),
+                everyItem(is(APPROVED.getDisplayName())));
     }
 
     @Test
@@ -180,7 +249,10 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickBrandsFilter();
         deductionPage.clickFilterOptionByText(client.getBrand());
         deductionPage.waitForPageToLoad();
-        assertThat("Check all brand groups in the table are as selected", deductionPage.getBrandValues(), everyItem(is(client.getBrand())));
+        assertThat(
+                "Check all brand groups in the table are as selected",
+                deductionPage.getBrandValues(),
+                everyItem(is(client.getBrand())));
     }
 
     @Test
@@ -202,7 +274,13 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickEmailFilter();
         deductionPage.clickFilterOptionByText(APPROVED.getDisplayName());
         deductionPage.waitForPageToLoad();
-        assertThat("Check all statuses in the table are as selected", deductionPage.getStatusValues(), everyItem(is(DEDUCTION_FAILED.getDisplayName())));
-        assertThat("Check all email statuses in the table are as selected", deductionPage.getEmailValues(), everyItem(is(APPROVED.getDisplayName())));
+        assertThat(
+                "Check all statuses in the table are as selected",
+                deductionPage.getStatusValues(),
+                everyItem(is(DEDUCTION_FAILED.getDisplayName())));
+        assertThat(
+                "Check all email statuses in the table are as selected",
+                deductionPage.getEmailValues(),
+                everyItem(is(APPROVED.getDisplayName())));
     }
 }

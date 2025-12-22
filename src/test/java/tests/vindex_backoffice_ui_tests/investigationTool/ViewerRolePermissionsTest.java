@@ -1,16 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.*;
@@ -19,6 +8,15 @@ import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -26,7 +24,6 @@ import static utils.Constants.*;
 class ViewerRolePermissionsTest extends TestBaseWeb {
     static ClientHelper client = getRandomVantageClient();
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
-
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -37,7 +34,8 @@ class ViewerRolePermissionsTest extends TestBaseWeb {
 
     @Test
     @AllureId("1724")
-    @DisplayName("BO user with viewer role can't assign suspicious client with the active payment alert to himself to perform investigation")
+    @DisplayName(
+            "BO user with viewer role can't assign suspicious client with the active payment alert to himself to perform investigation")
     void assignClientCardBothTypesAlertsViewerRolePaymentTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
@@ -81,7 +79,8 @@ class ViewerRolePermissionsTest extends TestBaseWeb {
 
     @Test
     @AllureId("1721")
-    @DisplayName("BO user with viewer role can assign suspicious client with the active trading alert to himself to perform investigation ")
+    @DisplayName(
+            "BO user with viewer role can assign suspicious client with the active trading alert to himself to perform investigation ")
     void assignClientCardBothTypesAlertsViewerRoleTradingTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
@@ -181,5 +180,4 @@ class ViewerRolePermissionsTest extends TestBaseWeb {
         alertHistoryPage.navigateAlertHistory();
         alertHistoryPage.notHaveQc();
     }
-
 }

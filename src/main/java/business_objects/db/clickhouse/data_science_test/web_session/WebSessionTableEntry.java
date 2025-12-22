@@ -7,14 +7,11 @@ public class WebSessionTableEntry {
     public String ucid;
     public String webSessionId;
 
-
-    public WebSessionTableEntry() {
-    }
+    public WebSessionTableEntry() {}
 
     public WebSessionTableEntry(String ucid, String webSessionId) {
         this.ucid = ucid;
         this.webSessionId = webSessionId;
-
     }
 
     @Override

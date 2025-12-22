@@ -1,23 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
-import business_objects.api.clickhouse_api_service.get_swap_free_volumes.GetSwapFreeVolumesResponse;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_swap_free_volumes.GetSwapFreeVolumesRequest.getSwapFreeVolumes;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
@@ -31,6 +13,23 @@ import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.writeLog;
 
+import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.clickhouse_api_service.get_swap_free_volumes.GetSwapFreeVolumesResponse;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
+
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME)
 @Tag(TEAM_CORE)
@@ -38,7 +37,7 @@ import static utils.Utils.writeLog;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetSwapFreeVolumesTests extends TestBaseApi {
 
-    //Client 1 data
+    // Client 1 data
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final CrmTbAccountObject account1 = generateAccountByClient(client1, true);
 
@@ -46,13 +45,13 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     private static final Mt5DealsCoercedObject deal2 = generateTradeByClient(client1, 1, 1, 1, 1111L);
     private static final Mt5DealsCoercedObject deal3 = generateTradeByClient(client1, 1, 1, 3, 1112L);
 
-    //Client 2 data
+    // Client 2 data
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final CrmTbAccountObject account2 = generateAccountByClient(client2, false);
     private static final Mt5DealsCoercedObject deal5 = generateTradeByClient(client2, 0, 0, 0, 1113L);
     private static final Mt5DealsCoercedObject deal6 = generateTradeByClient(client2, 1, 1, 0, 1114L);
 
-    //Client 3 data
+    // Client 3 data
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
 
     private static final String dateTo = getCurrentTimestampDbFormat();
@@ -63,7 +62,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }
 
-    //TODO uncomment after solving error with delete statement
+    // TODO uncomment after solving error with delete statement
     @AfterAll
     static void teardown() throws Exception {
         cleanCrmUserTableByClient(client1.getUcid(), client2.getUcid(), client3.getUcid());
@@ -76,7 +75,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get swap free volumes with all params")
     @AllureId("590")
     void getSwapFreeVolumeTest1() throws IOException {
-        //Send request
+        // Send request
         writeLog(client1.getTradingAccount());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -85,7 +84,8 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
+        GetSwapFreeVolumesResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
@@ -100,14 +100,15 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get swap free volumes with required params only")
     @AllureId("591")
     void getSwapFreeVolumeTest2() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
+        GetSwapFreeVolumesResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
@@ -122,7 +123,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get swap free volumes with wrong dateTo")
     @AllureId("592")
     void getSwapFreeVolumeTest3() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -130,7 +131,8 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
@@ -144,31 +146,36 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get swap free volumes with tradingAccount only")
     @AllureId("593")
     void getSwapFreeVolumeTest4() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
-        assertThat("Assert error", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes for not swap free account -  empty response")
     @AllureId("594")
     void getSwapFreeVolumeTest5() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client2.getTradingAccount()); // Required
         queryParams.put("serverId", client2.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
+        GetSwapFreeVolumesResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
@@ -183,24 +190,28 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get swap free volumes with serverId only")
     @AllureId("595")
     void getSwapFreeVolumeTest6() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", 1); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
-        assertThat("Assert error", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes dateTo < order date")
     @AllureId("596")
     void getSwapFreeVolumeTest7() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -208,7 +219,8 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
+        GetSwapFreeVolumesResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
@@ -223,50 +235,59 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get swap free volumes with wrong tradingAccount format")
     @AllureId("643")
     void getSwapFreeVolumeTest8() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "abc"); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
-        assertThat("Assert error", mappedResponse.getError(), is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with wrong serverId format")
     @AllureId("644")
     void getSwapFreeVolumeTest9() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", "abc"); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
-        assertThat("Assert error", mappedResponse.getError(), is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Response for user without orders")
     @AllureId("645")
     void getSwapFreeVolumeTest10() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client3.getTradingAccount()); // Required
         queryParams.put("serverId", client3.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
+        GetSwapFreeVolumesResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());

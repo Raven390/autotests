@@ -3,8 +3,9 @@ package helpers.data.enums;
 import java.security.SecureRandom;
 
 public enum FraudTypeStatus {
-
-    CONFIRMED("CONFIRMED", "Confirmed"), POTENTIAL("POTENTIAL", "Potential"), CLEANED("CLEANED", "Cleaned");
+    CONFIRMED("CONFIRMED", "Confirmed"),
+    POTENTIAL("POTENTIAL", "Potential"),
+    CLEANED("CLEANED", "Cleaned");
 
     private final String status;
     private final String displayName;
@@ -21,7 +22,6 @@ public enum FraudTypeStatus {
     public String getDisplayName() {
         return displayName;
     }
-
 
     public static FraudTypeStatus getRandomFraudStatusUi() {
         FraudTypeStatus fraud;

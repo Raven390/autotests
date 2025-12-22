@@ -3,7 +3,6 @@ package helpers.database;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 
-
 public class ChHelper {
 
     public static double calculateWithdrawalsValue(CrmTbWithdrawalEntity... withdrawal) {

@@ -1,20 +1,5 @@
 package tests.rule_engine_service_tests.rules.trading;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.trading.NoSlippageRuleDataFactory.setupNoSlippageRuleData;
@@ -24,6 +9,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_NO_SLIPPAGE_RULE)
@@ -45,7 +45,7 @@ class NoSlippageRuleTests extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         stopSshTunnel();
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
     }
 
     @Test
@@ -83,7 +83,8 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1422")
-    @DisplayName("No slippage rule. Exit with alert and restriction if user has 0 resolved alerts. ElementId: Event_0oa6zyc")
+    @DisplayName(
+            "No slippage rule. Exit with alert and restriction if user has 0 resolved alerts. ElementId: Event_0oa6zyc")
     void noSlippageRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
 
@@ -91,7 +92,7 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         checkElementId("Event_0oa6zyc", data.closeTradeMtEvent.id, "no_slippage");
 
-        //Verify alerts
+        // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
         writeLog("client ucid: " + data.clientHelper.getUcid());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
@@ -103,7 +104,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         // Verify restriction
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "No slippage pattern");
-
     }
 
     @Test
@@ -163,7 +163,8 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1428")
-    @DisplayName("No slippage rule. Exit without alert if profit(acc) + rebates(acc) < -10 000$?. ElementId: Event_0jy5i8k")
+    @DisplayName(
+            "No slippage rule. Exit without alert if profit(acc) + rebates(acc) < -10 000$?. ElementId: Event_0jy5i8k")
     void noSlippageRuleTest10() throws Exception {
         DataHelper data = dbDataMap.get("10");
 
@@ -185,7 +186,8 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1430")
-    @DisplayName("No slippage rule. Exit with alert and restriction if resolved alerts amount = 0. ElementId: Event_1k86ppo")
+    @DisplayName(
+            "No slippage rule. Exit with alert and restriction if resolved alerts amount = 0. ElementId: Event_1k86ppo")
     void noSlippageRuleTest12() throws Exception {
         DataHelper data = dbDataMap.get("12");
 
@@ -193,7 +195,7 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         checkElementId("Event_1k86ppo", data.closeTradeMtEvent.id, "no_slippage");
 
-        //Verify alerts
+        // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 
@@ -203,6 +205,5 @@ class NoSlippageRuleTests extends TestBaseRule {
         // Verify restriction
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "No slippage pattern");
-
     }
 }

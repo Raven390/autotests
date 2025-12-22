@@ -1,5 +1,23 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
+import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
+import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.kafka.alerts.RuleAlertFactory.*;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Currency.USD;
+import static helpers.database.BoHelper.closeAlert;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static utils.Constants.*;
+import static utils.Utils.getRandomIntPositive;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_credit_card_table.CrmTbCreditCardObject;
 import business_objects.db.clickhouse.crm_tb_credit_card_table.CrmTbCreditCardObjectFactory;
@@ -24,34 +42,15 @@ import helpers.data.enums.VerificationStatus;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-
-import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
-import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
-import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
-import static business_objects.kafka.alerts.RuleAlertFactory.*;
-import static helpers.database.BoHelper.closeAlert;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
-import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.Currency.USD;
-import static helpers.database.DbHelper.*;
-import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TransactionHistoryTest extends TestBaseWeb {
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -82,7 +81,7 @@ public class TransactionHistoryTest extends TestBaseWeb {
     private static CrmTbWithdrawAccountObject crmTbWithdrawAccountObject;
     private static CrmTbWithdrawAccountObject crmTbWithdrawAccountObject2;
 
-    //PGS
+    // PGS
     private static PaymentEventsObject paymentEventsObject1;
     private static PaymentDetailsObject paymentDetailsObject1;
     private static PaymentDecisionsObject paymentDecisionsObject1;
@@ -104,15 +103,20 @@ public class TransactionHistoryTest extends TestBaseWeb {
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
         tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, -10_000d, "withdraw");
 
-        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedAccountProfitComment(account2, 500.12 + 10_000d, comment);
+        MtMt4TradesCoercedObject trade2 =
+                generateMt4TradesCoercedAccountProfitComment(account2, 500.12 + 10_000d, comment);
         var tradeWithdrawal2 = generateMt4TradesCoercedAccountProfitComment(account2, -10_000d, "withdraw");
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser));
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser2));
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account21, account22));
-        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account1), generateAccountForMtByAccount(account2)));
-        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account21), generateAccountForMtByAccount(account22)));
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
+                List.of(generateAccountForMtByAccount(account1), generateAccountForMtByAccount(account2)));
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
+                List.of(generateAccountForMtByAccount(account21), generateAccountForMtByAccount(account22)));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
         var mtAccount21 = generateMtAccountByCrmTbAccount(account1);
         var mtAccount22 = generateMtAccountByCrmTbAccount(account2);
@@ -120,7 +124,11 @@ public class TransactionHistoryTest extends TestBaseWeb {
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, tradeWithdrawal, trade2, tradeWithdrawal2));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client1);
         insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1));
-        executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount2.account));
+        executeQueryToDb(
+                DbName.CLICKHOUSE,
+                String.format(
+                        "UPDATE %s SET is_deleted = 1 WHERE account = %s",
+                        MT5_POSITIONS_TABLE_NAME, mtAccount2.account));
 
         crmTbWithdrawAccountObject = CrmTbWithdrawAccountObjectFactory.generateByClient(client1);
         cardObject = CrmTbCreditCardObjectFactory.generateByClient(client1, getRandomIntPositive());
@@ -135,7 +143,7 @@ public class TransactionHistoryTest extends TestBaseWeb {
         insertObjectToDb(CRM_TB_CREDIT_CARD_TABLE_NAME, cardObject2);
 
         var prevYear = OffsetDateTime.now().minusYears(1);
-        //tb
+        // tb
         deposit1 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client1);
         deposit1.setCreateTime(prevYear);
         deposit1.setCreateTimeUtc(prevYear);
@@ -201,11 +209,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         withdrawal3.setStatusGroup("Fail");
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal3);
 
-        //PGS
+        // PGS
         paymentEventsObject1 = generatePaymentEventsObject(client1);
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         paymentDetailsObject1.setMerchantOrderId(withdrawal1.getOrderNumber());
-        paymentDetailsObject1.setPayload(String.format("""
+        paymentDetailsObject1.setPayload(String.format(
+                """
                 {"merchantOrderId": "%s"}
                 """, withdrawal1.getOrderNumber()));
         paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
@@ -215,7 +224,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
         paymentEventsObject2 = generatePaymentEventsObject(client1);
         paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client1);
         paymentDetailsObject2.setMerchantOrderId(withdrawal2.getOrderNumber());
-        paymentDetailsObject2.setPayload(String.format("""
+        paymentDetailsObject2.setPayload(String.format(
+                """
                 {"merchantOrderId": "%s"}
                 """, withdrawal2.getOrderNumber()));
         paymentDecisionsObject2 = generatePaymentDecisionObject(paymentEventsObject2);
@@ -226,7 +236,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
         paymentEventsObject3 = generatePaymentEventsObject(client1);
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client1);
         paymentDetailsObject3.setMerchantOrderId(withdrawal3.getOrderNumber());
-        paymentDetailsObject3.setPayload(String.format("""
+        paymentDetailsObject3.setPayload(String.format(
+                """
                 {"merchantOrderId": "%s"}
                 """, withdrawal3.getOrderNumber()));
         paymentDecisionsObject3 = generatePaymentDecisionObject(paymentEventsObject3);
@@ -234,22 +245,41 @@ public class TransactionHistoryTest extends TestBaseWeb {
         paymentDecisionsObject3.setDecisionCode(0);
         paymentDecisionsObject3.setDecisionType("risk");
 
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1, paymentDecisionsObject2, paymentDecisionsObject3));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE,
+                List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE,
+                List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                List.of(paymentDecisionsObject1, paymentDecisionsObject2, paymentDecisionsObject3));
 
-        //alerts
+        // alerts
         var alertPayment1 = generatePaymentAlertByUcidByTrigger(crmTbUser.ucid, "Withdrawal");
         var alertPayment2 = generatePaymentAlertByUcidByTrigger(crmTbUser.ucid, "Withdrawal");
         alertPayment1.setPaymentEventId(paymentEventsObject1.getPaymentId().toString());
         alertPayment1.setMerchantOrderId(withdrawal1.getOrderNumber());
         alertPayment2.setPaymentEventId(paymentEventsObject3.getPaymentId().toString());
         alertPayment2.setMerchantOrderId(withdrawal3.getOrderNumber());
-        kafka.produceMessage(alertPayment1.getId().toString(), objectMapper.writeValueAsString(alertPayment1), KAFKA_TOPIC_ALERTS);
-        kafka.produceMessage(alertPayment2.getId().toString(), objectMapper.writeValueAsString(alertPayment2), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment1.getId().toString(), objectMapper.writeValueAsString(alertPayment1), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment2.getId().toString(), objectMapper.writeValueAsString(alertPayment2), KAFKA_TOPIC_ALERTS);
 
-        //ver server
-        var verificationHistory = VerificationHistory.builder().ucid(client1.getUcid()).paymentProfileKey(deposit3.getPaymentProfileKey()).status(VerificationStatus.VERIFIED).comment("comment").changedByUsername("TEST").changedBySystem("TEST").changedAt(OffsetDateTime.of(2025, 11, 18, 15, 28, 56, 461, ZoneOffset.UTC)).build();
+        // ver server
+        var verificationHistory = VerificationHistory.builder()
+                .ucid(client1.getUcid())
+                .paymentProfileKey(deposit3.getPaymentProfileKey())
+                .status(VerificationStatus.VERIFIED)
+                .comment("comment")
+                .changedByUsername("TEST")
+                .changedBySystem("TEST")
+                .changedAt(OffsetDateTime.of(2025, 11, 18, 15, 28, 56, 461, ZoneOffset.UTC))
+                .build();
         insertObjectsToDb(DbName.POSTGRES, VE_VERIFICATION_HISTORY, List.of(verificationHistory));
     }
 
@@ -262,33 +292,97 @@ public class TransactionHistoryTest extends TestBaseWeb {
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
 
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit1.getTransferId()));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit2.getTransferId()));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit3.getTransferId()));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client2.getUcid(), deposit23.getTransferId()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal1.getTransferId()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal2.getTransferId()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal3.getTransferId()));
+        deleteEntryFromDb(
+                CRM_DEPOSIT_TABLE_NAME,
+                String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit1.getTransferId()));
+        deleteEntryFromDb(
+                CRM_DEPOSIT_TABLE_NAME,
+                String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit2.getTransferId()));
+        deleteEntryFromDb(
+                CRM_DEPOSIT_TABLE_NAME,
+                String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit3.getTransferId()));
+        deleteEntryFromDb(
+                CRM_DEPOSIT_TABLE_NAME,
+                String.format("ucid = '%s' AND transfer_id='%d'", client2.getUcid(), deposit23.getTransferId()));
+        deleteEntryFromDb(
+                CLICKHOUSE_CRM_TB_WITHDRAWAL,
+                String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal1.getTransferId()));
+        deleteEntryFromDb(
+                CLICKHOUSE_CRM_TB_WITHDRAWAL,
+                String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal2.getTransferId()));
+        deleteEntryFromDb(
+                CLICKHOUSE_CRM_TB_WITHDRAWAL,
+                String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal3.getTransferId()));
 
-        deleteEntryFromDb(CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, String.format("source_id_st = %d AND id = %d", crmTbWithdrawAccountObject.sourceIdSt, crmTbWithdrawAccountObject.id));
-        deleteEntryFromDb(CRM_TB_CREDIT_CARD_TABLE_NAME, String.format("source_id_st = %d AND user_id = %d AND id = %d", cardObject.sourceIdSt, cardObject.userId, cardObject.id));
-        deleteEntryFromDb(CRM_TB_CREDIT_CARD_TABLE_NAME, String.format("source_id_st = %d AND user_id = %d AND id = %d", cardObject2.sourceIdSt, cardObject2.userId, cardObject2.id));
+        deleteEntryFromDb(
+                CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME,
+                String.format(
+                        "source_id_st = %d AND id = %d",
+                        crmTbWithdrawAccountObject.sourceIdSt, crmTbWithdrawAccountObject.id));
+        deleteEntryFromDb(
+                CRM_TB_CREDIT_CARD_TABLE_NAME,
+                String.format(
+                        "source_id_st = %d AND user_id = %d AND id = %d",
+                        cardObject.sourceIdSt, cardObject.userId, cardObject.id));
+        deleteEntryFromDb(
+                CRM_TB_CREDIT_CARD_TABLE_NAME,
+                String.format(
+                        "source_id_st = %d AND user_id = %d AND id = %d",
+                        cardObject2.sourceIdSt, cardObject2.userId, cardObject2.id));
 
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
 
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, String.format("payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
 
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, String.format("payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
-
-
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, String.format("payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, String.format("client_id = '%s'", client1.getUserId()));
-        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format("ucid = '%s'", client1.getUcid()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format(
+                        "payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE,
+                String.format("client_id = '%s'", client1.getUserId()));
+        deleteEntryFromDb(
+                DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format("ucid = '%s'", client1.getUcid()));
 
         closeAlert(crmTbUser.ucid);
         deleteEntryFromDb(DbName.POSTGRES, VE_VERIFICATION_HISTORY, String.format("ucid = '%s'", client1.getUcid()));
@@ -308,38 +402,128 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var withdrawalRow2 = paymentsPage.getTransactionByOrderNumber(withdrawal2.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 1 type should be DepositSuccess", depositRow1.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 1 account should match", depositRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 1 submitted amount should match", depositRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
-        assertThat("Deposit 1 processed amount should match", depositRow1.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 1 type should be DepositSuccess",
+                depositRow1.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 1 account should match",
+                depositRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 1 submitted amount should match",
+                depositRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
+        assertThat(
+                "Deposit 1 processed amount should match",
+                depositRow1.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Deposit 2 type should be DepositSuccess", depositRow2.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 2 account should match", depositRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 2 submitted amount should match", depositRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
-        assertThat("Deposit 2 processed amount should match", depositRow2.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 2 type should be DepositSuccess",
+                depositRow2.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 2 account should match",
+                depositRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 2 submitted amount should match",
+                depositRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
+        assertThat(
+                "Deposit 2 processed amount should match",
+                depositRow2.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 1 type should be WithdrawalSuccess", withdrawalRow1.type(), org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
-        assertThat("Withdrawal 1 account should match", withdrawalRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 1 submitted amount should match", withdrawalRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
-        assertThat("Withdrawal 1 risk audit should be approved", withdrawalRow1.riskAudit(), org.hamcrest.Matchers.equalTo("Approved manually"));
-        assertThat("Withdrawal 1 rejection reason should be Internal reason", withdrawalRow1.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 1 type should be WithdrawalSuccess",
+                withdrawalRow1.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
+        assertThat(
+                "Withdrawal 1 account should match",
+                withdrawalRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 1 submitted amount should match",
+                withdrawalRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
+        assertThat(
+                "Withdrawal 1 risk audit should be approved",
+                withdrawalRow1.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Approved manually"));
+        assertThat(
+                "Withdrawal 1 rejection reason should be Internal reason",
+                withdrawalRow1.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 2 type should be WithdrawalSuccess", withdrawalRow2.type(), org.hamcrest.Matchers.equalTo("WithdrawalPartial success"));
-        assertThat("Withdrawal 2 account should match", withdrawalRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 2 submitted amount should match", withdrawalRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
-        assertThat("Withdrawal 2 risk audit should be rejected", withdrawalRow2.riskAudit(), org.hamcrest.Matchers.equalTo("Rejected manually"));
-        assertThat("Withdrawal 2 processed should be amount - reversed", withdrawalRow2.processed(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())), withdrawal2.getCurrency())));
-        assertThat("Withdrawal 2 rejection reason should be Internal reason", withdrawalRow2.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 2 type should be WithdrawalSuccess",
+                withdrawalRow2.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalPartial success"));
+        assertThat(
+                "Withdrawal 2 account should match",
+                withdrawalRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 2 submitted amount should match",
+                withdrawalRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
+        assertThat(
+                "Withdrawal 2 risk audit should be rejected",
+                withdrawalRow2.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Rejected manually"));
+        assertThat(
+                "Withdrawal 2 processed should be amount - reversed",
+                withdrawalRow2.processed(),
+                org.hamcrest.Matchers.containsString(String.format(
+                        "-%s %s",
+                        formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())),
+                        withdrawal2.getCurrency())));
+        assertThat(
+                "Withdrawal 2 rejection reason should be Internal reason",
+                withdrawalRow2.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
     }
 
     @Test
@@ -349,7 +533,7 @@ public class TransactionHistoryTest extends TestBaseWeb {
         openTransactionPage();
         paymentsPage.clickTransactionsFilterButton();
 
-        //Deposits
+        // Deposits
         paymentsPage.filterTransactionsByType("Deposit");
         var allTransactions = paymentsPage.getAllTransactions();
         Assertions.assertEquals(3, allTransactions.size());
@@ -358,20 +542,59 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow2 = paymentsPage.getTransactionByOrderNumber(deposit2.getOrderNumber());
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
 
-        assertThat("Deposit 1 type should be DepositSuccess", depositRow1.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 1 account should match", depositRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 1 submitted amount should match", depositRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
-        assertThat("Deposit 1 processed amount should match", depositRow1.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 1 type should be DepositSuccess",
+                depositRow1.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 1 account should match",
+                depositRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 1 submitted amount should match",
+                depositRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
+        assertThat(
+                "Deposit 1 processed amount should match",
+                depositRow1.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Deposit 2 type should be DepositSuccess", depositRow2.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 2 account should match", depositRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 2 submitted amount should match", depositRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
-        assertThat("Deposit 2 processed amount should match", depositRow2.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 2 type should be DepositSuccess",
+                depositRow2.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 2 account should match",
+                depositRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 2 submitted amount should match",
+                depositRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
+        assertThat(
+                "Deposit 2 processed amount should match",
+                depositRow2.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
         paymentsPage.clickTransactionsFilterButton();
         paymentsPage.filterTransactionsByType("Deposit");
@@ -384,25 +607,75 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var withdrawalRow2 = paymentsPage.getTransactionByOrderNumber(withdrawal2.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Withdrawal 1 type should be WithdrawalSuccess", withdrawalRow1.type(), org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
-        assertThat("Withdrawal 1 account should match", withdrawalRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 1 submitted amount should match", withdrawalRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
-        assertThat("Withdrawal 1 risk audit should be approved", withdrawalRow1.riskAudit(), org.hamcrest.Matchers.equalTo("Approved manually"));
-        assertThat("Withdrawal 1 rejection reason should be Internal reason", withdrawalRow1.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 1 type should be WithdrawalSuccess",
+                withdrawalRow1.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
+        assertThat(
+                "Withdrawal 1 account should match",
+                withdrawalRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 1 submitted amount should match",
+                withdrawalRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
+        assertThat(
+                "Withdrawal 1 risk audit should be approved",
+                withdrawalRow1.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Approved manually"));
+        assertThat(
+                "Withdrawal 1 rejection reason should be Internal reason",
+                withdrawalRow1.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 2 type should be WithdrawalSuccess", withdrawalRow2.type(), org.hamcrest.Matchers.equalTo("WithdrawalPartial success"));
-        assertThat("Withdrawal 2 account should match", withdrawalRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 2 submitted amount should match", withdrawalRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
-        assertThat("Withdrawal 2 risk audit should be rejected", withdrawalRow2.riskAudit(), org.hamcrest.Matchers.equalTo("Rejected manually"));
-        assertThat("Withdrawal 2 processed should be amount - reversed", withdrawalRow2.processed(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())), withdrawal2.getCurrency())));
-        assertThat("Withdrawal 2 rejection reason should be Internal reason", withdrawalRow2.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 2 type should be WithdrawalSuccess",
+                withdrawalRow2.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalPartial success"));
+        assertThat(
+                "Withdrawal 2 account should match",
+                withdrawalRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 2 submitted amount should match",
+                withdrawalRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
+        assertThat(
+                "Withdrawal 2 risk audit should be rejected",
+                withdrawalRow2.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Rejected manually"));
+        assertThat(
+                "Withdrawal 2 processed should be amount - reversed",
+                withdrawalRow2.processed(),
+                org.hamcrest.Matchers.containsString(String.format(
+                        "-%s %s",
+                        formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())),
+                        withdrawal2.getCurrency())));
+        assertThat(
+                "Withdrawal 2 rejection reason should be Internal reason",
+                withdrawalRow2.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
     }
-
 
     @Test
     @AllureId("1854")
@@ -415,10 +688,23 @@ public class TransactionHistoryTest extends TestBaseWeb {
         Assertions.assertEquals(1, allTransactions.size());
 
         var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
-        assertThat("Deposit 1 type should be DepositSuccess", depositRow1.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 1 account should match", depositRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 1 submitted amount should match", depositRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
-        assertThat("Deposit 1 processed amount should match", depositRow1.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 1 type should be DepositSuccess",
+                depositRow1.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 1 account should match",
+                depositRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 1 submitted amount should match",
+                depositRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
+        assertThat(
+                "Deposit 1 processed amount should match",
+                depositRow1.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
     }
 
     @Test
@@ -437,28 +723,92 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var withdrawalRow1 = paymentsPage.getTransactionByOrderNumber(withdrawal1.getOrderNumber());
         var withdrawalRow2 = paymentsPage.getTransactionByOrderNumber(withdrawal2.getOrderNumber());
 
-        assertThat("Deposit 1 type should be DepositSuccess", depositRow1.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 1 account should match", depositRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 1 submitted amount should match", depositRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
-        assertThat("Deposit 1 processed amount should match", depositRow1.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 1 type should be DepositSuccess",
+                depositRow1.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 1 account should match",
+                depositRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 1 submitted amount should match",
+                depositRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
+        assertThat(
+                "Deposit 1 processed amount should match",
+                depositRow1.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Deposit 2 type should be DepositSuccess", depositRow2.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 2 account should match", depositRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 2 submitted amount should match", depositRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
-        assertThat("Deposit 2 processed amount should match", depositRow2.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 2 type should be DepositSuccess",
+                depositRow2.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 2 account should match",
+                depositRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 2 submitted amount should match",
+                depositRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
+        assertThat(
+                "Deposit 2 processed amount should match",
+                depositRow2.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 1 type should be WithdrawalSuccess", withdrawalRow1.type(), org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
-        assertThat("Withdrawal 1 account should match", withdrawalRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 1 submitted amount should match", withdrawalRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
-        assertThat("Withdrawal 1 risk audit should be approved", withdrawalRow1.riskAudit(), org.hamcrest.Matchers.equalTo("Approved manually"));
-        assertThat("Withdrawal 1 rejection reason should be Internal reason", withdrawalRow1.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 1 type should be WithdrawalSuccess",
+                withdrawalRow1.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
+        assertThat(
+                "Withdrawal 1 account should match",
+                withdrawalRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 1 submitted amount should match",
+                withdrawalRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
+        assertThat(
+                "Withdrawal 1 risk audit should be approved",
+                withdrawalRow1.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Approved manually"));
+        assertThat(
+                "Withdrawal 1 rejection reason should be Internal reason",
+                withdrawalRow1.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 2 type should be WithdrawalSuccess", withdrawalRow2.type(), org.hamcrest.Matchers.equalTo("WithdrawalPartial success"));
-        assertThat("Withdrawal 2 account should match", withdrawalRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 2 submitted amount should match", withdrawalRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
-        assertThat("Withdrawal 2 risk audit should be rejected", withdrawalRow2.riskAudit(), org.hamcrest.Matchers.equalTo("Rejected manually"));
-        assertThat("Withdrawal 2 processed should be amount - reversed", withdrawalRow2.processed(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())), withdrawal2.getCurrency())));
-        assertThat("Withdrawal 2 rejection reason should be Internal reason", withdrawalRow2.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 2 type should be WithdrawalSuccess",
+                withdrawalRow2.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalPartial success"));
+        assertThat(
+                "Withdrawal 2 account should match",
+                withdrawalRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 2 submitted amount should match",
+                withdrawalRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
+        assertThat(
+                "Withdrawal 2 risk audit should be rejected",
+                withdrawalRow2.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Rejected manually"));
+        assertThat(
+                "Withdrawal 2 processed should be amount - reversed",
+                withdrawalRow2.processed(),
+                org.hamcrest.Matchers.containsString(String.format(
+                        "-%s %s",
+                        formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())),
+                        withdrawal2.getCurrency())));
+        assertThat(
+                "Withdrawal 2 rejection reason should be Internal reason",
+                withdrawalRow2.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
         paymentsPage.clickTransactionsFilterButton();
         paymentsPage.uncheckAccountFilter(String.valueOf(account1.account));
@@ -471,14 +821,40 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
     }
 
     @Test
@@ -496,15 +872,41 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
     }
 
     @Test
@@ -522,15 +924,41 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
     }
 
     @Test
@@ -548,15 +976,41 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
 
         paymentsPage.clickTransactionsFilterButton();
         paymentsPage.uncheckStatusFilter("Fail");
@@ -568,21 +1022,63 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
         var depositRow2 = paymentsPage.getTransactionByOrderNumber(deposit2.getOrderNumber());
         var withdrawalRow1 = paymentsPage.getTransactionByOrderNumber(withdrawal1.getOrderNumber());
-        assertThat("Deposit 1 type should be DepositSuccess", depositRow1.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 1 account should match", depositRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 1 submitted amount should match", depositRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
-        assertThat("Deposit 1 processed amount should match", depositRow1.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 1 type should be DepositSuccess",
+                depositRow1.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 1 account should match",
+                depositRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 1 submitted amount should match",
+                depositRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit1.getAmount()), deposit1.getCurrency())));
+        assertThat(
+                "Deposit 1 processed amount should match",
+                depositRow1.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Deposit 2 type should be DepositSuccess", depositRow2.type(), org.hamcrest.Matchers.equalTo("DepositSuccess"));
-        assertThat("Deposit 2 account should match", depositRow2.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Deposit 2 submitted amount should match", depositRow2.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
-        assertThat("Deposit 2 processed amount should match", depositRow2.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 2 type should be DepositSuccess",
+                depositRow2.type(),
+                org.hamcrest.Matchers.equalTo("DepositSuccess"));
+        assertThat(
+                "Deposit 2 account should match",
+                depositRow2.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Deposit 2 submitted amount should match",
+                depositRow2.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit2.getAmount()), deposit2.getCurrency())));
+        assertThat(
+                "Deposit 2 processed amount should match",
+                depositRow2.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 1 type should be WithdrawalSuccess", withdrawalRow1.type(), org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
-        assertThat("Withdrawal 1 account should match", withdrawalRow1.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
-        assertThat("Withdrawal 1 submitted amount should match", withdrawalRow1.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
-        assertThat("Withdrawal 1 risk audit should be approved", withdrawalRow1.riskAudit(), org.hamcrest.Matchers.equalTo("Approved manually"));
-        assertThat("Withdrawal 1 rejection reason should be Internal reason", withdrawalRow1.rejectionReason(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Withdrawal 1 type should be WithdrawalSuccess",
+                withdrawalRow1.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalSuccess"));
+        assertThat(
+                "Withdrawal 1 account should match",
+                withdrawalRow1.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account1.account)));
+        assertThat(
+                "Withdrawal 1 submitted amount should match",
+                withdrawalRow1.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal1.getAmount()), withdrawal1.getCurrency())));
+        assertThat(
+                "Withdrawal 1 risk audit should be approved",
+                withdrawalRow1.riskAudit(),
+                org.hamcrest.Matchers.equalTo("Approved manually"));
+        assertThat(
+                "Withdrawal 1 rejection reason should be Internal reason",
+                withdrawalRow1.rejectionReason(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
     }
 
     @Test
@@ -597,11 +1093,19 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var transactionDataMap = paymentsPage.getTransactionDetailsData();
         assertThat(transactionDataMap.get("Status"), org.hamcrest.Matchers.is("Partial success"));
         assertThat(transactionDataMap.get("Order"), org.hamcrest.Matchers.is(withdrawal2.getOrderNumber()));
-        assertThat(transactionDataMap.get("Submitted"), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
+        assertThat(
+                transactionDataMap.get("Submitted"),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(withdrawal2.getAmount()), withdrawal2.getCurrency())));
         assertThat(transactionDataMap.get("Account"), org.hamcrest.Matchers.is(String.valueOf(account1.account)));
         assertThat(transactionDataMap.get("Type"), org.hamcrest.Matchers.is("Withdrawal"));
         assertThat(transactionDataMap.get("CRM Status"), org.hamcrest.Matchers.is("Partial success"));
-        assertThat(transactionDataMap.get("Processed"), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())), withdrawal2.getCurrency())));
+        assertThat(
+                transactionDataMap.get("Processed"),
+                org.hamcrest.Matchers.containsString(String.format(
+                        "%s %s",
+                        formatter.format(withdrawal2.getAmount().subtract(withdrawal2.getReversedAmount())),
+                        withdrawal2.getCurrency())));
 
         var paymentProfileDataMap = paymentsPage.getPaymentProfileDetailsDataFromDrawer();
         assertThat(paymentProfileDataMap.get("Type"), org.hamcrest.Matchers.is(withdrawal2.getPaymentType()));
@@ -629,15 +1133,41 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
 
         paymentsPage.clickTransactionPaymentProfile("paymentProfile");
 
@@ -668,15 +1198,41 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
         var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
 
-        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
-        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
-        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+        assertThat(
+                "Deposit 3 type should be DepositFail",
+                depositRow3.type(),
+                org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat(
+                "Deposit 3 account should match",
+                depositRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Deposit 3 submitted amount should match",
+                depositRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat(
+                "Deposit 3 processed amount should match",
+                depositRow3.processed(),
+                org.hamcrest.Matchers.is(Matchers.emptyString()));
 
-        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
-        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
-        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
-        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+        assertThat(
+                "Withdrawal 3 type should be WithdrawalFail",
+                withdrawalRow3.type(),
+                org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat(
+                "Withdrawal 3 account should match",
+                withdrawalRow3.account(),
+                org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat(
+                "Withdrawal 3 submitted amount should match",
+                withdrawalRow3.submitted(),
+                org.hamcrest.Matchers.containsString(
+                        String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat(
+                "Withdrawal 3 risk audit shoud be fraud_detection",
+                withdrawalRow3.riskAudit(),
+                org.hamcrest.Matchers.equalTo("fraud_detection"));
 
         paymentsPage.clickTransactionPaymentFamily("paymentFamily");
 
@@ -700,7 +1256,9 @@ public class TransactionHistoryTest extends TestBaseWeb {
         openTransactionPage();
 
         paymentsPage.clickTransactionPaymentProfileLinkByOrderNumber(deposit3.getOrderNumber());
-        assertThat(paymentsPage.getPaymentProfileDrawerName(), org.hamcrest.Matchers.equalTo(deposit3.getPaymentProfile()));
+        assertThat(
+                paymentsPage.getPaymentProfileDrawerName(),
+                org.hamcrest.Matchers.equalTo(deposit3.getPaymentProfile()));
 
         var deposits = paymentsPage.getPaymentProfileDrawerProfileTotalsDeposits();
         var withdrawals = paymentsPage.getPaymentProfileDrawerProfileTotalsWithdrawals();
@@ -709,10 +1267,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         assertThat(deposits, org.hamcrest.Matchers.equalTo(expectedDeposits));
 
         var wdAmount = withdrawal3.getAmount().subtract(withdrawal3.getReversedAmount());
-        String expectedWithdrawals = String.format("%s %s1 withdrawal", decimalFormat.format(wdAmount), withdrawal3.getCurrency());
+        String expectedWithdrawals =
+                String.format("%s %s1 withdrawal", decimalFormat.format(wdAmount), withdrawal3.getCurrency());
         assertThat(withdrawals, org.hamcrest.Matchers.equalTo(expectedWithdrawals));
 
-        String expectedNetDeposits = String.format("%s %s", decimalFormat.format(deposit3.getAmount().subtract(wdAmount)), deposit3.getCurrency());
+        String expectedNetDeposits = String.format(
+                "%s %s", decimalFormat.format(deposit3.getAmount().subtract(wdAmount)), deposit3.getCurrency());
         assertThat(netDeposits, org.hamcrest.Matchers.equalTo(expectedNetDeposits));
         var detailsMap = paymentsPage.getPaymentProfileDrawerDetails();
         assertThat(detailsMap.get("Family"), org.hamcrest.Matchers.equalTo(deposit3.getPaymentFamily()));
@@ -726,7 +1286,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
 
         var crmId = client2.getUcid().split("-")[1];
         var data = paymentsPage.getConnectedClientRowByCrmId(client2.getUcid().split("-")[1]);
-        assertThat(data.get(0), org.hamcrest.Matchers.equalTo(crmTbUser2.firstName + " " + crmTbUser2.lastName + crmId));
+        assertThat(
+                data.get(0), org.hamcrest.Matchers.equalTo(crmTbUser2.firstName + " " + crmTbUser2.lastName + crmId));
         paymentsPage.closePaymentProfileDrawer();
     }
 

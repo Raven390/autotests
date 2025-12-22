@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_withdrawals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetWithdrawalsResponse {
@@ -24,11 +23,15 @@ public class GetWithdrawalsResponse {
     @JsonProperty("paymentChannel")
     public String paymentChannel;
 
-    public GetWithdrawalsResponse() {
-    }
+    public GetWithdrawalsResponse() {}
 
-    public GetWithdrawalsResponse(Integer transferId, String createTime, String clientId, Double actualAmountUsd,
-            Double actualAmount, String paymentChannel) {
+    public GetWithdrawalsResponse(
+            Integer transferId,
+            String createTime,
+            String clientId,
+            Double actualAmountUsd,
+            Double actualAmount,
+            String paymentChannel) {
         this.transferId = transferId;
         this.createTime = createTime;
         this.clientId = clientId;
@@ -42,7 +45,12 @@ public class GetWithdrawalsResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetWithdrawalsResponse that = (GetWithdrawalsResponse) o;
-        return Objects.equals(transferId, that.transferId) && Objects.equals(createTime, that.createTime) && Objects.equals(clientId, that.clientId) && Objects.equals(actualAmountUsd, that.actualAmountUsd) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentChannel, that.paymentChannel);
+        return Objects.equals(transferId, that.transferId)
+                && Objects.equals(createTime, that.createTime)
+                && Objects.equals(clientId, that.clientId)
+                && Objects.equals(actualAmountUsd, that.actualAmountUsd)
+                && Objects.equals(actualAmount, that.actualAmount)
+                && Objects.equals(paymentChannel, that.paymentChannel);
     }
 
     @Override
@@ -52,6 +60,8 @@ public class GetWithdrawalsResponse {
 
     @Override
     public String toString() {
-        return "GetWithdrawalsResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\'' + ", clientId='" + clientId + '\'' + ", actualAmountUsd=" + actualAmountUsd + ", actualAmount=" + actualAmount + ", paymentChannel='" + paymentChannel + '\'' + '}';
+        return "GetWithdrawalsResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\''
+                + ", clientId='" + clientId + '\'' + ", actualAmountUsd=" + actualAmountUsd + ", actualAmount="
+                + actualAmount + ", paymentChannel='" + paymentChannel + '\'' + '}';
     }
 }

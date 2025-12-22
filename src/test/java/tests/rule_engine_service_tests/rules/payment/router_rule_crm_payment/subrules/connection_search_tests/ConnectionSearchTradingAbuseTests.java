@@ -1,19 +1,19 @@
-package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.connection_search_tests;
-
-import helpers.data.DataHelper;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules.connection_search_tests;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.payments.router_rule_crm_payment.connection_search.ConnectionSearchTradingAbuseDataFactory.setupConnectionSearchTradingAbuseRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
+
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Disabled
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -34,11 +34,10 @@ class ConnectionSearchTradingAbuseTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dataMap);
+        DataDeleteHelper.deleteData(dataMap);
     }
 
     @Test
     @DisplayName("")
-    void connectionSearchTradingAbuseTest1() throws Exception {
-    }
+    void connectionSearchTradingAbuseTest1() throws Exception {}
 }

@@ -1,9 +1,8 @@
 package business_objects.db.verification_service_db;
 
 import helpers.data.enums.VerificationStatus;
-import lombok.*;
-
 import java.time.OffsetDateTime;
+import lombok.*;
 
 @Getter
 @Setter

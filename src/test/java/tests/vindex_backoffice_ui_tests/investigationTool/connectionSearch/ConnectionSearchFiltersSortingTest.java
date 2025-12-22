@@ -1,24 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
-import business_objects.api.mitigation_service.PostRestrictionRequestBody;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
-import helpers.database.ArHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-
-import java.util.List;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserWithUcidFirstName;
@@ -30,12 +11,29 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.BoHelper.*;
-import static helpers.database.DbHelper.*;
 import static helpers.database.CleanTableHelper.*;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.api.mitigation_service.PostRestrictionRequestBody;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
+import helpers.database.ArHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.util.List;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -60,14 +58,35 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         CrmTbUserObject connectedCrmTbUser4 = generateUserWithUcidFirstName(connectedClient4);
         CrmTbUserObject connectedCrmTbUser5 = generateUserWithUcidFirstName(connectedClient5);
         CrmTbUserObject connectedCrmTbUser6 = generateUserWithUcidFirstName(connectedClient6);
-        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, connectedCrmTbUser1, connectedCrmTbUser2, connectedCrmTbUser3, connectedCrmTbUser4, connectedCrmTbUser5, connectedCrmTbUser6));
+        insertObjectsToDb(
+                CRM_USER_TABLE_NAME,
+                List.of(
+                        crmTbUser,
+                        connectedCrmTbUser1,
+                        connectedCrmTbUser2,
+                        connectedCrmTbUser3,
+                        connectedCrmTbUser4,
+                        connectedCrmTbUser5,
+                        connectedCrmTbUser6));
         ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntryForUiFiltration1(client, connectedClient1);
         ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntryForUiFiltration2(client, connectedClient2);
-        ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntryForUiFiltration3(connectedClient1, connectedClient3);
-        ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntryForUiFiltration4(connectedClient2, connectedClient4);
-        ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntryForUiFiltration5(connectedClient3, connectedClient5);
-        ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntryForUiFiltration6(connectedClient4, connectedClient6);
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry1, connectionTableEntry2, connectionTableEntry3, connectionTableEntry4, connectionTableEntry5, connectionTableEntry6));
+        ConnectionTableEntry connectionTableEntry3 =
+                getConnectionTableEntryForUiFiltration3(connectedClient1, connectedClient3);
+        ConnectionTableEntry connectionTableEntry4 =
+                getConnectionTableEntryForUiFiltration4(connectedClient2, connectedClient4);
+        ConnectionTableEntry connectionTableEntry5 =
+                getConnectionTableEntryForUiFiltration5(connectedClient3, connectedClient5);
+        ConnectionTableEntry connectionTableEntry6 =
+                getConnectionTableEntryForUiFiltration6(connectedClient4, connectedClient6);
+        insertObjectsToDb(
+                CONNECTIONS_TABLE_NAME,
+                List.of(
+                        connectionTableEntry1,
+                        connectionTableEntry2,
+                        connectionTableEntry3,
+                        connectionTableEntry4,
+                        connectionTableEntry5,
+                        connectionTableEntry6));
         waitForConnectionSearchToUpdate(client);
         CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
         CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(connectedClient1);
@@ -77,31 +96,63 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         CrmTbAccountObject account5 = generateCrmTbAccountDataForUi(connectedClient5);
         CrmTbAccountObject account6 = generateCrmTbAccountDataForUi(connectedClient6);
         insertCrmAccountsToDb(account, account1, account2, account3, account4, account5, account6);
-        MtMt4TradesCoercedObject trade = generateMt4TradesCoercedForConnectionSearch(client, 123.45, getCurrentTimestampDbFormat());
-        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedForConnectionSearch(connectedClient1, 12.45, getCurrentTimestampDbFormat());
-        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedForConnectionSearch(connectedClient2, 25.46, getPreviousWeekTimestampDbFormat());
-        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedForConnectionSearch(connectedClient3, 568.95, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 1, 0));
-        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedForConnectionSearch(connectedClient4, 78.42, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 0, 0));
-        MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedForConnectionSearch(connectedClient5, 1111.24, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 1, 0));
-        MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedForConnectionSearch(connectedClient6, 89.34, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 1, 0));
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade, trade1, trade2, trade3, trade4, trade5, trade6));
+        MtMt4TradesCoercedObject trade =
+                generateMt4TradesCoercedForConnectionSearch(client, 123.45, getCurrentTimestampDbFormat());
+        MtMt4TradesCoercedObject trade1 =
+                generateMt4TradesCoercedForConnectionSearch(connectedClient1, 12.45, getCurrentTimestampDbFormat());
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedForConnectionSearch(
+                connectedClient2, 25.46, getPreviousWeekTimestampDbFormat());
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedForConnectionSearch(
+                connectedClient3,
+                568.95,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 1, 0));
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedForConnectionSearch(
+                connectedClient4,
+                78.42,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 0, 0));
+        MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedForConnectionSearch(
+                connectedClient5,
+                1111.24,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 1, 0));
+        MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedForConnectionSearch(
+                connectedClient6,
+                89.34,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 1, 0));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME, List.of(trade, trade1, trade2, trade3, trade4, trade5, trade6));
         Response response1 = postRestriction(new PostRestrictionRequestBody(
-                connectedClient2.getUcid(), "03", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
+                connectedClient2.getUcid(),
+                "03",
+                "GENERAL",
+                null,
+                null,
+                "Automation test",
+                new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")));
         assertThat("Assert that restriction has been set successfully", response1.code(), equalTo(200));
         Response response2 = postRestriction(new PostRestrictionRequestBody(
-                connectedClient5.getUcid(), "05", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
+                connectedClient5.getUcid(),
+                "05",
+                "GENERAL",
+                null,
+                null,
+                "Automation test",
+                new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")));
         assertThat("Assert that restriction has been set successfully", response2.code(), equalTo(200));
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         RuleAlert connectionAlert1 = generateRuleAlertByUcid(connectedClient1.getUcid());
-        kafka.produceMessage(connectionAlert1.alertId, objectMapper.writeValueAsString(connectionAlert1), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                connectionAlert1.alertId, objectMapper.writeValueAsString(connectionAlert1), KAFKA_TOPIC_ALERTS);
         RuleAlert connectionAlert2 = generateRuleAlertByUcid(connectedClient6.getUcid());
-        kafka.produceMessage(connectionAlert2.alertId, objectMapper.writeValueAsString(connectionAlert2), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                connectionAlert2.alertId, objectMapper.writeValueAsString(connectionAlert2), KAFKA_TOPIC_ALERTS);
         waitForConnectionSearchToUpdate(client);
-        addFraudsForClient(connectedClient1, List.of(REBATE_CHURNING, LATENCY_ARBITRAGE, MARKET_MANIPULATION, PRICING_ERROR), CONFIRMED);
-        addFraudsForClient(connectedClient6, List.of(GAP_TRADING, SWAP_ARBITRAGE, NBP_ABUSE, REBATE_CHURNING), CONFIRMED);
+        addFraudsForClient(
+                connectedClient1,
+                List.of(REBATE_CHURNING, LATENCY_ARBITRAGE, MARKET_MANIPULATION, PRICING_ERROR),
+                CONFIRMED);
+        addFraudsForClient(
+                connectedClient6, List.of(GAP_TRADING, SWAP_ARBITRAGE, NBP_ABUSE, REBATE_CHURNING), CONFIRMED);
     }
 
     @BeforeEach
@@ -118,18 +169,58 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     @DisplayName("Verify connection search filtration. Filter options")
     public void verifyConnectionSearchFiltration1Test() {
         connectionPage.clickFilterButton();
-        assertThat("Verify that all options are present in level filter", connectionPage.getLevelFilterOptions(), contains("Level 1", "Level 2", "Level 3"));
-        assertThat("Verify that all options are present in connection type filter", connectionPage.getConnectionTypeFilterOptions(), containsInAnyOrder(CONNECTION_TYPE_SAME_IDENTITY, CONNECTION_TYPE_SAME_NETWORK, CONNECTION_TYPE_SAME_PERSON));
-        assertThat("Verify that score to initial range is correct", connectionPage.getScoreToInitialFilterCurrentRange(), equalTo("Current range: 0.2 - 1"));
-        assertThat("Verify that score to initial slider is visible", connectionPage.isScoreToInitialFilterSliderVisible(), equalTo(true));
-        assertThat("Verify placeholder of the attribute filter dropdown", connectionPage.getAttributeFilterDropdownPlaceholder(), equalTo("Attribute name or value"));
+        assertThat(
+                "Verify that all options are present in level filter",
+                connectionPage.getLevelFilterOptions(),
+                contains("Level 1", "Level 2", "Level 3"));
+        assertThat(
+                "Verify that all options are present in connection type filter",
+                connectionPage.getConnectionTypeFilterOptions(),
+                containsInAnyOrder(
+                        CONNECTION_TYPE_SAME_IDENTITY, CONNECTION_TYPE_SAME_NETWORK, CONNECTION_TYPE_SAME_PERSON));
+        assertThat(
+                "Verify that score to initial range is correct",
+                connectionPage.getScoreToInitialFilterCurrentRange(),
+                equalTo("Current range: 0.2 - 1"));
+        assertThat(
+                "Verify that score to initial slider is visible",
+                connectionPage.isScoreToInitialFilterSliderVisible(),
+                equalTo(true));
+        assertThat(
+                "Verify placeholder of the attribute filter dropdown",
+                connectionPage.getAttributeFilterDropdownPlaceholder(),
+                equalTo("Attribute name or value"));
         connectionPage.clickAttributeFilterDropdown();
-        assertThat("Verify options of the attribute filter dropdown", connectionPage.getAttributeFilterDropdownOptions(), contains("device2 values", "documentNumber1 value", "payoutId1 value"));
+        assertThat(
+                "Verify options of the attribute filter dropdown",
+                connectionPage.getAttributeFilterDropdownOptions(),
+                contains("device2 values", "documentNumber1 value", "payoutId1 value"));
         List<String> behaviorFilterOptions = connectionPage.getBehaviorFilterOptions();
-        assertThat("Verify that all options are present in behavior filter", behaviorFilterOptions, containsInAnyOrder("Normal", "Suspicious", GAP_TRADING.getName(), LATENCY_ARBITRAGE.getName(), MARKET_MANIPULATION.getName(), PRICING_ERROR.getName(), NBP_ABUSE.getName(), REBATE_CHURNING.getName(), SWAP_ARBITRAGE.getName()));
-        assertThat("Verify that active restrictions switch is visible", connectionPage.isActiveRestrictionsFilterSwitchVisible(), equalTo(true));
-        assertThat("Verify placeholder of the PNL from filter", connectionPage.getPnlFilterFromPlaceholder(), equalTo("12.45 USD"));
-        assertThat("Verify placeholder of the PNL to filter", connectionPage.getPnlFilterToPlaceholder(), equalTo("1,111.24 USD"));
+        assertThat(
+                "Verify that all options are present in behavior filter",
+                behaviorFilterOptions,
+                containsInAnyOrder(
+                        "Normal",
+                        "Suspicious",
+                        GAP_TRADING.getName(),
+                        LATENCY_ARBITRAGE.getName(),
+                        MARKET_MANIPULATION.getName(),
+                        PRICING_ERROR.getName(),
+                        NBP_ABUSE.getName(),
+                        REBATE_CHURNING.getName(),
+                        SWAP_ARBITRAGE.getName()));
+        assertThat(
+                "Verify that active restrictions switch is visible",
+                connectionPage.isActiveRestrictionsFilterSwitchVisible(),
+                equalTo(true));
+        assertThat(
+                "Verify placeholder of the PNL from filter",
+                connectionPage.getPnlFilterFromPlaceholder(),
+                equalTo("12.45 USD"));
+        assertThat(
+                "Verify placeholder of the PNL to filter",
+                connectionPage.getPnlFilterToPlaceholder(),
+                equalTo("1,111.24 USD"));
         connectionPage.verifyPresetOptionsLastLoginFilter();
     }
 
@@ -188,10 +279,18 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectLevelFilterOption("Level 2");
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(client.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(2));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient3.getUserId().toString(), connectedClient4.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient3.getUserId().toString(),
+                        connectedClient4.getUserId().toString()));
     }
 
     @Test
@@ -202,10 +301,18 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectConnectionTypeFilterOption("Same Network");
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient3.getUcid(), connectedClient5.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(client.getUcid(), connectedClient3.getUcid(), connectedClient5.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(2));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient3.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -216,10 +323,23 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectScoreToInitialRange();
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient4.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient4.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(3));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient4.getUserId().toString()));
     }
 
     @Test
@@ -230,10 +350,27 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectAttribute("device", "All values");
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient4.getUcid(),
+                        connectedClient5.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(5));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -245,10 +382,27 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectBehaviorFilterOption(MARKET_MANIPULATION.getName());
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient4.getUcid(),
+                        connectedClient5.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(5));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -259,10 +413,18 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.clickActiveRestrictionsSwitch();
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient2.getUcid(), connectedClient5.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(client.getUcid(), connectedClient2.getUcid(), connectedClient5.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(2));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient2.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient2.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -274,10 +436,23 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.fillPnlToInput("568.95");
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient6.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(
+                        client.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient4.getUcid(),
+                        connectedClient6.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(3));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient3.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient6.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient3.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient6.getUserId().toString()));
     }
 
     @Test
@@ -288,10 +463,25 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectLastLogin(getCurrentDate(), getPreviousWeekDate());
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient6.getUcid()));
+        assertThat(
+                "Verify all expected unhidden nodes are present",
+                unhiddenNodesNames,
+                containsInAnyOrder(
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient6.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(4));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient6.getUserId().toString()));
+        assertThat(
+                "Verify user ids displayed in the table",
+                connectionPage.getConnectionTableUserIdsList(),
+                containsInAnyOrder(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient6.getUserId().toString()));
     }
 
     @Test
@@ -304,7 +494,10 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.selectBehaviorFilterOption("Normal");
         connectionPage.fillPnlFromInput("12.45");
         connectionPage.clickApplyFiltersButton();
-        assertThat("Verify applied filters list", connectionPage.getAppliedFiltersList(), containsInAnyOrder("Connection type", "Behavior", "PNL", "Attribute"));
+        assertThat(
+                "Verify applied filters list",
+                connectionPage.getAppliedFiltersList(),
+                containsInAnyOrder("Connection type", "Behavior", "PNL", "Attribute"));
         assertThat("Verify applied filters counter is correct", connectionPage.getAppliedFiltersCount(), equalTo("4"));
     }
 
@@ -314,7 +507,16 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     public void verifyConnectionSearchTableDefaultSortingTest() {
         connectionPage.openConnectionTable();
         writeLog(connectionPage.getConnectionTableUserIdsList());
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -324,13 +526,40 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.openConnectionTable();
         assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Sort by PNL:Descending"));
         connectionPage.clickTotalPnlHeader();
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient5.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient1.getUserId().toString()));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient5.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient1.getUserId().toString()));
         assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Change sorting to:Ascending"));
         connectionPage.clickTotalPnlHeader();
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
         assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Remove sorting"));
         connectionPage.clickTotalPnlHeader();
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -338,15 +567,46 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     @DisplayName("Verify connection table last login sorting")
     public void verifyConnectionSearchTableLastLoginSortingTest() {
         connectionPage.openConnectionTable();
-        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Sort by last login date:Newest → Oldest"));
+        assertThat(
+                "Verify tooltip",
+                connectionPage.getLastLoginSortingTooltip(),
+                is("Sort by last login date:Newest → Oldest"));
         connectionPage.clickLastLoginHeader();
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient5.getUserId().toString()));
-        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Change sorting to:Oldest → Newest"));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Change sorting to:Oldest → Newest"));
         connectionPage.clickLastLoginHeader();
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient5.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient1.getUserId().toString()));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient5.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient1.getUserId().toString()));
         assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Remove sorting"));
         connectionPage.clickLastLoginHeader();
-        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat(
+                "Verify sorting",
+                connectionPage.getConnectionTableUserIdsList(),
+                contains(
+                        connectedClient1.getUserId().toString(),
+                        connectedClient6.getUserId().toString(),
+                        connectedClient2.getUserId().toString(),
+                        connectedClient4.getUserId().toString(),
+                        connectedClient3.getUserId().toString(),
+                        connectedClient5.getUserId().toString()));
     }
 
     @Test
@@ -354,20 +614,60 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     @DisplayName("Verify connection score filter presets")
     public void verifyConnectionSearchFilterScorePresetsTest() {
         connectionPage.clickFilterButton();
-        assertThat("Verify presets list", connectionPage.getConnectionScoreFilterPresets(), contains("Low", "Medium", "High"));
+        assertThat(
+                "Verify presets list",
+                connectionPage.getConnectionScoreFilterPresets(),
+                contains("Low", "Medium", "High"));
         connectionPage.clickConnectionScoreFilterPresetByText("Low");
-        assertThat("Verify Low preset", connectionPage.getScoreToInitialFilterCurrentRange(), is("Current range: 0.2 - 0.54"));
+        assertThat(
+                "Verify Low preset",
+                connectionPage.getScoreToInitialFilterCurrentRange(),
+                is("Current range: 0.2 - 0.54"));
         connectionPage.clickConnectionScoreFilterPresetByText("Medium");
-        assertThat("Verify Medium preset", connectionPage.getScoreToInitialFilterCurrentRange(), is("Current range: 0.55 - 0.74"));
+        assertThat(
+                "Verify Medium preset",
+                connectionPage.getScoreToInitialFilterCurrentRange(),
+                is("Current range: 0.55 - 0.74"));
         connectionPage.clickConnectionScoreFilterPresetByText("High");
-        assertThat("Verify High preset", connectionPage.getScoreToInitialFilterCurrentRange(), is("Current range: 0.75 - 1"));
+        assertThat(
+                "Verify High preset",
+                connectionPage.getScoreToInitialFilterCurrentRange(),
+                is("Current range: 0.75 - 1"));
     }
 
     @AfterAll
     public static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid(), connectedClient6.getUcid()));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from IN ('%s', '%s', '%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid()));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid(), connectedClient6.getUcid()));
+        deleteEntryFromDb(
+                CRM_USER_TABLE_NAME,
+                String.format(
+                        "ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient4.getUcid(),
+                        connectedClient5.getUcid(),
+                        connectedClient6.getUcid()));
+        deleteEntryFromDb(
+                CONNECTIONS_TABLE_NAME,
+                String.format(
+                        "user_from IN ('%s', '%s', '%s', '%s', '%s')",
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient4.getUcid()));
+        deleteEntryFromDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                String.format(
+                        "ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                        client.getUcid(),
+                        connectedClient1.getUcid(),
+                        connectedClient2.getUcid(),
+                        connectedClient3.getUcid(),
+                        connectedClient4.getUcid(),
+                        connectedClient5.getUcid(),
+                        connectedClient6.getUcid()));
         closeAlert(client.getUcid());
         closeAlert(connectedClient1.getUcid());
         closeAlert(connectedClient6.getUcid());

@@ -1,11 +1,9 @@
 package business_objects.db.payment_gate.d_rejection;
 
-
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Objects;
 
 @Builder
 @Getter
@@ -19,8 +17,7 @@ public class DRejectionObject {
     private String dateCreated;
     private String dateUpdated;
 
-    public DRejectionObject() {
-    }
+    public DRejectionObject() {}
 
     public DRejectionObject(
             Integer id, Integer code, String name, String description, String dateCreated, String dateUpdated) {
@@ -32,13 +29,15 @@ public class DRejectionObject {
         this.dateUpdated = dateUpdated;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DRejectionObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(code, that.code) && Objects.equals(
-                name, that.name) && Objects.equals(description, that.description) && Objects.equals(
-                        dateCreated, that.dateCreated) && Objects.equals(dateUpdated, that.dateUpdated);
+        return Objects.equals(id, that.id)
+                && Objects.equals(code, that.code)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(dateCreated, that.dateCreated)
+                && Objects.equals(dateUpdated, that.dateUpdated);
     }
 
     @Override
@@ -48,6 +47,8 @@ public class DRejectionObject {
 
     @Override
     public String toString() {
-        return "DRejectionObject{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + ", description='" + description + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + '}';
+        return "DRejectionObject{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + ", description='"
+                + description + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\''
+                + '}';
     }
 }

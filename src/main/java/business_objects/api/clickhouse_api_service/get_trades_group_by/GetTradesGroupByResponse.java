@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_trades_group_by;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetTradesGroupByResponse {
@@ -36,12 +35,10 @@ public class GetTradesGroupByResponse {
     @JsonProperty("commissionUSD")
     public Double commissionUsd;
 
-    public GetTradesGroupByResponse() {
-    }
+    public GetTradesGroupByResponse() {}
 
     @Deprecated(forRemoval = true)
-    public GetTradesGroupByResponse(String symbol, Double profit, Double profitUsd,
-            Double volumeLots) {
+    public GetTradesGroupByResponse(String symbol, Double profit, Double profitUsd, Double volumeLots) {
         this.symbol = symbol;
         this.profit = profit;
         this.profitUsd = profitUsd;
@@ -49,8 +46,16 @@ public class GetTradesGroupByResponse {
     }
 
     public GetTradesGroupByResponse(
-            String tradingAccount, String serverId, String clientId, String symbol, Double profit, Double profitUsd,
-            Double volumeLots, Double pnlUsd, Double storageUsd, Double commissionUsd) {
+            String tradingAccount,
+            String serverId,
+            String clientId,
+            String symbol,
+            Double profit,
+            Double profitUsd,
+            Double volumeLots,
+            Double pnlUsd,
+            Double storageUsd,
+            Double commissionUsd) {
         this.tradingAccount = tradingAccount;
         this.serverId = serverId;
         this.clientId = clientId;
@@ -66,21 +71,39 @@ public class GetTradesGroupByResponse {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof GetTradesGroupByResponse that)) return false;
-        return Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId) && Objects.equals(
-                clientId, that.clientId) && Objects.equals(symbol, that.symbol) && Objects.equals(
-                        profit, that.profit) && Objects.equals(profitUsd, that.profitUsd) && Objects.equals(
-                                volumeLots, that.volumeLots) && Objects.equals(pnlUsd, that.pnlUsd) && Objects.equals(
-                                        storageUsd, that.storageUsd) && Objects.equals(commissionUsd, that.commissionUsd);
+        return Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(clientId, that.clientId)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(volumeLots, that.volumeLots)
+                && Objects.equals(pnlUsd, that.pnlUsd)
+                && Objects.equals(storageUsd, that.storageUsd)
+                && Objects.equals(commissionUsd, that.commissionUsd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tradingAccount, serverId, clientId, symbol, profit, profitUsd, volumeLots, pnlUsd, storageUsd, commissionUsd);
+        return Objects.hash(
+                tradingAccount,
+                serverId,
+                clientId,
+                symbol,
+                profit,
+                profitUsd,
+                volumeLots,
+                pnlUsd,
+                storageUsd,
+                commissionUsd);
     }
 
     @Override
     public String toString() {
-        return "GetTradesGroupByResponse{" + "tradingAccount='" + tradingAccount + '\'' + ", serverId='" + serverId + '\'' + ", symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + ", volumeLots=" + volumeLots + ", pnlUsd=" + pnlUsd + ", storageUsd=" + storageUsd + ", commissionUsd=" + commissionUsd + '}';
+        return "GetTradesGroupByResponse{" + "tradingAccount='" + tradingAccount + '\'' + ", serverId='" + serverId
+                + '\'' + ", symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd
+                + ", volumeLots=" + volumeLots + ", pnlUsd=" + pnlUsd + ", storageUsd=" + storageUsd
+                + ", commissionUsd=" + commissionUsd + '}';
     }
 
     public String getTradingAccount() {

@@ -1,15 +1,23 @@
 package tests.production_tests;
 
-import business_objects.api.clickhouse_api_service.get_mirror_score.GetMirrorScoreResponse;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.ConfigFactory.*;
+import static utils.Constants.*;
+
 import business_objects.api.clickhouse_api_service.get_client.GetClientResponse;
 import business_objects.api.clickhouse_api_service.get_clients.GetClientsResponse;
 import business_objects.api.clickhouse_api_service.get_deposits.GetDepositsResponse;
 import business_objects.api.clickhouse_api_service.get_lexis_nexis.GetLexisNexisResponse;
+import business_objects.api.clickhouse_api_service.get_mirror_score.GetMirrorScoreResponse;
 import business_objects.api.clickhouse_api_service.get_swap_free_volumes.GetSwapFreeVolumesResponse;
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -17,15 +25,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseApi;
 import utils.Utils;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.ConfigFactory.*;
-import static utils.Constants.*;
 
 @Tag(LAYER_API)
 @Tag(SUITE_SMOKE_PROD)
@@ -47,7 +46,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd1() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", "vantage-3384621");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABUSE_TYPES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABUSE_TYPES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -58,7 +58,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", "3384621");
         queryParamsMap.put("serverId", 1);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_BALANCE_ORDERS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_BALANCE_ORDERS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -68,7 +69,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd3() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", "vantage-123");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_BONUSES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_BONUSES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -79,9 +81,11 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        GetClientsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
+        GetClientsResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetClientsResponse.class);
         assertThat("Assert clientId not null", mappedResponse.getClientId(), is(notNullValue()));
     }
 
@@ -91,10 +95,12 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd5() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENT + ucid, null, null);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENT + ucid, null, null);
 
         assertThat("Assert that code is 200", response.code(), is(200));
-        GetClientResponse mappedResponse = objectMapper.readValue(response.body().string(), GetClientResponse.class);
+        GetClientResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetClientResponse.class);
         assertThat("Assert clientId not null", mappedResponse.getClientId(), is(notNullValue()));
         assertThat("Assert userId not null", mappedResponse.getUserId(), is(notNullValue()));
         assertThat("Assert brand not null", mappedResponse.getBrand(), is(notNullValue()));
@@ -130,7 +136,12 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd6() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS.replace("{clientId}", ucid), null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_TEST
+                                + CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS.replace("{clientId}", ucid),
+                        null,
+                        queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -143,7 +154,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("dateFrom", dateFrom);
         queryParamsMap.put("dateTo", dateTo);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDIT_EQUITY, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDIT_EQUITY, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -156,7 +168,11 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("dateFrom", dateFrom);
         queryParamsMap.put("dateTo", dateTo);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO,
+                        null,
+                        queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -167,7 +183,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDITS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDITS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -177,9 +194,11 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd10() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", "alphatick-11");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_DEPOSITS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_DEPOSITS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
+        GetDepositsResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert transferId not null", mappedResponse[0].transferId, is(notNullValue()));
         assertThat("Assert actualAmount not null", mappedResponse[0].actualAmount, is(notNullValue()));
         assertThat("Assert actualAmountUsd not null", mappedResponse[0].actualAmountUsd, is(notNullValue()));
@@ -197,7 +216,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("dateFrom", dateFrom);
         queryParamsMap.put("action", 1);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -207,7 +228,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd12() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -219,9 +241,11 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("eventType", "login");
         queryParamsMap.put("eventId", "0");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        GetLexisNexisResponse mappedResponse = objectMapper.readValue(response.body().string(), GetLexisNexisResponse.class);
+        GetLexisNexisResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetLexisNexisResponse.class);
         assertThat("Assert ucid not null", mappedResponse.ucid, is(ucid));
         assertThat("Assert uid not null", mappedResponse.uid, is(ucid));
         assertThat("Assert userId not null", mappedResponse.userId, is(notNullValue()));
@@ -241,32 +265,37 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert eventDatetime not null", mappedResponse.eventDatetime, is(notNullValue()));
         assertThat("Assert eventId not null", mappedResponse.eventId, is(notNullValue()));
         // EMPTY DATA because of not using vpn
-//        assertThat("Assert proxyIp not null", mappedResponse.proxyIp, is(notNullValue()));
-//        assertThat("Assert proxyIpActivities not null", mappedResponse.proxyIpActivities, is(notNullValue()));
-//        assertThat("Assert proxyIpAttributes not null", mappedResponse.proxyIpAttributes, is(notNullValue()));
-//        assertThat("Assert proxyIpConnectionType not null", mappedResponse.proxyIpConnectionType, is(notNullValue()));
-//        assertThat("Assert proxyIpFirstSeen not null", mappedResponse.proxyIpFirstSeen, is(notNullValue()));
-//        assertThat("Assert proxyIpGeo not null", mappedResponse.proxyIpGeo, is(notNullValue()));
-//        assertThat("Assert proxyIpHome not null", mappedResponse.proxyIpHome, is(notNullValue()));
-//        assertThat("Assert proxyIpIsp not null", mappedResponse.proxyIpIsp, is(notNullValue()));
-//        assertThat("Assert proxyIpLatitude not null", mappedResponse.proxyIpLatitude, is(notNullValue()));
-//        assertThat("Assert proxyIpLongitude not null", mappedResponse.proxyIpLongitude, is(notNullValue()));
-//        assertThat("Assert proxyIpOrganization not null", mappedResponse.proxyIpOrganization, is(notNullValue()));
-//        assertThat("Assert proxyIpOrganizationType not null", mappedResponse.proxyIpOrganizationType, is(notNullValue()));
-//        assertThat("Assert proxyIpRegion not null", mappedResponse.proxyIpRegion, is(notNullValue()));
-//        assertThat("Assert proxyIpResult not null", mappedResponse.proxyIpResult, is(notNullValue()));
-//        assertThat("Assert proxyIpRoutingType not null", mappedResponse.proxyIpRoutingType, is(notNullValue()));
-//        assertThat("Assert proxyIpScore not null", mappedResponse.proxyIpScore, is(notNullValue()));
-//        assertThat("Assert proxyIpWorstScore not null", mappedResponse.proxyIpWorstScore, is(notNullValue()));
-//        assertThat("Assert proxyIpv6 not null", mappedResponse.proxyIpv6, is(notNullValue()));
-//        assertThat("Assert proxyName not null", mappedResponse.proxyName, is(notNullValue()));
-//        assertThat("Assert proxyScore not null", mappedResponse.proxyScore, is(notNullValue()));
-//        assertThat("Assert proxyType not null", mappedResponse.proxyType, is(notNullValue()));
+        //        assertThat("Assert proxyIp not null", mappedResponse.proxyIp, is(notNullValue()));
+        //        assertThat("Assert proxyIpActivities not null", mappedResponse.proxyIpActivities, is(notNullValue()));
+        //        assertThat("Assert proxyIpAttributes not null", mappedResponse.proxyIpAttributes, is(notNullValue()));
+        //        assertThat("Assert proxyIpConnectionType not null", mappedResponse.proxyIpConnectionType,
+        // is(notNullValue()));
+        //        assertThat("Assert proxyIpFirstSeen not null", mappedResponse.proxyIpFirstSeen, is(notNullValue()));
+        //        assertThat("Assert proxyIpGeo not null", mappedResponse.proxyIpGeo, is(notNullValue()));
+        //        assertThat("Assert proxyIpHome not null", mappedResponse.proxyIpHome, is(notNullValue()));
+        //        assertThat("Assert proxyIpIsp not null", mappedResponse.proxyIpIsp, is(notNullValue()));
+        //        assertThat("Assert proxyIpLatitude not null", mappedResponse.proxyIpLatitude, is(notNullValue()));
+        //        assertThat("Assert proxyIpLongitude not null", mappedResponse.proxyIpLongitude, is(notNullValue()));
+        //        assertThat("Assert proxyIpOrganization not null", mappedResponse.proxyIpOrganization,
+        // is(notNullValue()));
+        //        assertThat("Assert proxyIpOrganizationType not null", mappedResponse.proxyIpOrganizationType,
+        // is(notNullValue()));
+        //        assertThat("Assert proxyIpRegion not null", mappedResponse.proxyIpRegion, is(notNullValue()));
+        //        assertThat("Assert proxyIpResult not null", mappedResponse.proxyIpResult, is(notNullValue()));
+        //        assertThat("Assert proxyIpRoutingType not null", mappedResponse.proxyIpRoutingType,
+        // is(notNullValue()));
+        //        assertThat("Assert proxyIpScore not null", mappedResponse.proxyIpScore, is(notNullValue()));
+        //        assertThat("Assert proxyIpWorstScore not null", mappedResponse.proxyIpWorstScore, is(notNullValue()));
+        //        assertThat("Assert proxyIpv6 not null", mappedResponse.proxyIpv6, is(notNullValue()));
+        //        assertThat("Assert proxyName not null", mappedResponse.proxyName, is(notNullValue()));
+        //        assertThat("Assert proxyScore not null", mappedResponse.proxyScore, is(notNullValue()));
+        //        assertThat("Assert proxyType not null", mappedResponse.proxyType, is(notNullValue()));
         assertThat("Assert trueIp not null", mappedResponse.trueIp, is(notNullValue()));
         assertThat("Assert trueIpActivities not null", mappedResponse.trueIpActivities, is(notNullValue()));
         assertThat("Assert trueIpAttributes not null", mappedResponse.trueIpAttributes, is(notNullValue()));
         assertThat("Assert trueIpCity not null", mappedResponse.trueIpCity, is(notNullValue()));
-        assertThat("Assert trueIpCountryConfidence not null", mappedResponse.trueIpCountryConfidence, is(notNullValue()));
+        assertThat(
+                "Assert trueIpCountryConfidence not null", mappedResponse.trueIpCountryConfidence, is(notNullValue()));
         assertThat("Assert trueIpFirstSeen not null", mappedResponse.trueIpFirstSeen, is(notNullValue()));
         assertThat("Assert trueIpFirstSeen not null", mappedResponse.trueIpFirstSeen, is(notNullValue()));
         assertThat("Assert trueIpGeo not null", mappedResponse.trueIpGeo, is(notNullValue()));
@@ -283,7 +312,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert trueIpWorstScore not null", mappedResponse.trueIpWorstScore, is(notNullValue()));
         assertThat("Assert trueIpv6 not null", mappedResponse.trueIpv6, is(notNullValue()));
         assertThat("Assert vpnScore not null", mappedResponse.vpnScore, is(notNullValue()));
-
     }
 
     @Test
@@ -294,7 +322,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("symbol", "EURUSD");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -305,7 +335,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SWAP_FREE_FEES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SWAP_FREE_FEES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -316,9 +347,11 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
+        GetSwapFreeVolumesResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Assert indicatorDate not null", mappedResponse.indicatorDate, is(notNullValue()));
         assertThat("Assert tradingIndicators not null", mappedResponse.tradingIndicators, is(notNullValue()));
     }
@@ -330,7 +363,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES_GROUP_BY, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES_GROUP_BY, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -341,7 +375,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -352,7 +387,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_UNCLOSED_TRADES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_UNCLOSED_TRADES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -362,7 +398,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd20() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_WITHDRAWALS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_WITHDRAWALS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -373,7 +410,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("eventType", "login");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS_V2, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS_V2, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -386,7 +424,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("tradeDurationSeconds", 1);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FAST_TRADES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FAST_TRADES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -397,7 +436,12 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", 10_080);
         queryParamsMap.put("serverId", 3);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES_BY_TRADE_ID.replace("{tradeId}", "4477144"), null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD
+                                + CLICKHOUSE_API_GET_TRADES_BY_TRADE_ID.replace("{tradeId}", "4477144"),
+                        null,
+                        queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -407,7 +451,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd24() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TOTAL_LOYALTIES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TOTAL_LOYALTIES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -417,7 +462,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd25() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_CLIENTS_BY_TRADES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_CLIENTS_BY_TRADES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -428,7 +475,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("dateFrom", Utils.convertTimestampToIsoFormat(Utils.getCurrentTimestampMillis()));
         queryParamsMap.put("dateTo", Utils.convertTimestampToIsoFormat(Utils.getCurrentTimestampMillis()));
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FINANCIAL_CALENDAR, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FINANCIAL_CALENDAR, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -440,7 +488,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_DUMMY_TRADE_DATA, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_DUMMY_TRADE_DATA, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -453,7 +502,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("dateTo", "2030-01-01T00:00:00");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ACCOUNT_BALANCE, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ACCOUNT_BALANCE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -463,7 +513,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd29() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABNORMAL_PROFIT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABNORMAL_PROFIT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -474,7 +525,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS_V2, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS_V2, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -486,7 +538,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("dateTo", "2030-12-31T11:11:11Z");
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_WINNING_DEALS_COUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_WINNING_DEALS_COUNT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -497,9 +551,14 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_VERIFY_TRADING_ACCOUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_VERIFY_TRADING_ACCOUNT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("{\"isTest\":false,\"accountGroup\":\"VIG_Hedge\\\\M_VIG_USD\"}"));
+        assertThat(
+                "Assert body",
+                response.body().string(),
+                is("{\"isTest\":false,\"accountGroup\":\"VIG_Hedge\\\\M_VIG_USD\"}"));
     }
 
     @Test
@@ -509,9 +568,14 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_STOPOUT_TRADES_RATIO, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_STOPOUT_TRADES_RATIO, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[{\"totalTrades\":0,\"stopOutTrades\":0,\"stopOutRatio\":0.00}]"));
+        assertThat(
+                "Assert body",
+                response.body().string(),
+                is("[{\"totalTrades\":0,\"stopOutTrades\":0,\"stopOutRatio\":0.00}]"));
     }
 
     @Test
@@ -521,7 +585,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SLIPPAGE_AMOUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SLIPPAGE_AMOUNT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -534,7 +599,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SHORT_TOXICITY, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SHORT_TOXICITY, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -546,7 +612,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_REBATE_AMOUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_REBATE_AMOUNT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -558,7 +625,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_PROFIT_TO_CAPITAL_RATIO, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_PROFIT_TO_CAPITAL_RATIO, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -570,7 +639,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NOTIONAL_VALUE_AMOUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NOTIONAL_VALUE_AMOUNT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -582,9 +653,13 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NET_PROFIT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NET_PROFIT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[{\"clientId\":\"vantage-3384621\",\"netProfit\":0.0000,\"profit\":0.0000}]"));
+        assertThat(
+                "Assert body",
+                response.body().string(),
+                is("[{\"clientId\":\"vantage-3384621\",\"netProfit\":0.0000,\"profit\":0.0000}]"));
     }
 
     @Test
@@ -594,9 +669,14 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NAME_BIRTH, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NAME_BIRTH, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[{\"clientId\":\"vantage-3384621\",\"nameBirth\":\"NIKOLAI\"},{\"clientId\":\"vantage-3384621\",\"nameBirth\":\"NIKOLAI\"}]"));
+        assertThat(
+                "Assert body",
+                response.body().string(),
+                is(
+                        "[{\"clientId\":\"vantage-3384621\",\"nameBirth\":\"NIKOLAI\"},{\"clientId\":\"vantage-3384621\",\"nameBirth\":\"NIKOLAI\"}]"));
     }
 
     @Test
@@ -609,7 +689,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("leverage", 1);
         queryParamsMap.put("bonusLvl", 1);
         queryParamsMap.put("profitLvl", 1);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("{\"suspiciousFlag\":false}"));
     }
@@ -620,9 +701,11 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd42() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_SCORE, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_SCORE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        GetMirrorScoreResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorScoreResponse.class);
+        GetMirrorScoreResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorScoreResponse.class);
         assertThat("Assert model score", mappedResponse.getModelScore(), is(notNullValue()));
         assertThat("Assert ucid score", mappedResponse.getUcidScore(), is(notNullValue()));
     }
@@ -634,7 +717,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -646,7 +731,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd44() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MARKET_MANIPULATOR_FLAG, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MARKET_MANIPULATOR_FLAG, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -659,9 +746,17 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
         queryParamsMap.put("tradeDurationSeconds", 10);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT,
+                        null,
+                        queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[{\"lastDealTime\":\"1970-01-01T00:00:00Z\",\"tradingAccount\":\"0\",\"serverId\":\"0\",\"countTotalTrades\":0,\"countFastTrades\":0}]"));
+        assertThat(
+                "Assert body",
+                response.body().string(),
+                is(
+                        "[{\"lastDealTime\":\"1970-01-01T00:00:00Z\",\"tradingAccount\":\"0\",\"serverId\":\"0\",\"countTotalTrades\":0,\"countFastTrades\":0}]"));
     }
 
     @Test
@@ -671,7 +766,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccounts", tradingAccount);
         queryParamsMap.put("serverIds", serverId);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CUMULATIVE_DEPOSITS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CUMULATIVE_DEPOSITS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -683,7 +780,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd47() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_TRADING_DAYS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_TRADING_DAYS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -694,7 +792,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd48() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("cpa", 1);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_CPA, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_CPA, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[{\"count\":35}]"));
     }
@@ -709,7 +808,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("rebateRatio", 1);
         queryParamsMap.put("rebateEffeciency", 1);
         queryParamsMap.put("profitToDeposit", 1);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CHARGEBACK_SCORE, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CHARGEBACK_SCORE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("{\"ratioAbuse\":0}"));
     }
@@ -720,7 +820,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd50() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ALERTS, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ALERTS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert body", response.body().string(), is("[]"));
     }
@@ -731,8 +832,12 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     void testClickHouseApiProd51() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_GENERAL_SCORE, null, queryParamsMap);
+        Response response = new HttpHelper()
+                .sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_GENERAL_SCORE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("{\"modelScore\":0.038232025,\"ucidScore\":0.07537152,\"avgPastUcidScore\":0.09}"));
+        assertThat(
+                "Assert body",
+                response.body().string(),
+                is("{\"modelScore\":0.038232025,\"ucidScore\":0.07537152,\"avgPastUcidScore\":0.09}"));
     }
 }

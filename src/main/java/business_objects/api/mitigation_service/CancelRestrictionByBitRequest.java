@@ -1,10 +1,9 @@
 package business_objects.api.mitigation_service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Objects;
-
 import static utils.Utils.getCurrentTimestampMillis;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 public class CancelRestrictionByBitRequest {
 
@@ -47,8 +46,7 @@ public class CancelRestrictionByBitRequest {
         this.updatedBy = updatedBy;
     }
 
-    public CancelRestrictionByBitRequest() {
-    }
+    public CancelRestrictionByBitRequest() {}
 
     public CancelRestrictionByBitRequest(Integer id, String cancelReason, UpdatedBy updatedBy) {
         this.id = id;
@@ -82,8 +80,7 @@ public class CancelRestrictionByBitRequest {
             this.user = user;
         }
 
-        public UpdatedBy() {
-        }
+        public UpdatedBy() {}
 
         public UpdatedBy(String system, String user) {
             this.system = system;

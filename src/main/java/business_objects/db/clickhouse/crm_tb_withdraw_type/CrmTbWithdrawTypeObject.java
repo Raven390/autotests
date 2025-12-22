@@ -5,20 +5,25 @@ import java.util.Objects;
 public class CrmTbWithdrawTypeObject {
     private Integer sourceIdSt;
     private Integer id;
-    private Integer category;        // UInt8
-    private String enName;         // String
+    private Integer category; // UInt8
+    private String enName; // String
     private String lastUpdated; // DateTime64(3)
 
     @Override
     public String toString() {
-        return "CrmTbWithdrawTypeObject{" + "sourceIdSt=" + sourceIdSt + ", id=" + id + ", category=" + category + ", enName='" + enName + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "CrmTbWithdrawTypeObject{" + "sourceIdSt=" + sourceIdSt + ", id=" + id + ", category=" + category
+                + ", enName='" + enName + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbWithdrawTypeObject that = (CrmTbWithdrawTypeObject) o;
-        return sourceIdSt == that.sourceIdSt && id == that.id && category == that.category && Objects.equals(enName, that.enName) && Objects.equals(lastUpdated, that.lastUpdated);
+        return sourceIdSt == that.sourceIdSt
+                && id == that.id
+                && category == that.category
+                && Objects.equals(enName, that.enName)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override

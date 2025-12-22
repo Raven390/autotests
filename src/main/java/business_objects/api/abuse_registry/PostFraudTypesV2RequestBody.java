@@ -1,7 +1,6 @@
 package business_objects.api.abuse_registry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -19,8 +18,7 @@ public class PostFraudTypesV2RequestBody {
     @JsonProperty("fraudTypes")
     private List<FraudType> fraudTypes;
 
-    public PostFraudTypesV2RequestBody() {
-    }
+    public PostFraudTypesV2RequestBody() {}
 
     public PostFraudTypesV2RequestBody(String actor, String system, String comment, List<FraudType> fraudTypes) {
         this.actor = actor;
@@ -65,7 +63,10 @@ public class PostFraudTypesV2RequestBody {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PostFraudTypesV2RequestBody that = (PostFraudTypesV2RequestBody) o;
-        return Objects.equals(actor, that.actor) && Objects.equals(system, that.system) && Objects.equals(comment, that.comment) && Objects.equals(fraudTypes, that.fraudTypes);
+        return Objects.equals(actor, that.actor)
+                && Objects.equals(system, that.system)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(fraudTypes, that.fraudTypes);
     }
 
     @Override
@@ -75,7 +76,8 @@ public class PostFraudTypesV2RequestBody {
 
     @Override
     public String toString() {
-        return "PostFraudTypesV2RequestBody{" + "actor='" + actor + '\'' + ", system='" + system + '\'' + ", comment='" + comment + '\'' + ", fraudTypes=" + fraudTypes + '}';
+        return "PostFraudTypesV2RequestBody{" + "actor='" + actor + '\'' + ", system='" + system + '\'' + ", comment='"
+                + comment + '\'' + ", fraudTypes=" + fraudTypes + '}';
     }
 
     public static class FraudType {

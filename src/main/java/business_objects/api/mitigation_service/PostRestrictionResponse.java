@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class PostRestrictionResponse {
@@ -15,8 +14,7 @@ public class PostRestrictionResponse {
     @JsonProperty("code")
     public String code;
 
-    public PostRestrictionResponse() {
-    }
+    public PostRestrictionResponse() {}
 
     public PostRestrictionResponse(Integer id, String ucid, String code) {
         this.id = id;

@@ -1,14 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -17,6 +8,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.waitForConnectionSearchToUpdate;
+
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
 

@@ -1,5 +1,19 @@
 package helpers.data.rules.trading;
 
+import static business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexDataFactory.generateAppFinindexData;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
+import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Constants.MT_CLOSE_TRADE_EVENT;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
@@ -10,7 +24,6 @@ import helpers.data.DataHelper;
 import helpers.data.enums.DateTimeFormat;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
@@ -18,27 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexDataFactory.generateAppFinindexData;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
-import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
-import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
-import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.MT_CLOSE_TRADE_EVENT;
-import static utils.Utils.*;
-
 public class NewsTraderRuleDataFactory {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
     private static final ClientHelper client4 = getRandomVantageClientAllFields();
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
-    private static final String oldTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1);
+    private static final String oldTime =
+            getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1);
 
     @Step("Create data for News Trader rule is test account=true")
     private static DataHelper getNewsTraderRuleData(ClientHelper client) {
@@ -53,7 +53,17 @@ public class NewsTraderRuleDataFactory {
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         data.closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), data.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), data.mt5DealsCoercedObjects.getFirst().getVolumeLots(), data.mt5DealsCoercedObjects.getFirst().getSymbol(), data.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+                getRandomUuidString(),
+                Instant.now().toString(),
+                data.mt5DealsCoercedObjects.getFirst().getPositionId(),
+                client.getTradingAccount(),
+                data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
+                data.mt5DealsCoercedObjects.getFirst().getSymbol(),
+                data.clientHelper.getServerId(),
+                MT_CLOSE_TRADE_EVENT,
+                Instant.now().toString(),
+                metadata,
+                Instant.now().toString());
         return data;
     }
 
@@ -113,8 +123,11 @@ public class NewsTraderRuleDataFactory {
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         writeLog("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(1100.0).divide(BigDecimal.valueOf(0.4), 2, RoundingMode.HALF_UP));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects
+                .getFirst()
+                .setAmountUsd(BigDecimal.valueOf(1100.0).divide(BigDecimal.valueOf(0.4), 2, RoundingMode.HALF_UP));
         return data;
     }
 
@@ -133,8 +146,11 @@ public class NewsTraderRuleDataFactory {
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         writeLog("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(1100.0).divide(BigDecimal.valueOf(0.6), 2, RoundingMode.HALF_UP));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects
+                .getFirst()
+                .setAmountUsd(BigDecimal.valueOf(1100.0).divide(BigDecimal.valueOf(0.6), 2, RoundingMode.HALF_UP));
         return data;
     }
 

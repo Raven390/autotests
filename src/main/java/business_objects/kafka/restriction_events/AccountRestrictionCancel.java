@@ -100,5 +100,4 @@ public class AccountRestrictionCancel {
     public void setRestrictions(Restriction restrictions) {
         this.restriction = restrictions;
     }
-
 }

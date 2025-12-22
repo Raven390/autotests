@@ -1,22 +1,22 @@
 package business_objects.db.clickhouse.mt_mt4_trades;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Symbol;
 import io.qameta.allure.Step;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static utils.Utils.*;
-
 public class MtMt4TradesObjectFactory {
 
-    private MtMt4TradesObjectFactory() {
-    }
+    private MtMt4TradesObjectFactory() {}
 
-    @Step("Generate mt___mt4_trades_coerced object by client object")//todo add enums for types, currencies(to create pairs), and logic based on type to select limits for values
+    @Step("Generate mt___mt4_trades_coerced object by client object") // todo add enums for types, currencies(to
+    // create pairs), and logic based on type to
+    // select limits for values
     public static MtMt4TradesObject generateMt4TradesObject(ClientHelper client) {
         MtMt4TradesObject trade = new MtMt4TradesObject();
         trade.brand = client.getBrand();

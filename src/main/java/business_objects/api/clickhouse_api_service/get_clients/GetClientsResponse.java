@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_clients;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetClientsResponse {
@@ -21,8 +20,7 @@ public class GetClientsResponse {
     @JsonProperty("serverId")
     Integer serverId;
 
-    public GetClientsResponse() {
-    }
+    public GetClientsResponse() {}
 
     public GetClientsResponse(String clientId) {
         this.clientId = clientId;
@@ -71,9 +69,11 @@ public class GetClientsResponse {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof GetClientsResponse that)) return false;
-        return Objects.equals(objectType, that.objectType) && Objects.equals(clientId, that.clientId) && Objects.equals(
-                tradingAccount, that.tradingAccount) && Objects.equals(tradingAccountCurrency, that.tradingAccountCurrency) && Objects.equals(
-                        serverId, that.serverId);
+        return Objects.equals(objectType, that.objectType)
+                && Objects.equals(clientId, that.clientId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(tradingAccountCurrency, that.tradingAccountCurrency)
+                && Objects.equals(serverId, that.serverId);
     }
 
     @Override
@@ -83,6 +83,8 @@ public class GetClientsResponse {
 
     @Override
     public String toString() {
-        return "GetClientsResponse{" + "objectType='" + objectType + '\'' + ", clientId='" + clientId + '\'' + ", tradingAccount=" + tradingAccount + ", tradingAccountCurrency=" + tradingAccountCurrency + ", serverId=" + serverId + '}';
+        return "GetClientsResponse{" + "objectType='" + objectType + '\'' + ", clientId='" + clientId + '\''
+                + ", tradingAccount=" + tradingAccount + ", tradingAccountCurrency=" + tradingAccountCurrency
+                + ", serverId=" + serverId + '}';
     }
 }

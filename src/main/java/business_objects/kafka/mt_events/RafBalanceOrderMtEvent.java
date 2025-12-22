@@ -37,8 +37,7 @@ public class RafBalanceOrderMtEvent {
     @JsonProperty("initialEventTime")
     String initialEventTime;
 
-    public RafBalanceOrderMtEvent() {
-    }
+    public RafBalanceOrderMtEvent() {}
 
     public RafBalanceOrderMtEvent(
             String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId, String type) {
@@ -53,9 +52,12 @@ public class RafBalanceOrderMtEvent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof RafBalanceOrderMtEvent that)) return false;
-        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(
-                tradingAccount, that.tradingAccount) && Objects.equals(comment, that.comment) && Objects.equals(
-                        serverId, that.serverId) && Objects.equals(type, that.type);
+        return Objects.equals(openTime, that.openTime)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(type, that.type);
     }
 
     @Override
@@ -65,9 +67,11 @@ public class RafBalanceOrderMtEvent {
 
     @Override
     public String toString() {
-        return "RafBalanceOrderMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata + ", initialEventTime='" + initialEventTime + '\'' + '}';
+        return "RafBalanceOrderMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId="
+                + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId="
+                + serverId + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata
+                + ", initialEventTime='" + initialEventTime + '\'' + '}';
     }
-
 
     public String getId() {
         return id;

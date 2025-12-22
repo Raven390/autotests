@@ -2,7 +2,6 @@ package business_objects.kafka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class CustomEvent {
 
     // JSON example for reference:
@@ -14,7 +13,8 @@ public class CustomEvent {
     //   "tradingAccount": "18885551",
     //   "brand": "vt",
     //   "clientId": "760338",
-    //   "alert": "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').",
+    //   "alert": "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My
+    // Order').",
     //   "fraudType": "HEDGING",
     //   "source": "ivan-script-hedge-ea",
     //   "message": "Raised automatically by Hedge EA detection script for manual review."
@@ -57,9 +57,18 @@ public class CustomEvent {
     private String message;
 
     public CustomEvent(
-            String id, String type, String timestamp, String serverId, String tradingAccount, String brand,
+            String id,
+            String type,
+            String timestamp,
+            String serverId,
+            String tradingAccount,
+            String brand,
             String clientId,
-            String alert, String fraudType, String restriction, String source, String message) {
+            String alert,
+            String fraudType,
+            String restriction,
+            String source,
+            String message) {
         this.id = id;
         this.type = type;
         this.timestamp = timestamp;
@@ -74,8 +83,7 @@ public class CustomEvent {
         this.message = message;
     }
 
-    public CustomEvent() {
-    }
+    public CustomEvent() {}
 
     public String getId() {
         return id;

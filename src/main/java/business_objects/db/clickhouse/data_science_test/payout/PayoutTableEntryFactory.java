@@ -5,8 +5,10 @@ import helpers.data.ClientHelper;
 public class PayoutTableEntryFactory {
 
     public static PayoutTableEntry payoutTableEntryForConnectionSearch(ClientHelper client) {
-        return new PayoutTableEntry(
-                client.getUcid(), "testpayout"
-        );
+        return new PayoutTableEntry(client.getUcid(), "testpayout");
+    }
+
+    public static PayoutTableEntry payoutTableEntryForConnectionSearch(ClientHelper client, String payout) {
+        return new PayoutTableEntry(client.getUcid(), payout);
     }
 }

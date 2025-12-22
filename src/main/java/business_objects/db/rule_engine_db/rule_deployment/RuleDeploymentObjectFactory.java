@@ -1,11 +1,9 @@
 package business_objects.db.rule_engine_db.rule_deployment;
 
-import utils.Utils;
-
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+import utils.Utils;
 
 public class RuleDeploymentObjectFactory {
     public static RuleDeploymentObject generateRuleDeploymentObject(UUID uuid) {

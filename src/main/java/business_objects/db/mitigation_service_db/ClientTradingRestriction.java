@@ -15,11 +15,19 @@ public class ClientTradingRestriction {
     private String createdAt;
     private String updatedAt;
 
-    public ClientTradingRestriction() {
-    }
+    public ClientTradingRestriction() {}
 
-    public ClientTradingRestriction(Long id, String ucid, String regulator, Long accountId, Long serverId,
-            Long restrictionId, String comment, String cancellationReason, String createdAt, String updatedAt) {
+    public ClientTradingRestriction(
+            Long id,
+            String ucid,
+            String regulator,
+            Long accountId,
+            Long serverId,
+            Long restrictionId,
+            String comment,
+            String cancellationReason,
+            String createdAt,
+            String updatedAt) {
         this.setId(id);
         this.setUcid(ucid);
         this.setRegulator(regulator);
@@ -116,16 +124,39 @@ public class ClientTradingRestriction {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ClientTradingRestriction that = (ClientTradingRestriction) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getUcid(), that.getUcid()) && Objects.equals(getRegulator(), that.getRegulator()) && Objects.equals(getAccountId(), that.getAccountId()) && Objects.equals(getServerId(), that.getServerId()) && Objects.equals(getRestrictionId(), that.getRestrictionId()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCancellationReason(), that.getCancellationReason()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt());
+        return Objects.equals(getId(), that.getId())
+                && Objects.equals(getUcid(), that.getUcid())
+                && Objects.equals(getRegulator(), that.getRegulator())
+                && Objects.equals(getAccountId(), that.getAccountId())
+                && Objects.equals(getServerId(), that.getServerId())
+                && Objects.equals(getRestrictionId(), that.getRestrictionId())
+                && Objects.equals(getComment(), that.getComment())
+                && Objects.equals(getCancellationReason(), that.getCancellationReason())
+                && Objects.equals(getCreatedAt(), that.getCreatedAt())
+                && Objects.equals(getUpdatedAt(), that.getUpdatedAt());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUcid(), getRegulator(), getAccountId(), getServerId(), getRestrictionId(), getComment(), getCancellationReason(), getCreatedAt(), getUpdatedAt());
+        return Objects.hash(
+                getId(),
+                getUcid(),
+                getRegulator(),
+                getAccountId(),
+                getServerId(),
+                getRestrictionId(),
+                getComment(),
+                getCancellationReason(),
+                getCreatedAt(),
+                getUpdatedAt());
     }
 
     @Override
     public String toString() {
-        return "ClientsRestrictionTrading{" + "id=" + getId() + ", ucid='" + getUcid() + '\'' + ", regulator='" + getRegulator() + '\'' + ", accountId=" + getAccountId() + ", serverId=" + getServerId() + ", restrictionId=" + getRestrictionId() + ", comment='" + getComment() + '\'' + ", cancellationReason='" + getCancellationReason() + '\'' + ", createdAt='" + getCreatedAt() + '\'' + ", updatedAt='" + getUpdatedAt() + '\'' + '}';
+        return "ClientsRestrictionTrading{" + "id=" + getId() + ", ucid='" + getUcid() + '\'' + ", regulator='"
+                + getRegulator() + '\'' + ", accountId=" + getAccountId() + ", serverId=" + getServerId()
+                + ", restrictionId=" + getRestrictionId() + ", comment='" + getComment() + '\''
+                + ", cancellationReason='" + getCancellationReason() + '\'' + ", createdAt='" + getCreatedAt() + '\''
+                + ", updatedAt='" + getUpdatedAt() + '\'' + '}';
     }
 }

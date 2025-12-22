@@ -105,7 +105,11 @@ public class dpAndWdByChannelObject {
 
     @Override
     public String toString() {
-        return "dpAndWdByChannelObject{" + "ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", account=" + account + ", date='" + date + '\'' + ", transferType='" + transferType + '\'' + ", paymentSystem='" + paymentChannel + '\'' + ", psCategory='" + channelCategory + '\'' + ", totalAmountUsd=" + totalAmountUsd + ", totalCount=" + totalCount + '\'' + '}';
+        return "dpAndWdByChannelObject{" + "ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='"
+                + regulator + '\'' + ", userId=" + userId + ", account=" + account + ", date='" + date + '\''
+                + ", transferType='" + transferType + '\'' + ", paymentSystem='" + paymentChannel + '\''
+                + ", psCategory='" + channelCategory + '\'' + ", totalAmountUsd=" + totalAmountUsd + ", totalCount="
+                + totalCount + '\'' + '}';
     }
 
     @Override
@@ -113,11 +117,32 @@ public class dpAndWdByChannelObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         dpAndWdByChannelObject that = (dpAndWdByChannelObject) o;
-        return userId == that.userId && account == that.account && totalCount == that.totalCount && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(date, that.date) && Objects.equals(transferType, that.transferType) && Objects.equals(paymentChannel, that.paymentChannel) && Objects.equals(channelCategory, that.channelCategory) && Objects.equals(totalAmountUsd, that.totalAmountUsd);
+        return userId == that.userId
+                && account == that.account
+                && totalCount == that.totalCount
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(date, that.date)
+                && Objects.equals(transferType, that.transferType)
+                && Objects.equals(paymentChannel, that.paymentChannel)
+                && Objects.equals(channelCategory, that.channelCategory)
+                && Objects.equals(totalAmountUsd, that.totalAmountUsd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, brand, regulator, userId, account, date, transferType, paymentChannel, channelCategory, totalAmountUsd, totalCount);
+        return Objects.hash(
+                ucid,
+                brand,
+                regulator,
+                userId,
+                account,
+                date,
+                transferType,
+                paymentChannel,
+                channelCategory,
+                totalAmountUsd,
+                totalCount);
     }
 }

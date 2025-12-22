@@ -1,7 +1,6 @@
 package business_objects.api.rule_engine_api.post_rules;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -25,8 +24,9 @@ public class RuleObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RuleObject that = (RuleObject) o;
-        return Objects.equals(id, that.id) && Objects.equals(eventType, that.eventType) && Objects.equals(
-                value, that.value);
+        return Objects.equals(id, that.id)
+                && Objects.equals(eventType, that.eventType)
+                && Objects.equals(value, that.value);
     }
 
     @Override

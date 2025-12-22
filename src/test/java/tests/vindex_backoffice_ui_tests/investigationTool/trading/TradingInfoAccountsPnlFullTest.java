@@ -1,24 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -36,6 +17,24 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.getRandomRoundedDouble;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
 
@@ -58,7 +57,6 @@ class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
     private static MtMt5PositionsObject positions12;
     private static MtMt5PositionsObject positions21;
     private static double calculatedPnl;
-
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -110,7 +108,12 @@ class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
         positions21.setStorageUsd(getRandomRoundedDouble(-555_555, 555_555));
         positions21.setAccount(account2.account);
 
-        calculatedPnl = (trade511.getProfitUsd() + trade511.getStorageUsd() + trade511.getCommissionUsd()) + (trade512.getProfitUsd() + trade512.getStorageUsd() + trade512.getCommissionUsd()) + (trade411.getProfitUsd() + trade411.getStorageUsd() + trade411.getCommissionUsd()) + (trade412.getProfitUsd() + trade412.getStorageUsd() + trade412.getCommissionUsd()) + (positions11.getProfitUsd() + positions11.getStorageUsd()) + (positions12.getProfitUsd() + positions12.getStorageUsd());
+        calculatedPnl = (trade511.getProfitUsd() + trade511.getStorageUsd() + trade511.getCommissionUsd())
+                + (trade512.getProfitUsd() + trade512.getStorageUsd() + trade512.getCommissionUsd())
+                + (trade411.getProfitUsd() + trade411.getStorageUsd() + trade411.getCommissionUsd())
+                + (trade412.getProfitUsd() + trade412.getStorageUsd() + trade412.getCommissionUsd())
+                + (positions11.getProfitUsd() + positions11.getStorageUsd())
+                + (positions12.getProfitUsd() + positions12.getStorageUsd());
         insertCrmAccountsToDb(account2);
 
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
@@ -146,7 +149,9 @@ class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openAccountsTab();
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTradingPnl(account1.account), equalTo(String.format("%s %s", decimalFormat.format(calculatedPnl), CURRENCY_USD)));
+        assertThat(
+                "Assert that account total pnl in card view is as expected",
+                tradingPage.getAccountTradingPnl(account1.account),
+                equalTo(String.format("%s %s", decimalFormat.format(calculatedPnl), CURRENCY_USD)));
     }
-
 }

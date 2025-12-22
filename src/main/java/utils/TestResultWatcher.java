@@ -1,10 +1,10 @@
 package utils;
 
+import static utils.Utils.writeLog;
+
 import java.util.Optional;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
-
-import static utils.Utils.writeLog;
 
 public class TestResultWatcher implements TestWatcher {
 

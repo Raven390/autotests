@@ -16,12 +16,20 @@ public class AbuserFraudType {
     String symbols;
     String fraudSource;
 
-    public AbuserFraudType() {
-    }
+    public AbuserFraudType() {}
 
-    public AbuserFraudType(String ucid, String fraudTypeCode, String status, String comment, String modifiedByUser,
-            String modifiedBySystem, Timestamp updatedAt, Timestamp createdAt, String fraudSubtypeCode,
-            String symbols, String fraudSource) {
+    public AbuserFraudType(
+            String ucid,
+            String fraudTypeCode,
+            String status,
+            String comment,
+            String modifiedByUser,
+            String modifiedBySystem,
+            Timestamp updatedAt,
+            Timestamp createdAt,
+            String fraudSubtypeCode,
+            String symbols,
+            String fraudSource) {
         this.ucid = ucid;
         this.fraudTypeCode = fraudTypeCode;
         this.status = status;
@@ -39,17 +47,38 @@ public class AbuserFraudType {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AbuserFraudType that = (AbuserFraudType) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(fraudTypeCode, that.fraudTypeCode) && Objects.equals(status, that.status) && Objects.equals(comment, that.comment) && Objects.equals(modifiedByUser, that.modifiedByUser) && Objects.equals(modifiedBySystem, that.modifiedBySystem) && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode) && Objects.equals(symbols, that.symbols) && Objects.equals(fraudSource, that.fraudSource);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(fraudTypeCode, that.fraudTypeCode)
+                && Objects.equals(status, that.status)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(modifiedByUser, that.modifiedByUser)
+                && Objects.equals(modifiedBySystem, that.modifiedBySystem)
+                && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode)
+                && Objects.equals(symbols, that.symbols)
+                && Objects.equals(fraudSource, that.fraudSource);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, fraudTypeCode, status, comment, modifiedByUser, modifiedBySystem, fraudSubtypeCode, symbols, fraudSource);
+        return Objects.hash(
+                ucid,
+                fraudTypeCode,
+                status,
+                comment,
+                modifiedByUser,
+                modifiedBySystem,
+                fraudSubtypeCode,
+                symbols,
+                fraudSource);
     }
 
     @Override
     public String toString() {
-        return "AbuserFraudType{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", status='" + status + '\'' + ", comment='" + comment + '\'' + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", updatedAt='" + updatedAt + '\'' + ", createdAt='" + createdAt + '\'' + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", symbols='" + symbols + '\'' + ", fraudSource='" + fraudSource + '\'' + '}';
+        return "AbuserFraudType{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", status='"
+                + status + '\'' + ", comment='" + comment + '\'' + ", modifiedByUser='" + modifiedByUser + '\''
+                + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", updatedAt='" + updatedAt + '\''
+                + ", createdAt='" + createdAt + '\'' + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", symbols='"
+                + symbols + '\'' + ", fraudSource='" + fraudSource + '\'' + '}';
     }
 
     public String getUcid() {

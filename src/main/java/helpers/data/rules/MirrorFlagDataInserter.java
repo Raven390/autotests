@@ -1,16 +1,17 @@
 package helpers.data.rules;
 
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
 
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+
 public class MirrorFlagDataInserter {
     public static void insertMirrorFlagData(ClientHelper client) {
-        String rawQuerryAccount = """
+        String rawQuerryAccount =
+                """
                 INSERT INTO consolidated.crm___tb_account
                 (source_id_st, brand_uid, brand, regulator, user_id, ucid, account, server_id_st, server_name, account_type_id,
                  account_type, account_group, platform, create_time, create_time_utc, create_date, create_date_utc, account_status,
@@ -22,7 +23,8 @@ public class MirrorFlagDataInserter {
                         NULL, NULL, NULL, NULL, 0.00, 'EUR', 0.00, 0.00, 0.00, 0.00, 0, 0.00, 0, NULL, NULL, 880001, 0, 0, 0, 1, 0, 0,
                         0, 'mv', '2025-08-03 07:43:19.000', 0);
                         """;
-        String rawQuerryDeposit = """
+        String rawQuerryDeposit =
+                """
                 INSERT INTO consolidated.crm___tb_deposit
                 (source_id_st, brand_uid, brand, regulator, user_id, ucid, account, transfer_id, create_time, create_time_utc,
                  update_time, update_time_utc, amount, amount_usd, currency, status_id, status, payment_type_id, payment_type,
@@ -33,7 +35,8 @@ public class MirrorFlagDataInserter {
                         'Success', 15, 'Cryptocurrency', 7, 'USDT(TRC20)-CPS', '', 'USD', 'usdt', '0/0', '7990860', 0.00,
                         'Automatic Deposit', 0, 1);
                         """;
-        String rawQuerryBalance = """
+        String rawQuerryBalance =
+                """
                 INSERT INTO consolidated.mt___balance_orders
                 (ticket, server_id, server_name, ucid, brand, regulator, user_id, platform, account, currency, create_time, create_time_utc, amount, rate_to_usd, amount_usd, order_type, `comment`, is_deleted, last_updated, internal_comment)
                 VALUES
@@ -47,7 +50,8 @@ public class MirrorFlagDataInserter {
                     (17867434, clientServerId, 'UM2', 'clientUcid', 'clientBrand', 'clientRegulator', clientId, 'MT4', clientAccount, 'EUR', '2025-04-24 06:58:14.000', '2025-04-24 03:58:14.000', 27.5900, 1.1345, 31.3008, 'unknown', 'Cash Adjustment - Debt W/O', 0, '2025-04-24 03:58:24.000', 'mv');
                 """;
 
-        String rawQuerryCredit = """
+        String rawQuerryCredit =
+                """
                 INSERT INTO consolidated.mt___credit_orders
                 (ticket, server_id, server_name, ucid, brand, regulator, user_id, platform, account, currency,
                  create_time, create_time_utc, amount, rate_to_usd, amount_usd, `comment`, is_deleted, last_updated, internal_comment)
@@ -77,7 +81,8 @@ public class MirrorFlagDataInserter {
                      'Credit Out - Debt W/O', 0, '2025-04-24 03:58:24.000', 'mv');
                 """;
 
-        String rawQuerryEquity = """
+        String rawQuerryEquity =
+                """
                 INSERT INTO consolidated.mt___equity_history
                 (brand, regulator, user_id, ucid, account, platform, server_id, server_name, account_type, account_group, account_currency, deal, `order`, `action`, entry, reason, contract_size, `time`, time_utc, symbol, symbol_underlying, base_currency, quote_currency, rate_usd_base, rate_usd_quote, rate_usd_acc, price, volume, volume_lots, notional_value_usd, profit, storage, commission, profit_usd, storage_usd, commission_usd, expert_id, position_id, `comment`, sl, tp, price_gateway, market_bid, market_ask, rate_profit, is_deleted, last_updated, long_short, balance_usd_cum, credit_usd_cum, open_positions, open_positions_nv_usd, floating_usd, equity_usd, insert_ts)
                 VALUES('clientBrand', 'clientRegulator', clientId, 'clientUcid', clientAccount, 'MT4', clientServerId, 'UM2', 'Standard STP', 'M_UM_EUR', 'EUR', 10650698, 10650698, 1, 0, 5, 100000, '2025-02-12 19:42:58.000', '2025-02-12 17:42:58.000', 'EURUSD', 'EURUSD', 'EUR', 'USD', 1.037765, 1.0, 1.037765, 1.037800, 1, 0.0100, 1037.80, 0.00, 0.00, 0.00, 0.0000, 0.0000, 0.0000, 0, 10650698, '', 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0, '2025-02-12 17:48:17.000', 'short', 1027.1280, 1027.2000, '[[EURUSD, short, -0.0100, -1037.8]]', -1037.80, 0.0000, 2054.3280, '2025-08-08 01:04:12.757'),
@@ -113,7 +118,13 @@ public class MirrorFlagDataInserter {
     }
 
     protected static String trasformQuerry(String rawQuerry, ClientHelper client) {
-        return rawQuerry.replace("clientBrand", client.getBrand()).replace("clientRegulator", client.getRegulator()).replace("clientId", client.getUserId().toString()).replace("clientAccount", client.getTradingAccount().toString()).replace("clientServerId", client.getServerId().toString()).replace("clientUcid", client.getUcid());
+        return rawQuerry
+                .replace("clientBrand", client.getBrand())
+                .replace("clientRegulator", client.getRegulator())
+                .replace("clientId", client.getUserId().toString())
+                .replace("clientAccount", client.getTradingAccount().toString())
+                .replace("clientServerId", client.getServerId().toString())
+                .replace("clientUcid", client.getUcid());
     }
 
     public static void deleteData(ClientHelper client) {

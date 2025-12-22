@@ -43,30 +43,44 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BALANCE_ORDERS = "Clickhouse api. Get balance orders";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BONUSES = "Clickhouse api. Get bonuses";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT_TRADING_ACCOUNTS = "Clickhouse api. Get client trading accounts request";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS = "Clickhouse api. Get client by trading account & server ID";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_EQUITY = "Clickhouse api. Get credit equity request";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO = "Clickhouse api. Get credit risk free revenue ratio";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT_TRADING_ACCOUNTS =
+            "Clickhouse api. Get client trading accounts request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS =
+            "Clickhouse api. Get client by trading account & server ID";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_EQUITY =
+            "Clickhouse api. Get credit equity request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO =
+            "Clickhouse api. Get credit risk free revenue ratio";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDITS = "Clickhouse api. Get credits";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS = "Clickhouse api. Get deposits";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FAST_TRADES = "Clickhouse api. Get fast trades";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY = "Clickhouse api. Get floating trades group by";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS = "Clickhouse api. Get lexis nexis data by client request";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS_DATA = "Clickhouse api. Get lexis nexis custom column data request";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES = "Clickhouse api. Get mirror accounts by trades";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL = "Clickhouse api. Get mirror trade on last withdrawal";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY =
+            "Clickhouse api. Get floating trades group by";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS =
+            "Clickhouse api. Get lexis nexis data by client request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS_DATA =
+            "Clickhouse api. Get lexis nexis custom column data request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES =
+            "Clickhouse api. Get mirror accounts by trades";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
+            "Clickhouse api. Get mirror trade on last withdrawal";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME = "Clickhouse api. Get swap free volume";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME =
+            "Clickhouse api. Get swap free volume";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SYMBOL_GROUPS = "Clickhouse api. Get symbol groups";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_UNCLOSED_TRADES_BY_SYMBOL = "Clickhouse api. Get unclosed trades by symbol";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_UNCLOSED_TRADES_BY_SYMBOL =
+            "Clickhouse api. Get unclosed trades by symbol";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES = "Clickhouse api. Get trades";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES_GROUP_BY_SYMBOL = "Clickhouse api. Get trades grouped by symbol";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES_GROUP_BY_SYMBOL =
+            "Clickhouse api. Get trades grouped by symbol";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_UNCLOSED_TRADES = "Clickhouse api. Get unclosed trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_WITHDRAWALS = "Clickhouse api. Get withdrawals";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
-    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V1 = "Get abuse types by client id V1";
-    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V2 = "Get abuse types by client id V2";
+    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V1 =
+            "Get abuse types by client id V1";
+    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V2 =
+            "Get abuse types by client id V2";
     public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES = "Get abuse types by attribute";
     public static final String STORY_DATA_DUMPER_CLOSE_TRADE_EVENT = "Data dumper. Close trade event";
     public static final String STORY_DATA_DUMPER_LOSS_COMPENSATION_EVENT = "Data dumper. Trade loss compensation event";
@@ -84,23 +98,31 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_CPA_ABUSE_RULE = "CPA abuse rule ";
     public static final String STORY_RULE_ENGINE_LOSS_VOUCHER_RULE = "Loss voucher rule ";
     public static final String STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE = "Market manipulation rule ";
-    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_RULE = "Mirror trading rule with close trade. ";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_RULE =
+            "Mirror trading rule with close trade. ";
     public static final String STORY_RULE_ENGINE_ML_MIRROR_TRADE_RULE = "Ml mirror trading rule with close trade. ";
-    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_BYBIT_RULE = "Mirror trading rule with close trade, only for bybit clients. ";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_BYBIT_RULE =
+            "Mirror trading rule with close trade, only for bybit clients. ";
     public static final String STORY_RULE_ENGINE_NDB_ABUSE_RULE = "No deposit bonus abuse rule ";
     public static final String STORY_RULE_ENGINE_NPB_LOSING_LEG_RULE = "NBP losing leg rule ";
     public static final String STORY_RULE_ENGINE_NPB_WINNING_LEG_RULE = "NBP winning leg rule ";
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule ";
-    public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_IN_ROUTER_RULE = "Router rule. Withdrawal notification branch.";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_IN_ROUTER_RULE =
+            "Router rule. Withdrawal notification branch.";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_IN_ROUTER_RULE = "Router rule. Mirror trade branch";
-    public static final String STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE = "Router rule. Connection search branch";
+    public static final String STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE =
+            "Router rule. Connection search branch";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_TRANSFER_TO_WA = "Router rule. Transfer to wa";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_SHADOW_MODE = "Router rule. Shadow mode";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_PAYMENT = "Router rule. crm payment topic";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_EVENTS = "Router rule. crm events topic";
-    public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE = "Router rule. Withdrawal integrity check ";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE =
+            "Router rule. Withdrawal integrity check ";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule ";
-    public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule ";
-    public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE = "News Trader with close trade event rule ";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE =
+            "Mirror trade with open trade event rule ";
+    public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE =
+            "News Trader with close trade event rule ";
     public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event ";
     public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event ";
     public static final String STORY_RULE_ENGINE_CUSTOM_RULE = "Custom rule ";
@@ -124,8 +146,11 @@ public class Constants {
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
-    // PAYMENT PROVIDERS
+    // PAYMENT
     public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
+    public static final String PAYMENT_METHOD_CODE_CREDIT_CARD = "CREDIT_CARD";
+    public static final String PAYMENT_METHOD_CODE_CRYPTO = "CRYPTO";
+    public static final String PAYMENT_METHOD_CODE_EWALLET = "E_WALLET";
     // OTHER
     public static final String ROLE_UNKNOWN = "unknown";
     public static final String TAG_AUTOMATED = "automated";
@@ -160,7 +185,8 @@ public class Constants {
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "consolidated.account_ib_relation_snapshot";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "consolidated.account_ib_relation";
     public static final String AGGR_CREDIT_EQUITY_RATE = "consolidated_api.aggr__credit_equity_rate";
-    public static final String AGGR_CREDIT_RISK_FREE_REVENUE_RATIO = "consolidated_api.aggr__credit_risk_free_revenue_ratio";
+    public static final String AGGR_CREDIT_RISK_FREE_REVENUE_RATIO =
+            "consolidated_api.aggr__credit_risk_free_revenue_ratio";
     public static final String AR_ABUSER_DEDUCTION_TABLE_NAME = "postgres.ar.abuser_deduction";
     public static final String AR_ABUSER_FRAUD_TYPE_TABLE_NAME = "postgres.ar.abuser_fraud_type";
     public static final String AR_ABUSER_HISTORY_TABLE_NAME = "postgres.ar.abuser_history";
@@ -224,14 +250,21 @@ public class Constants {
     public static final String MIRROR_LOGIN_TABLE_NAME = "data_science.mirror_login";
     public static final String MIRROR_UCID_TABLE_NAME = "consolidated.mirror_ucid";
     public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION = "postgres.mi.client_general_restriction";
-    public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION = "postgres.mi.client_general_restriction_action";
+    public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION =
+            "postgres.mi.client_general_restriction_action";
     public static final String MITIGATION_CLIENT_TRADING_RESTRICTION = "postgres.mi.client_trading_restriction";
-    public static final String MITIGATION_CLIENT_TRADING_RESTRICTION_ACTION = "postgres.mi.client_trading_restriction_action";
-    public static final String MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE = "postgres.mi.client_trading_restriction_status_by_site";
-    public static final String MITIGATION_KAFKA_REQUEST_GENERAL = "postgres.mi.client_general_restriction_kafka_request";
-    public static final String MITIGATION_KAFKA_REQUEST_TRADING = "postgres.mi.client_trading_restriction_kafka_request";
-    public static final String MITIGATION_KAFKA_RESPONSE_GENERAL = "postgres.mi.client_general_restriction_kafka_response";
-    public static final String MITIGATION_KAFKA_RESPONSE_TRADING = "postgres.mi.client_trading_restriction_kafka_response";
+    public static final String MITIGATION_CLIENT_TRADING_RESTRICTION_ACTION =
+            "postgres.mi.client_trading_restriction_action";
+    public static final String MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE =
+            "postgres.mi.client_trading_restriction_status_by_site";
+    public static final String MITIGATION_KAFKA_REQUEST_GENERAL =
+            "postgres.mi.client_general_restriction_kafka_request";
+    public static final String MITIGATION_KAFKA_REQUEST_TRADING =
+            "postgres.mi.client_trading_restriction_kafka_request";
+    public static final String MITIGATION_KAFKA_RESPONSE_GENERAL =
+            "postgres.mi.client_general_restriction_kafka_response";
+    public static final String MITIGATION_KAFKA_RESPONSE_TRADING =
+            "postgres.mi.client_trading_restriction_kafka_response";
     public static final String MITIGATION_CLIENT_BYBIT_RESTRICTION = "postgres.mi.client_bybit_restriction";
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "consolidated.mt___mt4_trades_coerced";
     public static final String MT4_TRADES_TABLE_NAME = "consolidated.mt___mt4_trades";
@@ -262,19 +295,24 @@ public class Constants {
     public static final String REPORTING_DB_ZEEBE_RULE_ELEMENTS = "reporting.zeebe_rules_elements";
     public static final String REPORTING_DB_ZEEBE_RULES_STARTED = "reporting.zeebe_rules_started";
     public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE = "postgres.paymentgate.payment_decisions";
-    public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_SENT_TABLE = "postgres.paymentgate.payment_decisions_sent";
-    public static final String PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE = "postgres.paymentgate.payment_rejection_attributes";
+    public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_SENT_TABLE =
+            "postgres.paymentgate.payment_decisions_sent";
+    public static final String PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE =
+            "postgres.paymentgate.payment_rejection_attributes";
     public static final String PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE = "postgres.paymentgate.payment_details";
     public static final String PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE = "postgres.paymentgate.payment_events";
-    public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE = "postgres.paymentgate.payment_rule_executions";
+    public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE =
+            "postgres.paymentgate.payment_rule_executions";
     public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE = "postgres.paymentgate.tmp_rule_decisions";
-    public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_SENT_TABLE = "postgres.paymentgate.payment_decisions_sent";
+    public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_SENT_TABLE =
+            "postgres.paymentgate.payment_decisions_sent";
     public static final String VE_VERIFICATION_HISTORY = "postgres.ve.verification_history";
     public static final String EQUITY_HISTORY_TABLE = "consolidated.mt___equity_history";
     public static final String AUDIT_EVENT_TABLE = "postgres.au.audit_event";
     public static final String CRM_WALLET_TRADE_ORDER_TABLE = "consolidated.crm___tb_wallet_trade_order";
     // UI
-    public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
+    public static final String VANTAGE_BRAND_IMAGE_SRC =
+            "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files
     public static final String FILE_KYC_NAME = "/other/d26364637ea848f0b4d2e363ea761461.png";
 
@@ -331,7 +369,8 @@ public class Constants {
     public static final String TIME_2024_12_31_00_00_00 = "2024-12-31 00:00:00";
     public static final String TIME_2024_2024_12_29_14_59_30_084000000 = "2024-12-29 14:59:30.084000000";
     //
-    public static final String EMPTY_RULE_XML = """
+    public static final String EMPTY_RULE_XML =
+            """
             <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ctfxpu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
               <bpmn:process id="process_id" isExecutable="true">
                 <bpmn:startEvent id="test_event" name="test_name">
@@ -360,6 +399,7 @@ public class Constants {
     public static final String CRM_LOGIN_EVENT = "login";
     public static final String CRM_REGISTRATION_EVENT = "registration";
     public static final String CRM_WITHDRAWAL_EVENT = "withdrawal";
+    public static final String CRM_TRANSFER_TO_WA_EVENT = "transferToWA";
     public static final String EG_LOGIN_EVENT = "egLoginToWeb";
     public static final String EG_RAF_BALANCE_EVENT = "egRaf";
     public static final String REGISTRATION_EVENT = "registration";
@@ -368,7 +408,7 @@ public class Constants {
     public static final String MT_CLOSE_TRADE_EVENT = "closeTrade";
     public static final String MT_OPEN_TRADE_EVENT = "openTrade";
     public static final String MT_RAF_BALANCE_EVENT = "raf";
-    //Other
+    // Other
     public static final String APPLIED_STATUS = "APPLIED";
     public static final String COMMENT_ADDED_TYPE = "COMMENT_ADDED";
     public static final String CONNECTION_SEARCH_DATA_DOCUMENT_HIDDEN = "3***********2";

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -12,7 +11,11 @@ import java.util.Objects;
  * ClientRestriction
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
-@JsonSubTypes({@JsonSubTypes.Type(value = ClientGeneralRestriction.class, name = "GENERAL"), @JsonSubTypes.Type(value = ClientTradingRestriction.class, name = "TRADING"), @JsonSubTypes.Type(value = ClientTradingEnvironmentRestriction.class, name = "TRADING_ENVIRONMENT"), @JsonSubTypes.Type(value = ClientBybitRestriction.class, name = "BYBIT"),
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = ClientGeneralRestriction.class, name = "GENERAL"),
+    @JsonSubTypes.Type(value = ClientTradingRestriction.class, name = "TRADING"),
+    @JsonSubTypes.Type(value = ClientTradingEnvironmentRestriction.class, name = "TRADING_ENVIRONMENT"),
+    @JsonSubTypes.Type(value = ClientBybitRestriction.class, name = "BYBIT"),
 })
 public class ClientRestriction {
     @JsonProperty("id")
@@ -49,7 +52,7 @@ public class ClientRestriction {
 
     /**
      * Applied restriction identifier
-     * 
+     *
      * @return id
      **/
     public Long getId() {
@@ -67,7 +70,7 @@ public class ClientRestriction {
 
     /**
      * The unique code of specific restriction
-     * 
+     *
      * @return code
      **/
     public String getCode() {
@@ -85,7 +88,7 @@ public class ClientRestriction {
 
     /**
      * Get type
-     * 
+     *
      * @return type
      **/
     public RestrictionType getType() {
@@ -104,7 +107,7 @@ public class ClientRestriction {
     /**
      * The reason for applying the restriction: - For restrictions from RE, this should be the name of the triggered
      * rule. - For other systems, it should be a comment.
-     * 
+     *
      * @return comment
      **/
     public String getComment() {
@@ -122,7 +125,7 @@ public class ClientRestriction {
 
     /**
      * The reason for canceling the restriction. Use only for system that can cancel restriction.
-     * 
+     *
      * @return cancelReason
      **/
     public String getCancelReason() {
@@ -140,7 +143,7 @@ public class ClientRestriction {
 
     /**
      * Timestamp when were last updates of the restriction status.
-     * 
+     *
      * @return updatedAt
      **/
     public OffsetDateTime getUpdatedAt() {
@@ -158,7 +161,7 @@ public class ClientRestriction {
 
     /**
      * Timestamp of restriction creating.
-     * 
+     *
      * @return createdAt
      **/
     public OffsetDateTime getCreatedAt() {
@@ -176,7 +179,7 @@ public class ClientRestriction {
 
     /**
      * Get updatedBy
-     * 
+     *
      * @return updatedBy
      **/
     public UpdatedBy getUpdatedBy() {
@@ -194,7 +197,7 @@ public class ClientRestriction {
 
     /**
      * Get editable
-     * 
+     *
      * @return editable
      **/
     public Boolean isEditable() {
@@ -214,7 +217,15 @@ public class ClientRestriction {
             return false;
         }
         ClientRestriction clientRestriction = (ClientRestriction) o;
-        return Objects.equals(this.id, clientRestriction.id) && Objects.equals(this.code, clientRestriction.code) && Objects.equals(this.type, clientRestriction.type) && Objects.equals(this.comment, clientRestriction.comment) && Objects.equals(this.cancelReason, clientRestriction.cancelReason) && Objects.equals(this.updatedAt, clientRestriction.updatedAt) && Objects.equals(this.createdAt, clientRestriction.createdAt) && Objects.equals(this.updatedBy, clientRestriction.updatedBy) && Objects.equals(this.editable, clientRestriction.editable);
+        return Objects.equals(this.id, clientRestriction.id)
+                && Objects.equals(this.code, clientRestriction.code)
+                && Objects.equals(this.type, clientRestriction.type)
+                && Objects.equals(this.comment, clientRestriction.comment)
+                && Objects.equals(this.cancelReason, clientRestriction.cancelReason)
+                && Objects.equals(this.updatedAt, clientRestriction.updatedAt)
+                && Objects.equals(this.createdAt, clientRestriction.createdAt)
+                && Objects.equals(this.updatedBy, clientRestriction.updatedBy)
+                && Objects.equals(this.editable, clientRestriction.editable);
     }
 
     @Override

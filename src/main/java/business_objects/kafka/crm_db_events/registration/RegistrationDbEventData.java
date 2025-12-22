@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_db_events.registration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class RegistrationDbEventData {
@@ -24,9 +23,7 @@ public class RegistrationDbEventData {
     @JsonProperty("regulator")
     public String regulator;
 
-
-    public RegistrationDbEventData() {
-    }
+    public RegistrationDbEventData() {}
 
     public RegistrationDbEventData(
             String updateTime, String createTime, Integer userId, String brand, String regulator, Integer mtAccount) {
@@ -42,9 +39,12 @@ public class RegistrationDbEventData {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RegistrationDbEventData that = (RegistrationDbEventData) o;
-        return Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime) && Objects.equals(
-                userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(mtAccount, that.mtAccount) && Objects.equals(
-                        regulator, that.regulator);
+        return Objects.equals(createTime, that.createTime)
+                && Objects.equals(updateTime, that.updateTime)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(mtAccount, that.mtAccount)
+                && Objects.equals(regulator, that.regulator);
     }
 
     @Override
@@ -54,6 +54,8 @@ public class RegistrationDbEventData {
 
     @Override
     public String toString() {
-        return "RegistrationDbEventData{" + "createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", mtAccount=" + mtAccount + ", regulator='" + regulator + '\'' + '}';
+        return "RegistrationDbEventData{" + "createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\''
+                + ", userId=" + userId + ", brand='" + brand + '\'' + ", mtAccount=" + mtAccount + ", regulator='"
+                + regulator + '\'' + '}';
     }
 }

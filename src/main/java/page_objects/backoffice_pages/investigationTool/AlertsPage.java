@@ -1,15 +1,14 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static com.microsoft.playwright.options.WaitForSelectorState.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.List;
-
-import static com.microsoft.playwright.options.WaitForSelectorState.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class AlertsPage extends AbstractPage {
 
@@ -35,10 +34,12 @@ public class AlertsPage extends AbstractPage {
 
     public AlertsPage(Page page) {
         super(page);
-        this.firstAlertRuleName = page.locator("//div[@class='v-investigation-tools-alert-card__header']/div[contains(@class,'g-color-text_color_primary')]");
+        this.firstAlertRuleName = page.locator(
+                "//div[@class='v-investigation-tools-alert-card__header']/div[contains(@class,'g-color-text_color_primary')]");
         this.alertCard = page.locator("//div[@class='v-timeline']/div[contains(@class,'v-timeline-item')]");
         this.alertRuleName = page.locator("//div[contains(@class,'g-color-text_color_primary')]");
-        this.alertRuleTrigger = page.locator("//div[contains(@class,'v-investigation-tools-alert-card__trigger')]/div[@class='v-text-with-icon__text']");
+        this.alertRuleTrigger = page.locator(
+                "//div[contains(@class,'v-investigation-tools-alert-card__trigger')]/div[@class='v-text-with-icon__text']");
         this.alertStatus = page.locator("//div[contains(@class,'g-label_interactive')]");
         this.alertAttributes = page.locator("//div[@class='v-investigation-tools-alert-card__attributes']");
         this.alertPopup = page.locator("//div[contains(@class,'g-popup_open')]");
@@ -50,9 +51,13 @@ public class AlertsPage extends AbstractPage {
         this.alertStatusDropdownActive = page.locator("//*[text()='Active alerts']");
         this.alertStatusDropdownClosed = page.locator("//*[text()='Closed alerts']");
         this.alertStatusDropdownAll = page.locator("//*[text()='All alerts']");
-        this.refreshButtonDisabled = page.locator("//button[@data-qa='client_alerts__refresher' and contains(@class,'g-button_disabled')]");
-        this.alertsLoading = page.locator("//div[contains(@class,'v-investigation-tools-alert-card-skeleton__item-body')]").first();
-        this.loadedAlertsCount = page.locator("//div[@class='v-investigation-tools-client-alerts-tab__refresher']/div[text()!='']");
+        this.refreshButtonDisabled =
+                page.locator("//button[@data-qa='client_alerts__refresher' and contains(@class,'g-button_disabled')]");
+        this.alertsLoading = page.locator(
+                        "//div[contains(@class,'v-investigation-tools-alert-card-skeleton__item-body')]")
+                .first();
+        this.loadedAlertsCount =
+                page.locator("//div[@class='v-investigation-tools-client-alerts-tab__refresher']/div[text()!='']");
         this.alertsTab = page.locator("[role=\"tab\"][title=\"Alerts\"]");
     }
 
@@ -161,4 +166,3 @@ public class AlertsPage extends AbstractPage {
         alertsTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
     }
 }
-

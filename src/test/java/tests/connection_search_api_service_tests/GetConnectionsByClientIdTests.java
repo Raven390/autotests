@@ -1,23 +1,5 @@
 package tests.connection_search_api_service_tests;
 
-import business_objects.api.connection_search_api.ConnectionSearchResponseError;
-import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
-import business_objects.api.connection_search_api.get_connections.GetConnectionsResponseError;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsResponseFactory.*;
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsResponseFactory.getConnectionsResponseSuccess;
@@ -31,6 +13,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.waitForConnectionSearchToUpdate;
+
+import business_objects.api.connection_search_api.ConnectionSearchResponseError;
+import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
+import business_objects.api.connection_search_api.get_connections.GetConnectionsResponseError;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
@@ -55,34 +54,68 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
     private static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
     private static final ClientHelper userTo5 = getRandomVantageClientAllFields();
 
-    private final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
-    private final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
-    private final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
-    private final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
+    private final GetConnectionsResponse getConnectionsResponseSuccess =
+            getConnectionsResponseSuccess(userFrom1, userTo1_1);
+    private final GetConnectionsResponse getConnectionsLvl2ResponseSuccess =
+            getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
+    private final GetConnectionsResponse[] getConnectionsResponsesForFiltration =
+            getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
+    private final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes =
+            getConnectionsResponseErrorIncorrectConnectionAttributes();
 
     private static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
-    private static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom5, userTo5, userTo5.getIpAddress());
+    private static ConnectionTableEntry connectionTableEntry2 =
+            getConnectionTableEntry(userFrom5, userTo5, userTo5.getIpAddress());
     private static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
-    private static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
-    //static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
+    private static ConnectionTableEntry connectionTableEntryForFiltration1 =
+            getConnectionTableEntry(userFrom2, userTo2_1);
+    // static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1,
+    // userTo2_2);
     private static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
     private static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
-    private static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
-    private static ConnectionTableEntry connectionTableEntrySameLevelScore1 = getConnectionTableEntry(userFrom4, userTo4_1);
-    private static ConnectionTableEntry connectionTableEntrySameLevelScore2 = getConnectionTableEntry(userFrom4, userTo4_2);
-    private static ConnectionTableEntry connectionTableEntrySameLevelScore3 = getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
-    private static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
+    private static ConnectionTableEntry connectionTableEntry1And2Level3 =
+            getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore1 =
+            getConnectionTableEntry(userFrom4, userTo4_1);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore2 =
+            getConnectionTableEntry(userFrom4, userTo4_2);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore3 =
+            getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore4 =
+            getConnectionTableEntry(userTo4_2, userTo4_3);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
         connectionTableEntryForFiltration1.connectionScore = 0.8;
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry, connectionTableEntryLvl2, connectionTableEntryForFiltration1, connectionTableEntry1And2Level1, connectionTableEntry1And2Level2, connectionTableEntry1And2Level3, connectionTableEntrySameLevelScore1, connectionTableEntrySameLevelScore2, connectionTableEntrySameLevelScore3, connectionTableEntrySameLevelScore4));
+        insertObjectsToDb(
+                CONNECTIONS_TABLE_NAME,
+                List.of(
+                        connectionTableEntry,
+                        connectionTableEntryLvl2,
+                        connectionTableEntryForFiltration1,
+                        connectionTableEntry1And2Level1,
+                        connectionTableEntry1And2Level2,
+                        connectionTableEntry1And2Level3,
+                        connectionTableEntrySameLevelScore1,
+                        connectionTableEntrySameLevelScore2,
+                        connectionTableEntrySameLevelScore3,
+                        connectionTableEntrySameLevelScore4));
         waitForConnectionSearchToUpdate();
     }
 
     @AfterAll
     static void deleteConnectionTableEntry() throws Exception {
-        cleanConnectionsTableByClient(connectionTableEntry.userFrom, connectionTableEntryLvl2.userFrom, connectionTableEntryForFiltration1.userFrom, connectionTableEntry1And2Level1.userFrom, connectionTableEntry1And2Level2.userFrom, connectionTableEntry1And2Level3.userFrom, connectionTableEntrySameLevelScore1.userFrom, connectionTableEntrySameLevelScore2.userFrom, connectionTableEntrySameLevelScore3.userFrom, connectionTableEntrySameLevelScore4.userFrom);
+        cleanConnectionsTableByClient(
+                connectionTableEntry.userFrom,
+                connectionTableEntryLvl2.userFrom,
+                connectionTableEntryForFiltration1.userFrom,
+                connectionTableEntry1And2Level1.userFrom,
+                connectionTableEntry1And2Level2.userFrom,
+                connectionTableEntry1And2Level3.userFrom,
+                connectionTableEntrySameLevelScore1.userFrom,
+                connectionTableEntrySameLevelScore2.userFrom,
+                connectionTableEntrySameLevelScore3.userFrom,
+                connectionTableEntrySameLevelScore4.userFrom);
     }
 
     @Test
@@ -93,15 +126,17 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("clientId", connectionTableEntry.userFrom);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess, getConnectionsLvl2ResponseSuccess));
+        assertThat(
+                "Check the response body",
+                Arrays.stream(responseBody).toList(),
+                containsInAnyOrder(getConnectionsResponseSuccess, getConnectionsLvl2ResponseSuccess));
     }
 
     @Test
@@ -112,9 +147,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("clientId", connectionTableEntry2.userFrom);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -122,41 +156,52 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by client Api. Get connection by clientId with 1 and 2 level connections to the same client success(200)")
+    @DisplayName(
+            "Connection search by client Api. Get connection by clientId with 1 and 2 level connections to the same client success(200)")
     @AllureId("939")
     void getConnectionsByClient1And2LevelSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom3.getUcid());
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess(userFrom3, userTo3_1), getConnectionsResponseSuccess(userFrom3, userTo3_2)));
+        assertThat(
+                "Check the response body",
+                Arrays.stream(responseBody).toList(),
+                containsInAnyOrder(
+                        getConnectionsResponseSuccess(userFrom3, userTo3_1),
+                        getConnectionsResponseSuccess(userFrom3, userTo3_2)));
     }
 
     @Test
-    @DisplayName("Connection search by client Api. Get connection by clientId with same level connections different score to the same client success(200)")
+    @DisplayName(
+            "Connection search by client Api. Get connection by clientId with same level connections different score to the same client success(200)")
     @AllureId("940")
     void getConnectionsByClientSameLevelScoreSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom4.getUcid());
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess(userFrom4, userTo4_1), getConnectionsResponseSuccess(userFrom4, userTo4_2), getConnectionsResponseSuccessWithLevel(userTo4_2, userTo4_3, 2)));
+        assertThat(
+                "Check the response body",
+                Arrays.stream(responseBody).toList(),
+                containsInAnyOrder(
+                        getConnectionsResponseSuccess(userFrom4, userTo4_1),
+                        getConnectionsResponseSuccess(userFrom4, userTo4_2),
+                        getConnectionsResponseSuccessWithLevel(userTo4_2, userTo4_3, 2)));
     }
 
     @Test
@@ -168,9 +213,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionDepth", 1);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -188,9 +232,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("clientId", "test-12345");
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -198,7 +241,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by client Api. Get connection by not existing connectionDepth for the client success(200)")
+    @DisplayName(
+            "Connection search by client Api. Get connection by not existing connectionDepth for the client success(200)")
     @AllureId("148")
     void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -206,9 +250,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionDepth", -99);
 
         Response response = getConnectionsByClientId(queryParams);
-        ConnectionSearchResponseError responseBody = objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        );
+        ConnectionSearchResponseError responseBody =
+                objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class);
 
         assertThat("Check the response code is 200", response.code(), is(400));
 
@@ -224,9 +267,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 0.7);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -244,9 +286,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionScoreTo", 0.9);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -265,9 +306,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionType", List.of("Same Person"));
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -286,9 +326,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionAttributes", List.of("payoutId"));
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
-        );
+        GetConnectionsResponse[] responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
@@ -305,13 +344,15 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
-        );
+        GetConnectionsResponseError responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponseError.class);
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorClientIdMissingBadRequest()));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                equalTo(getConnectionsResponseErrorClientIdMissingBadRequest()));
     }
 
     @Test
@@ -323,9 +364,8 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionDepth", 1);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
-        );
+        GetConnectionsResponseError responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponseError.class);
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
@@ -341,13 +381,15 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionDepth", "test");
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
-        );
+        GetConnectionsResponseError responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponseError.class);
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorConnectionDepthBadRequest()));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                equalTo(getConnectionsResponseErrorConnectionDepthBadRequest()));
     }
 
     @Test
@@ -359,13 +401,15 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionScoreFrom", "test");
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
-        );
+        GetConnectionsResponseError responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponseError.class);
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorConnectionScoreFromBadRequest()));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                equalTo(getConnectionsResponseErrorConnectionScoreFromBadRequest()));
     }
 
     @Test
@@ -377,13 +421,15 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionScoreTo", "test");
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
-        );
+        GetConnectionsResponseError responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponseError.class);
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorConnectionScoreToBadRequest()));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                equalTo(getConnectionsResponseErrorConnectionScoreToBadRequest()));
     }
 
     @Test
@@ -395,12 +441,14 @@ class GetConnectionsByClientIdTests extends TestBaseApi {
         queryParams.put("connectionAttributes", List.of("test"));
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
-        );
+        GetConnectionsResponseError responseBody =
+                objectMapper.readValue(response.body().string(), GetConnectionsResponseError.class);
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorIncorrectConnectionAttributes));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                equalTo(getConnectionsResponseErrorIncorrectConnectionAttributes));
     }
 }

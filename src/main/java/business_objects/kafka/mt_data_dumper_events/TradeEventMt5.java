@@ -84,8 +84,11 @@ public class TradeEventMt5 {
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof Header header)) return false;
-            return operation == header.operation && serverId == header.serverId && timestamp == header.timestamp && Objects.equals(
-                    msgId, header.msgId) && Objects.equals(msgType, header.msgType);
+            return operation == header.operation
+                    && serverId == header.serverId
+                    && timestamp == header.timestamp
+                    && Objects.equals(msgId, header.msgId)
+                    && Objects.equals(msgType, header.msgType);
         }
 
         @Override
@@ -95,7 +98,8 @@ public class TradeEventMt5 {
 
         @Override
         public String toString() {
-            return "Header{" + "msgId='" + msgId + '\'' + ", msgType='" + msgType + '\'' + ", operation=" + operation + ", serverId=" + serverId + ", timestamp=" + timestamp + '}';
+            return "Header{" + "msgId='" + msgId + '\'' + ", msgType='" + msgType + '\'' + ", operation=" + operation
+                    + ", serverId=" + serverId + ", timestamp=" + timestamp + '}';
         }
     }
 
@@ -248,20 +252,55 @@ public class TradeEventMt5 {
         public Long volumeExt;
 
         public Payload(
-                Double accountRate, Integer action, Double balance, String comment, Double commission,
+                Double accountRate,
+                Integer action,
+                Double balance,
+                String comment,
+                Double commission,
                 Double contractSize,
-                Long deal, Long dealer, Integer digits, Integer digitsCurrency, Integer entry, Double equity,
+                Long deal,
+                Long dealer,
+                Integer digits,
+                Integer digitsCurrency,
+                Integer entry,
+                Double equity,
                 Long expertId,
-                String externalId, Double fee, Integer flags, Double freeMargin, String gateway, Integer leverage,
+                String externalId,
+                Double fee,
+                Integer flags,
+                Double freeMargin,
+                String gateway,
+                Integer leverage,
                 Long login,
-                Double margin, Double marketAsk, Double marketBid, Double marketLast, Integer modificationFlags,
+                Double margin,
+                Double marketAsk,
+                Double marketBid,
+                Double marketLast,
+                Integer modificationFlags,
                 Long order,
-                Long positionId, Double price, Double priceGateway, Double pricePosition, Double priceSL,
+                Long positionId,
+                Double price,
+                Double priceGateway,
+                Double pricePosition,
+                Double priceSL,
                 Double priceTP,
-                Double profit, Double profitRaw, Double rateMargin, Double rateProfit, List<RawApiData> rawApiData,
+                Double profit,
+                Double profitRaw,
+                Double rateMargin,
+                Double rateProfit,
+                List<RawApiData> rawApiData,
                 Integer reason,
-                Double storage, String symbol, Double tickSize, Double tickValue, Long time, Long timeUtc, Double value,
-                Long volume, Long volumeClosed, Long volumeClosedExt, Long volumeExt) {
+                Double storage,
+                String symbol,
+                Double tickSize,
+                Double tickValue,
+                Long time,
+                Long timeUtc,
+                Double value,
+                Long volume,
+                Long volumeClosed,
+                Long volumeClosedExt,
+                Long volumeExt) {
             this.accountRate = accountRate;
             this.action = action;
             this.balance = balance;
@@ -605,8 +644,7 @@ public class TradeEventMt5 {
             return rawApiData;
         }
 
-        public void setRawApiData(
-                List<RawApiData> rawApiData) {
+        public void setRawApiData(List<RawApiData> rawApiData) {
             this.rawApiData = rawApiData;
         }
 
@@ -709,33 +747,128 @@ public class TradeEventMt5 {
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof Payload payload)) return false;
-            return Double.compare(accountRate, payload.accountRate) == 0 && action == payload.action && Double.compare(
-                    balance, payload.balance) == 0 && Double.compare(commission, payload.commission) == 0 && Double.compare(
-                            contractSize, payload.contractSize) == 0 && deal == payload.deal && dealer == payload.dealer && digits == payload.digits && digitsCurrency == payload.digitsCurrency && entry == payload.entry && Double.compare(
-                                    equity, payload.equity) == 0 && expertId == payload.expertId && Double.compare(fee, payload.fee) == 0 && flags == payload.flags && Double.compare(
-                                            freeMargin, payload.freeMargin) == 0 && leverage == payload.leverage && login == payload.login && Double.compare(
-                                                    margin, payload.margin) == 0 && Double.compare(marketAsk, payload.marketAsk) == 0 && Double.compare(
-                                                            marketBid, payload.marketBid) == 0 && Double.compare(marketLast, payload.marketLast) == 0 && modificationFlags == payload.modificationFlags && order == payload.order && positionId == payload.positionId && Double.compare(
-                                                                    price, payload.price) == 0 && Double.compare(priceGateway, payload.priceGateway) == 0 && Double.compare(
-                                                                            pricePosition, payload.pricePosition) == 0 && Double.compare(priceSL, payload.priceSL) == 0 && Double.compare(
-                                                                                    priceTP, payload.priceTP) == 0 && Double.compare(profit, payload.profit) == 0 && Double.compare(
-                                                                                            profitRaw, payload.profitRaw) == 0 && Double.compare(rateMargin, payload.rateMargin) == 0 && Double.compare(
-                                                                                                    rateProfit, payload.rateProfit) == 0 && reason == payload.reason && Double.compare(storage, payload.storage) == 0 && Double.compare(
-                                                                                                            tickSize, payload.tickSize) == 0 && Double.compare(tickValue, payload.tickValue) == 0 && time == payload.time && timeUtc == payload.timeUtc && Double.compare(
-                                                                                                                    value, payload.value) == 0 && volume == payload.volume && volumeClosed == payload.volumeClosed && volumeClosedExt == payload.volumeClosedExt && volumeExt == payload.volumeExt && Objects.equals(
-                                                                                                                            comment, payload.comment) && Objects.equals(externalId, payload.externalId) && Objects.equals(
-                                                                                                                                    gateway, payload.gateway) && Objects.equals(rawApiData, payload.rawApiData) && Objects.equals(
-                                                                                                                                            symbol, payload.symbol);
+            return Double.compare(accountRate, payload.accountRate) == 0
+                    && action == payload.action
+                    && Double.compare(balance, payload.balance) == 0
+                    && Double.compare(commission, payload.commission) == 0
+                    && Double.compare(contractSize, payload.contractSize) == 0
+                    && deal == payload.deal
+                    && dealer == payload.dealer
+                    && digits == payload.digits
+                    && digitsCurrency == payload.digitsCurrency
+                    && entry == payload.entry
+                    && Double.compare(equity, payload.equity) == 0
+                    && expertId == payload.expertId
+                    && Double.compare(fee, payload.fee) == 0
+                    && flags == payload.flags
+                    && Double.compare(freeMargin, payload.freeMargin) == 0
+                    && leverage == payload.leverage
+                    && login == payload.login
+                    && Double.compare(margin, payload.margin) == 0
+                    && Double.compare(marketAsk, payload.marketAsk) == 0
+                    && Double.compare(marketBid, payload.marketBid) == 0
+                    && Double.compare(marketLast, payload.marketLast) == 0
+                    && modificationFlags == payload.modificationFlags
+                    && order == payload.order
+                    && positionId == payload.positionId
+                    && Double.compare(price, payload.price) == 0
+                    && Double.compare(priceGateway, payload.priceGateway) == 0
+                    && Double.compare(pricePosition, payload.pricePosition) == 0
+                    && Double.compare(priceSL, payload.priceSL) == 0
+                    && Double.compare(priceTP, payload.priceTP) == 0
+                    && Double.compare(profit, payload.profit) == 0
+                    && Double.compare(profitRaw, payload.profitRaw) == 0
+                    && Double.compare(rateMargin, payload.rateMargin) == 0
+                    && Double.compare(rateProfit, payload.rateProfit) == 0
+                    && reason == payload.reason
+                    && Double.compare(storage, payload.storage) == 0
+                    && Double.compare(tickSize, payload.tickSize) == 0
+                    && Double.compare(tickValue, payload.tickValue) == 0
+                    && time == payload.time
+                    && timeUtc == payload.timeUtc
+                    && Double.compare(value, payload.value) == 0
+                    && volume == payload.volume
+                    && volumeClosed == payload.volumeClosed
+                    && volumeClosedExt == payload.volumeClosedExt
+                    && volumeExt == payload.volumeExt
+                    && Objects.equals(comment, payload.comment)
+                    && Objects.equals(externalId, payload.externalId)
+                    && Objects.equals(gateway, payload.gateway)
+                    && Objects.equals(rawApiData, payload.rawApiData)
+                    && Objects.equals(symbol, payload.symbol);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(accountRate, action, balance, comment, commission, contractSize, deal, dealer, digits, digitsCurrency, entry, equity, expertId, externalId, fee, flags, freeMargin, gateway, leverage, login, margin, marketAsk, marketBid, marketLast, modificationFlags, order, positionId, price, priceGateway, pricePosition, priceSL, priceTP, profit, profitRaw, rateMargin, rateProfit, rawApiData, reason, storage, symbol, tickSize, tickValue, time, timeUtc, value, volume, volumeClosed, volumeClosedExt, volumeExt);
+            return Objects.hash(
+                    accountRate,
+                    action,
+                    balance,
+                    comment,
+                    commission,
+                    contractSize,
+                    deal,
+                    dealer,
+                    digits,
+                    digitsCurrency,
+                    entry,
+                    equity,
+                    expertId,
+                    externalId,
+                    fee,
+                    flags,
+                    freeMargin,
+                    gateway,
+                    leverage,
+                    login,
+                    margin,
+                    marketAsk,
+                    marketBid,
+                    marketLast,
+                    modificationFlags,
+                    order,
+                    positionId,
+                    price,
+                    priceGateway,
+                    pricePosition,
+                    priceSL,
+                    priceTP,
+                    profit,
+                    profitRaw,
+                    rateMargin,
+                    rateProfit,
+                    rawApiData,
+                    reason,
+                    storage,
+                    symbol,
+                    tickSize,
+                    tickValue,
+                    time,
+                    timeUtc,
+                    value,
+                    volume,
+                    volumeClosed,
+                    volumeClosedExt,
+                    volumeExt);
         }
 
         @Override
         public String toString() {
-            return "Payload{" + "accountRate=" + accountRate + ", action=" + action + ", balance=" + balance + ", comment='" + comment + '\'' + ", commission=" + commission + ", contractSize=" + contractSize + ", deal=" + deal + ", dealer=" + dealer + ", digits=" + digits + ", digitsCurrency=" + digitsCurrency + ", entry=" + entry + ", equity=" + equity + ", expertId=" + expertId + ", externalId='" + externalId + '\'' + ", fee=" + fee + ", flags=" + flags + ", freeMargin=" + freeMargin + ", gateway='" + gateway + '\'' + ", leverage=" + leverage + ", login=" + login + ", margin=" + margin + ", marketAsk=" + marketAsk + ", marketBid=" + marketBid + ", marketLast=" + marketLast + ", modificationFlags=" + modificationFlags + ", order=" + order + ", positionId=" + positionId + ", price=" + price + ", priceGateway=" + priceGateway + ", pricePosition=" + pricePosition + ", priceSL=" + priceSL + ", priceTP=" + priceTP + ", profit=" + profit + ", profitRaw=" + profitRaw + ", rateMargin=" + rateMargin + ", rateProfit=" + rateProfit + ", rawApiData=" + rawApiData + ", reason=" + reason + ", storage=" + storage + ", symbol='" + symbol + '\'' + ", tickSize=" + tickSize + ", tickValue=" + tickValue + ", time=" + time + ", timeUtc=" + timeUtc + ", value=" + value + ", volume=" + volume + ", volumeClosed=" + volumeClosed + ", volumeClosedExt=" + volumeClosedExt + ", volumeExt=" + volumeExt + '}';
+            return "Payload{" + "accountRate=" + accountRate + ", action=" + action + ", balance=" + balance
+                    + ", comment='" + comment + '\'' + ", commission=" + commission + ", contractSize=" + contractSize
+                    + ", deal=" + deal + ", dealer=" + dealer + ", digits=" + digits + ", digitsCurrency="
+                    + digitsCurrency + ", entry=" + entry + ", equity=" + equity + ", expertId=" + expertId
+                    + ", externalId='" + externalId + '\'' + ", fee=" + fee + ", flags=" + flags + ", freeMargin="
+                    + freeMargin + ", gateway='" + gateway + '\'' + ", leverage=" + leverage + ", login=" + login
+                    + ", margin=" + margin + ", marketAsk=" + marketAsk + ", marketBid=" + marketBid + ", marketLast="
+                    + marketLast + ", modificationFlags=" + modificationFlags + ", order=" + order + ", positionId="
+                    + positionId + ", price=" + price + ", priceGateway=" + priceGateway + ", pricePosition="
+                    + pricePosition + ", priceSL=" + priceSL + ", priceTP=" + priceTP + ", profit=" + profit
+                    + ", profitRaw=" + profitRaw + ", rateMargin=" + rateMargin + ", rateProfit=" + rateProfit
+                    + ", rawApiData=" + rawApiData + ", reason=" + reason + ", storage=" + storage + ", symbol='"
+                    + symbol + '\'' + ", tickSize=" + tickSize + ", tickValue=" + tickValue + ", time=" + time
+                    + ", timeUtc=" + timeUtc + ", value=" + value + ", volume=" + volume + ", volumeClosed="
+                    + volumeClosed + ", volumeClosedExt=" + volumeClosedExt + ", volumeExt=" + volumeExt + '}';
         }
     }
 
@@ -754,7 +887,6 @@ public class TradeEventMt5 {
             this.id = id;
             this.value = value;
         }
-
 
         public int getAppId() {
             return appId;

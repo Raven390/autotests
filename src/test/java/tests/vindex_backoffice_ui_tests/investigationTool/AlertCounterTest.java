@@ -1,19 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import helpers.data.enums.AlertType;
-import helpers.data.enums.InvestigationStatus;
-import helpers.database.ArHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static business_objects.ui.user.UserFactory.autotestUserPT;
@@ -26,6 +12,19 @@ import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static utils.Constants.CRM_USER_TABLE_NAME;
 
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.data.enums.AlertType;
+import helpers.data.enums.InvestigationStatus;
+import helpers.database.ArHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 class AlertCounterTest extends TestBaseWeb {
     static ClientHelper client1 = getRandomVantageClient();
     private static CrmTbUserObject crmTbUser1 = generateStaticUserByClient(client1);
@@ -33,7 +32,6 @@ class AlertCounterTest extends TestBaseWeb {
     private static CrmTbUserObject crmTbUser2 = generateStaticUserByClient(client2);
     static ClientHelper client3 = getRandomVantageClient();
     private static CrmTbUserObject crmTbUser3 = generateStaticUserByClient(client3);
-
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -87,7 +85,8 @@ class AlertCounterTest extends TestBaseWeb {
         investigationPage.clickSelectInvestigationType("Trading");
         long countUnassignT = countInvestigationsDb(AlertType.TRADING, InvestigationStatus.NEW);
         long countAllT = countInvestigationsDb(AlertType.TRADING, ACTIVE) + countUnassignT;
-        long countMyT = countUsersInvestigationsDb(AlertType.TRADING, autotestUserOne().getId());
+        long countMyT =
+                countUsersInvestigationsDb(AlertType.TRADING, autotestUserOne().getId());
         investigationPage.checkSuspiciousCounterValueALL(countAllT);
         investigationPage.checkSuspiciousCounterValueUNASSIGNED(countUnassignT);
         investigationPage.checkSuspiciousCounterValueMY(countMyT);
@@ -95,14 +94,16 @@ class AlertCounterTest extends TestBaseWeb {
         investigationPage.investigateUserAlertList(client1.getUserId());
         countUnassignT = countInvestigationsDb(AlertType.TRADING, InvestigationStatus.NEW);
         countAllT = countInvestigationsDb(AlertType.TRADING, ACTIVE) + countUnassignT;
-        countMyT = countUsersInvestigationsDb(AlertType.TRADING, autotestUserOne().getId());
+        countMyT =
+                countUsersInvestigationsDb(AlertType.TRADING, autotestUserOne().getId());
         investigationPage.checkSuspiciousCounterValueALL(countAllT);
         investigationPage.checkSuspiciousCounterValueUNASSIGNED(countUnassignT);
         investigationPage.checkSuspiciousCounterValueMY(countMyT);
         investigationPage.clickSelectInvestigationType("Payments");
         long countUnassignP = countInvestigationsDb(AlertType.PAYMENT, InvestigationStatus.NEW);
         long countAllP = countInvestigationsDb(AlertType.PAYMENT, ACTIVE) + countUnassignP;
-        long countMyP = countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserOne().getId());
+        long countMyP =
+                countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserOne().getId());
         investigationPage.checkSuspiciousCounterValueALL(countAllP);
         investigationPage.checkSuspiciousCounterValueUNASSIGNED(countUnassignP);
         investigationPage.checkSuspiciousCounterValueMY(countMyP);
@@ -110,7 +111,8 @@ class AlertCounterTest extends TestBaseWeb {
         investigationPage.investigateUserAlertList(client1.getUserId());
         countUnassignP = countInvestigationsDb(AlertType.PAYMENT, InvestigationStatus.NEW);
         countAllP = countInvestigationsDb(AlertType.PAYMENT, ACTIVE) + countUnassignP;
-        countMyP = countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserOne().getId());
+        countMyP =
+                countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserOne().getId());
         investigationPage.checkSuspiciousCounterValueALL(countAllP);
         investigationPage.checkSuspiciousCounterValueUNASSIGNED(countUnassignP);
         investigationPage.checkSuspiciousCounterValueMY(countMyP);
@@ -133,7 +135,8 @@ class AlertCounterTest extends TestBaseWeb {
         investigationPage.navigateInvestigationTool();
         long countUnassignP = countInvestigationsDb(AlertType.PAYMENT, InvestigationStatus.NEW);
         long countAllP = countInvestigationsDb(AlertType.PAYMENT, ACTIVE) + countUnassignP;
-        long countMyP = countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserPT().getId());
+        long countMyP =
+                countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserPT().getId());
         investigationPage.checkSuspiciousCounterValueALL(countAllP);
         investigationPage.checkSuspiciousCounterValueUNASSIGNED(countUnassignP);
         investigationPage.checkSuspiciousCounterValueMY(countMyP);
@@ -141,7 +144,8 @@ class AlertCounterTest extends TestBaseWeb {
         investigationPage.investigateUserAlertList(client1.getUserId());
         countUnassignP = countInvestigationsDb(AlertType.PAYMENT, InvestigationStatus.NEW);
         countAllP = countInvestigationsDb(AlertType.PAYMENT, ACTIVE) + countUnassignP;
-        countMyP = countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserPT().getId());
+        countMyP =
+                countUsersInvestigationsDb(AlertType.PAYMENT, autotestUserPT().getId());
         investigationPage.checkSuspiciousCounterValueALL(countAllP);
         investigationPage.checkSuspiciousCounterValueUNASSIGNED(countUnassignP);
         investigationPage.checkSuspiciousCounterValueMY(countMyP);

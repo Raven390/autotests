@@ -1,5 +1,10 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import business_objects.ui.audit_trail.AuditTrailItem;
 import business_objects.ui.audit_trail.AuditTrailItemV2;
 import com.microsoft.playwright.Locator;
@@ -7,15 +12,9 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
-import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class AuditTrailPage extends AbstractPage {
 
@@ -40,7 +39,8 @@ public class AuditTrailPage extends AbstractPage {
     private final Locator auditTrailAlertCounter;
     private final Locator auditTrailPaymentProfile;
 
-    private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
+    private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT =
+            "//div[@class='v-investigation-tools-trail__skeleton-container']";
     private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@role='option']/descendant::*[text()='%s']";
     private static final String AUDIT_TRAIL_FILTER = "//div[@data-qa='audit_trail__filters__action']";
 
@@ -48,7 +48,8 @@ public class AuditTrailPage extends AbstractPage {
         super(page);
         this.auditTrailTab = page.locator("[role=\"tab\"][title=\"Audit trail\"]");
         this.auditTrailAlertCounter = page.locator("[role='tab'][title='Audit trail'] .g-tabs__item-counter");
-        this.auditTrailItem = page.locator("//div[@class='v-investigation-tools-trail__item']/div/div[contains(@class,'v-timeline-item')]");
+        this.auditTrailItem = page.locator(
+                "//div[@class='v-investigation-tools-trail__item']/div/div[contains(@class,'v-timeline-item')]");
         this.auditTrailItemV2 = page.locator("//div[@class='v-audit-trail-v2-item__card']");
         this.auditTrailItemHeader = page.locator("//div[@class='v-investigation-tools-trail-card__header']");
         this.auditTrailItemComment = page.locator("//div[@class='v-investigation-tools-trail-card__comment']");
@@ -56,15 +57,18 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailItemDetails = page.locator("//div[@class='v-investigation-tools-trail-card__details']/span");
         this.auditTrailItemDetailsV2 = page.locator("//div[@class='v-audit-trail-v2-content__attributes']");
         this.auditTrailItemTime = page.locator("//div[@class='v-timeline-item__time']");
-        this.auditTrailClearFilterButton = page.locator(AUDIT_TRAIL_FILTER + "/descendant::button[@data-qa='select-clear']");
+        this.auditTrailClearFilterButton =
+                page.locator(AUDIT_TRAIL_FILTER + "/descendant::button[@data-qa='select-clear']");
         this.auditTrailFilterActiveButton = page.locator(AUDIT_TRAIL_FILTER + "//div[text()=\"Active alerts\"]");
         this.auditTrailFilterCommentsButton = page.locator(AUDIT_TRAIL_FILTER + "//div[text()=\"Comments\"]");
         this.auditTrailFilterTeamSelect = page.locator("//div[@class='g-select v-audit-trail-v2-filters__select']");
         this.auditTrailDetailsTitle = page.locator("//*[contains(@class,'v-audit-trail-v2-details__title')]");
         this.auditTrailDetailsLabels = page.locator("//*[@class='v-audit-trail-v2-details__labels']/div");
         this.auditTrailDetailsAttributes = page.locator("//*[@class='v-audit-trail-v2-details__attribute']");
-        this.auditTrailDetailsAttributesNames = auditTrailDetailsAttributes.locator("//*[contains(@class,'g-color-text_color_secondary')]");
-        this.auditTrailDetailsAttributesValues = page.locator("//*[contains(@class,'v-audit-trail-v2-details__attribute-value')]");
+        this.auditTrailDetailsAttributesNames =
+                auditTrailDetailsAttributes.locator("//*[contains(@class,'g-color-text_color_secondary')]");
+        this.auditTrailDetailsAttributesValues =
+                page.locator("//*[contains(@class,'v-audit-trail-v2-details__attribute-value')]");
         this.auditTrailPaymentProfile = page.locator("//div[@class='v-audit-trail-v2-content__payment-profile']");
     }
 
@@ -89,7 +93,9 @@ public class AuditTrailPage extends AbstractPage {
 
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
-        page.waitForSelector(AUDIT_TRAIL_TAB_LOADING_ELEMENT, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(
+                AUDIT_TRAIL_TAB_LOADING_ELEMENT,
+                new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
     @Step("Get list of all audit trail items")
@@ -101,10 +107,12 @@ public class AuditTrailPage extends AbstractPage {
             item.setHeader(auditTrailItem.nth(i).locator(auditTrailItemHeader).textContent());
             item.setTime(auditTrailItem.nth(i).locator(auditTrailItemTime).textContent());
             if (auditTrailItem.nth(i).locator(auditTrailItemComment).count() > 0) {
-                item.setComment(auditTrailItem.nth(i).locator(auditTrailItemComment).textContent());
+                item.setComment(
+                        auditTrailItem.nth(i).locator(auditTrailItemComment).textContent());
             }
             if (auditTrailItem.nth(i).locator(auditTrailItemDetails).count() > 0) {
-                item.setDetails(auditTrailItem.nth(i).locator(auditTrailItemDetails).innerText());
+                item.setDetails(
+                        auditTrailItem.nth(i).locator(auditTrailItemDetails).innerText());
             }
             auditTrailItems.add(item);
         }
@@ -118,15 +126,16 @@ public class AuditTrailPage extends AbstractPage {
         List<AuditTrailItemV2> auditTrailItems = new ArrayList<>();
         for (int i = 0; i < auditTrailItemV2.count(); i++) {
             AuditTrailItemV2 item = new AuditTrailItemV2();
-            item.setHeader(auditTrailItemV2.nth(i).locator(auditTrailItemHeaderV2).innerText());
+            item.setHeader(
+                    auditTrailItemV2.nth(i).locator(auditTrailItemHeaderV2).innerText());
             if (auditTrailItemV2.nth(i).locator(auditTrailItemDetailsV2).count() > 0) {
-                item.setDetails(auditTrailItemV2.nth(i).locator(auditTrailItemDetailsV2).innerText());
+                item.setDetails(
+                        auditTrailItemV2.nth(i).locator(auditTrailItemDetailsV2).innerText());
             }
             auditTrailItems.add(item);
         }
         return auditTrailItems;
     }
-
 
     @Step("Click active alerts audit filter button")
     public void clickAuditTrailActiveFilter() {
@@ -218,4 +227,3 @@ public class AuditTrailPage extends AbstractPage {
         auditTrailPaymentProfile.getByText(paymentProfile).first().click();
     }
 }
-

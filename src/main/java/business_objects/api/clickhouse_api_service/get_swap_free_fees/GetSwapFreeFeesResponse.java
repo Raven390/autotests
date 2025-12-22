@@ -1,9 +1,7 @@
 package business_objects.api.clickhouse_api_service.get_swap_free_fees;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
-
 
 public class GetSwapFreeFeesResponse {
 
@@ -25,11 +23,14 @@ public class GetSwapFreeFeesResponse {
     @JsonProperty("comment")
     public String comment;
 
-    public GetSwapFreeFeesResponse() {
-    }
+    public GetSwapFreeFeesResponse() {}
 
     public GetSwapFreeFeesResponse(
-            String tradeDate, Integer tradeId, Integer tradingAccount, Double profit, Double profitUsd,
+            String tradeDate,
+            Integer tradeId,
+            Integer tradingAccount,
+            Double profit,
+            Double profitUsd,
             String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
@@ -44,9 +45,12 @@ public class GetSwapFreeFeesResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetSwapFreeFeesResponse that = (GetSwapFreeFeesResponse) o;
-        return Objects.equals(tradeDate, that.tradeDate) && Objects.equals(tradeId, that.tradeId) && Objects.equals(
-                tradingAccount, that.tradingAccount) && Objects.equals(profit, that.profit) && Objects.equals(
-                        profitUsd, that.profitUsd) && Objects.equals(comment, that.comment);
+        return Objects.equals(tradeDate, that.tradeDate)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
@@ -56,6 +60,8 @@ public class GetSwapFreeFeesResponse {
 
     @Override
     public String toString() {
-        return "GetSwapFreeFeesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUsd=" + profitUsd + ", comment='" + comment + '\'' + '}';
+        return "GetSwapFreeFeesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId
+                + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUsd=" + profitUsd
+                + ", comment='" + comment + '\'' + '}';
     }
 }

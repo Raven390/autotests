@@ -1,5 +1,16 @@
 package tests.payment_gate_service_tests;
 
+import static business_objects.api.payment_gate.rejection_reasons.RejectionReasonsRequests.getRejectionReasons;
+import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.CleanTableHelper.cleanPaymentGateData;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
 
 import business_objects.api.payment_gate.rejection_reasons.GetRejectionReasonsResponseBody;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
@@ -12,24 +23,11 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import java.util.Collections;
+import java.util.List;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
-
-import java.util.Collections;
-import java.util.List;
-
-import static business_objects.api.payment_gate.rejection_reasons.RejectionReasonsRequests.getRejectionReasons;
-import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
-import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
-import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
-import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.CleanTableHelper.cleanPaymentGateData;
-import static helpers.database.DbHelper.insertObjectsToDb;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
 
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_GET_REJECTION_REASONS)
@@ -54,13 +52,17 @@ class GetRejectionReasonsV1Tests extends TestBaseApi {
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, List.of(paymentRuleExecutionsObject1));
+        insertObjectsToDb(
+                DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, List.of(paymentRuleExecutionsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1));
     }
 
     @AfterAll
     static void deleteData() throws Exception {
-        cleanPaymentGateData(client1.getUcid(), client1.getUserId(), paymentEventsObject1.getPaymentId().toString());
+        cleanPaymentGateData(
+                client1.getUcid(),
+                client1.getUserId(),
+                paymentEventsObject1.getPaymentId().toString());
     }
 
     @Test
@@ -72,7 +74,8 @@ class GetRejectionReasonsV1Tests extends TestBaseApi {
         Allure.step("Validate Data in response");
         String body = response.body().string();
         Allure.step("Response body: " + body);
-        GetRejectionReasonsResponseBody[] mappedResponse = objectMapper.readValue(body, GetRejectionReasonsResponseBody[].class);
+        GetRejectionReasonsResponseBody[] mappedResponse =
+                objectMapper.readValue(body, GetRejectionReasonsResponseBody[].class);
         assertThat("Assert at least one rejection reason returned", mappedResponse.length, is(1));
         GetRejectionReasonsResponseBody item = mappedResponse[0];
         // Validate dictionary fields presence (do not assert exact values, just presence)
@@ -94,7 +97,8 @@ class GetRejectionReasonsV1Tests extends TestBaseApi {
         Allure.step("Validate Data in response");
         String body = response.body().string();
         Allure.step("Response body: " + body);
-        GetRejectionReasonsResponseBody[] mappedResponse = objectMapper.readValue(body, GetRejectionReasonsResponseBody[].class);
+        GetRejectionReasonsResponseBody[] mappedResponse =
+                objectMapper.readValue(body, GetRejectionReasonsResponseBody[].class);
         assertThat("Assert at least one rejection reason returned", mappedResponse.length, is(1));
         GetRejectionReasonsResponseBody item = mappedResponse[0];
         // Validate dictionary fields presence (do not assert exact values, just presence)
@@ -113,9 +117,8 @@ class GetRejectionReasonsV1Tests extends TestBaseApi {
         Allure.step("Validate Data in response");
         String body = response.body().string();
         Allure.step("Response body: " + body);
-        GetRejectionReasonsResponseBody[] mappedResponse = objectMapper.readValue(body, GetRejectionReasonsResponseBody[].class);
+        GetRejectionReasonsResponseBody[] mappedResponse =
+                objectMapper.readValue(body, GetRejectionReasonsResponseBody[].class);
         assertThat("Assert at least one rejection reason returned", mappedResponse.length, greaterThan(1));
     }
-
-
 }

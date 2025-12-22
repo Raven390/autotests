@@ -1,5 +1,13 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.BoHelper.deleteUserBO;
+import static helpers.database.CleanTableHelper.cleanUserAudit;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
+import static utils.Constants.*;
+
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudTypeOld;
@@ -10,15 +18,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
-
-
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.BoHelper.deleteUserBO;
-import static helpers.database.CleanTableHelper.cleanUserAudit;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
-import static utils.Constants.*;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -33,11 +32,11 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, resolveClientDB);
     }
 
-
     @Test
     @AllureId("1324")
     @Feature("BMS-1453 Actions by AF team")
-    @DisplayName("BO user with AF role can't assign suspicious client with the active alert to himself to perform investigation from the client card")
+    @DisplayName(
+            "BO user with AF role can't assign suspicious client with the active alert to himself to perform investigation from the client card")
     public void assignClientCardTest() throws Exception {
 
         deleteUserBO(client.getUcid());
@@ -60,7 +59,6 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
         keycloackPage.loginAsAFUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.cantOpenCommentForm();
-
     }
 
     @Test
@@ -83,5 +81,4 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
         restrictionPage.navigate(client.getUcid());
         restrictionPage.cantAddNewRestriction();
     }
-
 }

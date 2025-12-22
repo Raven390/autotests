@@ -27,8 +27,7 @@ public class PostRestrictionByBitRequest {
         this.updatedBy = updatedBy;
     }
 
-    public PostRestrictionByBitRequest() {
-    }
+    public PostRestrictionByBitRequest() {}
 
     public String getUcid() {
         return ucid;
@@ -99,18 +98,17 @@ public class PostRestrictionByBitRequest {
             return "UpdatedBy{" + "system='" + system + '\'' + ", user='" + user + '\'' + '}';
         }
 
-        public UpdatedBy() {
-        }
+        public UpdatedBy() {}
 
         public UpdatedBy(String system, String user) {
             this.system = system;
             this.user = user;
         }
-
     }
 
     @Override
     public String toString() {
-        return "PostRestrictionByBitRequest{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", account='" + account + '\'' + ", comment='" + comment + '\'' + ", updatedBy=" + updatedBy + '}';
+        return "PostRestrictionByBitRequest{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", account='"
+                + account + '\'' + ", comment='" + comment + '\'' + ", updatedBy=" + updatedBy + '}';
     }
 }

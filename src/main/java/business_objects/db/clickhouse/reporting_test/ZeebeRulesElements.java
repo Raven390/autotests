@@ -10,8 +10,7 @@ public class ZeebeRulesElements {
     private Integer position;
     private Integer ruleVersion;
 
-    public ZeebeRulesElements() {
-    }
+    public ZeebeRulesElements() {}
 
     public ZeebeRulesElements(
             String timestamp, String ruleName, Long runId, String elementId, Integer position, Integer ruleVersion) {
@@ -74,9 +73,12 @@ public class ZeebeRulesElements {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ZeebeRulesElements that)) return false;
-        return Objects.equals(timestamp, that.timestamp) && Objects.equals(ruleName, that.ruleName) && Objects.equals(
-                runId, that.runId) && Objects.equals(elementId, that.elementId) && Objects.equals(
-                        position, that.position) && Objects.equals(ruleVersion, that.ruleVersion);
+        return Objects.equals(timestamp, that.timestamp)
+                && Objects.equals(ruleName, that.ruleName)
+                && Objects.equals(runId, that.runId)
+                && Objects.equals(elementId, that.elementId)
+                && Objects.equals(position, that.position)
+                && Objects.equals(ruleVersion, that.ruleVersion);
     }
 
     @Override
@@ -86,6 +88,7 @@ public class ZeebeRulesElements {
 
     @Override
     public String toString() {
-        return "ZeebeRulesElements{" + "timestamp='" + timestamp + '\'' + ", ruleName='" + ruleName + '\'' + ", runId=" + runId + ", elementId=" + elementId + ", position=" + position + ", ruleVersion=" + ruleVersion + '}';
+        return "ZeebeRulesElements{" + "timestamp='" + timestamp + '\'' + ", ruleName='" + ruleName + '\'' + ", runId="
+                + runId + ", elementId=" + elementId + ", position=" + position + ", ruleVersion=" + ruleVersion + '}';
     }
 }

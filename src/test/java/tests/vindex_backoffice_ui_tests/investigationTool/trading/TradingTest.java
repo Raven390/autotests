@@ -1,5 +1,15 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
+import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.insertCrmAccountsToDb;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
@@ -12,28 +22,27 @@ import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
 import java.sql.SQLException;
 import java.util.List;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
-import static helpers.database.DbHelper.*;
-import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
-import static utils.Utils.insertCrmAccountsToDb;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingTest extends TestBaseWeb {
 
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(151_501).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(151_501_001).tradingAccount2(151_501_002).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(151_501)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca41f")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .tradingAccount(151_501_001)
+                .tradingAccount2(151_501_002)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);
@@ -500,7 +509,6 @@ public class TradingTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("472")
     @DisplayName("Test that profit filter works with negative")
-
     public void testProfitFilterNegativeValuesTest() {
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
@@ -525,7 +533,7 @@ public class TradingTest extends TestBaseWeb {
     @Feature("BMS-1080 Highlight HFT deals")
     @DisplayName("Test that Highlight HFT works")
     public void testHighlightHftDeals() {
-        //case1 trade duration 0
+        // case1 trade duration 0
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         trade0.setTicketType("Buy");
@@ -544,7 +552,7 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.disableHftButton();
         tradingPage.checkCountNotHighlightedRows(1);
         tradingPage.checkCountHighlightedRows(0);
-        //case2 trade duration 10 minutes
+        // case2 trade duration 10 minutes
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         trade1.setTicketType("Buy");
@@ -562,7 +570,7 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.disableHftButton();
         tradingPage.checkCountNotHighlightedRows(1);
         tradingPage.checkCountHighlightedRows(0);
-        //case3 trade duration 10 minutes 1 second
+        // case3 trade duration 10 minutes 1 second
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
         trade2.setTicketType("Buy");
@@ -645,7 +653,5 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.fillVolumeAmountValues(String.valueOf(volumeUSDFrom), String.valueOf(volumeUSDTo));
         tradingPage.clickApplyButton();
         tradingPage.errorMessageIsNotVisible();
-
     }
-
 }

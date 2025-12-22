@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Audit event type for kafka messages
  */
 public enum AlertMessageType {
-    TRADING("TRADING"), PAYMENT("PAYMENT");
+    TRADING("TRADING"),
+    PAYMENT("PAYMENT");
 
     private String value;
 

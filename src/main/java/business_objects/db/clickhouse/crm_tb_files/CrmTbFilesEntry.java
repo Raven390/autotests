@@ -1,10 +1,9 @@
 package business_objects.db.clickhouse.crm_tb_files;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @Builder

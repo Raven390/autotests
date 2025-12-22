@@ -57,7 +57,25 @@ public class MtMt4TradesObject {
 
     @Override
     public String toString() {
-        return "MtMt4TradesObject{" + "brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", platform='" + platform + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", accountType='" + accountType + '\'' + ", accountGroup='" + accountGroup + '\'' + ", accountCurrency='" + accountCurrency + '\'' + ", ticket=" + ticket + ", cmd=" + cmd + ", reason=" + reason + ", contractSize=" + contractSize + ", openTime='" + openTime + '\'' + ", openTimeUtc='" + openTimeUtc + '\'' + ", openPrice=" + openPrice + ", sl=" + sl + ", tp=" + tp + ", symbol='" + symbol + '\'' + ", symbolUnderlying='" + symbolUnderlying + '\'' + ", ticketType='" + ticketType + '\'' + ", reasonName='" + reasonName + '\'' + ", symbolUnderlying='" + symbolUnderlying + '\'' + ", baseCurrency='" + baseCurrency + '\'' + ", quoteCurrency='" + quoteCurrency + '\'' + ", openRateUsdBase=" + openRateUsdBase + ", openRateUsdQuote=" + openRateUsdQuote + ", openRateUsdAcc=" + openRateUsdAcc + ", volume=" + volume + ", volumeLots=" + volumeLots + ", openNotionalValueUsd=" + openNotionalValueUsd + ", closeNotionalValueUsd=" + closeNotionalValueUsd + ", profit=" + profit + ", storage=" + storage + ", commission=" + commission + ", profitUsd=" + profitUsd + ", storageUsd=" + storageUsd + ", commissionUsd=" + commissionUsd + ", closeTime='" + closeTime + '\'' + ", closeTimeUtc='" + closeTimeUtc + '\'' + ", closePrice=" + closePrice + ", closeRateUsdBase=" + closeRateUsdBase + ", closeRateUsdQuote=" + closeRateUsdQuote + ", closeRateUsdAcc=" + closeRateUsdAcc + ", convRate1=" + convRate1 + ", convRate2=" + convRate2 + ", comment='" + comment + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
+        return "MtMt4TradesObject{" + "brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId="
+                + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", platform='" + platform + '\''
+                + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", accountType='" + accountType
+                + '\'' + ", accountGroup='" + accountGroup + '\'' + ", accountCurrency='" + accountCurrency + '\''
+                + ", ticket=" + ticket + ", cmd=" + cmd + ", reason=" + reason + ", contractSize=" + contractSize
+                + ", openTime='" + openTime + '\'' + ", openTimeUtc='" + openTimeUtc + '\'' + ", openPrice=" + openPrice
+                + ", sl=" + sl + ", tp=" + tp + ", symbol='" + symbol + '\'' + ", symbolUnderlying='" + symbolUnderlying
+                + '\'' + ", ticketType='" + ticketType + '\'' + ", reasonName='" + reasonName + '\''
+                + ", symbolUnderlying='" + symbolUnderlying + '\'' + ", baseCurrency='" + baseCurrency + '\''
+                + ", quoteCurrency='" + quoteCurrency + '\'' + ", openRateUsdBase=" + openRateUsdBase
+                + ", openRateUsdQuote=" + openRateUsdQuote + ", openRateUsdAcc=" + openRateUsdAcc + ", volume=" + volume
+                + ", volumeLots=" + volumeLots + ", openNotionalValueUsd=" + openNotionalValueUsd
+                + ", closeNotionalValueUsd=" + closeNotionalValueUsd + ", profit=" + profit + ", storage=" + storage
+                + ", commission=" + commission + ", profitUsd=" + profitUsd + ", storageUsd=" + storageUsd
+                + ", commissionUsd=" + commissionUsd + ", closeTime='" + closeTime + '\'' + ", closeTimeUtc='"
+                + closeTimeUtc + '\'' + ", closePrice=" + closePrice + ", closeRateUsdBase=" + closeRateUsdBase
+                + ", closeRateUsdQuote=" + closeRateUsdQuote + ", closeRateUsdAcc=" + closeRateUsdAcc + ", convRate1="
+                + convRate1 + ", convRate2=" + convRate2 + ", comment='" + comment + '\'' + ", isDeleted=" + isDeleted
+                + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
     }
 
     @Override
@@ -65,12 +83,115 @@ public class MtMt4TradesObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MtMt4TradesObject that = (MtMt4TradesObject) o;
-        return Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(platform, that.platform) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(accountType, that.accountType) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(accountCurrency, that.accountCurrency) && Objects.equals(ticket, that.ticket) && Objects.equals(cmd, that.cmd) && Objects.equals(reason, that.reason) && Objects.equals(contractSize, that.contractSize) && Objects.equals(openTime, that.openTime) && Objects.equals(openTimeUtc, that.openTimeUtc) && Objects.equals(openPrice, that.openPrice) && Objects.equals(sl, that.sl) && Objects.equals(tp, that.tp) && Objects.equals(symbol, that.symbol) && Objects.equals(symbolUnderlying, that.symbolUnderlying) && Objects.equals(ticketType, that.ticketType) && Objects.equals(reasonName, that.reasonName) && Objects.equals(symbolUnderlying, that.symbolUnderlying) && Objects.equals(baseCurrency, that.baseCurrency) && Objects.equals(quoteCurrency, that.quoteCurrency) && Objects.equals(openRateUsdBase, that.openRateUsdBase) && Objects.equals(openRateUsdQuote, that.openRateUsdQuote) && Objects.equals(openRateUsdAcc, that.openRateUsdAcc) && Objects.equals(volume, that.volume) && Objects.equals(volumeLots, that.volumeLots) && Objects.equals(openNotionalValueUsd, that.openNotionalValueUsd) && Objects.equals(closeNotionalValueUsd, that.closeNotionalValueUsd) && Objects.equals(profit, that.profit) && Objects.equals(storage, that.storage) && Objects.equals(commission, that.commission) && Objects.equals(profitUsd, that.profitUsd) && Objects.equals(storageUsd, that.storageUsd) && Objects.equals(commissionUsd, that.commissionUsd) && Objects.equals(closeTime, that.closeTime) && Objects.equals(closeTimeUtc, that.closeTimeUtc) && Objects.equals(closePrice, that.closePrice) && Objects.equals(closeRateUsdBase, that.closeRateUsdBase) && Objects.equals(closeRateUsdQuote, that.closeRateUsdQuote) && Objects.equals(closeRateUsdAcc, that.closeRateUsdAcc) && Objects.equals(convRate1, that.convRate1) && Objects.equals(convRate2, that.convRate2) && Objects.equals(comment, that.comment) && Objects.equals(isDeleted, that.isDeleted) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(internalComment, that.internalComment);
+        return Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(accountType, that.accountType)
+                && Objects.equals(accountGroup, that.accountGroup)
+                && Objects.equals(accountCurrency, that.accountCurrency)
+                && Objects.equals(ticket, that.ticket)
+                && Objects.equals(cmd, that.cmd)
+                && Objects.equals(reason, that.reason)
+                && Objects.equals(contractSize, that.contractSize)
+                && Objects.equals(openTime, that.openTime)
+                && Objects.equals(openTimeUtc, that.openTimeUtc)
+                && Objects.equals(openPrice, that.openPrice)
+                && Objects.equals(sl, that.sl)
+                && Objects.equals(tp, that.tp)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(symbolUnderlying, that.symbolUnderlying)
+                && Objects.equals(ticketType, that.ticketType)
+                && Objects.equals(reasonName, that.reasonName)
+                && Objects.equals(symbolUnderlying, that.symbolUnderlying)
+                && Objects.equals(baseCurrency, that.baseCurrency)
+                && Objects.equals(quoteCurrency, that.quoteCurrency)
+                && Objects.equals(openRateUsdBase, that.openRateUsdBase)
+                && Objects.equals(openRateUsdQuote, that.openRateUsdQuote)
+                && Objects.equals(openRateUsdAcc, that.openRateUsdAcc)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(volumeLots, that.volumeLots)
+                && Objects.equals(openNotionalValueUsd, that.openNotionalValueUsd)
+                && Objects.equals(closeNotionalValueUsd, that.closeNotionalValueUsd)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(storage, that.storage)
+                && Objects.equals(commission, that.commission)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(storageUsd, that.storageUsd)
+                && Objects.equals(commissionUsd, that.commissionUsd)
+                && Objects.equals(closeTime, that.closeTime)
+                && Objects.equals(closeTimeUtc, that.closeTimeUtc)
+                && Objects.equals(closePrice, that.closePrice)
+                && Objects.equals(closeRateUsdBase, that.closeRateUsdBase)
+                && Objects.equals(closeRateUsdQuote, that.closeRateUsdQuote)
+                && Objects.equals(closeRateUsdAcc, that.closeRateUsdAcc)
+                && Objects.equals(convRate1, that.convRate1)
+                && Objects.equals(convRate2, that.convRate2)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(isDeleted, that.isDeleted)
+                && Objects.equals(lastUpdated, that.lastUpdated)
+                && Objects.equals(internalComment, that.internalComment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, regulator, userId, ucid, account, platform, serverId, serverName, accountType, accountGroup, accountCurrency, ticket, cmd, reason, contractSize, openTime, openTimeUtc, openPrice, sl, tp, symbol, symbolUnderlying, ticketType, reasonName, symbolUnderlying, baseCurrency, quoteCurrency, openRateUsdBase, openRateUsdQuote, openRateUsdAcc, volume, volumeLots, openNotionalValueUsd, closeNotionalValueUsd, profit, storage, commission, profitUsd, storageUsd, commissionUsd, closeTime, closeTimeUtc, closePrice, closeRateUsdBase, closeRateUsdQuote, closeRateUsdAcc, convRate1, convRate2, comment, isDeleted, lastUpdated, internalComment);
+        return Objects.hash(
+                brand,
+                regulator,
+                userId,
+                ucid,
+                account,
+                platform,
+                serverId,
+                serverName,
+                accountType,
+                accountGroup,
+                accountCurrency,
+                ticket,
+                cmd,
+                reason,
+                contractSize,
+                openTime,
+                openTimeUtc,
+                openPrice,
+                sl,
+                tp,
+                symbol,
+                symbolUnderlying,
+                ticketType,
+                reasonName,
+                symbolUnderlying,
+                baseCurrency,
+                quoteCurrency,
+                openRateUsdBase,
+                openRateUsdQuote,
+                openRateUsdAcc,
+                volume,
+                volumeLots,
+                openNotionalValueUsd,
+                closeNotionalValueUsd,
+                profit,
+                storage,
+                commission,
+                profitUsd,
+                storageUsd,
+                commissionUsd,
+                closeTime,
+                closeTimeUtc,
+                closePrice,
+                closeRateUsdBase,
+                closeRateUsdQuote,
+                closeRateUsdAcc,
+                convRate1,
+                convRate2,
+                comment,
+                isDeleted,
+                lastUpdated,
+                internalComment);
     }
 
     public String getBrand() {

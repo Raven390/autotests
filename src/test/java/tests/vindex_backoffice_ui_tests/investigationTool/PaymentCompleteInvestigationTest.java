@@ -1,5 +1,27 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
+import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
+import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Currency.USD;
+import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
+import static helpers.database.BoHelper.closeAlert;
+import static helpers.database.BoHelper.getClientsInvestigationsDb;
+import static helpers.database.CleanTableHelper.cleanPaymentGateData;
+import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.POSTGRES;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.getRandomIntPositive;
+
 import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.abuse_registry_db.AbuserHistory;
@@ -27,37 +49,13 @@ import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
-import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
-import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.Currency.USD;
-import static helpers.data.enums.FraudType.*;
-import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
-import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
-import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.BoHelper.getClientsInvestigationsDb;
-import static helpers.database.CleanTableHelper.cleanPaymentGateData;
-import static helpers.database.DbHelper.*;
-import static helpers.database.DbName.POSTGRES;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
-
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Feature("BMS-2051 Complete client investigation (Payment alerts)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -67,7 +65,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     private static final String PAYMENT_METHOD_CODE = "Brazil Bank Transfer";
     private static final String ALERT_WHERE = "client_ucid = '%s' and type='%s' ORDER BY happened_at DESC";
 
-    private static final java.text.DecimalFormat formatter = new java.text.DecimalFormat("#,##0.00", java.text.DecimalFormatSymbols.getInstance(java.util.Locale.US));
+    private static final java.text.DecimalFormat formatter =
+            new java.text.DecimalFormat("#,##0.00", java.text.DecimalFormatSymbols.getInstance(java.util.Locale.US));
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
@@ -86,8 +85,30 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
 
     public static String buildPayload(double WD_EUR, String PAYMENT_METHOD_CODE, double WD_USD) throws Exception {
         Map<String, Object> payload = Map.ofEntries(
-                Map.entry("id", "361564a9-2404-4dd6-aafb-31ce12af19e8"), Map.entry("iban", ""), Map.entry("type", "withdrawal"), Map.entry("brand", "vantage"), Map.entry("bankName", "testvv"), Map.entry("clientId", "99887766"), Map.entry("platform", "WEB"), Map.entry("checkName", "Little_Amount"), Map.entry("eventDate", "2025-09-18T06:15:50+03:00"), Map.entry("regulator", "VFSC2"), Map.entry("mt4Account", 1_398_842_009), Map.entry("accountType", "MT4"), Map.entry("withdrawalId", "41000779"), Map.entry("schemaVersion", "1.0"), Map.entry("merchantOrderId", "VU856068920250918061547"), Map.entry("paymentTypeName", "Bank Transfers"), Map.entry("withdrawalAmount", WD_EUR), Map.entry("paymentMethodCode", PAYMENT_METHOD_CODE), Map.entry("paymentChannelCode", "642"), Map.entry("paymentChannelName", "Brazil-CPS"), Map.entry("withdrawalCurrency", "EUR"), Map.entry("withdrawalAmountUSD", WD_USD), Map.entry("bankAccountHolderName", "testvv"), Map.entry("withdrawalApplicationTime", "2025-09-18T06:15:46.379Z")
-        );
+                Map.entry("id", "361564a9-2404-4dd6-aafb-31ce12af19e8"),
+                Map.entry("iban", ""),
+                Map.entry("type", "withdrawal"),
+                Map.entry("brand", "vantage"),
+                Map.entry("bankName", "testvv"),
+                Map.entry("clientId", "99887766"),
+                Map.entry("platform", "WEB"),
+                Map.entry("checkName", "Little_Amount"),
+                Map.entry("eventDate", "2025-09-18T06:15:50+03:00"),
+                Map.entry("regulator", "VFSC2"),
+                Map.entry("mt4Account", 1_398_842_009),
+                Map.entry("accountType", "MT4"),
+                Map.entry("withdrawalId", "41000779"),
+                Map.entry("schemaVersion", "1.0"),
+                Map.entry("merchantOrderId", "VU856068920250918061547"),
+                Map.entry("paymentTypeName", "Bank Transfers"),
+                Map.entry("withdrawalAmount", WD_EUR),
+                Map.entry("paymentMethodCode", PAYMENT_METHOD_CODE),
+                Map.entry("paymentChannelCode", "642"),
+                Map.entry("paymentChannelName", "Brazil-CPS"),
+                Map.entry("withdrawalCurrency", "EUR"),
+                Map.entry("withdrawalAmountUSD", WD_USD),
+                Map.entry("bankAccountHolderName", "testvv"),
+                Map.entry("withdrawalApplicationTime", "2025-09-18T06:15:46.379Z"));
 
         return objectMapper.writeValueAsString(payload);
     }
@@ -118,15 +139,15 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
     }
 
-
     @BeforeEach
     void sendAlert() throws Exception {
         PaymentAlertMessage alertPayment = generatePaymentAlertByUcid(crmTbUser.ucid);
-        kafka.produceMessage(alertPayment.getId().toString(), objectMapper.writeValueAsString(alertPayment), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment.getId().toString(), objectMapper.writeValueAsString(alertPayment), KAFKA_TOPIC_ALERTS);
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
         alert.rule.attributes.account = mtAccount1.account.toString();
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
-        //pgs
+        // pgs
         event.setPaymentId(UUID.fromString(alertPayment.getPaymentEventId()));
         insertObjectToDb(POSTGRES, PAYMENT_EVENT_TABLE_NAME, event);
 
@@ -144,7 +165,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
 
     @AfterEach
     void teardownInPGS() throws Exception {
-        cleanPaymentGateData(client.getUcid(), client.getUserId(), event.getPaymentId().toString());
+        cleanPaymentGateData(
+                client.getUcid(), client.getUserId(), event.getPaymentId().toString());
         deleteUserFromAbuseRegistry(client.getUcid());
         closeAlert(crmTbUser.ucid);
     }
@@ -163,9 +185,11 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1610")
-    @DisplayName("Verify complete investigation with withdrawals for payment team and investigation for trading is not closed")
+    @DisplayName(
+            "Verify complete investigation with withdrawals for payment team and investigation for trading is not closed")
     void completeInvestigationFlowTest() throws Exception {
-        String longResolveComment = "I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk.";
+        String longResolveComment =
+                "I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk. I will not waste chalk.";
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -182,28 +206,54 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.addFraud();
         resolvePage.resolveNoActionsPayment(longResolveComment);
 
-        //check investigation in db
+        // check investigation in db
         List<Investigation> clientsInvestigationsDb = getClientsInvestigationsDb(client.getUcid(), AlertType.PAYMENT);
         assertThat("Verify that investigation is completed", clientsInvestigationsDb.size(), is(1));
-        assertThat("Verify that investigation is completed", clientsInvestigationsDb.getFirst().getStatus(), is("COMPLETED"));
+        assertThat(
+                "Verify that investigation is completed",
+                clientsInvestigationsDb.getFirst().getStatus(),
+                is("COMPLETED"));
 
-        //check trading investigation is not closed
-        List<Investigation> clientsInvestigationsTrading = getClientsInvestigationsDb(client.getUcid(), AlertType.TRADING);
+        // check trading investigation is not closed
+        List<Investigation> clientsInvestigationsTrading =
+                getClientsInvestigationsDb(client.getUcid(), AlertType.TRADING);
         assertThat("Verify that trading investigation is completed", clientsInvestigationsTrading.size(), is(1));
-        assertThat("Verify that trading investigation is not completed", clientsInvestigationsTrading.getFirst().getStatus(), not("COMPLETED"));
+        assertThat(
+                "Verify that trading investigation is not completed",
+                clientsInvestigationsTrading.getFirst().getStatus(),
+                not("COMPLETED"));
 
-
-        //PGS decision check in db
-        List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
+        // PGS decision check in db
+        List<PaymentDecisionsObject> decisions = getObjectsFromDB(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format("payment_id = '%s'", event.getPaymentId().toString()),
+                PaymentDecisionsObject.class);
         assertThat("Verify that decision is saved in db", decisions.size(), is(1));
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is approved", actualDecision.getDecisionCode(), is(1));
 
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
-        AuditEvent audit = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_TABLE, String.format("ucid = '%s' AND type = '%s'", client.getUcid(), COMMENT_ADDED_TYPE), AuditEvent.class).getFirst();
-        assertThat("Verify comment was saved until 500th character", audit.getComment(), is(longResolveComment.substring(0, 500)));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is FALSE_POSITIVE",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+        AuditEvent audit = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AUDIT_EVENT_TABLE,
+                        String.format("ucid = '%s' AND type = '%s'", client.getUcid(), COMMENT_ADDED_TYPE),
+                        AuditEvent.class)
+                .getFirst();
+        assertThat(
+                "Verify comment was saved until 500th character",
+                audit.getComment(),
+                is(longResolveComment.substring(0, 500)));
     }
 
     @Order(2)
@@ -225,17 +275,32 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActionsPayment("test comment");
 
-        //PGS decision check in db
-        List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
+        // PGS decision check in db
+        List<PaymentDecisionsObject> decisions = getObjectsFromDB(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format("payment_id = '%s'", event.getPaymentId().toString()),
+                PaymentDecisionsObject.class);
         assertThat("Verify that decision is saved in db", decisions.size(), is(1));
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is rejected", actualDecision.getDecisionCode(), is(2));
-        assertThat("Verify that rejectionCode is not default 0 (reason code should be provided)", actualDecision.getRejectionCode(), greaterThan(0));
+        assertThat(
+                "Verify that rejectionCode is not default 0 (reason code should be provided)",
+                actualDecision.getRejectionCode(),
+                greaterThan(0));
         assertThat("Verify that actor is Vindex BO", actualDecision.getActor(), is("Vindex BO"));
 
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is CONFIRMED",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.CONFIRMED.getDisplayName()));
     }
 
     @Order(3)
@@ -255,9 +320,17 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.resolveNoActionsPayment("test comment");
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is FALSE_POSITIVE",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
     }
 
     @Order(4)
@@ -278,24 +351,85 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.clickWithdrawalApprove();
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActionsPayment("test comment");
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is FALSE_POSITIVE",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
     }
-
 
     @Order(5)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1614")
-    @DisplayName("Verify alert resolution FALSE_POSITIVE withdrawals on approve and already has different fraud for payment team")
+    @DisplayName(
+            "Verify alert resolution FALSE_POSITIVE withdrawals on approve and already has different fraud for payment team")
     void alertResolutionTest3() throws Exception {
         var nowTimestamp = Timestamp.from(Instant.now());
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_TABLE_NAME,
+                new Abuser(
+                        client.getUcid(),
+                        CONFIRMED.getStatus(),
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        nowTimestamp,
+                        true));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                new AbuserHistory(
+                        null,
+                        client.getUcid(),
+                        "CLIENT_STATUS",
+                        CONFIRMED.getStatus(),
+                        "CLIENT_STATUS",
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        null,
+                        null));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                new AbuserFraudType(
+                        client.getUcid(),
+                        HEDGING.getCode(),
+                        CONFIRMED.getStatus(),
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        nowTimestamp,
+                        "INTERNAL",
+                        null,
+                        "Vindex"));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                new AbuserHistory(
+                        null,
+                        client.getUcid(),
+                        HEDGING.getCode(),
+                        CONFIRMED.getStatus(),
+                        "FRAUD_TYPE_STATUS",
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        "INTERNAL",
+                        null));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -306,10 +440,17 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.resolveNoActionsPayment("test comment");
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
-
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is FALSE_POSITIVE",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
     }
 
     @Order(6)
@@ -317,13 +458,67 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1615")
-    @DisplayName("Verify alert resolution CONFIRMED withdrawals on reject and already has different fraud for payment team")
+    @DisplayName(
+            "Verify alert resolution CONFIRMED withdrawals on reject and already has different fraud for payment team")
     void alertResolutionTest4() throws Exception {
         var nowTimestamp = Timestamp.from(Instant.now());
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_TABLE_NAME,
+                new Abuser(
+                        client.getUcid(),
+                        CONFIRMED.getStatus(),
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        nowTimestamp,
+                        true));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                new AbuserHistory(
+                        null,
+                        client.getUcid(),
+                        "CLIENT_STATUS",
+                        CONFIRMED.getStatus(),
+                        "CLIENT_STATUS",
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        null,
+                        null));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                new AbuserFraudType(
+                        client.getUcid(),
+                        HEDGING.getCode(),
+                        CONFIRMED.getStatus(),
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        nowTimestamp,
+                        "INTERNAL",
+                        null,
+                        "Vindex"));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                new AbuserHistory(
+                        null,
+                        client.getUcid(),
+                        HEDGING.getCode(),
+                        CONFIRMED.getStatus(),
+                        "FRAUD_TYPE_STATUS",
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        "INTERNAL",
+                        null));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -334,9 +529,17 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.resolveNoActionsPayment("test comment");
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is CONFIRMED",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.CONFIRMED.getDisplayName()));
     }
 
     @Order(7)
@@ -357,9 +560,17 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActionsPayment("test comment");
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is CONFIRMED",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.CONFIRMED.getDisplayName()));
     }
 
     @Order(8)
@@ -379,9 +590,17 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.resolveNoActionsPayment("test comment");
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is CONFIRMED",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.CONFIRMED.getDisplayName()));
     }
 
     @Order(9)
@@ -389,7 +608,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1766")
-    @DisplayName("Verify complete investigation with reject withdrawals for payment team with dynamic values in Rejection Reasons")
+    @DisplayName(
+            "Verify complete investigation with reject withdrawals for payment team with dynamic values in Rejection Reasons")
     void completeInvestigationRejectWithDynamicValueTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
@@ -401,18 +621,34 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.resolveWithdrawalsAllRejectPayment(REASON_WITH_PARAMS, "AQA");
 
-        //PGS decision check in db
-        List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
+        // PGS decision check in db
+        List<PaymentDecisionsObject> decisions = getObjectsFromDB(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format("payment_id = '%s'", event.getPaymentId().toString()),
+                PaymentDecisionsObject.class);
         assertThat("Verify that decision is saved in db", decisions.size(), is(1));
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is rejected", actualDecision.getDecisionCode(), is(2));
-        assertThat("Verify that rejectionCode is not default 0 (reason code should be provided)", actualDecision.getRejectionCode(), greaterThan(0));
+        assertThat(
+                "Verify that rejectionCode is not default 0 (reason code should be provided)",
+                actualDecision.getRejectionCode(),
+                greaterThan(0));
         assertThat("Verify that actor is Vindex BO", actualDecision.getActor(), is("Vindex BO"));
-        assertThat("Verify that reason string contains AQA tag", actualDecision.getReasonString(), containsString("AQA"));
+        assertThat(
+                "Verify that reason string contains AQA tag", actualDecision.getReasonString(), containsString("AQA"));
 
-        //Alert resolution
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+        // Alert resolution
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_ALERT_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT),
+                        Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is CONFIRMED",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.CONFIRMED.getDisplayName()));
     }
 
     private static void assertWithdrawalText(String text) {
@@ -428,10 +664,63 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @DisplayName("Check that resolve screen not have symbol selector on fraud")
     void paymentResolveNotHaveSymbolSelector() {
         var nowTimestamp = Timestamp.from(Instant.now());
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_TABLE_NAME,
+                new Abuser(
+                        client.getUcid(),
+                        CONFIRMED.getStatus(),
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        nowTimestamp,
+                        true));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                new AbuserHistory(
+                        null,
+                        client.getUcid(),
+                        "CLIENT_STATUS",
+                        CONFIRMED.getStatus(),
+                        "CLIENT_STATUS",
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        null,
+                        null));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                new AbuserFraudType(
+                        client.getUcid(),
+                        HEDGING.getCode(),
+                        CONFIRMED.getStatus(),
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        nowTimestamp,
+                        "INTERNAL",
+                        null,
+                        "Vindex"));
+        insertObjectToDb(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                new AbuserHistory(
+                        null,
+                        client.getUcid(),
+                        HEDGING.getCode(),
+                        CONFIRMED.getStatus(),
+                        "FRAUD_TYPE_STATUS",
+                        "auto-test comment",
+                        "AUTOTEST USER",
+                        "Vindex BO",
+                        nowTimestamp,
+                        "INTERNAL",
+                        null));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         investigationPage.waitForPageToLoad();

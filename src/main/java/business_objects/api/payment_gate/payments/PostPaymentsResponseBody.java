@@ -3,7 +3,6 @@ package business_objects.api.payment_gate.payments;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -132,7 +131,15 @@ public class PostPaymentsResponseBody {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostPaymentsResponseBody that = (PostPaymentsResponseBody) o;
-        return Objects.equals(paymentId, that.paymentId) && Objects.equals(type, that.type) && Objects.equals(storedAt, that.storedAt) && Objects.equals(idempotencyKey, that.idempotencyKey) && Objects.equals(idempotent, that.idempotent) && Objects.equals(links, that.links) && Objects.equals(error, that.error) && Objects.equals(message, that.message) && Objects.equals(violations, that.violations);
+        return Objects.equals(paymentId, that.paymentId)
+                && Objects.equals(type, that.type)
+                && Objects.equals(storedAt, that.storedAt)
+                && Objects.equals(idempotencyKey, that.idempotencyKey)
+                && Objects.equals(idempotent, that.idempotent)
+                && Objects.equals(links, that.links)
+                && Objects.equals(error, that.error)
+                && Objects.equals(message, that.message)
+                && Objects.equals(violations, that.violations);
     }
 
     @Override
@@ -142,7 +149,10 @@ public class PostPaymentsResponseBody {
 
     @Override
     public String toString() {
-        return "PostPaymentsResponseBody{" + "paymentId='" + paymentId + '\'' + ", type='" + type + '\'' + ", storedAt='" + storedAt + '\'' + ", idempotencyKey='" + idempotencyKey + '\'' + ", idempotent=" + idempotent + ", links=" + links + ", error='" + error + '\'' + ", message='" + message + '\'' + ", violations=" + violations + '}';
+        return "PostPaymentsResponseBody{" + "paymentId='" + paymentId + '\'' + ", type='" + type + '\''
+                + ", storedAt='" + storedAt + '\'' + ", idempotencyKey='" + idempotencyKey + '\'' + ", idempotent="
+                + idempotent + ", links=" + links + ", error='" + error + '\'' + ", message='" + message + '\''
+                + ", violations=" + violations + '}';
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

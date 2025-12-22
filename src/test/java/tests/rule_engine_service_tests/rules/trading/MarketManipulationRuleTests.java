@@ -1,25 +1,25 @@
 package tests.rule_engine_service_tests.rules.trading;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.trading.MarketManipulationRuleDataFactory.setupMarketManipulationRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import tests.TestBaseRule;
 
 class MarketManipulationRuleTests extends TestBaseRule {
 
@@ -34,7 +34,7 @@ class MarketManipulationRuleTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -52,6 +52,5 @@ class MarketManipulationRuleTests extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
-
     }
 }

@@ -1,13 +1,13 @@
 package utils;
 
-import java.util.Objects;
-
-import org.aeonbits.owner.Config;
-
 import static utils.Utils.writeLog;
 
+import java.util.Objects;
+import org.aeonbits.owner.Config;
+
 public class ConfigFactory {
-    private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
+    private static final UserConfig CONFIG =
+            org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
     // URLs
     public static final String BASE_URL_E2E = CONFIG.baseURLE2E();
@@ -28,25 +28,31 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_CLIENT = CONFIG.clickhouseGetClientPath();
     public static final String CLICKHOUSE_API_GET_CLIENTS = CONFIG.clickhouseGetClientsPath();
     public static final String CLICKHOUSE_API_GET_CLIENTS_V2 = CONFIG.clickhouseGetClientsV2Path();
-    public static final String CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS = CONFIG.clickhouseGetClientTradingAccountsPath();
+    public static final String CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS =
+            CONFIG.clickhouseGetClientTradingAccountsPath();
     public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS = CONFIG.clickhouseGetLexisNexisPath();
     public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA = CONFIG.clickhouseGetLexisNexisDataPath();
     public static final String CLICKHOUSE_API_GET_TRADES_GROUP_BY = CONFIG.clickhouseGetTradesGroupByPath();
     public static final String CLICKHOUSE_API_GET_TRADES = CONFIG.clickhouseGetTradesPath();
     public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES = CONFIG.clickhouseGetUnclosedTradesPath();
-    public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES_BY_SYMBOL = CONFIG.clickhouseGetUnclosedTradesBySymbol();
+    public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES_BY_SYMBOL =
+            CONFIG.clickhouseGetUnclosedTradesBySymbol();
     public static final String CLICKHOUSE_API_GET_DEPOSITS = CONFIG.clickhouseGetDepositsPath();
     public static final String CLICKHOUSE_API_GET_RATE_USD = CONFIG.clickhouseGetRateUsd();
     public static final String CLICKHOUSE_API_GET_WITHDRAWALS = CONFIG.clickhouseGetWithdrawalsPath();
     public static final String CLICKHOUSE_API_GET_CREDITS = CONFIG.clickhouseGetCreditsPath();
     public static final String CLICKHOUSE_API_GET_BONUSES = CONFIG.clickhouseGetBonusesPath();
     public static final String CLICKHOUSE_API_GET_CREDIT_EQUITY = CONFIG.clickhouseGetCreditEquityRatio();
-    public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY = CONFIG.clickhouseGetFloatingTradesGroupBy();
-    public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES = CONFIG.clickhouseGetMirrorAccountsByTrades();
-    public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL = CONFIG.clickhouseGetMirrorTradeOnLastWithdrawal();
+    public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY =
+            CONFIG.clickhouseGetFloatingTradesGroupBy();
+    public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES =
+            CONFIG.clickhouseGetMirrorAccountsByTrades();
+    public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
+            CONFIG.clickhouseGetMirrorTradeOnLastWithdrawal();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
     public static final String CLICKHOUSE_API_GET_MARKET_CLOSE = CONFIG.clickhouseGetMarketClose();
-    public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO = CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
+    public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO =
+            CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_FEES = CONFIG.clickhouseGetSwapFreeFees();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES = CONFIG.clickhouseGetSwapFreeVolumes();
     public static final String CLICKHOUSE_API_GET_BALANCE_ORDERS = CONFIG.clickhouseGetBalanceOrders();
@@ -54,7 +60,8 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_V2 = CONFIG.clickhouseGetLexisNexisV2();
     public static final String CLICKHOUSE_API_GET_TRADES_BY_TRADE_ID = CONFIG.clickhouseGetTradesByTradeId();
     public static final String CLICKHOUSE_API_GET_TOTAL_LOYALTIES = CONFIG.clickhouseGetTotalLoyalties();
-    public static final String CLICKHOUSE_API_GET_MIRROR_CLIENTS_BY_TRADES = CONFIG.clickhouseGetMirrorClientsByTrades();
+    public static final String CLICKHOUSE_API_GET_MIRROR_CLIENTS_BY_TRADES =
+            CONFIG.clickhouseGetMirrorClientsByTrades();
     public static final String CLICKHOUSE_API_GET_FINANCIAL_CALENDAR = CONFIG.clickhouseGetFinancialCalendar();
     public static final String CLICKHOUSE_API_GET_DUMMY_TRADE_DATA = CONFIG.clickhouseGetDummyTradeData();
     public static final String CLICKHOUSE_API_GET_ACCOUNT_BALANCE = CONFIG.clickhouseGetAccountBalance();
@@ -72,9 +79,11 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_NAME_BIRTH = CONFIG.clickhouseGetNameBirth();
     public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES = CONFIG.clickhouseGetMirrorTradeWaves();
     public static final String CLICKHOUSE_API_GET_MIRROR_SCORE = CONFIG.clickhouseGetMirrorScore();
-    public static final String CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT = CONFIG.clickhouseGetMaxDailySlippageAmount();
+    public static final String CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT =
+            CONFIG.clickhouseGetMaxDailySlippageAmount();
     public static final String CLICKHOUSE_API_GET_MARKET_MANIPULATOR_FLAG = CONFIG.clickhouseGetMarketManipulatorFlag();
-    public static final String CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT = CONFIG.clickhouseGetFastTradesAndTotalCount();
+    public static final String CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT =
+            CONFIG.clickhouseGetFastTradesAndTotalCount();
     public static final String CLICKHOUSE_API_GET_CUMULATIVE_DEPOSITS = CONFIG.clickhouseGetCumulativeDeposits();
     public static final String CLICKHOUSE_API_GET_COUNT_TRADING_DAYS = CONFIG.clickhouseGetCountTradingDays();
     public static final String CLICKHOUSE_API_GET_COUNT_CPA = CONFIG.clickhouseGetCountCpa();
@@ -93,21 +102,28 @@ public class ConfigFactory {
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
-    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
-    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes();
-    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V1 = CONFIG.connectionSearchGetAbuseTypesByClientV1();
-    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V2 = CONFIG.connectionSearchGetAbuseTypesByClientV2();
-    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES = CONFIG.connectionSearchGetAbuseTypesByAttributes();
+    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT =
+            CONFIG.connectionSearchGetConnectionsByClient();
+    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES =
+            CONFIG.connectionSearchGetConnectionsByAttributes();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V1 =
+            CONFIG.connectionSearchGetAbuseTypesByClientV1();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V2 =
+            CONFIG.connectionSearchGetAbuseTypesByClientV2();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES =
+            CONFIG.connectionSearchGetAbuseTypesByAttributes();
     public static final String CONNECTION_SEARCH_GET_CHECK_CONNECTED_IB = CONFIG.connectionSearchGetCheckConnectedIb();
     // Mitigation service
     public static final String MITIGATION_SERVICE_BASE_PATH = CONFIG.mitigationServiceBasePath();
     public static final String MITIGATION_SERVICE_INSIGHT_BASE_PATH = CONFIG.mitigationServiceInsightBasePath();
-    public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog();
+    public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG =
+            CONFIG.mitigationServiceGetRestrictionCatalog();
     public static final String MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions();
     public static final String MITIGATION_SERVICE_RESTRICTIONS_V3 = CONFIG.mitigationServiceRestrictionsV3();
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction();
     public static final String MITIGATION_SERVICE_RESTRICTIONS_BYBIT = CONFIG.mitigationServiceRestrictionsByBit();
-    public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION_BYBIT = CONFIG.mitigationServiceCancelRestrictionsByBit();
+    public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION_BYBIT =
+            CONFIG.mitigationServiceCancelRestrictionsByBit();
     // Mitigation service
     public static final String PAYMENT_GATE_SERVICE_BASE_PATH = CONFIG.paymentGateServiceBasePath();
     public static final String PAYMENT_GATE_PAYMENTS_PATH = CONFIG.paymentGatePaymentsPath();
@@ -421,7 +437,6 @@ public class ConfigFactory {
         @Key("clickhouseGetUnclosedTradesBySymbol")
         String clickhouseGetUnclosedTradesBySymbol();
 
-
         // Rule engine
 
         @Key("ruleEngineBasePathTest")
@@ -684,7 +699,6 @@ public class ConfigFactory {
         @Key("emailOps24User")
         String emailOps24User();
 
-
         @Key("emailViewerUser")
         String emailViewerUser();
 
@@ -700,7 +714,7 @@ public class ConfigFactory {
         @Key("idOps24User")
         String idOps24User();
 
-        //Lark
+        // Lark
 
         @Key("larkBaseUrl")
         String larkBaseUrl();

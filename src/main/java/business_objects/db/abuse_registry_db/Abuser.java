@@ -12,11 +12,17 @@ public class Abuser {
     private Timestamp createdAt;
     private Boolean pendingProcessing;
 
-    public Abuser() {
-    }
+    public Abuser() {}
 
-    public Abuser(String ucid, String status, String comment, String modifiedByUser, String modifiedBySystem,
-            Timestamp updatedAt, Timestamp createdAt, Boolean pendingProcessing) {
+    public Abuser(
+            String ucid,
+            String status,
+            String comment,
+            String modifiedByUser,
+            String modifiedBySystem,
+            Timestamp updatedAt,
+            Timestamp createdAt,
+            Boolean pendingProcessing) {
         this.ucid = ucid;
         this.status = status;
         this.comment = comment;

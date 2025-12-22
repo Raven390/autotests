@@ -33,5 +33,4 @@ public class ClientRestrictionApply {
         @JsonProperty("restrictionCode")
         public String restrictionCode;
     }
-
 }

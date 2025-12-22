@@ -1,6 +1,5 @@
 package business_objects.db.clickhouse.client_fraud_types;
 
-
 import static helpers.database.DbHelper.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
@@ -15,6 +14,5 @@ public class ClientFraudTypesFactory {
         return fraud;
     }
 
-    private ClientFraudTypesFactory() {
-    }
+    private ClientFraudTypesFactory() {}
 }

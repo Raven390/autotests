@@ -1,19 +1,5 @@
 package helpers.data.rules.trading;
 
-import business_objects.kafka.mt_events.TradeEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
-import helpers.data.DataHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.Step;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
@@ -24,9 +10,22 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.*;
 import static utils.Utils.*;
+
+import business_objects.kafka.mt_events.TradeEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import helpers.data.enums.DateTimeFormat;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.Step;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RuleTestData("mirror-trading-open-trade")
 public class MirrorTradingOpenTradeEventDataFactory {
@@ -39,7 +38,6 @@ public class MirrorTradingOpenTradeEventDataFactory {
     private static final ClientHelper mirrorTradingOpenTradeEventTest5Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingOpenTradeEventTest6Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingOpenTradeEventTest7Client = getRandomVantageClientAllFields();
-
 
     @Step("Create base test data for Latency arbitrage rule")
     private static DataHelper getMirrorTradingOpenTradeEventRuleData(ClientHelper client) {
@@ -89,9 +87,10 @@ public class MirrorTradingOpenTradeEventDataFactory {
         DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest3Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
-        data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 4, getCurrentTimestampDbFormat());
+        data.mtTbCreditsObjects.getFirst().createTime =
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 4, getCurrentTimestampDbFormat());
         return data;
     }
 
@@ -100,9 +99,10 @@ public class MirrorTradingOpenTradeEventDataFactory {
         DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest4Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
-        data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 201, getCurrentTimestampDbFormat());
+        data.mtTbCreditsObjects.getFirst().createTime =
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 201, getCurrentTimestampDbFormat());
         return data;
     }
 
@@ -111,9 +111,10 @@ public class MirrorTradingOpenTradeEventDataFactory {
         DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest5Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
-        data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
+        data.mtTbCreditsObjects.getFirst().createTime =
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
         data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.89d, 0.89d);
 
         return data;
@@ -124,9 +125,10 @@ public class MirrorTradingOpenTradeEventDataFactory {
         DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest6Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
-        data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
+        data.mtTbCreditsObjects.getFirst().createTime =
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
         data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
         data.boAlertsObjects.getFirst().setRule("Mirror Trading");
@@ -139,9 +141,10 @@ public class MirrorTradingOpenTradeEventDataFactory {
         DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest7Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
-        data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
+        data.mtTbCreditsObjects.getFirst().createTime =
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
+        data.mt5DealsCoercedObjects =
+                generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
         data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         return data;
     }
@@ -150,12 +153,12 @@ public class MirrorTradingOpenTradeEventDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
-//        map.put("1", getMirrorTradingOpenTradeEventRuleTest1Data());
-//        map.put("2", getMirrorTradingOpenTradeEventRuleTest2Data());
-//        map.put("3", getMirrorTradingOpenTradeEventRuleTest3Data());
-//        map.put("4", getMirrorTradingOpenTradeEventRuleTest4Data());
-//        map.put("5", getMirrorTradingOpenTradeEventRuleTest5Data());
-//        map.put("6", getMirrorTradingOpenTradeEventRuleTest6Data());
+        //        map.put("1", getMirrorTradingOpenTradeEventRuleTest1Data());
+        //        map.put("2", getMirrorTradingOpenTradeEventRuleTest2Data());
+        //        map.put("3", getMirrorTradingOpenTradeEventRuleTest3Data());
+        //        map.put("4", getMirrorTradingOpenTradeEventRuleTest4Data());
+        //        map.put("5", getMirrorTradingOpenTradeEventRuleTest5Data());
+        //        map.put("6", getMirrorTradingOpenTradeEventRuleTest6Data());
         map.put("7", getMirrorTradingOpenTradeEventRuleTest7Data());
 
         setupData(map);

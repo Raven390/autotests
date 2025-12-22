@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.app_tb_finindex_data;
 
-import net.datafaker.Faker;
-
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.getRandomIntPositive;
+
+import net.datafaker.Faker;
 
 public class AppTbFinindexDataFactory {
     static Faker faker = new Faker();

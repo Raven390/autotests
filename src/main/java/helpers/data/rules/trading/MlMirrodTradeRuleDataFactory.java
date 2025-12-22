@@ -1,24 +1,23 @@
 package helpers.data.rules.trading;
 
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+
 import business_objects.kafka.MirrorScoreEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import utils.Utils;
-
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.startSshTunnel;
+import utils.Utils;
 
 @RuleTestData("mirror-trading")
 public class MlMirrodTradeRuleDataFactory {

@@ -1,7 +1,6 @@
 package business_objects.kafka.mt_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class TradeEvent {
@@ -194,22 +193,52 @@ public class TradeEvent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof TradeEvent that)) return false;
-        return tradeId == that.tradeId && serverId == that.serverId && tradingAccount == that.tradingAccount && Double.compare(
-                volume, that.volume) == 0 && Double.compare(equity, that.equity) == 0 && Double.compare(
-                        balance, that.balance) == 0 && Double.compare(leverage, that.leverage) == 0 && Double.compare(
-                                margin, that.margin) == 0 && Double.compare(freeMargin, that.freeMargin) == 0 && Objects.equals(
-                                        symbol, that.symbol) && Objects.equals(id, that.id) && Objects.equals(closeTime, that.closeTime) && Objects.equals(
-                                                closeTimeUtc, that.closeTimeUtc) && Objects.equals(type, that.type) && Objects.equals(
-                                                        eventDate, that.eventDate) && Objects.equals(metadata, that.metadata);
+        return tradeId == that.tradeId
+                && serverId == that.serverId
+                && tradingAccount == that.tradingAccount
+                && Double.compare(volume, that.volume) == 0
+                && Double.compare(equity, that.equity) == 0
+                && Double.compare(balance, that.balance) == 0
+                && Double.compare(leverage, that.leverage) == 0
+                && Double.compare(margin, that.margin) == 0
+                && Double.compare(freeMargin, that.freeMargin) == 0
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(id, that.id)
+                && Objects.equals(closeTime, that.closeTime)
+                && Objects.equals(closeTimeUtc, that.closeTimeUtc)
+                && Objects.equals(type, that.type)
+                && Objects.equals(eventDate, that.eventDate)
+                && Objects.equals(metadata, that.metadata);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tradeId, symbol, id, serverId, tradingAccount, volume, closeTime, closeTimeUtc, equity, balance, leverage, margin, freeMargin, type, eventDate, metadata);
+        return Objects.hash(
+                tradeId,
+                symbol,
+                id,
+                serverId,
+                tradingAccount,
+                volume,
+                closeTime,
+                closeTimeUtc,
+                equity,
+                balance,
+                leverage,
+                margin,
+                freeMargin,
+                type,
+                eventDate,
+                metadata);
     }
 
     @Override
     public String toString() {
-        return "CloseTradeMtEvent_NEW{" + "tradeId=" + tradeId + ", symbol='" + symbol + '\'' + ", id='" + id + '\'' + ", serverId=" + serverId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", closeTime='" + closeTime + '\'' + ", closeTimeUtc='" + closeTimeUtc + '\'' + ", equity=" + equity + ", balance=" + balance + ", leverage=" + leverage + ", margin=" + margin + ", freeMargin=" + freeMargin + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata + '\'' + '}';
+        return "CloseTradeMtEvent_NEW{" + "tradeId=" + tradeId + ", symbol='" + symbol + '\'' + ", id='" + id + '\''
+                + ", serverId=" + serverId + ", tradingAccount=" + tradingAccount + ", volume=" + volume
+                + ", closeTime='" + closeTime + '\'' + ", closeTimeUtc='" + closeTimeUtc + '\'' + ", equity=" + equity
+                + ", balance=" + balance + ", leverage=" + leverage + ", margin=" + margin + ", freeMargin="
+                + freeMargin + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata
+                + '\'' + '}';
     }
 }

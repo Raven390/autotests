@@ -1,23 +1,5 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_events;
 
-import business_objects.api.payment_gate.payments_decisions.PutDecisionsRequestBody;
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
-import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
-import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.payment.acknowledgement.Acknowledge;
-import business_objects.kafka.restriction_events.WithdrawalApprovals;
-import helpers.data.DataHelper;
-import helpers.data.enums.payment_gate.Decision;
-import io.qameta.allure.*;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.*;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
 import static helpers.data.rules.payments.router_rule_crm_events.RouterRuleCrmEventsDataFactory.setupRouterRuleData;
@@ -28,6 +10,24 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.api.payment_gate.payments_decisions.PutDecisionsRequestBody;
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
+import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
+import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.payment.acknowledgement.Acknowledge;
+import business_objects.kafka.restriction_events.WithdrawalApprovals;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import helpers.data.enums.payment_gate.Decision;
+import io.qameta.allure.*;
+import java.io.IOException;
+import java.util.*;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_EVENTS)
@@ -47,7 +47,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dataMap);
+        DataDeleteHelper.deleteData(dataMap);
     }
 
     @Test
@@ -69,9 +69,12 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         PaymentDetailsObject paymentDetailsObject = getPaymentDetails(data.clientHelper.getUserId());
         assertThat("Assert payment details", paymentDetailsObject.getPaymentId(), is(paymentId));
         assertThat("Assert payment details", paymentDetailsObject.getPaymentId(), is(paymentId));
-        assertThat("Assert payment details", paymentDetailsObject.getPayload(), containsString("\"withdrawalAmountUSD\": 1.1"));
+        assertThat(
+                "Assert payment details",
+                paymentDetailsObject.getPayload(),
+                containsString("\"withdrawalAmountUSD\": 1.1"));
 
-        List<Acknowledge> acknowledgement = getPaymentAcknowledgementFromKafka(data.crmWithdrawalEvent.getId());
+        List<Acknowledge> acknowledgement = getPaymentAcknowledgementFromKafka(paymentId);
         assertThat("Assert acknowledgement", acknowledgement.getFirst().getPaymentId(), is(paymentId.toString()));
 
         PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
@@ -80,25 +83,68 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getPaymentId(), is(paymentId));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionCode(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getRejectionCode(), is(nullValue()));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getActor(), is("Rule engine"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getPaymentId(),
+                is(paymentId));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionType(),
+                is("risk"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionCode(),
+                is(1));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getRejectionCode(),
+                is(nullValue()));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getActor(),
+                is("Rule engine"));
 
         assertThat("Assert final_decision_id", paymentEventsObject.getFinalDecisionId(), is(2));
 
-        List<WithdrawalApprovals> withdrawalApprovals = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
+        List<WithdrawalApprovals> withdrawalApprovals =
+                getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
         writeLog(withdrawalApprovals);
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMessageId(), is(data.crmWithdrawalEvent.getId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getBrand(), is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRegulator(), is(data.crmWithdrawalEvent.getRegulator()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getInternalReason(), is(""));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getStatus(), is("Approve"));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getOrderNumber(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getCheckName(), is(""));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getTimestamp(),
+                is(notNullValue()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getMessageId(),
+                is(data.crmWithdrawalEvent.getId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getTransferId(),
+                is(data.crmWithdrawalEvent.getWithdrawalId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getBrand(),
+                is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getRegulator(),
+                is(data.crmWithdrawalEvent.getRegulator()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getInternalReason(),
+                is(""));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getStatus(),
+                is("Approve"));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getOrderNumber(),
+                is(data.crmWithdrawalEvent.getMerchantOrderId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getCheckName(),
+                is(""));
     }
 
     @Test
@@ -129,23 +175,66 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getPaymentId(), is(paymentId));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionCode(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getRejectionCode(), is(0));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getActor(), is("Auto qa"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getPaymentId(),
+                is(paymentId));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionType(),
+                is("risk"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionCode(),
+                is(1));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getRejectionCode(),
+                is(0));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getActor(),
+                is("Auto qa"));
 
-        List<WithdrawalApprovals> withdrawalApprovals = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
+        List<WithdrawalApprovals> withdrawalApprovals =
+                getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
         writeLog(withdrawalApprovals);
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMessageId(), is(data.crmWithdrawalEvent.getId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getBrand(), is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRegulator(), is(data.crmWithdrawalEvent.getRegulator()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getInternalReason(), is(""));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getStatus(), is("Approve"));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getOrderNumber(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getCheckName(), is(data.crmWithdrawalEvent.getCheckName()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getTimestamp(),
+                is(notNullValue()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getMessageId(),
+                is(data.crmWithdrawalEvent.getId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getTransferId(),
+                is(data.crmWithdrawalEvent.getWithdrawalId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getBrand(),
+                is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getRegulator(),
+                is(data.crmWithdrawalEvent.getRegulator()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getInternalReason(),
+                is(""));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getStatus(),
+                is("Approve"));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getOrderNumber(),
+                is(data.crmWithdrawalEvent.getMerchantOrderId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getCheckName(),
+                is(data.crmWithdrawalEvent.getCheckName()));
     }
 
     @Test
@@ -177,28 +266,72 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getPaymentId(), is(paymentId));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionCode(), is(2));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getRejectionCode(), is(0));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getActor(), is("Auto qa"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getPaymentId(),
+                is(paymentId));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionType(),
+                is("risk"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionCode(),
+                is(2));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getRejectionCode(),
+                is(0));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getActor(),
+                is("Auto qa"));
 
-        List<WithdrawalApprovals> withdrawalApprovals = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
+        List<WithdrawalApprovals> withdrawalApprovals =
+                getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
         writeLog(withdrawalApprovals);
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMessageId(), is(data.crmWithdrawalEvent.getId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getBrand(), is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRegulator(), is(data.crmWithdrawalEvent.getRegulator()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getInternalReason(), is(""));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getStatus(), is("Refuse"));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getOrderNumber(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
-        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getCheckName(), is(data.crmWithdrawalEvent.getCheckName()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getTimestamp(),
+                is(notNullValue()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getMessageId(),
+                is(data.crmWithdrawalEvent.getId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getTransferId(),
+                is(data.crmWithdrawalEvent.getWithdrawalId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getBrand(),
+                is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getRegulator(),
+                is(data.crmWithdrawalEvent.getRegulator()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getInternalReason(),
+                is(""));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getStatus(),
+                is("Refuse"));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getOrderNumber(),
+                is(data.crmWithdrawalEvent.getMerchantOrderId()));
+        assertThat(
+                "Assert withdrawal.approval message",
+                withdrawalApprovals.getFirst().getCheckName(),
+                is(data.crmWithdrawalEvent.getCheckName()));
     }
 
     @Test
     @AllureId("1624")
-    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = true. ElementId:Event_0dvxfab")
+    @DisplayName(
+            "Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = true. ElementId:Event_0dvxfab")
     void routerRuleTest4() throws Exception {
         DataHelper data = dataMap.get("4");
 
@@ -221,7 +354,9 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         checkElementId("Event_1kdk048", data.crmWithdrawalEvent.getId(), "router_rule_crm_events");
 
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
-        assertEquals(data.crmWithdrawalEvent.getWithdrawalId(), Long.valueOf(events.getFirst().getCrmId()));
+        assertEquals(
+                data.crmWithdrawalEvent.getWithdrawalId(),
+                Long.valueOf(events.getFirst().getCrmId()));
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Withdrawal Review");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
@@ -229,10 +364,12 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         assertThat("Verify alert ucid", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
 
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.rateUSD, is(instanceOf(Double.class)));
-        assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.amountUSD, is(instanceOf(Double.class)));
+        assertThat(
+                "Verify alert attributes", alerts.getFirst().rule.attributes.amountUSD, is(instanceOf(Double.class)));
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.paymentId, is(paymentId.toString()));
 
-        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb(events.getFirst().getPaymentId(), "risk");
+        List<PaymentDecisionsObject> decision =
+                getRuleDecisionByWithdrawalIdFromDb(events.getFirst().getPaymentId(), "risk");
         assertThat("Verify amount of decisions in DB", decision.size(), is(1));
         assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionType(), is("risk"));
@@ -243,7 +380,8 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
 
     @Test
     @AllureId("1623")
-    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = false. ElementId:Event_1gdl5i3")
+    @DisplayName(
+            "Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = false. ElementId:Event_1gdl5i3")
     void routerRuleTest5() throws Exception {
         DataHelper data = dataMap.get("5");
 
@@ -252,33 +390,58 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr");
         checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), "router_rule_crm_events");
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Withdrawal notification in Router rule (crm-events)");
+        List<RuleAlert> alerts =
+                getUserAlertsFromKafka(data.clientHelper, "Withdrawal notification in Router rule (crm-events)");
 
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<PaymentEventsObject> events = getUserPaymentEventsFromDb(data.clientHelper);
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
-        assertEquals(data.crmWithdrawalEvent.getWithdrawalId(), Long.valueOf(events.getFirst().getCrmId()));
+        assertEquals(
+                data.crmWithdrawalEvent.getWithdrawalId(),
+                Long.valueOf(events.getFirst().getCrmId()));
         UUID paymentId = events.getFirst().getPaymentId();
 
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper, "Withdrawal notification in Router rule (crm-events)");
+        List<Alert> dbAlerts =
+                getUserAlertsFromDb(data.clientHelper, "Withdrawal notification in Router rule (crm-events)");
         assertThat("Verify amount of alerts in DB", dbAlerts.size(), is(0));
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getPaymentId(), is(paymentId));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getDecisionCode(), is(1));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getRejectionCode(), is(nullValue()));
-        assertThat("Verify decisions have right decision ", paymentDecisionsObject.getFirst().getActor(), is("Rule engine"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getPaymentId(),
+                is(paymentId));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionType(),
+                is("risk"));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getDecisionCode(),
+                is(1));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getRejectionCode(),
+                is(nullValue()));
+        assertThat(
+                "Verify decisions have right decision ",
+                paymentDecisionsObject.getFirst().getActor(),
+                is("Rule engine"));
 
-        List<WithdrawalApprovals> approval = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
+        List<WithdrawalApprovals> approval =
+                getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
 
         assertThat("Verify amount of approvals in Kafka topic", approval.size(), is(1));
-        assertThat("Verify status of approval in Kafka topic", approval.getFirst().getStatus(), is("Approve"));
-        assertThat("Verify status of checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
+        assertThat(
+                "Verify status of approval in Kafka topic", approval.getFirst().getStatus(), is("Approve"));
+        assertThat(
+                "Verify status of checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
         assertThat("Verify checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
         assertThat("Verify checkName in Kafka topic", approval.getFirst().getBrand(), is("Vantage"));
-        assertThat("Verify orderNumber in Kafka topic", approval.getFirst().getOrderNumber(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
+        assertThat(
+                "Verify orderNumber in Kafka topic",
+                approval.getFirst().getOrderNumber(),
+                is(data.crmWithdrawalEvent.getMerchantOrderId()));
     }
 }

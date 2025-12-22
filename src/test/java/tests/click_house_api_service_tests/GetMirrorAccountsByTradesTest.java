@@ -1,20 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
-import business_objects.api.clickhouse_api_service.get_mirror_accounts_by_trades.GetMirrorAccountsByTradesResponse;
-import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_mirror_accounts_by_trades.GetMirrorAccountsByTradesRequest.getMirrorAccountsByTrades;
 import static business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObjectFactory.generateMirrorTradesByAccount;
 import static helpers.data.ClientFactory.getRandomVantageClient;
@@ -25,6 +10,20 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.getTomorrowTimestampDbFormat;
+
+import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.clickhouse_api_service.get_mirror_accounts_by_trades.GetMirrorAccountsByTradesResponse;
+import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES)
@@ -54,7 +53,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades (200)")
     @AllureId("217")
     void getMirrorTradeAccountsByTradesTest1() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -64,7 +63,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert requestTradingAccount", mappedResponse[0].originalTradingAccount, is(data1.login_1));
         assertThat("Assert requestServerId", mappedResponse[0].originalServerId, is(data1.server_id_1));
@@ -79,7 +79,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with required params (200)")
     @AllureId("436")
     void getMirrorTradeAccountsByTradesTest2() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -94,16 +94,20 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with account and serverId (400)")
     @AllureId("437")
     void getMirrorTradeAccountsByTradesTest3() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
         queryParams.put("serverId", "1"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'symbol' for method parameter type String is not present"));
+        assertThat(
+                "Assert error message",
+                mappedResponse.getError(),
+                is("Required request parameter 'symbol' for method parameter type String is not present"));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
     }
 
@@ -111,41 +115,49 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with serverId and symbol(400)")
     @AllureId("438")
     void getMirrorTradeAccountsByTradesTest4() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", "1"); // Required
         queryParams.put("symbol", "2"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
-        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat(
+                "Assert error message",
+                mappedResponse.getError(),
+                is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with tradingAccount and symbol (400)")
     @AllureId("439")
     void getMirrorTradeAccountsByTradesTest5() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
         queryParams.put("symbol", "1"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
-        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat(
+                "Assert error message",
+                mappedResponse.getError(),
+                is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades dateFrom (200)")
     @AllureId("440")
     void getMirrorTradeAccountsByTradesTest6() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -161,7 +173,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades dateTo (200)")
     @AllureId("441")
     void getMirrorTradeAccountsByTradesTest7() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -177,7 +189,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by account (200)")
     @AllureId("442")
     void getMirrorTradeAccountsByTradesTest9() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
         queryParams.put("serverId", "1"); // Required
@@ -185,7 +197,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
     }
@@ -194,7 +207,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by serverId (200)")
     @AllureId("443")
     void getMirrorTradeAccountsByTradesTest10() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", "1"); // Required
@@ -202,7 +215,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
     }
@@ -211,7 +225,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by symbol (200)")
     @AllureId("444")
     void getMirrorTradeAccountsByTradesTest11() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -219,7 +233,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
     }

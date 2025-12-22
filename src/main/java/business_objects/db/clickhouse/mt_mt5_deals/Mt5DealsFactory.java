@@ -1,12 +1,11 @@
 package business_objects.db.clickhouse.mt_mt5_deals;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import helpers.data.enums.Symbol;
 import io.qameta.allure.Step;
-
 import java.util.Locale;
-
-import static utils.Utils.*;
 
 public class Mt5DealsFactory {
 

@@ -1,10 +1,13 @@
 package helpers.database;
 
-import io.qameta.allure.Step;
-import org.postgresql.jdbc.PgArray;
+import static utils.ConfigFactory.*;
+import static utils.ConfigFactory.POSTGRES_DB_USER;
+import static utils.Utils.writeLog;
 
+import io.qameta.allure.Step;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.InetAddress;
 import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -12,13 +15,8 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.net.InetAddress;
 import java.util.stream.Collectors;
-
-
-import static utils.ConfigFactory.*;
-import static utils.ConfigFactory.POSTGRES_DB_USER;
-import static utils.Utils.writeLog;
+import org.postgresql.jdbc.PgArray;
 
 public class DbHelper {
 
@@ -41,14 +39,15 @@ public class DbHelper {
     }
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
-    public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className,
-            int retries)
-            throws Exception {
-        return executeWithRetry(() -> {
-            try (Connection connection = createConnection(dbName)) {
-                return fetchObjects(connection, tableName, where, className);
-            }
-        }, retries);
+    public static <T> List<T> getObjectsFromDB(
+            DbName dbName, String tableName, String where, Class<T> className, int retries) throws Exception {
+        return executeWithRetry(
+                () -> {
+                    try (Connection connection = createConnection(dbName)) {
+                        return fetchObjects(connection, tableName, where, className);
+                    }
+                },
+                retries);
     }
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
@@ -70,7 +69,8 @@ public class DbHelper {
         } else {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
         }
-        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()) {
             writeLog(query);
             return mapResultSetToObjects(resultSet, className);
         }
@@ -84,7 +84,8 @@ public class DbHelper {
         } else {
             query = String.format("SELECT * FROM %s FINAL WHERE %s", tableName, where);
         }
-        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()) {
             writeLog(query);
             return mapResultSetToObjects(resultSet, className);
         }
@@ -195,8 +196,7 @@ public class DbHelper {
         }
 
         throw new IllegalArgumentException(String.format(
-                "Cannot convert value of type %s to type %s", value.getClass().getName(), targetType.getName()
-        ));
+                "Cannot convert value of type %s to type %s", value.getClass().getName(), targetType.getName()));
     }
 
     private static <T> Map<String, Field> mapDbColumnsToFields(ResultSet resultSet, Class<T> className)
@@ -289,34 +289,44 @@ public class DbHelper {
     public static void deleteObjectsFromDb(DbName dbName, String tableName, String columnName, List<?> values)
             throws SQLException {
         if (values == null || values.isEmpty()) {
-            throw new IllegalArgumentException("The 'values' list cannot be null or empty to prevent unintended deletions.");
+            throw new IllegalArgumentException(
+                    "The 'values' list cannot be null or empty to prevent unintended deletions.");
         }
 
         // Ensure all values are of supported types (String or Number)
         for (Object value : values) {
             if (!(value instanceof String || value instanceof Number)) {
-                throw new IllegalArgumentException(
-                        "Unsupported value type: " + value.getClass().getSimpleName() + ". Only String or Number is allowed.");
+                throw new IllegalArgumentException("Unsupported value type: "
+                        + value.getClass().getSimpleName() + ". Only String or Number is allowed.");
             }
         }
 
         // Build the IN clause dynamically
-        String placeholders = values.stream().map(value -> {
-            if (value instanceof Number) {
-                return String.valueOf(value); // Numbers are added directly without quotes
-            } else if (value instanceof String) {
-                return String.format("'%s'", ((String) value).replace("'", "''").replace("[", "").replace("]", "").replace(", ", "','")); // Escape and quote strings
-            } else {
-                throw new IllegalArgumentException(
-                        "Unsupported value type: " + value.getClass().getSimpleName());
-            }
-        }).collect(Collectors.joining(", "));
+        String placeholders = values.stream()
+                .map(value -> {
+                    if (value instanceof Number) {
+                        return String.valueOf(value); // Numbers are added directly without quotes
+                    } else if (value instanceof String) {
+                        return String.format(
+                                "'%s'",
+                                ((String) value)
+                                        .replace("'", "''")
+                                        .replace("[", "")
+                                        .replace("]", "")
+                                        .replace(", ", "','")); // Escape and quote strings
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Unsupported value type: " + value.getClass().getSimpleName());
+                    }
+                })
+                .collect(Collectors.joining(", "));
 
         // Generate the SQL query
         String query = String.format("DELETE FROM %s WHERE %s IN (%s)", tableName, columnName, placeholders);
 
         // Execute the query
-        try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = createConnection(dbName);
+                PreparedStatement statement = connection.prepareStatement(query)) {
             writeLog("Executing query: " + query);
             statement.executeUpdate();
         }
@@ -330,7 +340,8 @@ public class DbHelper {
 
         String query = String.format("DELETE FROM %s WHERE %s", tableName, where);
         executeWithRetry(() -> {
-            try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
+            try (Connection connection = createConnection(dbName);
+                    PreparedStatement statement = connection.prepareStatement(query)) {
                 writeLog(query);
                 statement.executeUpdate();
             }
@@ -342,7 +353,8 @@ public class DbHelper {
     @Step("Execute query: {query} to {dbName}")
     public static void executeQueryToDb(DbName dbName, String query) {
         executeWithRetry(() -> {
-            try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
+            try (Connection connection = createConnection(dbName);
+                    PreparedStatement statement = connection.prepareStatement(query)) {
                 writeLog("Executing query: " + query);
                 statement.executeUpdate();
             }
@@ -381,14 +393,28 @@ public class DbHelper {
         }
 
         if (!"GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            String sshCommand = String.join("", "ssh -i ", POSTGRES_DB_SSH_PRIVATE_KEY, " -L ", POSTGRES_DB_PORT, ":", POSTGRES_DB_HOST, ":", POSTGRES_DB_PORT, " ", POSTGRES_DB_SSH_USER, "@", POSTGRES_DB_SSH_HOST
-            );
+            String sshCommand = String.join(
+                    "",
+                    "ssh -i ",
+                    POSTGRES_DB_SSH_PRIVATE_KEY,
+                    " -L ",
+                    POSTGRES_DB_PORT,
+                    ":",
+                    POSTGRES_DB_HOST,
+                    ":",
+                    POSTGRES_DB_PORT,
+                    " ",
+                    POSTGRES_DB_SSH_USER,
+                    "@",
+                    POSTGRES_DB_SSH_HOST);
             writeLog(sshCommand);
 
             try {
                 String os = System.getProperty("os.name").toLowerCase();
                 if (!os.contains("win")) {
-                    new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + POSTGRES_DB_SSH_PRIVATE_KEY).start();
+                    new ProcessBuilder(
+                                    "chmod", "600", System.getProperty("user.dir") + "/" + POSTGRES_DB_SSH_PRIVATE_KEY)
+                            .start();
                     Thread.sleep(500);
                 }
 
@@ -407,32 +433,33 @@ public class DbHelper {
         }
     }
 
-    private static <T> void insertObjects(Connection connection, String tableName, List<T> objects) throws SQLException,
-            ReflectiveOperationException {
-        Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
+    private static <T> void insertObjects(Connection connection, String tableName, List<T> objects)
+            throws SQLException, ReflectiveOperationException {
+        Map<String, String> fieldMappings =
+                retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
         for (T obj : objects) {
             insertSingleObject(connection, tableName, obj, fieldMappings);
         }
     }
 
     private static <T> void insertObjectsSlow(Connection connection, String tableName, List<T> objects)
-            throws SQLException,
-            ReflectiveOperationException, InterruptedException {
-        Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
+            throws SQLException, ReflectiveOperationException, InterruptedException {
+        Map<String, String> fieldMappings =
+                retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
         for (T obj : objects) {
             insertSingleObject(connection, tableName, obj, fieldMappings);
             Thread.sleep(500);
         }
     }
 
-    private static <T> void insertSingleObject(Connection connection, String tableName, T obj) throws SQLException,
-            ReflectiveOperationException {
+    private static <T> void insertSingleObject(Connection connection, String tableName, T obj)
+            throws SQLException, ReflectiveOperationException {
         Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, obj.getClass());
         insertSingleObject(connection, tableName, obj, fieldMappings);
     }
 
-    private static <T> void insertSingleObject(Connection connection, String tableName, T obj,
-            Map<String, String> fieldMappings)
+    private static <T> void insertSingleObject(
+            Connection connection, String tableName, T obj, Map<String, String> fieldMappings)
             throws SQLException, ReflectiveOperationException {
         String insertQuery = buildInsertQuery(tableName, obj, fieldMappings);
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
@@ -447,7 +474,11 @@ public class DbHelper {
                     // Replace placeholders with actual values for debugging.
                     int questionMarkPos = filledQuery.indexOf("?", placeholderIndex);
                     String replacement;
-                    if (value instanceof String || value instanceof LocalDate || value instanceof LocalDateTime || value instanceof Enum || value instanceof OffsetDateTime) {
+                    if (value instanceof String
+                            || value instanceof LocalDate
+                            || value instanceof LocalDateTime
+                            || value instanceof Enum
+                            || value instanceof OffsetDateTime) {
                         replacement = "'" + value + "'";
                     } else {
                         replacement = value.toString();
@@ -466,16 +497,16 @@ public class DbHelper {
                     } else if (value instanceof Enum) {
                         String enumValue = ((Enum<?>) value).name();
                         statement.setString(parameterIndex++, enumValue);
-                    } else
-                        if ("payload".equalsIgnoreCase(columnName) && tableName.toLowerCase().endsWith("payment_details")) {
-                            // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
-                            org.postgresql.util.PGobject jsonbObject = new org.postgresql.util.PGobject();
-                            jsonbObject.setType("jsonb");
-                            jsonbObject.setValue(value.toString());
-                            statement.setObject(parameterIndex++, jsonbObject);
-                        } else {
-                            statement.setObject(parameterIndex++, value);
-                        }
+                    } else if ("payload".equalsIgnoreCase(columnName)
+                            && tableName.toLowerCase().endsWith("payment_details")) {
+                        // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
+                        org.postgresql.util.PGobject jsonbObject = new org.postgresql.util.PGobject();
+                        jsonbObject.setType("jsonb");
+                        jsonbObject.setValue(value.toString());
+                        statement.setObject(parameterIndex++, jsonbObject);
+                    } else {
+                        statement.setObject(parameterIndex++, value);
+                    }
                 }
             }
 
@@ -486,7 +517,6 @@ public class DbHelper {
             statement.executeUpdate();
         }
     }
-
 
     private static <T> String buildInsertQuery(String tableName, T obj, Map<String, String> fieldMappings)
             throws IllegalAccessException {
@@ -505,8 +535,8 @@ public class DbHelper {
         return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columnNames, placeholders);
     }
 
-    private static Map<String, String> retrieveColumnMappings(Connection connection, String tableName,
-            Class<?> objClass) throws SQLException {
+    private static Map<String, String> retrieveColumnMappings(
+            Connection connection, String tableName, Class<?> objClass) throws SQLException {
         Map<String, String> columnMappings = new HashMap<>();
         DatabaseMetaData metaData = connection.getMetaData();
         String catalog = null;
@@ -558,7 +588,8 @@ public class DbHelper {
                 attempt++;
                 writeLog("Database operation failed (attempt " + attempt + "): " + e.getMessage());
                 if (attempt >= MAX_RETRIES) {
-                    throw new RuntimeException("Operation failed after " + MAX_RETRIES + " attempts"); // Give up after 5 attempts
+                    throw new RuntimeException(
+                            "Operation failed after " + MAX_RETRIES + " attempts"); // Give up after 5 attempts
                 }
                 try {
                     Thread.sleep(1000);
@@ -581,7 +612,8 @@ public class DbHelper {
                 attempt++;
                 writeLog("Database operation failed (attempt " + attempt + "): " + e.getMessage());
                 if (attempt >= retries) {
-                    throw new RuntimeException("Operation failed after " + retries + " attempts"); // Give up after 5 attempts
+                    throw new RuntimeException(
+                            "Operation failed after " + retries + " attempts"); // Give up after 5 attempts
                 }
                 try {
                     Thread.sleep(1000);
@@ -600,5 +632,4 @@ public class DbHelper {
     private interface DatabaseOperation<T> {
         T execute() throws Exception;
     }
-
 }

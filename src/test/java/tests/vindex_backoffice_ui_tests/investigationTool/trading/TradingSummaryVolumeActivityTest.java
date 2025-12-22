@@ -1,27 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.DateTimeFormat;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
@@ -36,12 +14,43 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 import static utils.Utils.getCurrentDate;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.DateTimeFormat;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import tests.TestBaseWeb;
+
 public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
 
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(202_007).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_007_001).tradingAccount2(202_007_002).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(202_007)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca41f")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .tradingAccount(202_007_001)
+                .tradingAccount2(202_007_002)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);
@@ -92,7 +101,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("988")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 1-7 days one division on timeline is 1 day with date under each section")
+    @DisplayName(
+            "Trading/Summary. When user filters 1-7 days one division on timeline is 1 day with date under each section")
     public void filterLegend1And7DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -112,7 +122,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("989")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 8-98 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
+    @DisplayName(
+            "Trading/Summary. When user filters 8-98 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
     public void filterLegend8And31DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -131,7 +142,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("990")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 99-365 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
+    @DisplayName(
+            "Trading/Summary. When user filters 99-365 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
     public void filterLegend31And98DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -160,7 +172,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
         page.reload();
         Allure.step("filter 6 years");
-        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 364 * 6, 0, 0), getCurrentDate());
+        paymentsPage.selectDatesInCalendar(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 364 * 6, 0, 0), getCurrentDate());
         paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
     }
 
@@ -169,7 +182,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("992")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 6+ years division on timeline is 1 year with eek annotation = YYYY")
+    @DisplayName(
+            "Trading/Summary. When user filters 6+ years division on timeline is 1 year with eek annotation = YYYY")
     public void filterLegend3YearsTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -184,7 +198,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("993")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
     public void timelineInactiveDaysFilter6DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -199,7 +214,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("994")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , when user filters 5 days must have 1 inactive day on both sides")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , when user filters 5 days must have 1 inactive day on both sides")
     public void timelineInactiveDaysFilter5DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -215,7 +231,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("995")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , when user filters 4 days must have 1 inactive day on the left and 2 on the right.")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , when user filters 4 days must have 1 inactive day on the left and 2 on the right.")
     public void timelineInactiveDaysFilter4DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -232,7 +249,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("996")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , when user filters three days must have 2 inactive days on both sides")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , when user filters three days must have 2 inactive days on both sides")
     public void timelineInactiveDaysFilter3DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -250,7 +268,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("997")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , when user filters two days must have 2 inactive days on the left and 3 on the right")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , when user filters two days must have 2 inactive days on the left and 3 on the right")
     public void timelineInactiveDaysFilter2DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -269,7 +288,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("998")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , when user filters one day must have 3 inactive days on both sides")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , when user filters one day must have 3 inactive days on both sides")
     public void timelineInactiveDaysFilter1DayTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -289,7 +309,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("999")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user uses timeline , user can switch timeline between display activity or volume")
+    @DisplayName(
+            "Trading/Summary. When user uses timeline , user can switch timeline between display activity or volume")
     public void timelineSwitchVolumeActivity() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
@@ -303,7 +324,6 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         trade1.setNotionalValueUsd(10.0);
         trade2.setNotionalValueUsd(10.0);
 
-
         trade0.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
         trade0.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0));
         trade1.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
@@ -311,7 +331,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         trade2.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
         trade2.setCloseTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0));
 
-        Allure.step("create a one big deals for another day notionalValueUsd of which will be 3 times bigger than sum of first three");
+        Allure.step(
+                "create a one big deals for another day notionalValueUsd of which will be 3 times bigger than sum of first three");
 
         MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
         trade3.setNotionalValueUsd(90.0);

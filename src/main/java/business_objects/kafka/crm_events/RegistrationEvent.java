@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class RegistrationEvent {
@@ -90,7 +89,11 @@ public class RegistrationEvent {
         private String webSessionId;
 
         public LexisNexis(
-                String device, String digitalId, Integer policyScore, String rawResponse, String riskRating,
+                String device,
+                String digitalId,
+                Integer policyScore,
+                String rawResponse,
+                String riskRating,
                 Integer sessionId,
                 String trueIp) {
             this.device = device;
@@ -102,25 +105,32 @@ public class RegistrationEvent {
             this.trueIp = trueIp;
         }
 
-        public LexisNexis() {
-        }
+        public LexisNexis() {}
 
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof LexisNexis that)) return false;
-            return Objects.equals(device, that.device) && Objects.equals(digitalId, that.digitalId) && Objects.equals(
-                    policyScore, that.policyScore) && Objects.equals(rawResponse, that.rawResponse) && Objects.equals(
-                            riskRating, that.riskRating) && Objects.equals(sessionId, that.sessionId) && Objects.equals(trueIp, that.trueIp);
+            return Objects.equals(device, that.device)
+                    && Objects.equals(digitalId, that.digitalId)
+                    && Objects.equals(policyScore, that.policyScore)
+                    && Objects.equals(rawResponse, that.rawResponse)
+                    && Objects.equals(riskRating, that.riskRating)
+                    && Objects.equals(sessionId, that.sessionId)
+                    && Objects.equals(trueIp, that.trueIp);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(device, digitalId, policyScore, rawResponse, riskRating, sessionId, trueIp, webSessionId);
+            return Objects.hash(
+                    device, digitalId, policyScore, rawResponse, riskRating, sessionId, trueIp, webSessionId);
         }
 
         @Override
         public String toString() {
-            return "LexisNexis{" + "device='" + device + '\'' + ", digitalId='" + digitalId + '\'' + ", policyScore=" + policyScore + ", rawResponse='" + rawResponse + '\'' + ", riskRating='" + riskRating + '\'' + ", sessionId=" + sessionId + ", trueIp='" + trueIp + '\'' + ", webSessionId='" + webSessionId + '\'' + '}';
+            return "LexisNexis{" + "device='" + device + '\'' + ", digitalId='" + digitalId + '\'' + ", policyScore="
+                    + policyScore + ", rawResponse='" + rawResponse + '\'' + ", riskRating='" + riskRating + '\''
+                    + ", sessionId=" + sessionId + ", trueIp='" + trueIp + '\'' + ", webSessionId='" + webSessionId
+                    + '\'' + '}';
         }
 
         public String getDevice() {
@@ -188,13 +198,26 @@ public class RegistrationEvent {
         }
     }
 
-    public RegistrationEvent() {
-    }
+    public RegistrationEvent() {}
 
     public RegistrationEvent(
-            String birthday, String brand, Integer clientId, String email, String eventDate, String firstLanguage,
-            String firstName, Integer ibId, String id, String lastName, String nationalityCode, LexisNexis lexisNexis,
-            String phoneNumber, String regulator, String residencyCode, String schemaVersion, String type,
+            String birthday,
+            String brand,
+            Integer clientId,
+            String email,
+            String eventDate,
+            String firstLanguage,
+            String firstName,
+            Integer ibId,
+            String id,
+            String lastName,
+            String nationalityCode,
+            LexisNexis lexisNexis,
+            String phoneNumber,
+            String regulator,
+            String residencyCode,
+            String schemaVersion,
+            String type,
             String websiteUserType) {
         this.birthday = birthday;
         this.brand = brand;
@@ -219,18 +242,57 @@ public class RegistrationEvent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof RegistrationEvent that)) return false;
-        return birthday == that.birthday && brand == that.brand && clientId == that.clientId && email == that.email && eventDate == that.eventDate && firstLanguage == that.firstLanguage && firstName == that.firstName && ibId == that.ibId && id == that.id && lastName == that.lastName && nationalityCode == that.nationalityCode && phoneNumber == that.phoneNumber && regulator == that.regulator && residencyCode == that.residencyCode && schemaVersion == that.schemaVersion && type == that.type && websiteUserType == that.websiteUserType && Objects.equals(
-                lexisNexis, that.lexisNexis);
+        return birthday == that.birthday
+                && brand == that.brand
+                && clientId == that.clientId
+                && email == that.email
+                && eventDate == that.eventDate
+                && firstLanguage == that.firstLanguage
+                && firstName == that.firstName
+                && ibId == that.ibId
+                && id == that.id
+                && lastName == that.lastName
+                && nationalityCode == that.nationalityCode
+                && phoneNumber == that.phoneNumber
+                && regulator == that.regulator
+                && residencyCode == that.residencyCode
+                && schemaVersion == that.schemaVersion
+                && type == that.type
+                && websiteUserType == that.websiteUserType
+                && Objects.equals(lexisNexis, that.lexisNexis);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(birthday, brand, clientId, email, eventDate, firstLanguage, firstName, ibId, id, lastName, nationalityCode, lexisNexis, phoneNumber, regulator, residencyCode, schemaVersion, type, websiteUserType);
+        return Objects.hash(
+                birthday,
+                brand,
+                clientId,
+                email,
+                eventDate,
+                firstLanguage,
+                firstName,
+                ibId,
+                id,
+                lastName,
+                nationalityCode,
+                lexisNexis,
+                phoneNumber,
+                regulator,
+                residencyCode,
+                schemaVersion,
+                type,
+                websiteUserType);
     }
 
     @Override
     public String toString() {
-        return "RegistrationEvent{" + "birthday=" + birthday + ", brand=" + brand + ", clientId=" + clientId + ", email=" + email + ", eventDate=" + eventDate + ", firstLanguage=" + firstLanguage + ", firstName=" + firstName + ", ibId=" + ibId + ", id=" + id + ", lastName=" + lastName + ", nationalityCode=" + nationalityCode + ", lexisNexis=" + lexisNexis + ", phoneNumber=" + phoneNumber + ", regulator=" + regulator + ", residencyCode=" + residencyCode + ", schemaVersion=" + schemaVersion + ", type=" + type + ", websiteUserType=" + websiteUserType + '}';
+        return "RegistrationEvent{" + "birthday=" + birthday + ", brand=" + brand + ", clientId=" + clientId
+                + ", email=" + email + ", eventDate=" + eventDate + ", firstLanguage=" + firstLanguage + ", firstName="
+                + firstName + ", ibId=" + ibId + ", id=" + id + ", lastName=" + lastName + ", nationalityCode="
+                + nationalityCode + ", lexisNexis=" + lexisNexis + ", phoneNumber=" + phoneNumber + ", regulator="
+                + regulator + ", residencyCode=" + residencyCode + ", schemaVersion=" + schemaVersion + ", type=" + type
+                + ", websiteUserType=" + websiteUserType + '}';
     }
 
     public String getBirthday() {

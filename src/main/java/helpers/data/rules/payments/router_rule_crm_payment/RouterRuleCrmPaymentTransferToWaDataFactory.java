@@ -1,19 +1,19 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Constants.CRM_TRANSFER_TO_WA_EVENT;
+
 import business_objects.kafka.crm_events.TransferToWaEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Description;
-import utils.Utils;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.startSshTunnel;
+import utils.Utils;
 
 public class RouterRuleCrmPaymentTransferToWaDataFactory {
     private static final ClientHelper routerRuleClient1 = getRandomVantageClientAllFields();
@@ -25,29 +25,29 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
         DataHelper data = new DataHelper();
         createClient(data, client);
         UUID id = UUID.randomUUID();
-        data.transferToWaEvent = new TransferToWaEvent(
-                data.clientHelper.getTradingAccount(),      //fromMt4account
-                "1.0",                                      //schemaVersion
-                data.clientHelper.getUserId(),              //clientId
-                "MT5",                                      //accountType
-                0.033_958_96,                               //actualAmount
-                101D,                                       //transferAmount
-                "AUVF1110171050ETH17640572580047",          //merchantOrderId
-                "transferToWA",                             //type
-                Utils.getRandomLongPositive(),               //transferId
-                "",                             //checkName
-                "WEB",                                      //platform
-                "AUVF1110171050ETH17640572580047",          //businessOrderId
-                24,                                         //statusId
-                "ETH",                                      //to currency
-                "2025-11-25T07:55:46Z",                     //transferApplicationTime
-                data.clientHelper.getRegulator(),           //regulator
-                "USD",                                      //fromCurrency
-                id,                                         //id
-                data.clientHelper.getBrand(),               //brand
-                "Risk Audit",                               //status
-                "2025-11-25T07:55:46Z"                      //eventDate
-        );
+        data.transferToWaEvent = TransferToWaEvent.builder()
+                .fromMt4account(data.clientHelper.getTradingAccount()) // fromMt4account
+                .schemaVersion("1.0") // schemaVersion
+                .clientId(data.clientHelper.getUserId()) // clientId
+                .accountType("MT5") // accountType
+                .actualAmount(0.033_958_96) // actualAmount
+                .transferAmount(101D) // transferAmount
+                .merchantOrderId("AUVF1110171050ETH17640572580047") // merchantOrderId
+                .type(CRM_TRANSFER_TO_WA_EVENT) // type
+                .transferId(Utils.getRandomLongPositive()) // transferId
+                .checkName("") // checkName
+                .platform("WEB") // platform
+                .businessOrderId("AUVF1110171050ETH17640572580047") // businessOrderId
+                .statusId(24) // statusId
+                .toCurrency("ETH") // to currency
+                .transferApplicationTime("2025-11-25T07:55:46Z") // transferApplicationTime
+                .regulator(data.clientHelper.getRegulator()) // regulator
+                .fromCurrency("USD") // fromCurrency
+                .id(id) // id
+                .brand(data.clientHelper.getBrand()) // brand
+                .status("Risk Audit") // status
+                .eventDate("2025-11-25T07:55:46Z") // eventDate
+                .build();
         return data;
     }
 

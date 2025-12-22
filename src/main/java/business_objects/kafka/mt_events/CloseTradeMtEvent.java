@@ -40,11 +40,15 @@ public class CloseTradeMtEvent {
     @JsonProperty("initialEventTime")
     public String initialEventTime;
 
-    public CloseTradeMtEvent() {
-    }
+    public CloseTradeMtEvent() {}
 
     public CloseTradeMtEvent(
-            String id, String closeTime, Long tradeId, Integer tradingAccount, Double volume, String symbol,
+            String id,
+            String closeTime,
+            Long tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
             Integer serverId) {
         this.id = id;
         this.closeTime = closeTime;
@@ -56,7 +60,12 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-            String closeTime, Long tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId,
+            String closeTime,
+            Long tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
+            Integer serverId,
             String type) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -67,8 +76,15 @@ public class CloseTradeMtEvent {
         this.type = type;
     }
 
-    public CloseTradeMtEvent(String id, String closeTime, Long tradeId, Integer tradingAccount, Double volume,
-            String symbol, Integer serverId, String type) {
+    public CloseTradeMtEvent(
+            String id,
+            String closeTime,
+            Long tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
+            Integer serverId,
+            String type) {
         this.id = id;
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -80,8 +96,17 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-            String id, String closeTime, Long tradeId, Integer tradingAccount, Double volume, String symbol,
-            Integer serverId, String type, String eventDate, TradeEventMetadata metadata, String initialEventTime) {
+            String id,
+            String closeTime,
+            Long tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
+            Integer serverId,
+            String type,
+            String eventDate,
+            TradeEventMetadata metadata,
+            String initialEventTime) {
         this.id = id;
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -100,7 +125,13 @@ public class CloseTradeMtEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CloseTradeMtEvent that = (CloseTradeMtEvent) o;
-        return Objects.equals(closeTime, that.closeTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(volume, that.volume) && Objects.equals(symbol, that.symbol) && Objects.equals(serverId, that.serverId) && Objects.equals(type, that.type);
+        return Objects.equals(closeTime, that.closeTime)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(type, that.type);
     }
 
     @Override
@@ -110,6 +141,8 @@ public class CloseTradeMtEvent {
 
     @Override
     public String toString() {
-        return "CloseTradeMtEvent{" + "id='" + id + '\'' + ", closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
+        return "CloseTradeMtEvent{" + "id='" + id + '\'' + ", closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId
+                + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\''
+                + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }

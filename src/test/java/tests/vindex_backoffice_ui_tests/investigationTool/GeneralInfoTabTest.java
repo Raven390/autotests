@@ -1,30 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
-import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.playwright.Page;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Regulator;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Locale;
-
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
@@ -46,6 +21,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
+import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.playwright.Page;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 class GeneralInfoTabTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -53,9 +52,18 @@ class GeneralInfoTabTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(getRandomVantageClientAllFields());
 
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(232_301).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_301_001).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(232_301)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff997c7")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(232_301_001)
+                .serverId(42)
+                .build();
     }
+
     private static final CrmTbUserObject crmTbClient = generateUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
@@ -94,11 +102,23 @@ class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         generalTab.clickGeneralTabButton();
-        assertThat("Assert that full name is correct", generalTab.getFullName(), equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
+        assertThat(
+                "Assert that full name is correct",
+                generalTab.getFullName(),
+                equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
         String registrationDateAgoPattern = "^(?:(?:\\d+ year(?:s)? )?(?:\\d+ month(?:s)? )?)?\\d+ day(?:s)?$";
-        assertThat("Assert that registration date ago is correct", generalTab.getRegistrationDateAgo(), matchesPattern(registrationDateAgoPattern));
-        assertThat("Assert that client id is correct", generalTab.getClientId(), equalTo(String.valueOf(crmTbUser.userId)));
-        assertThat("Assert that registration date is correct", generalTab.getRegistrationDate(), equalTo(crmTbUser.registrationDateUtc.split(" ")[0]));
+        assertThat(
+                "Assert that registration date ago is correct",
+                generalTab.getRegistrationDateAgo(),
+                matchesPattern(registrationDateAgoPattern));
+        assertThat(
+                "Assert that client id is correct",
+                generalTab.getClientId(),
+                equalTo(String.valueOf(crmTbUser.userId)));
+        assertThat(
+                "Assert that registration date is correct",
+                generalTab.getRegistrationDate(),
+                equalTo(crmTbUser.registrationDateUtc.split(" ")[0]));
         assertThat("Assert that regulator is correct", generalTab.getRegulator(), equalTo(crmTbUser.regulator));
         assertThat("Assert that gender is correct", generalTab.getGender(), equalTo(crmTbUser.gender));
         assertThat("Assert that date of birth is correct", generalTab.getDateOfBirth(), equalTo(crmTbUser.birthday));
@@ -108,8 +128,14 @@ class GeneralInfoTabTest extends TestBaseWeb {
         assertThat("Assert that encoded phone number is correct", generalTab.getPhoneNumber(), equalTo("+1*********3"));
         assertThat("Assert that 2 factor auth is correct", generalTab.get2FactorAuth(), equalTo("Yes"));
         generalTab.verifyKycSectionIsVisible();
-        assertThat("Assert that registration source raf is correct", generalTab.getRegistrationSourceRaf(), equalTo(crmTbUser.rafReferrerId.toString()));
-        assertThat("Assert that registration source cpa is correct", generalTab.getRegistrationSourceCpa(), equalTo(crmTbUser.cpaId.toString()));
+        assertThat(
+                "Assert that registration source raf is correct",
+                generalTab.getRegistrationSourceRaf(),
+                equalTo(crmTbUser.rafReferrerId.toString()));
+        assertThat(
+                "Assert that registration source cpa is correct",
+                generalTab.getRegistrationSourceCpa(),
+                equalTo(crmTbUser.cpaId.toString()));
         generalTab.clickShowHiddenDataButton();
         assertThat("Assert that email is correct", generalTab.getEmailAddress(), equalTo("test14@example.com"));
         assertThat("Assert that phone number is correct", generalTab.getPhoneNumber(), equalTo("+1810347493"));
@@ -120,7 +146,15 @@ class GeneralInfoTabTest extends TestBaseWeb {
     @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
     @DisplayName("General Tab. User can see IB account in clients general info info more than one account")
     public void IBtest() {
-        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
+        ClientHelper referral = ClientHelper.builder()
+                .userId(232_303)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff997c7")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(232_303_001)
+                .tradingAccount2(232_303_002)
+                .serverId(42)
+                .build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";
@@ -133,7 +167,6 @@ class GeneralInfoTabTest extends TestBaseWeb {
         MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount2);
-
 
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
@@ -157,8 +190,10 @@ class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigate(client.getUcid());
-        generalTab.checkIbRebates(referral.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()));
-        generalTab.checkIbRebates(referral.getTradingAccount2(), (commission2.getSalesCommission() + commission2.getIbCommission()));
+        generalTab.checkIbRebates(
+                referral.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()));
+        generalTab.checkIbRebates(
+                referral.getTradingAccount2(), (commission2.getSalesCommission() + commission2.getIbCommission()));
     }
 
     @Test
@@ -168,7 +203,15 @@ class GeneralInfoTabTest extends TestBaseWeb {
     public void ibSeparateTest() {
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
-        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
+        ClientHelper referral = ClientHelper.builder()
+                .userId(232_303)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff997c7")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(232_303_001)
+                .tradingAccount2(232_303_002)
+                .serverId(42)
+                .build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";
@@ -178,7 +221,6 @@ class GeneralInfoTabTest extends TestBaseWeb {
         insertCrmAccountsToDb(refAccount1);
         MtAccountObject refMtAccount1 = generateMtAccountByCrmTbAccount(refAccount1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
-
 
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
@@ -206,7 +248,10 @@ class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigate(client.getUcid());
-        generalTab.checkIbRebates(referral.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()) + (commission2.getSalesCommission() + commission2.getIbCommission()));
+        generalTab.checkIbRebates(
+                referral.getTradingAccount(),
+                (commission.getSalesCommission() + commission.getIbCommission())
+                        + (commission2.getSalesCommission() + commission2.getIbCommission()));
     }
 
     @Test
@@ -237,7 +282,8 @@ class GeneralInfoTabTest extends TestBaseWeb {
     @Test
     @AllureId("1074")
     @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
-    @DisplayName("General Tab. User can't see IB account in clients general info if there only rebate data exist without connection record")
+    @DisplayName(
+            "General Tab. User can't see IB account in clients general info if there only rebate data exist without connection record")
     public void IbNotDisplayedOnlyRebateExistTest() {
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
@@ -327,7 +373,8 @@ class GeneralInfoTabTest extends TestBaseWeb {
     @Test
     @AllureId("1052")
     @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
-    @DisplayName("General Tab. User can't see CPA client in clients general info if there is no CPA data in clients DB record")
+    @DisplayName(
+            "General Tab. User can't see CPA client in clients general info if there is no CPA data in clients DB record")
     public void CpaNotDisplayedTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -340,7 +387,15 @@ class GeneralInfoTabTest extends TestBaseWeb {
     @Feature("BMS-1194 Sales person whom belongs client")
     @DisplayName("")
     public void SalesPersonDisplayedTest() throws InterruptedException {
-        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
+        ClientHelper referral = ClientHelper.builder()
+                .userId(232_303)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff997c7")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(232_303_001)
+                .tradingAccount2(232_303_002)
+                .serverId(42)
+                .build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";
@@ -353,7 +408,6 @@ class GeneralInfoTabTest extends TestBaseWeb {
         MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount2);
-
 
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
@@ -368,7 +422,7 @@ class GeneralInfoTabTest extends TestBaseWeb {
         insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission);
         AccountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
         relation2.setDirectIbRebateAccount(referral.getTradingAccount2());
-        relation2.setSalesId(relation.getSalesId() + 1);//this is for sorting by id
+        relation2.setSalesId(relation.getSalesId() + 1); // this is for sorting by id
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation2);
         S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
         commission2.setIbRebateAccount(relation2.getDirectIbRebateAccount());
@@ -388,13 +442,17 @@ class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigate(client.getUcid());
-        generalTab.checkManagerData(manager1.getUserName(), manager1.getOrgName(), relation.getAccount().toString());
-        generalTab.checkManagerData(manager2.getUserName(), manager2.getOrgName(), relation2.getAccount().toString());
-
+        generalTab.checkManagerData(
+                manager1.getUserName(),
+                manager1.getOrgName(),
+                relation.getAccount().toString());
+        generalTab.checkManagerData(
+                manager2.getUserName(),
+                manager2.getOrgName(),
+                relation2.getAccount().toString());
 
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "user_id =" + manager1.getUserId());
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "user_id =" + manager2.getUserId());
-
     }
 
     @AfterAll

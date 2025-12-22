@@ -1,5 +1,10 @@
 package page_objects.backoffice_pages.abuseRegistry;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -7,33 +12,34 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
 import io.qameta.allure.Allure;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.ConfigFactory.BASE_URL_E2E;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class FraudstersPage extends AbstractPage {
 
     private final Locator uploadListButton;
     private final Locator uploadDrawer;
     private final String uploadDrawerLocator = "//*[@data-qa='drawer_body']";
-    private static final String FRAUD_BY_TEXT_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content') or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[text()='%s']";
-    private static final String FRAUD_STATUS_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')  or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[contains(@data-qa,'fraud_type_selector__dropdown__item__submenu__%s:%s')]";
-    private final String brandSelectButtonLocatorPattern = uploadDrawerLocator + "//*[@class='v-label-list__list']/button/*[text()='%s']";
+    private static final String FRAUD_BY_TEXT_PATTERN =
+            "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content') or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[text()='%s']";
+    private static final String FRAUD_STATUS_PATTERN =
+            "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')  or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[contains(@data-qa,'fraud_type_selector__dropdown__item__submenu__%s:%s')]";
+    private final String brandSelectButtonLocatorPattern =
+            uploadDrawerLocator + "//*[@class='v-label-list__list']/button/*[text()='%s']";
     private final String fraudTypeSelectionSection = uploadDrawerLocator + "//*[@class='v-fraud-type-selector']";
-    private final String restrictionSelectionSection = uploadDrawerLocator + "//*[@class='v-client-restrictions-selector']";
+    private final String restrictionSelectionSection =
+            uploadDrawerLocator + "//*[@class='v-client-restrictions-selector']";
     private final Locator clientIdInput;
     private final Locator addFraudButton;
     private final Locator fraudTypeInput;
-    private final String fraudDropoutListElementLocatorPattern = "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
+    private final String fraudDropoutListElementLocatorPattern =
+            "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
     private final String sourceSelectButtonLocatorPattern = "[data-qa='buttons_list__item__%s']";
-    private final String restrictionPopupListElementLocatorPattern = "//*[@class='g-select-list__option-default-label'][text()='%s']";
-    private final String sourceSelectPattern = "//*[text()='%s']/ancestor::*[@class ='v-fraud-type']//*[@data-qa=\"source_select__select_control\"]";
+    private final String restrictionPopupListElementLocatorPattern =
+            "//*[@class='g-select-list__option-default-label'][text()='%s']";
+    private final String sourceSelectPattern =
+            "//*[text()='%s']/ancestor::*[@class ='v-fraud-type']//*[@data-qa=\"source_select__select_control\"]";
     private final String statusOptionPattern = "//*[@data-qa=\"select-list\"]//span[text()='%s']";
     private final Locator fraudDropoutListElement;
     private final Locator validationList;
@@ -57,16 +63,20 @@ public class FraudstersPage extends AbstractPage {
     private final Locator uploadByIdButton;
     private final Locator uploadByAccountButton;
 
-
     public FraudstersPage(Page page) {
         super(page);
         this.uploadListButton = page.locator("//button/*[text()='Add']");
         this.removeListButton = page.locator("//button/*[text()='Remove']");
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
         this.removeDrawer = page.locator(uploadDrawerLocator + "//*[text()='Remove fraud types or restrictions']");
-        this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons or new lines']");
-        this.serverAccInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter a list of accounts with servers (e.g.: MT5-PUG2 123456789), separated with spaces, commas, semicolons or new lines']");
-        this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='fraud_type_selector__add_button' or @data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__anchor']");
+        this.clientIdInput = page.locator(uploadDrawerLocator
+                + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons or new lines']");
+        this.serverAccInput = page.locator(
+                uploadDrawerLocator
+                        + "//textarea[@placeholder='Enter a list of accounts with servers (e.g.: MT5-PUG2 123456789), separated with spaces, commas, semicolons or new lines']");
+        this.addFraudButton = page.locator(
+                uploadDrawerLocator
+                        + "//*[@data-qa='fraud_type_selector__add_button' or @data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__anchor']");
         this.validationList = page.locator(".v-abuse-registry-batch-delete-errors__list");
         this.validationListItem = page.locator(".v-abuse-registry-batch-delete-errors-item__item");
         this.addRestrictionButton = page.locator(restrictionSelectionSection + "//button");
@@ -82,8 +92,10 @@ public class FraudstersPage extends AbstractPage {
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
         this.warningToast = page.locator("//*[contains(@class, 'g-toast_theme_warning')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
-        this.pendingProcessingToggleLocator = page.locator("//*[@data-qa=\"abuse_registry__controls__pending_processing_switch\"]");
-        this.pendingProcessingCells = page.locator("//div[contains(@class,'v-body-row')]/descendant::div[contains(@data-qa,'pending_processing')]");
+        this.pendingProcessingToggleLocator =
+                page.locator("//*[@data-qa=\"abuse_registry__controls__pending_processing_switch\"]");
+        this.pendingProcessingCells = page.locator(
+                "//div[contains(@class,'v-body-row')]/descendant::div[contains(@data-qa,'pending_processing')]");
         this.uploadByIdButton = page.locator("[title='Client IDs']");
         this.uploadByAccountButton = page.locator("[title='Accounts']");
     }
@@ -245,7 +257,6 @@ public class FraudstersPage extends AbstractPage {
         page.locator(sourceElement).click();
         String sourceOptionElement = String.format(statusOptionPattern, source);
         page.locator(sourceOptionElement).click();
-
     }
 
     public void addSelectedFraudDelete(String fraud) {
@@ -332,7 +343,8 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public String getClientInPendingProcessingContent(String ucid) {
-        return page.locator(String.format("//*[@data-qa='virtualized_table__rows__%s__pending_processing']", ucid)).textContent();
+        return page.locator(String.format("//*[@data-qa='virtualized_table__rows__%s__pending_processing']", ucid))
+                .textContent();
     }
 
     public List<String> getPendingProcessingCellsContent() {
@@ -352,4 +364,3 @@ public class FraudstersPage extends AbstractPage {
         restrictionApplyButton.click();
     }
 }
-

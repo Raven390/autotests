@@ -4,14 +4,10 @@ import helpers.data.ClientHelper;
 
 public class MtCidEntryFactory {
     public static MtCidTableEntry mtCidTableEntryForConnectionSearch(ClientHelper client) {
-        return new MtCidTableEntry(
-                client.getUcid(), client.getMtCid()
-        );
+        return new MtCidTableEntry(client.getUcid(), client.getMtCid());
     }
 
     public static MtCidTableEntry mtCidTableEntryForConnectionSearch(ClientHelper client, String mtCid) {
-        return new MtCidTableEntry(
-                client.getUcid(), mtCid
-        );
+        return new MtCidTableEntry(client.getUcid(), mtCid);
     }
 }

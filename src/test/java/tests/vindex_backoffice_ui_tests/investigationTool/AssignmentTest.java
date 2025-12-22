@@ -1,17 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.backoffice_db.Investigation;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.database.DbName;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
@@ -21,6 +9,17 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
+
+import business_objects.db.backoffice_db.Investigation;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.database.DbName;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class AssignmentTest extends TestBaseWeb {
 
@@ -49,8 +48,15 @@ public class AssignmentTest extends TestBaseWeb {
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
         investigationPage.verifyClientCardWithClientIdVisible(String.valueOf(crmTbUser.userId));
-        List<Investigation> investigations = getObjectsFromDB(DbName.POSTGRES, BO_INVESTIGATION_TABLE_NAME, String.format("client_ucid = '%s'", crmTbUser.ucid), Investigation.class);
-        assertThat("Assert that client is assigned to current user in db table", investigations.getFirst().getAssignedUserId(), equalTo(autotestUserOne().getId()));
+        List<Investigation> investigations = getObjectsFromDB(
+                DbName.POSTGRES,
+                BO_INVESTIGATION_TABLE_NAME,
+                String.format("client_ucid = '%s'", crmTbUser.ucid),
+                Investigation.class);
+        assertThat(
+                "Assert that client is assigned to current user in db table",
+                investigations.getFirst().getAssignedUserId(),
+                equalTo(autotestUserOne().getId()));
     }
 
     @AfterAll

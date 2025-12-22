@@ -53,21 +53,57 @@ public class Mt5DealsCoercedObject {
     private String lastUpdated;
     private String internalComment;
 
-    public Mt5DealsCoercedObject() {
-    }
+    public Mt5DealsCoercedObject() {}
 
     public Mt5DealsCoercedObject(
-            String brand, String regulator, Integer userId, String ucid, Integer account, String platform,
+            String brand,
+            String regulator,
+            Integer userId,
+            String ucid,
+            Integer account,
+            String platform,
             Integer serverId,
-            String serverName, String accountType, String accountGroup, String accountCurrency, Long deal, Long order,
-            Integer action, Integer entry, Integer reason, Double contractSize, String time, String timeUtc,
+            String serverName,
+            String accountType,
+            String accountGroup,
+            String accountCurrency,
+            Long deal,
+            Long order,
+            Integer action,
+            Integer entry,
+            Integer reason,
+            Double contractSize,
+            String time,
+            String timeUtc,
             String symbol,
-            String symbolUnderlying, String baseCurrency, String quoteCurrency, Double rateUsdBase, Double rateUsdQuote,
-            Double rateUsdAcc, Double price, Double volume, Double volumeLots, Double notionalValueUsd, Double profit,
-            Double storage, Double commission, Double profitUsd, Double storageUsd, Double commissionUsd, Long expertId,
-            Long positionId, String comment, Double sl, Double tp, Double priceGateway, Double marketBid,
+            String symbolUnderlying,
+            String baseCurrency,
+            String quoteCurrency,
+            Double rateUsdBase,
+            Double rateUsdQuote,
+            Double rateUsdAcc,
+            Double price,
+            Double volume,
+            Double volumeLots,
+            Double notionalValueUsd,
+            Double profit,
+            Double storage,
+            Double commission,
+            Double profitUsd,
+            Double storageUsd,
+            Double commissionUsd,
+            Long expertId,
+            Long positionId,
+            String comment,
+            Double sl,
+            Double tp,
+            Double priceGateway,
+            Double marketBid,
             Double marketAsk,
-            Double rateProfit, Integer isDeleted, String lastUpdated, String internalComment) {
+            Double rateProfit,
+            Integer isDeleted,
+            String lastUpdated,
+            String internalComment) {
         this.brand = brand;
         this.regulator = regulator;
         this.userId = userId;
@@ -123,33 +159,107 @@ public class Mt5DealsCoercedObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mt5DealsCoercedObject that = (Mt5DealsCoercedObject) o;
-        return Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(
-                userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(
-                        platform, that.platform) && Objects.equals(serverId, that.serverId) && Objects.equals(
-                                serverName, that.serverName) && Objects.equals(accountType, that.accountType) && Objects.equals(
-                                        accountGroup, that.accountGroup) && Objects.equals(accountCurrency, that.accountCurrency) && Objects.equals(
-                                                deal, that.deal) && Objects.equals(order, that.order) && Objects.equals(action, that.action) && Objects.equals(
-                                                        entry, that.entry) && Objects.equals(reason, that.reason) && Objects.equals(
-                                                                contractSize, that.contractSize) && Objects.equals(time, that.time) && Objects.equals(
-                                                                        timeUtc, that.timeUtc) && Objects.equals(symbol, that.symbol) && Objects.equals(
-                                                                                symbolUnderlying, that.symbolUnderlying) && Objects.equals(baseCurrency, that.baseCurrency) && Objects.equals(
-                                                                                        quoteCurrency, that.quoteCurrency) && Objects.equals(rateUsdBase, that.rateUsdBase) && Objects.equals(
-                                                                                                rateUsdQuote, that.rateUsdQuote) && Objects.equals(rateUsdAcc, that.rateUsdAcc) && Objects.equals(
-                                                                                                        price, that.price) && Objects.equals(volume, that.volume) && Objects.equals(volumeLots, that.volumeLots) && Objects.equals(
-                                                                                                                notionalValueUsd, that.notionalValueUsd) && Objects.equals(profit, that.profit) && Objects.equals(
-                                                                                                                        storage, that.storage) && Objects.equals(commission, that.commission) && Objects.equals(
-                                                                                                                                profitUsd, that.profitUsd) && Objects.equals(storageUsd, that.storageUsd) && Objects.equals(
-                                                                                                                                        commissionUsd, that.commissionUsd) && Objects.equals(expertId, that.expertId) && Objects.equals(
-                                                                                                                                                positionId, that.positionId) && Objects.equals(comment, that.comment) && Objects.equals(
-                                                                                                                                                        sl, that.sl) && Objects.equals(tp, that.tp) && Objects.equals(priceGateway, that.priceGateway) && Objects.equals(
-                                                                                                                                                                marketBid, that.marketBid) && Objects.equals(marketAsk, that.marketAsk) && Objects.equals(
-                                                                                                                                                                        rateProfit, that.rateProfit) && Objects.equals(isDeleted, that.isDeleted) && Objects.equals(
-                                                                                                                                                                                lastUpdated, that.lastUpdated) && Objects.equals(internalComment, that.internalComment);
+        return Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(accountType, that.accountType)
+                && Objects.equals(accountGroup, that.accountGroup)
+                && Objects.equals(accountCurrency, that.accountCurrency)
+                && Objects.equals(deal, that.deal)
+                && Objects.equals(order, that.order)
+                && Objects.equals(action, that.action)
+                && Objects.equals(entry, that.entry)
+                && Objects.equals(reason, that.reason)
+                && Objects.equals(contractSize, that.contractSize)
+                && Objects.equals(time, that.time)
+                && Objects.equals(timeUtc, that.timeUtc)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(symbolUnderlying, that.symbolUnderlying)
+                && Objects.equals(baseCurrency, that.baseCurrency)
+                && Objects.equals(quoteCurrency, that.quoteCurrency)
+                && Objects.equals(rateUsdBase, that.rateUsdBase)
+                && Objects.equals(rateUsdQuote, that.rateUsdQuote)
+                && Objects.equals(rateUsdAcc, that.rateUsdAcc)
+                && Objects.equals(price, that.price)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(volumeLots, that.volumeLots)
+                && Objects.equals(notionalValueUsd, that.notionalValueUsd)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(storage, that.storage)
+                && Objects.equals(commission, that.commission)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(storageUsd, that.storageUsd)
+                && Objects.equals(commissionUsd, that.commissionUsd)
+                && Objects.equals(expertId, that.expertId)
+                && Objects.equals(positionId, that.positionId)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(sl, that.sl)
+                && Objects.equals(tp, that.tp)
+                && Objects.equals(priceGateway, that.priceGateway)
+                && Objects.equals(marketBid, that.marketBid)
+                && Objects.equals(marketAsk, that.marketAsk)
+                && Objects.equals(rateProfit, that.rateProfit)
+                && Objects.equals(isDeleted, that.isDeleted)
+                && Objects.equals(lastUpdated, that.lastUpdated)
+                && Objects.equals(internalComment, that.internalComment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, regulator, userId, ucid, account, platform, serverId, serverName, accountType, accountGroup, accountCurrency, deal, order, action, entry, reason, contractSize, time, timeUtc, symbol, symbolUnderlying, baseCurrency, quoteCurrency, rateUsdBase, rateUsdQuote, rateUsdAcc, price, volume, volumeLots, notionalValueUsd, profit, storage, commission, profitUsd, storageUsd, commissionUsd, expertId, positionId, comment, sl, tp, priceGateway, marketBid, marketAsk, rateProfit, isDeleted, lastUpdated, internalComment);
+        return Objects.hash(
+                brand,
+                regulator,
+                userId,
+                ucid,
+                account,
+                platform,
+                serverId,
+                serverName,
+                accountType,
+                accountGroup,
+                accountCurrency,
+                deal,
+                order,
+                action,
+                entry,
+                reason,
+                contractSize,
+                time,
+                timeUtc,
+                symbol,
+                symbolUnderlying,
+                baseCurrency,
+                quoteCurrency,
+                rateUsdBase,
+                rateUsdQuote,
+                rateUsdAcc,
+                price,
+                volume,
+                volumeLots,
+                notionalValueUsd,
+                profit,
+                storage,
+                commission,
+                profitUsd,
+                storageUsd,
+                commissionUsd,
+                expertId,
+                positionId,
+                comment,
+                sl,
+                tp,
+                priceGateway,
+                marketBid,
+                marketAsk,
+                rateProfit,
+                isDeleted,
+                lastUpdated,
+                internalComment);
     }
 
     public String getBrand() {

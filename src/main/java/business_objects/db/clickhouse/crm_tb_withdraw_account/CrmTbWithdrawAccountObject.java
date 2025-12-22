@@ -1,6 +1,5 @@
 package business_objects.db.clickhouse.crm_tb_withdraw_account;
 
-
 import java.util.Objects;
 
 public class CrmTbWithdrawAccountObject {
@@ -30,15 +29,32 @@ public class CrmTbWithdrawAccountObject {
     public Integer isDeleted;
     public String lastUpdated;
 
-    public CrmTbWithdrawAccountObject() {
-    }
+    public CrmTbWithdrawAccountObject() {}
 
     public CrmTbWithdrawAccountObject(
-            Integer sourceIdSt, Long id, Integer brandUid, String brand, String regulator,
-            String ucid, Integer userId, String bankName, String bankAccountName, String swiftCode,
-            String bankCard, String sortCode, String bankAddress, String bankBranchName,
-            String accountHolderAddress, String createTime, String createTimeUtc, String updateTime,
-            String updateTimeUtc, Integer isDel, String bankCity, String ifscCode, Integer isDeleted,
+            Integer sourceIdSt,
+            Long id,
+            Integer brandUid,
+            String brand,
+            String regulator,
+            String ucid,
+            Integer userId,
+            String bankName,
+            String bankAccountName,
+            String swiftCode,
+            String bankCard,
+            String sortCode,
+            String bankAddress,
+            String bankBranchName,
+            String accountHolderAddress,
+            String createTime,
+            String createTimeUtc,
+            String updateTime,
+            String updateTimeUtc,
+            Integer isDel,
+            String bankCity,
+            String ifscCode,
+            Integer isDeleted,
             String lastUpdated) {
         this.sourceIdSt = sourceIdSt;
         this.id = id;
@@ -71,17 +87,68 @@ public class CrmTbWithdrawAccountObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbWithdrawAccountObject that = (CrmTbWithdrawAccountObject) o;
-        return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(id, that.id) && Objects.equals(brandUid, that.brandUid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(ucid, that.ucid) && Objects.equals(userId, that.userId) && Objects.equals(bankName, that.bankName) && Objects.equals(bankAccountName, that.bankAccountName) && Objects.equals(swiftCode, that.swiftCode) && Objects.equals(bankCard, that.bankCard) && Objects.equals(sortCode, that.sortCode) && Objects.equals(bankAddress, that.bankAddress) && Objects.equals(bankBranchName, that.bankBranchName) && Objects.equals(accountHolderAddress, that.accountHolderAddress) && Objects.equals(isDel, that.isDel) && Objects.equals(bankCity, that.bankCity) && Objects.equals(ifscCode, that.ifscCode) && Objects.equals(isDeleted, that.isDeleted);
+        return Objects.equals(sourceIdSt, that.sourceIdSt)
+                && Objects.equals(id, that.id)
+                && Objects.equals(brandUid, that.brandUid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(bankName, that.bankName)
+                && Objects.equals(bankAccountName, that.bankAccountName)
+                && Objects.equals(swiftCode, that.swiftCode)
+                && Objects.equals(bankCard, that.bankCard)
+                && Objects.equals(sortCode, that.sortCode)
+                && Objects.equals(bankAddress, that.bankAddress)
+                && Objects.equals(bankBranchName, that.bankBranchName)
+                && Objects.equals(accountHolderAddress, that.accountHolderAddress)
+                && Objects.equals(isDel, that.isDel)
+                && Objects.equals(bankCity, that.bankCity)
+                && Objects.equals(ifscCode, that.ifscCode)
+                && Objects.equals(isDeleted, that.isDeleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceIdSt, id, brandUid, brand, regulator, ucid, userId, bankName, bankAccountName, swiftCode, bankCard, sortCode, bankAddress, bankBranchName, accountHolderAddress, createTime, createTimeUtc, updateTime, updateTimeUtc, isDel, bankCity, ifscCode, isDeleted, lastUpdated);
+        return Objects.hash(
+                sourceIdSt,
+                id,
+                brandUid,
+                brand,
+                regulator,
+                ucid,
+                userId,
+                bankName,
+                bankAccountName,
+                swiftCode,
+                bankCard,
+                sortCode,
+                bankAddress,
+                bankBranchName,
+                accountHolderAddress,
+                createTime,
+                createTimeUtc,
+                updateTime,
+                updateTimeUtc,
+                isDel,
+                bankCity,
+                ifscCode,
+                isDeleted,
+                lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "CrmTbWithdrawAccountObject{" + "sourceIdSt=" + sourceIdSt + ", id=" + id + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\'' + ", userId=" + userId + ", bankName='" + bankName + '\'' + ", bankAccountName='" + bankAccountName + '\'' + ", swiftCode='" + swiftCode + '\'' + ", bankCard='" + bankCard + '\'' + ", sortCode='" + sortCode + '\'' + ", bankAddress='" + bankAddress + '\'' + ", bankBranchName='" + bankBranchName + '\'' + ", accountHolderAddress='" + accountHolderAddress + '\'' + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", updateTime='" + updateTime + '\'' + ", updateTimeUtc='" + updateTimeUtc + '\'' + ", isDel=" + isDel + ", bankCity='" + bankCity + '\'' + ", ifscCode='" + ifscCode + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "CrmTbWithdrawAccountObject{" + "sourceIdSt=" + sourceIdSt + ", id=" + id + ", brandUid=" + brandUid
+                + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\''
+                + ", userId=" + userId + ", bankName='" + bankName + '\'' + ", bankAccountName='" + bankAccountName
+                + '\'' + ", swiftCode='" + swiftCode + '\'' + ", bankCard='" + bankCard + '\'' + ", sortCode='"
+                + sortCode + '\'' + ", bankAddress='" + bankAddress + '\'' + ", bankBranchName='" + bankBranchName
+                + '\'' + ", accountHolderAddress='" + accountHolderAddress + '\'' + ", createTime='" + createTime + '\''
+                + ", createTimeUtc='" + createTimeUtc + '\'' + ", updateTime='" + updateTime + '\''
+                + ", updateTimeUtc='" + updateTimeUtc + '\'' + ", isDel=" + isDel + ", bankCity='" + bankCity + '\''
+                + ", ifscCode='" + ifscCode + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\''
+                + '}';
     }
 
     public Integer getSourceIdSt() {

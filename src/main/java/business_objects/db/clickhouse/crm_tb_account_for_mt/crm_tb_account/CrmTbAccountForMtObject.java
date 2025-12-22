@@ -50,19 +50,53 @@ public class CrmTbAccountForMtObject {
     private String internalComment;
     private Integer isTest;
 
-    public CrmTbAccountForMtObject() {
-    }
+    public CrmTbAccountForMtObject() {}
 
     public CrmTbAccountForMtObject(
-            Integer sourceIdSt, Integer brandUid, String brand, String regulator, Integer userId, String ucid,
-            Integer account, Integer serverIdSt, String serverName, Integer accountTypeId, String accountType,
-            String accountGroup, String platform, String createTime, String createTimeUtc, String createDate,
-            String createDateUtc, String accountStatus, String lastLogin, String lastLoginUtc, String lastOrder,
-            String lastOrderUtc, Double balance, String currency, Double balanceUsd, Double equity, Double credit,
-            Double pnl, Integer leverage, Double marginFree, Integer isRebateAccount, Integer rebateAccountNr,
+            Integer sourceIdSt,
+            Integer brandUid,
+            String brand,
+            String regulator,
+            Integer userId,
+            String ucid,
+            Integer account,
+            Integer serverIdSt,
+            String serverName,
+            Integer accountTypeId,
+            String accountType,
+            String accountGroup,
+            String platform,
+            String createTime,
+            String createTimeUtc,
+            String createDate,
+            String createDateUtc,
+            String accountStatus,
+            String lastLogin,
+            String lastLoginUtc,
+            String lastOrder,
+            String lastOrderUtc,
+            Double balance,
+            String currency,
+            Double balanceUsd,
+            Double equity,
+            Double credit,
+            Double pnl,
+            Integer leverage,
+            Double marginFree,
+            Integer isRebateAccount,
+            Integer rebateAccountNr,
             Integer ibId,
-            Integer pId, Integer isSwapFree, Integer isPamm, Integer isCent, Integer isArchive, Integer isHidden,
-            Integer isDel, Integer isDeleted, String lastUpdated, String internalComment, Integer isTest) {
+            Integer pId,
+            Integer isSwapFree,
+            Integer isPamm,
+            Integer isCent,
+            Integer isArchive,
+            Integer isHidden,
+            Integer isDel,
+            Integer isDeleted,
+            String lastUpdated,
+            String internalComment,
+            Integer isTest) {
         this.setSourceIdSt(sourceIdSt);
         this.setBrandUid(brandUid);
         this.setBrand(brand);
@@ -113,17 +147,123 @@ public class CrmTbAccountForMtObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbAccountForMtObject that = (CrmTbAccountForMtObject) o;
-        return Objects.equals(getSourceIdSt(), that.getSourceIdSt()) && Objects.equals(getBrandUid(), that.getBrandUid()) && Objects.equals(getBrand(), that.getBrand()) && Objects.equals(getRegulator(), that.getRegulator()) && Objects.equals(getUserId(), that.getUserId()) && Objects.equals(getUcid(), that.getUcid()) && Objects.equals(getUid(), that.getUid()) && Objects.equals(getAccount(), that.getAccount()) && Objects.equals(getServerIdSt(), that.getServerIdSt()) && Objects.equals(getServerName(), that.getServerName()) && Objects.equals(getAccountTypeId(), that.getAccountTypeId()) && Objects.equals(getAccountType(), that.getAccountType()) && Objects.equals(getAccountGroup(), that.getAccountGroup()) && Objects.equals(getPlatform(), that.getPlatform()) && Objects.equals(getCreateTime(), that.getCreateTime()) && Objects.equals(getCreateTimeUtc(), that.getCreateTimeUtc()) && Objects.equals(getCreateDate(), that.getCreateDate()) && Objects.equals(getCreateDateUtc(), that.getCreateDateUtc()) && Objects.equals(getAccountStatus(), that.getAccountStatus()) && Objects.equals(getLastLogin(), that.getLastLogin()) && Objects.equals(getLastLoginUtc(), that.getLastLoginUtc()) && Objects.equals(getLastOrder(), that.getLastOrder()) && Objects.equals(getLastOrderUtc(), that.getLastOrderUtc()) && Objects.equals(getBalance(), that.getBalance()) && Objects.equals(getCurrency(), that.getCurrency()) && Objects.equals(getBalanceUsd(), that.getBalanceUsd()) && Objects.equals(getEquity(), that.getEquity()) && Objects.equals(getCredit(), that.getCredit()) && Objects.equals(getPnl(), that.getPnl()) && Objects.equals(getLeverage(), that.getLeverage()) && Objects.equals(getMarginFree(), that.getMarginFree()) && Objects.equals(getIsRebateAccount(), that.getIsRebateAccount()) && Objects.equals(getRebateAccountNr(), that.getRebateAccountNr()) && Objects.equals(getIbId(), that.getIbId()) && Objects.equals(getpId(), that.getpId()) && Objects.equals(getIsSwapFree(), that.getIsSwapFree()) && Objects.equals(getIsPamm(), that.getIsPamm()) && Objects.equals(getIsCent(), that.getIsCent()) && Objects.equals(getIsArchive(), that.getIsArchive()) && Objects.equals(getIsHidden(), that.getIsHidden()) && Objects.equals(getIsDel(), that.getIsDel()) && Objects.equals(getIsDeleted(), that.getIsDeleted()) && Objects.equals(getLastUpdated(), that.getLastUpdated()) && Objects.equals(getInternalComment(), that.getInternalComment()) && Objects.equals(getIsTest(), that.getIsTest());
+        return Objects.equals(getSourceIdSt(), that.getSourceIdSt())
+                && Objects.equals(getBrandUid(), that.getBrandUid())
+                && Objects.equals(getBrand(), that.getBrand())
+                && Objects.equals(getRegulator(), that.getRegulator())
+                && Objects.equals(getUserId(), that.getUserId())
+                && Objects.equals(getUcid(), that.getUcid())
+                && Objects.equals(getUid(), that.getUid())
+                && Objects.equals(getAccount(), that.getAccount())
+                && Objects.equals(getServerIdSt(), that.getServerIdSt())
+                && Objects.equals(getServerName(), that.getServerName())
+                && Objects.equals(getAccountTypeId(), that.getAccountTypeId())
+                && Objects.equals(getAccountType(), that.getAccountType())
+                && Objects.equals(getAccountGroup(), that.getAccountGroup())
+                && Objects.equals(getPlatform(), that.getPlatform())
+                && Objects.equals(getCreateTime(), that.getCreateTime())
+                && Objects.equals(getCreateTimeUtc(), that.getCreateTimeUtc())
+                && Objects.equals(getCreateDate(), that.getCreateDate())
+                && Objects.equals(getCreateDateUtc(), that.getCreateDateUtc())
+                && Objects.equals(getAccountStatus(), that.getAccountStatus())
+                && Objects.equals(getLastLogin(), that.getLastLogin())
+                && Objects.equals(getLastLoginUtc(), that.getLastLoginUtc())
+                && Objects.equals(getLastOrder(), that.getLastOrder())
+                && Objects.equals(getLastOrderUtc(), that.getLastOrderUtc())
+                && Objects.equals(getBalance(), that.getBalance())
+                && Objects.equals(getCurrency(), that.getCurrency())
+                && Objects.equals(getBalanceUsd(), that.getBalanceUsd())
+                && Objects.equals(getEquity(), that.getEquity())
+                && Objects.equals(getCredit(), that.getCredit())
+                && Objects.equals(getPnl(), that.getPnl())
+                && Objects.equals(getLeverage(), that.getLeverage())
+                && Objects.equals(getMarginFree(), that.getMarginFree())
+                && Objects.equals(getIsRebateAccount(), that.getIsRebateAccount())
+                && Objects.equals(getRebateAccountNr(), that.getRebateAccountNr())
+                && Objects.equals(getIbId(), that.getIbId())
+                && Objects.equals(getpId(), that.getpId())
+                && Objects.equals(getIsSwapFree(), that.getIsSwapFree())
+                && Objects.equals(getIsPamm(), that.getIsPamm())
+                && Objects.equals(getIsCent(), that.getIsCent())
+                && Objects.equals(getIsArchive(), that.getIsArchive())
+                && Objects.equals(getIsHidden(), that.getIsHidden())
+                && Objects.equals(getIsDel(), that.getIsDel())
+                && Objects.equals(getIsDeleted(), that.getIsDeleted())
+                && Objects.equals(getLastUpdated(), that.getLastUpdated())
+                && Objects.equals(getInternalComment(), that.getInternalComment())
+                && Objects.equals(getIsTest(), that.getIsTest());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSourceIdSt(), getBrandUid(), getBrand(), getRegulator(), getUserId(), getUcid(), getUid(), getAccount(), getServerIdSt(), getServerName(), getAccountTypeId(), getAccountType(), getAccountGroup(), getPlatform(), getCreateTime(), getCreateTimeUtc(), getCreateDate(), getCreateDateUtc(), getAccountStatus(), getLastLogin(), getLastLoginUtc(), getLastOrder(), getLastOrderUtc(), getBalance(), getCurrency(), getBalanceUsd(), getEquity(), getCredit(), getPnl(), getLeverage(), getMarginFree(), getIsRebateAccount(), getRebateAccountNr(), getIbId(), getpId(), getIsSwapFree(), getIsPamm(), getIsCent(), getIsArchive(), getIsHidden(), getIsDel(), getIsDeleted(), getLastUpdated(), getInternalComment(), getIsTest());
+        return Objects.hash(
+                getSourceIdSt(),
+                getBrandUid(),
+                getBrand(),
+                getRegulator(),
+                getUserId(),
+                getUcid(),
+                getUid(),
+                getAccount(),
+                getServerIdSt(),
+                getServerName(),
+                getAccountTypeId(),
+                getAccountType(),
+                getAccountGroup(),
+                getPlatform(),
+                getCreateTime(),
+                getCreateTimeUtc(),
+                getCreateDate(),
+                getCreateDateUtc(),
+                getAccountStatus(),
+                getLastLogin(),
+                getLastLoginUtc(),
+                getLastOrder(),
+                getLastOrderUtc(),
+                getBalance(),
+                getCurrency(),
+                getBalanceUsd(),
+                getEquity(),
+                getCredit(),
+                getPnl(),
+                getLeverage(),
+                getMarginFree(),
+                getIsRebateAccount(),
+                getRebateAccountNr(),
+                getIbId(),
+                getpId(),
+                getIsSwapFree(),
+                getIsPamm(),
+                getIsCent(),
+                getIsArchive(),
+                getIsHidden(),
+                getIsDel(),
+                getIsDeleted(),
+                getLastUpdated(),
+                getInternalComment(),
+                getIsTest());
     }
 
     @Override
     public String toString() {
-        return "CrmTbAccountForMtObject{" + "sourceIdSt=" + getSourceIdSt() + ", brandUid=" + getBrandUid() + ", brand='" + getBrand() + '\'' + ", regulator='" + getRegulator() + '\'' + ", userId=" + getUserId() + ", ucid='" + getUcid() + '\'' + ", uid='" + getUid() + '\'' + ", account=" + getAccount() + ", serverIdSt=" + getServerIdSt() + ", serverName='" + getServerName() + '\'' + ", accountTypeId=" + getAccountTypeId() + ", accountType='" + getAccountType() + '\'' + ", accountGroup='" + getAccountGroup() + '\'' + ", platform='" + getPlatform() + '\'' + ", createTime='" + getCreateTime() + '\'' + ", createTimeUtc='" + getCreateTimeUtc() + '\'' + ", createDate='" + getCreateDate() + '\'' + ", createDateUtc='" + getCreateDateUtc() + '\'' + ", accountStatus='" + getAccountStatus() + '\'' + ", lastLogin='" + getLastLogin() + '\'' + ", lastLoginUtc='" + getLastLoginUtc() + '\'' + ", lastOrder='" + getLastOrder() + '\'' + ", lastOrderUtc='" + getLastOrderUtc() + '\'' + ", balance=" + getBalance() + ", currency='" + getCurrency() + '\'' + ", balanceUsd=" + getBalanceUsd() + ", equity=" + getEquity() + ", credit=" + getCredit() + ", pnl=" + getPnl() + ", leverage=" + getLeverage() + ", marginFree=" + getMarginFree() + ", isRebateAccount=" + getIsRebateAccount() + ", rebateAccountNr=" + getRebateAccountNr() + ", ibId=" + getIbId() + ", pId=" + getpId() + ", isSwapFree=" + getIsSwapFree() + ", isPamm=" + getIsPamm() + ", isCent=" + getIsCent() + ", isArchive=" + getIsArchive() + ", isHidden=" + getIsHidden() + ", isDel=" + getIsDel() + ", isDeleted=" + getIsDeleted() + ", lastUpdated='" + getLastUpdated() + '\'' + ", internalComment='" + getInternalComment() + '\'' + ", isTest=" + getIsTest() + '}';
+        return "CrmTbAccountForMtObject{" + "sourceIdSt=" + getSourceIdSt() + ", brandUid=" + getBrandUid()
+                + ", brand='" + getBrand() + '\'' + ", regulator='" + getRegulator() + '\'' + ", userId=" + getUserId()
+                + ", ucid='" + getUcid() + '\'' + ", uid='" + getUid() + '\'' + ", account=" + getAccount()
+                + ", serverIdSt=" + getServerIdSt() + ", serverName='" + getServerName() + '\'' + ", accountTypeId="
+                + getAccountTypeId() + ", accountType='" + getAccountType() + '\'' + ", accountGroup='"
+                + getAccountGroup() + '\'' + ", platform='" + getPlatform() + '\'' + ", createTime='" + getCreateTime()
+                + '\'' + ", createTimeUtc='" + getCreateTimeUtc() + '\'' + ", createDate='" + getCreateDate() + '\''
+                + ", createDateUtc='" + getCreateDateUtc() + '\'' + ", accountStatus='" + getAccountStatus() + '\''
+                + ", lastLogin='" + getLastLogin() + '\'' + ", lastLoginUtc='" + getLastLoginUtc() + '\''
+                + ", lastOrder='" + getLastOrder() + '\'' + ", lastOrderUtc='" + getLastOrderUtc() + '\'' + ", balance="
+                + getBalance() + ", currency='" + getCurrency() + '\'' + ", balanceUsd=" + getBalanceUsd() + ", equity="
+                + getEquity() + ", credit=" + getCredit() + ", pnl=" + getPnl() + ", leverage=" + getLeverage()
+                + ", marginFree=" + getMarginFree() + ", isRebateAccount=" + getIsRebateAccount() + ", rebateAccountNr="
+                + getRebateAccountNr() + ", ibId=" + getIbId() + ", pId=" + getpId() + ", isSwapFree=" + getIsSwapFree()
+                + ", isPamm=" + getIsPamm() + ", isCent=" + getIsCent() + ", isArchive=" + getIsArchive()
+                + ", isHidden=" + getIsHidden() + ", isDel=" + getIsDel() + ", isDeleted=" + getIsDeleted()
+                + ", lastUpdated='" + getLastUpdated() + '\'' + ", internalComment='" + getInternalComment() + '\''
+                + ", isTest=" + getIsTest() + '}';
     }
 
     public Integer getSourceIdSt() {

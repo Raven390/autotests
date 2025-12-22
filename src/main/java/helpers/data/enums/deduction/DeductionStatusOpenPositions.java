@@ -1,7 +1,9 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionStatusOpenPositions {
-    HOLDING("HOLDING"), NOT_HOLDING("NOT_HOLDING"), WAS_HOLDING("WAS_HOLDING");
+    HOLDING("HOLDING"),
+    NOT_HOLDING("NOT_HOLDING"),
+    WAS_HOLDING("WAS_HOLDING");
 
     private final String displayName;
 
@@ -12,5 +14,4 @@ public enum DeductionStatusOpenPositions {
     public String getDisplayName() {
         return displayName;
     }
-
 }

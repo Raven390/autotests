@@ -7,8 +7,7 @@ public class EmailTableEntry {
     public String ucid;
     public String email;
 
-    public EmailTableEntry() {
-    }
+    public EmailTableEntry() {}
 
     public EmailTableEntry(String ucid, String email) {
         this.ucid = ucid;

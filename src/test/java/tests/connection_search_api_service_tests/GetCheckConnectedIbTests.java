@@ -1,41 +1,17 @@
 package tests.connection_search_api_service_tests;
 
-import business_objects.api.connection_search_api.ConnectionSearchResponseError;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntry;
-import business_objects.db.clickhouse.data_science_test.digital_id_table.DigitalIdTableEntry;
-import business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntry;
-import business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntry;
-import business_objects.db.clickhouse.name_birth.NameBirthTableEntry;
-import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
-import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
-import business_objects.db.clickhouse.data_science_test.web_session.WebSessionTableEntry;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.connection_search_api.check_connected_ib.CheckConnectedIbRequest.getCheckConnectedIb;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.getEmailTableEntryByClient;
 import static business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.name_birth.NameBirthTableEntryFactory.nameBirthTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.name_birth.NameBirthTableEntryFactory.nameBirthTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.database.CleanTableHelper.*;
@@ -45,6 +21,29 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.waitForConnectionSearchToUpdate;
+
+import business_objects.api.connection_search_api.ConnectionSearchResponseError;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.digital_id_table.DigitalIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntry;
+import business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntry;
+import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
+import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.web_session.WebSessionTableEntry;
+import business_objects.db.clickhouse.name_birth.NameBirthTableEntry;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CHECK_CONNECTED_IB)
@@ -101,42 +100,60 @@ class GetCheckConnectedIbTests extends TestBaseApi {
     private static ConnectionTableEntry connectionTableEntry8 = getConnectionTableEntry(userTo82, userTo83);
 
     private static final EmailTableEntry emailTableEntry11 = emailTableEntryForConnectionSearch(userFrom1);
-    private static final EmailTableEntry emailTableEntry12 = emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
+    private static final EmailTableEntry emailTableEntry12 =
+            emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
     private static final EmailTableEntry emailTableEntry41 = emailTableEntryForConnectionSearch(userFrom4);
-    private static final EmailTableEntry emailTableEntry42 = emailTableEntryForConnectionSearch(userTo4, userFrom4.getEmail());
+    private static final EmailTableEntry emailTableEntry42 =
+            emailTableEntryForConnectionSearch(userTo4, userFrom4.getEmail());
     private static final EmailTableEntry emailTableEntry51 = emailTableEntryForConnectionSearch(userFrom5);
-    private static final EmailTableEntry emailTableEntry52 = emailTableEntryForConnectionSearch(userTo5, userFrom5.getEmail());
+    private static final EmailTableEntry emailTableEntry52 =
+            emailTableEntryForConnectionSearch(userTo5, userFrom5.getEmail());
     private static final EmailTableEntry emailTableEntry61 = emailTableEntryForConnectionSearch(userFrom6);
-    private static final EmailTableEntry emailTableEntry62 = emailTableEntryForConnectionSearch(userTo6, userFrom6.getEmail());
+    private static final EmailTableEntry emailTableEntry62 =
+            emailTableEntryForConnectionSearch(userTo6, userFrom6.getEmail());
     private static final EmailTableEntry emailTableEntry71 = emailTableEntryForConnectionSearch(userFrom7);
-    private static final EmailTableEntry emailTableEntry72 = emailTableEntryForConnectionSearch(userTo71, userFrom7.getEmail());
-    private static final EmailTableEntry emailTableEntry73 = emailTableEntryForConnectionSearch(userTo72, userFrom7.getEmail());
+    private static final EmailTableEntry emailTableEntry72 =
+            emailTableEntryForConnectionSearch(userTo71, userFrom7.getEmail());
+    private static final EmailTableEntry emailTableEntry73 =
+            emailTableEntryForConnectionSearch(userTo72, userFrom7.getEmail());
     private static final EmailTableEntry emailTableEntry8 = emailTableEntryForConnectionSearch(userFrom8);
-    private static final EmailTableEntry emailTableEntry81 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
-    private static final EmailTableEntry emailTableEntry82 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
-    private static final EmailTableEntry emailTableEntry83 = emailTableEntryForConnectionSearch(userTo82, userFrom8.getEmail());
+    private static final EmailTableEntry emailTableEntry81 =
+            emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
+    private static final EmailTableEntry emailTableEntry82 =
+            emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
+    private static final EmailTableEntry emailTableEntry83 =
+            emailTableEntryForConnectionSearch(userTo82, userFrom8.getEmail());
 
     private static final DigitalIdTableEntry digitalTableEntry11 = digitalIdTableEntryForConnectionSearch(userFrom1);
-    private static final DigitalIdTableEntry digitalTableEntry12 = digitalIdTableEntryForConnectionSearch(userTo1, userFrom1.getDigitalId());
+    private static final DigitalIdTableEntry digitalTableEntry12 =
+            digitalIdTableEntryForConnectionSearch(userTo1, userFrom1.getDigitalId());
 
     private static final DeviceIdTableEntry deviceTableEntry11 = deviceIdTableEntryForConnectionSearch(userFrom1);
-    private static final DeviceIdTableEntry deviceTableEntry12 = deviceIdTableEntryForConnectionSearch(userTo1, userFrom1.getDeviceId());
+    private static final DeviceIdTableEntry deviceTableEntry12 =
+            deviceIdTableEntryForConnectionSearch(userTo1, userFrom1.getDeviceId());
 
     private static final SessionIdTableEntry sessionTableEntry11 = sessionIdTableEntryForConnectionSearch(userFrom1);
-    private static final SessionIdTableEntry sessionTableEntry12 = sessionIdTableEntryForConnectionSearch(userTo1, userFrom1.getSessionId());
+    private static final SessionIdTableEntry sessionTableEntry12 =
+            sessionIdTableEntryForConnectionSearch(userTo1, userFrom1.getSessionId());
 
     private static NameBirthTableEntry nameTableEntry11 = nameBirthTableEntryForConnectionSearch(userFrom1);
-    private static NameBirthTableEntry nameTableEntry12 = nameBirthTableEntryForConnectionSearch(userTo1, userFrom1.getFirstName(), userFrom1.getLastName(), userFrom1.getDateOfBirth());
+    private static NameBirthTableEntry nameTableEntry12 = nameBirthTableEntryForConnectionSearch(
+            userTo1, userFrom1.getFirstName(), userFrom1.getLastName(), userFrom1.getDateOfBirth());
 
-    private static final WebSessionTableEntry webSessionTableEntry11 = webSessionTableEntryForConnectionSearch(userFrom1);
-    private static final WebSessionTableEntry webSessionTableEntry12 = webSessionTableEntryForConnectionSearch(userTo1, userFrom1.getWebSessionId());
+    private static final WebSessionTableEntry webSessionTableEntry11 =
+            webSessionTableEntryForConnectionSearch(userFrom1);
+    private static final WebSessionTableEntry webSessionTableEntry12 =
+            webSessionTableEntryForConnectionSearch(userTo1, userFrom1.getWebSessionId());
 
     private static final PhoneTableEntry phoneTableEntry11 = phoneTableEntryForConnectionSearch(userFrom1);
-    private static final PhoneTableEntry phoneTableEntry12 = phoneTableEntryForConnectionSearch(userTo1, userFrom1.getPhoneNumber());
+    private static final PhoneTableEntry phoneTableEntry12 =
+            phoneTableEntryForConnectionSearch(userTo1, userFrom1.getPhoneNumber());
 
     private static final IpTableEntry ipTableEntry11 = ipTableEntryForConnectionSearch(userFrom1);
-    private static final IpTableEntry ipTableEntry12 = ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
-    private static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userTo91, userFrom9.getIpAddress());
+    private static final IpTableEntry ipTableEntry12 =
+            ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
+    private static final IpTableEntry ipTableEntry2 =
+            ipTableEntryForConnectionSearch(userTo91, userFrom9.getIpAddress());
 
     private static final EmailTableEntry emailTableEntry21 = getEmailTableEntryByClient(userFrom2);
     private static final EmailTableEntry emailTableEntry22 = getEmailTableEntryByClient(userTo2);
@@ -169,9 +186,44 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         user102 = generateUserByClient(userTo82);
         userTo83.setCpaId(userFrom8.getCpaId());
         user103 = generateUserByClient(userTo83);
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry1, connectionTableEntry2, connectionTableEntry3, connectionTableEntry4, connectionTableEntry5, connectionTableEntry6, connectionTableEntry7, connectionTableEntry8));
-        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(user1, user2, user3, user4, user5, user6, user7, user8, user9, user91, user92, user10, user101, user102, user103));
-        insertObjectsToDb(EMAIL_TABLE_NAME, List.of(emailTableEntry11, emailTableEntry12, emailTableEntry21, emailTableEntry22, emailTableEntry31, emailTableEntry32, emailTableEntry41, emailTableEntry42, emailTableEntry51, emailTableEntry52, emailTableEntry61, emailTableEntry62, emailTableEntry71, emailTableEntry72, emailTableEntry73, emailTableEntry8, emailTableEntry81, emailTableEntry82, emailTableEntry83));
+        insertObjectsToDb(
+                CONNECTIONS_TABLE_NAME,
+                List.of(
+                        connectionTableEntry1,
+                        connectionTableEntry2,
+                        connectionTableEntry3,
+                        connectionTableEntry4,
+                        connectionTableEntry5,
+                        connectionTableEntry6,
+                        connectionTableEntry7,
+                        connectionTableEntry8));
+        insertObjectsToDb(
+                CRM_USER_TABLE_NAME,
+                List.of(
+                        user1, user2, user3, user4, user5, user6, user7, user8, user9, user91, user92, user10, user101,
+                        user102, user103));
+        insertObjectsToDb(
+                EMAIL_TABLE_NAME,
+                List.of(
+                        emailTableEntry11,
+                        emailTableEntry12,
+                        emailTableEntry21,
+                        emailTableEntry22,
+                        emailTableEntry31,
+                        emailTableEntry32,
+                        emailTableEntry41,
+                        emailTableEntry42,
+                        emailTableEntry51,
+                        emailTableEntry52,
+                        emailTableEntry61,
+                        emailTableEntry62,
+                        emailTableEntry71,
+                        emailTableEntry72,
+                        emailTableEntry73,
+                        emailTableEntry8,
+                        emailTableEntry81,
+                        emailTableEntry82,
+                        emailTableEntry83));
         insertObjectsToDb(DEVICE_ID_TABLE_NAME, List.of(deviceTableEntry11, deviceTableEntry12));
         insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalTableEntry11, digitalTableEntry12));
         insertObjectsToDb(SESSION_ID_TABLE_NAME, List.of(sessionTableEntry11, sessionTableEntry12));
@@ -184,8 +236,22 @@ class GetCheckConnectedIbTests extends TestBaseApi {
 
     @AfterAll
     static void deleteConnectionTableEntry() throws Exception {
-        cleanConnectionsTableByClient(connectionTableEntry1.userFrom, connectionTableEntry2.userFrom, connectionTableEntry3.userFrom, connectionTableEntry4.userFrom, connectionTableEntry5.userFrom, connectionTableEntry6.userFrom, connectionTableEntry7.userFrom, connectionTableEntry8.userFrom);
-        cleanEmailTableByClient(emailTableEntry11.email, emailTableEntry12.email, emailTableEntry21.email, emailTableEntry22.email, emailTableEntry31.email, emailTableEntry32.email);
+        cleanConnectionsTableByClient(
+                connectionTableEntry1.userFrom,
+                connectionTableEntry2.userFrom,
+                connectionTableEntry3.userFrom,
+                connectionTableEntry4.userFrom,
+                connectionTableEntry5.userFrom,
+                connectionTableEntry6.userFrom,
+                connectionTableEntry7.userFrom,
+                connectionTableEntry8.userFrom);
+        cleanEmailTableByClient(
+                emailTableEntry11.email,
+                emailTableEntry12.email,
+                emailTableEntry21.email,
+                emailTableEntry22.email,
+                emailTableEntry31.email,
+                emailTableEntry32.email);
         cleanDeviceIdTableByClient(deviceTableEntry11.deviceId, deviceTableEntry12.deviceId);
         cleanDigitalIdTableByClient(digitalTableEntry11.digitalId, digitalTableEntry12.digitalId);
         cleanSessionIdTableByClient(sessionTableEntry11.sessionId, sessionTableEntry12.sessionId);
@@ -193,7 +259,8 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         cleanPhoneTableByClient(phoneTableEntry11.phoneNum, phoneTableEntry12.phoneNum);
         cleanIpTableByClient(ipTableEntry11.ip, ipTableEntry12.ip, ipTableEntry2.ip);
         cleanNameTableByClient(nameTableEntry11.ucid, nameTableEntry12.ucid);
-        cleanCrmUserTableByClient(user1.ucid, user2.ucid, user3.ucid, user4.ucid, user5.ucid, user6.ucid, user7.ucid, user8.ucid);
+        cleanCrmUserTableByClient(
+                user1.ucid, user2.ucid, user3.ucid, user4.ucid, user5.ucid, user6.ucid, user7.ucid, user8.ucid);
     }
 
     @Test
@@ -205,9 +272,8 @@ class GetCheckConnectedIbTests extends TestBaseApi {
 
         Response response = getCheckConnectedIb(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 400", response.code(), is(400));
         assertThat("Check the response code is 400", responseBody.status, is(400));
@@ -418,15 +484,17 @@ class GetCheckConnectedIbTests extends TestBaseApi {
 
         Response response = getCheckConnectedIb(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 400", response.code(), is(400));
         assertThat("Check the response code is 400", responseBody.type, is("about:blank"));
         assertThat("Check the response code is 400", responseBody.title, is("Bad Request"));
         assertThat("Check the response code is 400", responseBody.status, is(400));
-        assertThat("Check the response code is 400", responseBody.detail, is("Required parameter 'clientId' is not present."));
+        assertThat(
+                "Check the response code is 400",
+                responseBody.detail,
+                is("Required parameter 'clientId' is not present."));
         assertThat("Check the response code is 400", responseBody.instance, is("/v1/connections/checkConnectedIb"));
     }
 

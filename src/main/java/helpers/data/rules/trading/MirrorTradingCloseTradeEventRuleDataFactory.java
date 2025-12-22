@@ -1,20 +1,5 @@
 package helpers.data.rules.trading;
 
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.kafka.mt_events.CloseTradeMtEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.DataHelper;
-import io.qameta.allure.Description;
-import io.qameta.allure.Step;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -29,12 +14,26 @@ import static business_objects.db.data_science.ucid_general_score.UcidGeneralSco
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.*;
 import static helpers.data.DataHelper.addAlert;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.MaxUsedLeverageInserter.insertMaxUsedLeverageData;
 import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RuleTestData("mirror-trading")
 public class MirrorTradingCloseTradeEventRuleDataFactory {
@@ -73,10 +72,19 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(client));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         data.closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), data.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), data.mt5DealsCoercedObjects.getFirst().getVolumeLots(), data.mt5DealsCoercedObjects.getFirst().getSymbol(), data.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+                getRandomUuidString(),
+                Instant.now().toString(),
+                data.mt5DealsCoercedObjects.getFirst().getPositionId(),
+                client.getTradingAccount(),
+                data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
+                data.mt5DealsCoercedObjects.getFirst().getSymbol(),
+                data.clientHelper.getServerId(),
+                MT_CLOSE_TRADE_EVENT,
+                Instant.now().toString(),
+                metadata,
+                Instant.now().toString());
         return data;
     }
-
 
     private static DataHelper getMirrorTradingCloseTradeTest1Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest1Data);
@@ -84,7 +92,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. ElementId: Event_1m3mqdr")
+    @Description(
+            "Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. ElementId: Event_1m3mqdr")
     private static DataHelper getMirrorTradingCloseTradeTest7Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest7Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
@@ -109,7 +118,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient((data.clientHelper)));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient((data.clientHelper)));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         return data;
@@ -121,7 +131,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1d;
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         // leverage
@@ -131,13 +142,15 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
+    @Description(
+            "Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
     private static DataHelper getMirrorTradingCloseTradeTest13Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest13Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1d;
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         // leverage
@@ -156,7 +169,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1d;
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         // leverage
@@ -167,7 +181,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Waves. Exit without alert if pattern matched and at least 1 resolved alerts. ElementId: Event_end_9")
+    @Description(
+            "Mirror trading. Waves. Exit without alert if pattern matched and at least 1 resolved alerts. ElementId: Event_end_9")
     public static DataHelper getMirrorTradingCloseTradeTest15Data() throws InterruptedException {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest15Data);
         data.mtTbCreditsObjects = null;
@@ -182,7 +197,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Waves. Exit with alert and MWR if pattern matched and at no resolved alerts. ElementId: Event_end_9")
+    @Description(
+            "Mirror trading. Waves. Exit with alert and MWR if pattern matched and at no resolved alerts. ElementId: Event_end_9")
     public static DataHelper getMirrorTradingCloseTradeTest16Data() throws InterruptedException {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest16Data);
         data.mtTbCreditsObjects = null;
@@ -203,7 +219,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
+    @Description(
+            "Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
     private static DataHelper getMirrorTradingCloseTradeTest19Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest19Data);
         data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
@@ -214,7 +231,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_06qi81c")
+    @Description(
+            "Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_06qi81c")
     private static DataHelper getMirrorTradingCloseTradeTest20Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest20Data);
         data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
@@ -222,12 +240,14 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.lnSessionParsedObject.setInputIpGeo("vn");
         data.lnSessionParsedObject.setTrueIpGeo("vn");
         data.lnSessionParsedObject.setBrowserLanguage("vn");
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
         return data;
     }
 
-    @Description("Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_06qi81c")
+    @Description(
+            "Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_06qi81c")
     private static DataHelper getMirrorTradingCloseTradeTest21Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest21Data);
         data.crmTbUserObject.isoCountryCode = "vn";
@@ -236,7 +256,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.lnSessionParsedObject.setInputIpGeo("vn");
         data.lnSessionParsedObject.setTrueIpGeo("vn");
         data.lnSessionParsedObject.setBrowserLanguage("vn");
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
         data.crmTbUserObject.country = "vn";
         data.mt5DealsCoercedObjects.getFirst().setReason(2);
@@ -253,7 +274,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.lnSessionParsedObject.setInputIpGeo("vn");
         data.lnSessionParsedObject.setTrueIpGeo("vn");
         data.lnSessionParsedObject.setBrowserLanguage("vn");
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
         data.crmTbUserObject.country = "vn";
         data.mt5DealsCoercedObjects.getFirst().setReason(2);
@@ -263,7 +285,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Web hedge. Exit with restriction and alert if user doesn't has resolved alerts. ElementId: Event_06qi81c")
+    @Description(
+            "Mirror trading. Web hedge. Exit with restriction and alert if user doesn't has resolved alerts. ElementId: Event_06qi81c")
     private static DataHelper getMirrorTradingCloseTradeTest23Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest23Data);
         data.crmTbUserObject.isoCountryCode = "vn";
@@ -272,7 +295,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.lnSessionParsedObject.setInputIpGeo("vn");
         data.lnSessionParsedObject.setTrueIpGeo("vn");
         data.lnSessionParsedObject.setBrowserLanguage("vn");
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
         data.crmTbUserObject.country = "vn";
         data.mt5DealsCoercedObjects.getFirst().setReason(2);

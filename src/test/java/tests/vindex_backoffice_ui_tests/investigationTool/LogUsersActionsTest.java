@@ -1,26 +1,10 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.backoffice_db.user_action_audit.UserActionAudit;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Muted;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
-import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
@@ -35,6 +19,21 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 import static utils.Utils.waitForConnectionSearchToUpdate;
+
+import business_objects.db.backoffice_db.user_action_audit.UserActionAudit;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LogUsersActionsTest extends TestBaseWeb {
@@ -76,10 +75,12 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "LOGIN", "AUTH", null);
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItem(expectedUserActionAudit));
     }
 
     @Test
@@ -102,11 +103,32 @@ public class LogUsersActionsTest extends TestBaseWeb {
         connectionPage.openConnectionTable();
         connectionPage.clickUnmaskConnectionTableDataButton();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s' AND entity = 'SENSITIVE_DATA' ORDER BY created_at DESC LIMIT 100", userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditConnection = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUserConnected.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditGeneral, expectedUserActionAuditConnection, expectedUserActionAuditConnection));
+                POSTGRES,
+                BO_USER_ACTION_AUDIT_TABLE_NAME,
+                String.format(
+                        "user_id = '%s' AND entity = 'SENSITIVE_DATA' ORDER BY created_at DESC LIMIT 100", userId),
+                UserActionAudit.class);
+        UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "SENSITIVE_DATA",
+                String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditConnection = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "SENSITIVE_DATA",
+                String.format("{\"%s\": \"%s\"}", "ucid", crmTbUserConnected.ucid));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItems(
+                        expectedUserActionAuditGeneral,
+                        expectedUserActionAuditConnection,
+                        expectedUserActionAuditConnection));
     }
 
     @Test
@@ -123,10 +145,20 @@ public class LogUsersActionsTest extends TestBaseWeb {
         generalTab.clickGeneralTabButton();
         generalTab.kycDetailsOpen("Proof of identity");
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "KYC_DATA", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "fileName", FILE_KYC_NAME.substring(1)));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "KYC_DATA",
+                String.format(
+                        "{\"%s\": \"%s\", \"%s\": \"%s\"}",
+                        "ucid", crmTbUser.ucid, "fileName", FILE_KYC_NAME.substring(1)));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItem(expectedUserActionAudit));
     }
 
     @Test
@@ -153,20 +185,114 @@ public class LogUsersActionsTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         connectionPage.clickConnectionTabButton();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAuditInvestigation = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s\"}", "path", "/investigation"));
-        UserActionAudit expectedUserActionAuditAlerts = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/alerts", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/general", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditOperations = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/payments/summary", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditTradingAccountsCards = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/cards", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditTradingSummary = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/summary", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditTradingAccountsTable = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/table", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditTradingOperations = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/operations", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditRestrictions = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/restrictions", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditAuditTrail = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/audit", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditConnections = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/connections", "ucid", crmTbUser.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditInvestigation, expectedUserActionAuditAlerts, expectedUserActionAuditGeneral, expectedUserActionAuditOperations, expectedUserActionAuditTradingAccountsCards, expectedUserActionAuditTradingSummary, expectedUserActionAuditTradingAccountsTable, expectedUserActionAuditTradingOperations, expectedUserActionAuditRestrictions, expectedUserActionAuditAuditTrail, expectedUserActionAuditConnections));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAuditInvestigation = new UserActionAudit(
+                null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s\"}", "path", "/investigation"));
+        UserActionAudit expectedUserActionAuditAlerts = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/alerts", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/general", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditOperations = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/payments/summary", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingAccountsCards = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/cards", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingSummary = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/trading/summary", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingAccountsTable = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/table", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingOperations = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/trading/operations", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditRestrictions = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/restrictions", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditAuditTrail = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/audit", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditConnections = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "VIEW",
+                "ROUTING",
+                String.format(
+                        "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
+                        "path", "/investigation/", crmTbUser.ucid, "/connections", "ucid", crmTbUser.ucid));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItems(
+                        expectedUserActionAuditInvestigation,
+                        expectedUserActionAuditAlerts,
+                        expectedUserActionAuditGeneral,
+                        expectedUserActionAuditOperations,
+                        expectedUserActionAuditTradingAccountsCards,
+                        expectedUserActionAuditTradingSummary,
+                        expectedUserActionAuditTradingAccountsTable,
+                        expectedUserActionAuditTradingOperations,
+                        expectedUserActionAuditRestrictions,
+                        expectedUserActionAuditAuditTrail,
+                        expectedUserActionAuditConnections));
     }
 
     @Test
@@ -182,10 +308,13 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         investigationPage.investigateClientCard();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ASSIGN", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(
+                null, userId, null, "ASSIGN", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItem(expectedUserActionAudit));
     }
 
     @Test
@@ -203,10 +332,13 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.fillCommentForm("Test log users actions comment");
         investigationPage.submitCommentForm();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "COMMENT", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(
+                null, userId, null, "COMMENT", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItem(expectedUserActionAudit));
     }
 
     @Test
@@ -224,11 +356,25 @@ public class LogUsersActionsTest extends TestBaseWeb {
         restrictionPage.addNewRestriction(LOGIN_CRM, "Test log users actions restriction apply");
         restrictionPage.removeRestriction(LOGIN_CRM, "Test log users actions restriction cancel");
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAuditApply = new UserActionAudit(null, userId, null, "RESTRICTION", "CLIENT", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "APPLY"));
-        UserActionAudit expectedUserActionAuditCancel = new UserActionAudit(null, userId, null, "RESTRICTION", "CLIENT", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "CANCEL"));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditApply, expectedUserActionAuditCancel));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAuditApply = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "RESTRICTION",
+                "CLIENT",
+                String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "APPLY"));
+        UserActionAudit expectedUserActionAuditCancel = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "RESTRICTION",
+                "CLIENT",
+                String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "CANCEL"));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItems(expectedUserActionAuditApply, expectedUserActionAuditCancel));
     }
 
     @Disabled
@@ -254,10 +400,20 @@ public class LogUsersActionsTest extends TestBaseWeb {
         paymentsPage.clickApproveButton();
         page.waitForTimeout(2000);
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ACCEPT", "WD_REQUEST", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "transferId", alert.rule.attributes.withdrawalId));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(
+                null,
+                userId,
+                null,
+                "ACCEPT",
+                "WD_REQUEST",
+                String.format(
+                        "{\"%s\": \"%s\", \"%s\": \"%s\"}",
+                        "ucid", crmTbUser.ucid, "transferId", alert.rule.attributes.withdrawalId));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItem(expectedUserActionAudit));
     }
 
     @Test
@@ -276,10 +432,13 @@ public class LogUsersActionsTest extends TestBaseWeb {
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
-        );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "RESOLVE", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+                POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(
+                null, userId, null, "RESOLVE", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat(
+                "Assert that user_action_audit table contains expected data",
+                userActionAudits,
+                hasItem(expectedUserActionAudit));
     }
 
     @AfterAll

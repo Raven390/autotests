@@ -1,14 +1,12 @@
 package business_objects.db.clickhouse.crm_tb_transfer;
 
-import helpers.data.ClientHelper;
-
-
 import static utils.Utils.*;
+
+import helpers.data.ClientHelper;
 
 public class CrmTbTransferFactory {
 
-    private CrmTbTransferFactory() {
-    }
+    private CrmTbTransferFactory() {}
 
     public static CrmTbTransferObject generateCrmTbTransferRandomized(ClientHelper client) {
         CrmTbTransferObject transfer = new CrmTbTransferObject();
@@ -37,5 +35,4 @@ public class CrmTbTransferFactory {
         transfer.lastUpdated = getCurrentTimestampDbFormat();
         return transfer;
     }
-
 }

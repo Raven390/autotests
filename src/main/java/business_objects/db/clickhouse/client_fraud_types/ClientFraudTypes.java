@@ -49,8 +49,7 @@ public class ClientFraudTypes {
         this.lastUpdated = lastUpdated;
     }
 
-    public ClientFraudTypes() {
-    }
+    public ClientFraudTypes() {}
 
     public ClientFraudTypes(String ucid, String fraudTypeCode, String source, Integer isDeleted, String lastUpdated) {
         this.ucid = ucid;
@@ -64,7 +63,11 @@ public class ClientFraudTypes {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ClientFraudTypes that = (ClientFraudTypes) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(fraudTypeCode, that.fraudTypeCode) && Objects.equals(source, that.source) && Objects.equals(isDeleted, that.isDeleted) && Objects.equals(lastUpdated, that.lastUpdated);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(fraudTypeCode, that.fraudTypeCode)
+                && Objects.equals(source, that.source)
+                && Objects.equals(isDeleted, that.isDeleted)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
@@ -74,6 +77,7 @@ public class ClientFraudTypes {
 
     @Override
     public String toString() {
-        return "ClientFraudTypes{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", source='" + source + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "ClientFraudTypes{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", source='"
+                + source + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

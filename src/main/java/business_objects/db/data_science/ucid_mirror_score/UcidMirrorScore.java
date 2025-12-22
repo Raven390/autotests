@@ -12,12 +12,17 @@ public class UcidMirrorScore {
     Integer countAction;
     Double ucidScore;
 
-    public UcidMirrorScore() {
-    }
+    public UcidMirrorScore() {}
 
     public UcidMirrorScore(
-            String ucid, String id, Integer action, String timeUtc, Double modelScore, Integer countFraud,
-            Integer countAction, Double ucidScore) {
+            String ucid,
+            String id,
+            Integer action,
+            String timeUtc,
+            Double modelScore,
+            Integer countFraud,
+            Integer countAction,
+            Double ucidScore) {
         this.ucid = ucid;
         this.id = id;
         this.action = action;
@@ -31,10 +36,14 @@ public class UcidMirrorScore {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof UcidMirrorScore that)) return false;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(id, that.id) && Objects.equals(
-                action, that.action) && Objects.equals(timeUtc, that.timeUtc) && Objects.equals(
-                        modelScore, that.modelScore) && Objects.equals(countFraud, that.countFraud) && Objects.equals(
-                                countAction, that.countAction) && Objects.equals(ucidScore, that.ucidScore);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(id, that.id)
+                && Objects.equals(action, that.action)
+                && Objects.equals(timeUtc, that.timeUtc)
+                && Objects.equals(modelScore, that.modelScore)
+                && Objects.equals(countFraud, that.countFraud)
+                && Objects.equals(countAction, that.countAction)
+                && Objects.equals(ucidScore, that.ucidScore);
     }
 
     @Override
@@ -44,7 +53,9 @@ public class UcidMirrorScore {
 
     @Override
     public String toString() {
-        return "UcidMirrorScore{" + "ucid='" + ucid + '\'' + ", id='" + id + '\'' + ", action=" + action + ", timeUtc='" + timeUtc + '\'' + ", modelScore=" + modelScore + ", countFraud=" + countFraud + ", countAction=" + countAction + ", ucidScore=" + ucidScore + '}';
+        return "UcidMirrorScore{" + "ucid='" + ucid + '\'' + ", id='" + id + '\'' + ", action=" + action + ", timeUtc='"
+                + timeUtc + '\'' + ", modelScore=" + modelScore + ", countFraud=" + countFraud + ", countAction="
+                + countAction + ", ucidScore=" + ucidScore + '}';
     }
 
     public String getUcid() {

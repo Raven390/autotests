@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.mt_account;
 
+import static utils.Utils.getCurrentTimestampDbFormat;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import helpers.data.ClientHelper;
-
-import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class MtAccountObjectFactory {
 

@@ -1,9 +1,8 @@
 package business_objects.db.ticks.rates_usd_current;
 
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Objects;
 
 @Data
 @Builder
@@ -14,14 +13,17 @@ public class RatesUsdCurrentObject {
 
     @Override
     public String toString() {
-        return "RatesUsdCurrentObject{" + "currency='" + currency + '\'' + ", ts='" + ts + '\'' + ", rate=" + rate + '}';
+        return "RatesUsdCurrentObject{" + "currency='" + currency + '\'' + ", ts='" + ts + '\'' + ", rate=" + rate
+                + '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RatesUsdCurrentObject that = (RatesUsdCurrentObject) o;
-        return Double.compare(rate, that.rate) == 0 && Objects.equals(currency, that.currency) && Objects.equals(ts, that.ts);
+        return Double.compare(rate, that.rate) == 0
+                && Objects.equals(currency, that.currency)
+                && Objects.equals(ts, that.ts);
     }
 
     @Override

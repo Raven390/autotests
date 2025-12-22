@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.abuse_registry_db.AbuserHistory;
-import business_objects.db.abuse_registry_db.PendingProcessing;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
@@ -29,6 +13,21 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.abuse_registry_db.PendingProcessing;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.io.IOException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Feature("BMS-1830. Calculate subtype for 'Gap Trading'")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -65,7 +64,10 @@ class CalculateGapTradingSubtypeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.addFraud(GAP_TRADING, CONFIRMED);
-        assertThat(resolvePage.getSelectedFraud(), is(String.format("%s (%s)", GAP_TRADING.getName(), FIRST_TIME.getName().toLowerCase())));
+        assertThat(
+                resolvePage.getSelectedFraud(),
+                is(String.format(
+                        "%s (%s)", GAP_TRADING.getName(), FIRST_TIME.getName().toLowerCase())));
     }
 
     @Test
@@ -80,7 +82,10 @@ class CalculateGapTradingSubtypeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.addFraud(GAP_TRADING, CONFIRMED);
-        assertThat(resolvePage.getSelectedFraud(), is(String.format("%s (%s)", GAP_TRADING.getName(), SECOND_TIME.getName().toLowerCase())));
+        assertThat(
+                resolvePage.getSelectedFraud(),
+                is(String.format(
+                        "%s (%s)", GAP_TRADING.getName(), SECOND_TIME.getName().toLowerCase())));
     }
 
     @Test
@@ -95,7 +100,11 @@ class CalculateGapTradingSubtypeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.addFraud(GAP_TRADING, CONFIRMED);
-        assertThat(resolvePage.getSelectedFraud(), is(String.format("%s (%s)", GAP_TRADING.getName(), MULTIPLE_TIMES.getName().toLowerCase())));
+        assertThat(
+                resolvePage.getSelectedFraud(),
+                is(String.format(
+                        "%s (%s)",
+                        GAP_TRADING.getName(), MULTIPLE_TIMES.getName().toLowerCase())));
     }
 
     @Test
@@ -103,8 +112,16 @@ class CalculateGapTradingSubtypeTest extends TestBaseWeb {
     @AllureId("1541")
     @DisplayName("Gap trading subtype does not take into account pending_processing frauds")
     void calculateGapTradingSubtypeTest4() throws Exception {
-        List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserHistory.class);
-        PendingProcessing pendingProcessing = new PendingProcessing(client.getUcid(), GAP_TRADING.getCode(), SECOND_TIME.getCode(), abuserHistory.getLast().getId());
+        List<AbuserHistory> abuserHistory = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                String.format("ucid = '%s'", client.getUcid()),
+                AbuserHistory.class);
+        PendingProcessing pendingProcessing = new PendingProcessing(
+                client.getUcid(),
+                GAP_TRADING.getCode(),
+                SECOND_TIME.getCode(),
+                abuserHistory.getLast().getId());
         insertObjectToDb(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, pendingProcessing);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -112,7 +129,10 @@ class CalculateGapTradingSubtypeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.addFraud(GAP_TRADING, CONFIRMED);
-        assertThat(resolvePage.getSelectedFraud(), is(String.format("%s (%s)", GAP_TRADING.getName(), SECOND_TIME.getName().toLowerCase())));
+        assertThat(
+                resolvePage.getSelectedFraud(),
+                is(String.format(
+                        "%s (%s)", GAP_TRADING.getName(), SECOND_TIME.getName().toLowerCase())));
     }
 
     @Test
@@ -128,6 +148,9 @@ class CalculateGapTradingSubtypeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(GAP_TRADING, CONFIRMED);
-        assertThat(resolvePage.getSelectedFraud(), is(String.format("%s (%s)", GAP_TRADING.getName(), SECOND_TIME.getName().toLowerCase())));
+        assertThat(
+                resolvePage.getSelectedFraud(),
+                is(String.format(
+                        "%s (%s)", GAP_TRADING.getName(), SECOND_TIME.getName().toLowerCase())));
     }
 }

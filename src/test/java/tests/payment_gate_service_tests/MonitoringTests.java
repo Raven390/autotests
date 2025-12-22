@@ -1,5 +1,18 @@
 package tests.payment_gate_service_tests;
 
+import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.PaymentGateHelper.getPaymentEvent;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static tests.TestBaseRule.sendCrmAcknowledgeToKafka;
+import static utils.Constants.*;
+import static utils.Utils.getRandomUuid;
+
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
@@ -12,26 +25,11 @@ import helpers.database.PaymentGateHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-
-import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
-import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
-import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-
-import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
-import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.PaymentGateHelper.getPaymentEvent;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static tests.TestBaseRule.sendCrmAcknowledgeToKafka;
-import static utils.Constants.*;
-import static utils.Utils.getRandomUuid;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_RECONCILIATION)
@@ -283,7 +281,8 @@ class MonitoringTests extends TestBaseApi {
 
     @Test
     @AllureId("1759")
-    @DisplayName("Payment reconciliation test 6. Status = Risk audit and id != 21 -> FAILED  Status != Risk audit and id != 21 -> DELIVERED two payments with the same payment ID")
+    @DisplayName(
+            "Payment reconciliation test 6. Status = Risk audit and id != 21 -> FAILED  Status != Risk audit and id != 21 -> DELIVERED two payments with the same payment ID")
     void ReconciliationTest6() throws Exception {
         crmTbWithdrawalObject6.setStatus("Risk Audit");
         crmTbWithdrawalObject6.setStatusId(22);

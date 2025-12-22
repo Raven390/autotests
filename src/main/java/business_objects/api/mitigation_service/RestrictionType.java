@@ -7,7 +7,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * The type of restriction
  */
 public enum RestrictionType {
-    GENERAL("GENERAL"), TRADING("TRADING"), TRADING_ENVIRONMENT("TRADING_ENVIRONMENT"), BYBIT("BYBIT");
+    GENERAL("GENERAL"),
+    TRADING("TRADING"),
+    TRADING_ENVIRONMENT("TRADING_ENVIRONMENT"),
+    BYBIT("BYBIT");
 
     private String value;
 

@@ -9,8 +9,7 @@ public class DocumentTableEntry {
     public String accIdNum;
     public Integer nationalityId;
 
-    public DocumentTableEntry() {
-    }
+    public DocumentTableEntry() {}
 
     public DocumentTableEntry(String ucid, String accIdType, String accIdNum, Integer nationalityId) {
         this.ucid = ucid;
@@ -23,8 +22,10 @@ public class DocumentTableEntry {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DocumentTableEntry that = (DocumentTableEntry) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(accIdType, that.accIdType) && Objects.equals(
-                accIdNum, that.accIdNum) && Objects.equals(nationalityId, that.nationalityId);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(accIdType, that.accIdType)
+                && Objects.equals(accIdNum, that.accIdNum)
+                && Objects.equals(nationalityId, that.nationalityId);
     }
 
     @Override
@@ -34,6 +35,7 @@ public class DocumentTableEntry {
 
     @Override
     public String toString() {
-        return "DocumentTableEntry{" + "ucid='" + ucid + '\'' + ", accIdType='" + accIdType + '\'' + ", accIdNum='" + accIdNum + '\'' + ", nationalityId=" + nationalityId + '}';
+        return "DocumentTableEntry{" + "ucid='" + ucid + '\'' + ", accIdType='" + accIdType + '\'' + ", accIdNum='"
+                + accIdNum + '\'' + ", nationalityId=" + nationalityId + '}';
     }
 }

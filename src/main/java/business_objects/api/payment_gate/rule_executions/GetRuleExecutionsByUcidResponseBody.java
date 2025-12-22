@@ -2,7 +2,6 @@ package business_objects.api.payment_gate.rule_executions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -37,8 +36,7 @@ public class GetRuleExecutionsByUcidResponseBody {
     @JsonProperty("items")
     private List<Item> items;
 
-    public GetRuleExecutionsByUcidResponseBody() {
-    }
+    public GetRuleExecutionsByUcidResponseBody() {}
 
     public GetRuleExecutionsByUcidResponseBody(UUID paymentId, List<Item> items) {
         this.paymentId = paymentId;
@@ -114,11 +112,20 @@ public class GetRuleExecutionsByUcidResponseBody {
         @JsonProperty("updatedAt")
         private String updatedAt;
 
-        public Item() {
-        }
+        public Item() {}
 
-        public Item(Integer id, String runId, String paymentId, Integer ruleId, String ruleType, String ruleVersion,
-                Integer ruleEndId, String startedAt, String completedAt, String createdAt, String updatedAt) {
+        public Item(
+                Integer id,
+                String runId,
+                String paymentId,
+                Integer ruleId,
+                String ruleType,
+                String ruleVersion,
+                Integer ruleEndId,
+                String startedAt,
+                String completedAt,
+                String createdAt,
+                String updatedAt) {
             this.id = id;
             this.runId = runId;
             this.paymentId = paymentId;
@@ -225,17 +232,41 @@ public class GetRuleExecutionsByUcidResponseBody {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Item item = (Item) o;
-            return Objects.equals(id, item.id) && Objects.equals(runId, item.runId) && Objects.equals(paymentId, item.paymentId) && Objects.equals(ruleId, item.ruleId) && Objects.equals(ruleType, item.ruleType) && Objects.equals(ruleVersion, item.ruleVersion) && Objects.equals(ruleEndId, item.ruleEndId) && Objects.equals(startedAt, item.startedAt) && Objects.equals(completedAt, item.completedAt) && Objects.equals(createdAt, item.createdAt) && Objects.equals(updatedAt, item.updatedAt);
+            return Objects.equals(id, item.id)
+                    && Objects.equals(runId, item.runId)
+                    && Objects.equals(paymentId, item.paymentId)
+                    && Objects.equals(ruleId, item.ruleId)
+                    && Objects.equals(ruleType, item.ruleType)
+                    && Objects.equals(ruleVersion, item.ruleVersion)
+                    && Objects.equals(ruleEndId, item.ruleEndId)
+                    && Objects.equals(startedAt, item.startedAt)
+                    && Objects.equals(completedAt, item.completedAt)
+                    && Objects.equals(createdAt, item.createdAt)
+                    && Objects.equals(updatedAt, item.updatedAt);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, runId, paymentId, ruleId, ruleType, ruleVersion, ruleEndId, startedAt, completedAt, createdAt, updatedAt);
+            return Objects.hash(
+                    id,
+                    runId,
+                    paymentId,
+                    ruleId,
+                    ruleType,
+                    ruleVersion,
+                    ruleEndId,
+                    startedAt,
+                    completedAt,
+                    createdAt,
+                    updatedAt);
         }
 
         @Override
         public String toString() {
-            return "Item{" + "id=" + id + ", runId='" + runId + '\'' + ", paymentId='" + paymentId + '\'' + ", ruleId=" + ruleId + ", ruleType='" + ruleType + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", ruleEndId=" + ruleEndId + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
+            return "Item{" + "id=" + id + ", runId='" + runId + '\'' + ", paymentId='" + paymentId + '\'' + ", ruleId="
+                    + ruleId + ", ruleType='" + ruleType + '\'' + ", ruleVersion='" + ruleVersion + '\''
+                    + ", ruleEndId=" + ruleEndId + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt
+                    + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
         }
     }
 }

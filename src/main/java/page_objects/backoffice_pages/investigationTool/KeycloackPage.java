@@ -1,16 +1,15 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static business_objects.ui.user.UserFactory.*;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 import business_objects.ui.user.User;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.regex.Pattern;
-
-import static business_objects.ui.user.UserFactory.*;
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class KeycloackPage extends AbstractPage {
     private final Locator loginField;

@@ -49,11 +49,16 @@ public class TestUtils {
     @Step("Compare page with baseline screenshot")
     public static void comparePageScreenshotWithBaseline(Page page, String baselineScreenshotName) {
         page.waitForTimeout(1000);
-        page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("visual-comparsion/current-screenshots/screenshot.png")));
-        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(PATH_BASELINE_SCREENSHOT + baselineScreenshotName);
-        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("visual-comparsion/current-screenshots/screenshot.png");
-        File resultDestination = new File("visual-comparsion/result-screenshots/" + "result" + Utils.getCurrentTimestampSeconds() + ".png");
-        ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
+        page.screenshot(new Page.ScreenshotOptions()
+                .setPath(Paths.get("visual-comparsion/current-screenshots/screenshot.png")));
+        BufferedImage expectedImage =
+                ImageComparisonUtil.readImageFromResources(PATH_BASELINE_SCREENSHOT + baselineScreenshotName);
+        BufferedImage actualImage =
+                ImageComparisonUtil.readImageFromResources("visual-comparsion/current-screenshots/screenshot.png");
+        File resultDestination = new File(
+                "visual-comparsion/result-screenshots/" + "result" + Utils.getCurrentTimestampSeconds() + ".png");
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
         assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
     }
 }

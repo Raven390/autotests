@@ -1,7 +1,6 @@
 package business_objects.kafka.deductions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class AccountDeductionRequest {
@@ -30,11 +29,17 @@ public class AccountDeductionRequest {
     @JsonProperty("comment")
     private String comment;
 
-    public AccountDeductionRequest() {
-    }
+    public AccountDeductionRequest() {}
 
-    public AccountDeductionRequest(String timestamp, String messageId, Integer serverId, Integer login,
-            String updateType, String uploadCurrency, Double uploadAmount, String comment) {
+    public AccountDeductionRequest(
+            String timestamp,
+            String messageId,
+            Integer serverId,
+            Integer login,
+            String updateType,
+            String uploadCurrency,
+            Double uploadAmount,
+            String comment) {
         this.timestamp = timestamp;
         this.messageId = messageId;
         this.serverId = serverId;
@@ -113,7 +118,12 @@ public class AccountDeductionRequest {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AccountDeductionRequest that = (AccountDeductionRequest) o;
-        return Objects.equals(serverId, that.serverId) && Objects.equals(login, that.login) && Objects.equals(updateType, that.updateType) && Objects.equals(uploadCurrency, that.uploadCurrency) && Objects.equals(uploadAmount, that.uploadAmount) && Objects.equals(comment, that.comment);
+        return Objects.equals(serverId, that.serverId)
+                && Objects.equals(login, that.login)
+                && Objects.equals(updateType, that.updateType)
+                && Objects.equals(uploadCurrency, that.uploadCurrency)
+                && Objects.equals(uploadAmount, that.uploadAmount)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
@@ -123,6 +133,9 @@ public class AccountDeductionRequest {
 
     @Override
     public String toString() {
-        return "AccountDeductionRequest{" + "timestamp='" + timestamp + '\'' + ", messageId='" + messageId + '\'' + ", serverId=" + serverId + ", login=" + login + ", updateType='" + updateType + '\'' + ", uploadCurrency='" + uploadCurrency + '\'' + ", uploadAmount=" + uploadAmount + ", comment='" + comment + '\'' + '}';
+        return "AccountDeductionRequest{" + "timestamp='" + timestamp + '\'' + ", messageId='" + messageId + '\''
+                + ", serverId=" + serverId + ", login=" + login + ", updateType='" + updateType + '\''
+                + ", uploadCurrency='" + uploadCurrency + '\'' + ", uploadAmount=" + uploadAmount + ", comment='"
+                + comment + '\'' + '}';
     }
 }

@@ -1,23 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.*;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
@@ -27,13 +9,39 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import tests.TestBaseWeb;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 public class TradingSummaryPnlByDuration extends TestBaseWeb {
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(202_001).uid("e5880ca5-8578-4a1e-969d-7a64716ca40f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_001_001).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(202_001)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca40f")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .tradingAccount(202_001_001)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
 
@@ -91,23 +99,36 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         trade10.setOpenTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 1, 24, 0, 1));
         trade10.setCloseTime(getCurrentTimestampDbFormat());
 
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(trade0, trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.openPnlDurationTooltip("0-10min");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade0.getProfitUsd() + trade0.getCommissionUsd() + trade0.getStorageUsd()) + (trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd()) + (trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd()));
-//        tradingPage.checkTextPnlDurationTooltipPercentage("75");
+        tradingPage.checkTextPnlDurationTooltipAmount(
+                (trade0.getProfitUsd() + trade0.getCommissionUsd() + trade0.getStorageUsd())
+                        + (trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd())
+                        + (trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd()));
+        //        tradingPage.checkTextPnlDurationTooltipPercentage("75");
         tradingPage.openPnlDurationTooltip("10-30min");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd()) + (trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd()));
-//        tradingPage.checkTextPnlDurationTooltipPercentage("25");
+        tradingPage.checkTextPnlDurationTooltipAmount(
+                (trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd())
+                        + (trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd()));
+        //        tradingPage.checkTextPnlDurationTooltipPercentage("25");
         tradingPage.openPnlDurationTooltip("0.5-6h");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade5.getProfitUsd() + trade5.getCommissionUsd() + trade5.getStorageUsd()) + (trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd()));
+        tradingPage.checkTextPnlDurationTooltipAmount(
+                (trade5.getProfitUsd() + trade5.getCommissionUsd() + trade5.getStorageUsd())
+                        + (trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd()));
         tradingPage.openPnlDurationTooltip("6-24h");
-        tradingPage.checkTextPnlDurationTooltipAmount((trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd()) + (trade8.getProfitUsd() + trade8.getCommissionUsd() + trade8.getStorageUsd()) + (trade9.getProfitUsd() + trade9.getCommissionUsd() + trade9.getStorageUsd()));
+        tradingPage.checkTextPnlDurationTooltipAmount(
+                (trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd())
+                        + (trade8.getProfitUsd() + trade8.getCommissionUsd() + trade8.getStorageUsd())
+                        + (trade9.getProfitUsd() + trade9.getCommissionUsd() + trade9.getStorageUsd()));
         tradingPage.openPnlDurationTooltip("24h>");
-        tradingPage.checkTextPnlDurationTooltipAmount(trade10.getProfitUsd() + trade10.getCommissionUsd() + trade10.getStorageUsd());
+        tradingPage.checkTextPnlDurationTooltipAmount(
+                trade10.getProfitUsd() + trade10.getCommissionUsd() + trade10.getStorageUsd());
     }
 
     @Test
@@ -209,13 +230,13 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         trade2.setStorageUsd(0.0);
         trade2.setCommissionUsd(0.0);
 
-
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade2, trade1));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        tradingPage.checkMaxProfitableValue((trade0.getProfitUsd() + trade0.getCommissionUsd() + trade0.getStorageUsd()));
+        tradingPage.checkMaxProfitableValue(
+                (trade0.getProfitUsd() + trade0.getCommissionUsd() + trade0.getStorageUsd()));
         tradingPage.checkMaxLossValue((trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd()));
         tradingPage.checkTopProfitCategory("0-10min");
         tradingPage.checkTopLossCategory("0.5-6h");

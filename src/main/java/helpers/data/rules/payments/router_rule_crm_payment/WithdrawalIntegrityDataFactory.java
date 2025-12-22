@@ -1,24 +1,21 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
-import helpers.data.ClientHelper;
-import helpers.data.DataHelper;
-import io.qameta.allure.Description;
-import utils.Utils;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.CRM_WITHDRAWAL_EVENT;
-import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
+import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getRandomUuidString;
+
+import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Description;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import utils.Utils;
 
 public class WithdrawalIntegrityDataFactory {
     private static final ClientHelper withdrawalIntegrityRuleClient1 = getRandomVantageClientAllFields();
@@ -30,49 +27,49 @@ public class WithdrawalIntegrityDataFactory {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
-        data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4",                            // accountType
-                Utils.getRandomIntPositive().toString(),      // binNumber
-                data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // checkName
-                data.clientHelper.getUserId(),                // clientId
-                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
-                "4",                                          // expMonth
-                "2030",                                       // expYear
-                data.clientHelper.getFirstName(),             // fullName
-                getRandomUuidString(),                        // id
-                "VTSG" + getRandomIntPositive(),              // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(),        // mt4Account
-                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
-                "-",                                 // paymentChannelName
-                "CREDIT_CARD",                       // paymentMethodCode
-                "WEB",                               // platform
-                data.clientHelper.getRegulator(),    // regulator
-                "1.0",                               // schemaVersion
-                CRM_WITHDRAWAL_EVENT,                // type
-                1,                                   // withdrawalAmount
-                Instant.now().toString(),               // withdrawalApplicationTime
-                "EUR",                               // withdrawalCurrency
-                getRandomIntPositive()               // withdrawalId
-        );
+        data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
+                .accountType("MT4")
+                .binNumber(Utils.getRandomIntPositive().toString())
+                .brand(data.clientHelper.getBrand().toLowerCase())
+                .checkName("")
+                .clientId(data.clientHelper.getUserId())
+                .eventDate(Instant.now().toString())
+                .expMonth("4")
+                .expYear("2030")
+                .fullName(data.clientHelper.getFirstName())
+                .merchantOrderId("VTSG" + getRandomIntPositive())
+                .mt4Account(data.clientHelper.getTradingAccount())
+                .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
+                .paymentChannelName("-")
+                .paymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD)
+                .platform("WEB")
+                .regulator(data.clientHelper.getRegulator())
+                .schemaVersion("1.0")
+                .type(CRM_WITHDRAWAL_EVENT)
+                .withdrawalAmount(1.0)
+                .withdrawalApplicationTime(Instant.now().toString())
+                .withdrawalCurrency("EUR")
+                .withdrawalId(Long.valueOf(getRandomIntPositive()))
+                .status("Risk audit")
+                .build();
         return data;
     }
 
     private static DataHelper getWithdrawalIntegrityCheckTest1Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
-        data.crmWithdrawalEvent.setWithdrawalAmount(1d);
+        data.crmWithdrawalEventV2.setWithdrawalAmount(1d);
         return data;
     }
 
     private static DataHelper getWithdrawalIntegrityCheckTest2Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
-        data.crmWithdrawalEvent.setWithdrawalAmount(50_000d);
+        data.crmWithdrawalEventV2.setWithdrawalAmount(50_000d);
         return data;
     }
 
     private static DataHelper getWithdrawalIntegrityCheckTest3Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient2);
-        data.crmWithdrawalEvent.setWithdrawalAmount(101d);
+        data.crmWithdrawalEventV2.setWithdrawalAmount(101d);
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.91, 0.91);
 
         return data;
@@ -80,7 +77,7 @@ public class WithdrawalIntegrityDataFactory {
 
     private static DataHelper getWithdrawalIntegrityCheckTest4Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient3);
-        data.crmWithdrawalEvent.setWithdrawalAmount(2000d);
+        data.crmWithdrawalEventV2.setWithdrawalAmount(2000d);
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.8, 0.8);
         return data;
     }

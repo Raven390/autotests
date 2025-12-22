@@ -40,7 +40,12 @@ public class RafBalanceOrderMtDbEventMt5Data {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RafBalanceOrderMtDbEventMt5Data that = (RafBalanceOrderMtDbEventMt5Data) o;
-        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(mtAccount, that.mtAccount) && Objects.equals(comment, that.comment) && Objects.equals(action, that.action) && Objects.equals(serverId, that.serverId);
+        return Objects.equals(openTime, that.openTime)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(mtAccount, that.mtAccount)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(action, that.action)
+                && Objects.equals(serverId, that.serverId);
     }
 
     @Override
@@ -50,7 +55,9 @@ public class RafBalanceOrderMtDbEventMt5Data {
 
     @Override
     public String toString() {
-        return "RafBalanceOrderMtDbEventMt5Data{" + "openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", mtAccount=" + mtAccount + ", comment='" + comment + '\'' + ", action=" + action + ", serverId=" + serverId + '}';
+        return "RafBalanceOrderMtDbEventMt5Data{" + "openTime='" + openTime + '\'' + ", tradeId=" + tradeId
+                + ", mtAccount=" + mtAccount + ", comment='" + comment + '\'' + ", action=" + action + ", serverId="
+                + serverId + '}';
     }
 
     public String getOpenTime() {

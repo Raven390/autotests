@@ -1,28 +1,5 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
-import business_objects.db.abuse_registry_db.AbuserDeduction;
-import business_objects.db.abuse_registry_db.AbuserHistory;
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.Currency;
-import java.util.List;
-
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
@@ -47,6 +24,28 @@ import static helpers.database.DbHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.abuse_registry_db.AbuserDeduction;
+import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.Currency;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Feature("BMS-1553 Manage single deduction")
 public class ManageSingleDeductionTest extends TestBaseWeb {
@@ -82,7 +81,8 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position1.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position2.getUcid()));
-        deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", deduction.getUcid()));
+        deleteEntryFromDb(
+                DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", deduction.getUcid()));
         closeAlert(crmTbUser.ucid);
         cleanCrmUserTableByClient(crmTbUser.ucid);
     }
@@ -92,7 +92,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
     @AllureId("1530")
     void userCanSaveDeduction() throws Exception {
 
-        //Create a record about a client in crm_tb_user
+        // Create a record about a client in crm_tb_user
         client = getRandomVantageClientAllFields();
         crmTbUser = generateUserByClient(client);
         client.setFirstName(faker.name().firstName());
@@ -101,7 +101,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         crmTbUser.lastName = client.getLastName();
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
 
-        //Create a record about a client's account
+        // Create a record about a client's account
         account = generateCrmTbAccountDataForUi(client);
         account2 = generateAdditionalCrmTbAccountData(client);
         account.currency = Currency.getInstance("EUR").getCurrencyCode();
@@ -112,37 +112,43 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));
         Thread.sleep(1000);
 
-        //add fraud for the client
+        // add fraud for the client
         addFraudForClient(client, GAP_TRADING, FIRST_TIME, CONFIRMED, List.of("EURUSD", "GBPUSD"));
 
-        //generate deduction
-        List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserHistory.class);
-        deduction = generateAbuserDeductionByAccount(account, abuserHistory.getLast().getId());
+        // generate deduction
+        List<AbuserHistory> abuserHistory = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                String.format("ucid = '%s'", client.getUcid()),
+                AbuserHistory.class);
+        deduction = generateAbuserDeductionByAccount(
+                account, abuserHistory.getLast().getId());
         deduction.setStatusDeduction(TO_BE_DEDUCTED.getDisplayName());
         deduction.setStatusApproval(AWAITING_APPROVAL.getDisplayName());
         deduction.setStatusEmail(NOT_SENT.getDisplayName());
-        deduction.setIllegalProfitUsd(-12.00);//set gap_illegal_profit_total (illegal profit less than) gap_pnl_total
+        deduction.setIllegalProfitUsd(-12.00); // set gap_illegal_profit_total (illegal profit less than) gap_pnl_total
         deduction.setIllegalProfit(deduction.getIllegalProfitUsd());
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, deduction);
 
-        //set IB relation
+        // set IB relation
         ibRelation = generateAccountIbRelationObjectByClient(client);
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, ibRelation);
 
-        //set Sale relation
+        // set Sale relation
         s3Dim = generateS3DimClientObject(client, ibRelation.getSalesId());
         insertObjectToDb(S3_DIM_CLIENT, s3Dim);
 
-        //set deposit
+        // set deposit
         deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
-        //set withdrawal
+        // set withdrawal
         withdrawal = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
-        //set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater than gap_illegal_profit_total: sum of illegal_profit_usd
-        position1 = generateMtMt5PositionsObject(client);//
+        // set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater
+        // than gap_illegal_profit_total: sum of illegal_profit_usd
+        position1 = generateMtMt5PositionsObject(client); //
         position1.setProfitUsd(1100.00);
         position1.setStorageUsd(1000.00);
         position1.setAccount(account.account);
@@ -175,13 +181,19 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         deductionPage.isSaveIsActive();
         deductionPage.saveDeduction();
         Allure.step("get clients deduction from DB");
-        AbuserDeduction changedDeduction = (getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, "ucid = '" + client.getUcid() + "'", AbuserDeduction.class)).getFirst();
+        AbuserDeduction changedDeduction = (getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_DEDUCTION_TABLE_NAME,
+                        "ucid = '" + client.getUcid() + "'",
+                        AbuserDeduction.class))
+                .getFirst();
         Allure.step("check that illegal profit was changed");
         assertEquals(roundDouble(changedDeduction.getIllegalProfit(), 2), roundDouble(newIllegalProfit, 2));
         assertEquals(roundDouble(changedDeduction.getIllegalProfitUsd(), 2), roundDouble(newIllegalProfitUSD, 2));
         Allure.step("check that suggested deduction was changed");
         assertEquals(roundDouble(changedDeduction.getSuggestedDeduction(), 2), roundDouble(newSuggestedDeduction, 2));
-        assertEquals(roundDouble(changedDeduction.getSuggestedDeductionUsd(), 2), roundDouble(newSuggestedDeductionUSD, 2));
+        assertEquals(
+                roundDouble(changedDeduction.getSuggestedDeductionUsd(), 2), roundDouble(newSuggestedDeductionUSD, 2));
     }
 
     @Test
@@ -189,7 +201,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
     @AllureId("1531")
     void userCanDeductDeduction() throws Exception {
 
-        //Create a record about a client in crm_tb_user
+        // Create a record about a client in crm_tb_user
         client = getRandomVantageClientAllFields();
         crmTbUser = generateUserByClient(client);
         client.setFirstName(faker.name().firstName());
@@ -198,7 +210,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         crmTbUser.lastName = client.getLastName();
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
 
-        //Create a record about a client's account
+        // Create a record about a client's account
         account = generateCrmTbAccountDataForUi(client);
         account2 = generateAdditionalCrmTbAccountData(client);
         account.currency = Currency.getInstance("EUR").getCurrencyCode();
@@ -209,37 +221,43 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));
         Thread.sleep(1000);
 
-        //add fraud for the client
+        // add fraud for the client
         addFraudForClient(client, GAP_TRADING, FIRST_TIME, CONFIRMED, List.of("EURUSD", "GBPUSD"));
 
-        //generate deduction
-        List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserHistory.class);
-        deduction = generateAbuserDeductionByAccount(account, abuserHistory.getLast().getId());
+        // generate deduction
+        List<AbuserHistory> abuserHistory = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_HISTORY_TABLE_NAME,
+                String.format("ucid = '%s'", client.getUcid()),
+                AbuserHistory.class);
+        deduction = generateAbuserDeductionByAccount(
+                account, abuserHistory.getLast().getId());
         deduction.setStatusDeduction(TO_BE_DEDUCTED.getDisplayName());
         deduction.setStatusApproval(AWAITING_APPROVAL.getDisplayName());
         deduction.setStatusEmail(NOT_SENT.getDisplayName());
-        deduction.setIllegalProfitUsd(-12.00);//set gap_illegal_profit_total (illegal profit less than) gap_pnl_total
+        deduction.setIllegalProfitUsd(-12.00); // set gap_illegal_profit_total (illegal profit less than) gap_pnl_total
         deduction.setIllegalProfit(deduction.getIllegalProfitUsd());
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, deduction);
 
-        //set IB relation
+        // set IB relation
         ibRelation = generateAccountIbRelationObjectByClient(client);
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, ibRelation);
 
-        //set Sale relation
+        // set Sale relation
         s3Dim = generateS3DimClientObject(client, ibRelation.getSalesId());
         insertObjectToDb(S3_DIM_CLIENT, s3Dim);
 
-        //set deposit
+        // set deposit
         deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
-        //set withdrawal
+        // set withdrawal
         withdrawal = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
-        //set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater than gap_illegal_profit_total: sum of illegal_profit_usd
-        position1 = generateMtMt5PositionsObject(client);//
+        // set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater
+        // than gap_illegal_profit_total: sum of illegal_profit_usd
+        position1 = generateMtMt5PositionsObject(client); //
         position1.setProfitUsd(1100.00);
         position1.setStorageUsd(1000.00);
         position1.setAccount(account.account);
@@ -269,7 +287,12 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         deductionPage.isDeductIsActive();
         deductionPage.finishDeduction();
         Allure.step("get clients deduction from DB");
-        AbuserDeduction deductedDeduction = (getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, "ucid = '" + client.getUcid() + "'", AbuserDeduction.class)).getFirst();
+        AbuserDeduction deductedDeduction = (getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_DEDUCTION_TABLE_NAME,
+                        "ucid = '" + client.getUcid() + "'",
+                        AbuserDeduction.class))
+                .getFirst();
         Allure.step("check that Deduction field was changed");
         assertEquals(roundDouble(deductionValue, 2), roundDouble(deductedDeduction.getApprovedDeduction(), 2));
         assertEquals(roundDouble(deductionValueUSD, 2), roundDouble(deductedDeduction.getApprovedDeductionUsd(), 2));

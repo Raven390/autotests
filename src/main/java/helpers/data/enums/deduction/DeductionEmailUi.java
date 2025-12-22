@@ -1,7 +1,11 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionEmailUi {
-    NO_EMAIL_SENT("No email sent"), AWAITING_APPROVAL("Awaiting approval"), APPROVED("Approved"), REJECTED("Rejected"), EMAIL_SENT("Email sent");
+    NO_EMAIL_SENT("No email sent"),
+    AWAITING_APPROVAL("Awaiting approval"),
+    APPROVED("Approved"),
+    REJECTED("Rejected"),
+    EMAIL_SENT("Email sent");
 
     private final String displayName;
 
@@ -12,5 +16,4 @@ public enum DeductionEmailUi {
     public String getDisplayName() {
         return displayName;
     }
-
 }

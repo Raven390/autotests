@@ -1,20 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.List;
-
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.*;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -28,6 +13,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TradingSummaryIbRebatesTest extends TestBaseWeb {
@@ -144,7 +143,8 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         commission6.setSalesCommission(768.31);
         commission6.setIbCommission(87.1);
         commission6.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 3, 0, 0));
-        List<S3FactIbSalesCommissionsObject> commissionsList = List.of(commission1, commission2, commission3, commission4, commission5, commission6);
+        List<S3FactIbSalesCommissionsObject> commissionsList =
+                List.of(commission1, commission2, commission3, commission4, commission5, commission6);
         insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, commissionsList);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -153,11 +153,13 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify title", tradingPage.getIbRebatesWidgetTitle(), is("IB rebates USD"));
-        String value = formatter.format(commissionsList.stream().mapToDouble(obj -> obj.getSalesCommission() + obj.getIbCommission()).sum());
+        String value = formatter.format(commissionsList.stream()
+                .mapToDouble(obj -> obj.getSalesCommission() + obj.getIbCommission())
+                .sum());
         assertThat("Verify value", tradingPage.getIbRebatesWidgetValue(), is(value));
-        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s rebate accounts", "3")));
+        assertThat(
+                "Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s rebate accounts", "3")));
     }
-
 
     @AfterAll
     public static void teardown() throws Exception {

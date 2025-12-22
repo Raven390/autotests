@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_rates_usd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetRatesUsdResponse {

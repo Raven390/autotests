@@ -7,8 +7,7 @@ public class DigitalIdTableEntry {
     public String ucid;
     public String digitalId;
 
-    public DigitalIdTableEntry() {
-    }
+    public DigitalIdTableEntry() {}
 
     public DigitalIdTableEntry(String ucid, String digitalId) {
         this.ucid = ucid;

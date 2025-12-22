@@ -1,28 +1,31 @@
 package helpers.data.rules;
 
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
 
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+
 public class MirrorTradeOnLastWithdrawalDataInserter {
     public static void insertMirrorTradeOnLastWithdrawalData(ClientHelper client) {
-        //'clientBrand', 'clientRegulator', clientId, 'clientUcid', clientAccount, clientServerId
-        String rawQuerryAccount = """
+        // 'clientBrand', 'clientRegulator', clientId, 'clientUcid', clientAccount, clientServerId
+        String rawQuerryAccount =
+                """
                 INSERT INTO consolidated.crm___tb_account
                 (source_id_st, brand_uid, brand, regulator, user_id, ucid, account, server_id_st, server_name, account_type_id, account_type, account_group, platform, create_time, create_time_utc, create_date, create_date_utc, account_status, last_login, last_login_utc, last_order, last_order_utc, balance, currency, balance_usd, equity, credit, pnl, leverage, margin_free, is_rebate_account, rebate_account_nr, ib_id, p_id, is_swap_free, is_pamm, is_cent, is_archive, is_hidden, is_del, is_deleted, internal_comment, last_updated, is_test)
                 VALUES
                 (7, 3, 'clientBrand', 'clientRegulator', clientId, 'clientUcid', clientAccount, clientServerId, 'MT5VT3', 25, 'MT5 Swap Free STP Cent', 'VT_Hedge\\M_VT_NM_S20_USC', 'MT5', '2025-08-31 08:20:55.000', '2025-08-31 05:20:55.000', '2025-08-31', '2025-08-31', 'Active', NULL, NULL, NULL, NULL, 0.00000000, 'USC', 0.00, 0.00000000, 0.00000000, 0.00000000, 0, 0.00000000, 0, NULL, NULL, 758987, 1, 0, 1, 0, 0, 0, 0, 'mv', '2025-12-01 06:10:37.000', 0),
                 (7, 3, 'clientBrand', 'clientRegulator', clientId, 'clientUcid', clientAccount, clientServerId, 'MT5VT3', 25, 'MT5 Swap Free STP Cent', 'VT_Hedge\\M_VT_NM_S20_USC', 'MT5', '2025-08-31 08:20:55.000', '2025-08-31 05:20:55.000', '2025-08-31', '2025-08-31', 'Active', NULL, NULL, NULL, NULL, 0.00000000, 'USC', 0.00, 0.00000000, 0.00000000, 0.00000000, 0, 0.00000000, 0, NULL, NULL, 758987, 1, 0, 1, 0, 0, 0, 0, 'mv', '2025-11-29 06:07:49.000', 0);
                 """;
-        String rawQuerryDeposit = """
+        String rawQuerryDeposit =
+                """
                 INSERT INTO consolidated.crm___tb_deposit
                 (source_id_st, brand_uid, brand, regulator, user_id, ucid, account, transfer_id, create_time, create_time_utc, update_time, update_time_utc, amount_submitted, amount_submitted_usd, amount, amount_usd, currency, status_id, status, status_group, payment_type_id, payment_type, payment_channel_id, payment_channel, payment_family, payment_system_account, payment_system_currency, payment_details, payment_expiration_date, ticket, v_wallet_account, fee, processed_notes, is_del, is_non_app, last_updated, credit_card_id, payment_profile, payment_profile_masked, payment_profile_key, is_deleted, card_holder_name, first_six_digits, three_domain_secure, order_number)
                 VALUES(7, 3, 'clientBrand', 'clientRegulator', clientId, 'clientUcid', clientAccount, 5146395, '2025-08-31 09:23:50.000', '2025-08-31 06:23:50.000', '2025-08-31 09:25:34.000', '2025-08-31 06:25:34.000', 50000.00000000, 500.00, 50000.00000000, 500.00, 'USC', 5, 'Success', 'Success', 4, 'crypto|wallet|Bank Transfer|bank transfer', 20, 'Thailand-QR-CPS', 'LBT', '', 'THB', '', '0/0', '11987827', '', 0.00000000, 'Automatic Deposit', 0, 1, '2025-08-31 06:25:35.000', 0, '', '', '', 0, '', '', '', 'VTSG1665675820250831092350281104');
                 """;
-        String rawQuerryBalance = """
+        String rawQuerryBalance =
+                """
                 INSERT INTO consolidated.mt___balance_orders
                 (
                     ticket, server_id, server_name, ucid, brand, regulator, user_id, platform,
@@ -39,7 +42,8 @@ public class MirrorTradeOnLastWithdrawalDataInserter {
                 (107505556, clientServerId, 'MT5VT3', 'clientUcid', 'clientBrand', 'clientRegulator', clientId, 'MT5', clientAccount, 'USC', '2025-11-07 04:45:31.035', '2025-11-07 02:45:31.035', -3464.0, 0.01, -34.64, 'unknown', 'Withdraw-TH-CPS', 0, '2025-11-07 02:45:31.000', 'mv');
                 """;
 
-        String rawQuerryCredit = """
+        String rawQuerryCredit =
+                """
                 INSERT INTO consolidated.mt___credit_orders
                  (
                      ticket, server_id, server_name, ucid, brand, regulator, user_id, platform,
@@ -53,7 +57,8 @@ public class MirrorTradeOnLastWithdrawalDataInserter {
                   '2025-09-30 15:50:29.237', '2025-09-30 12:50:29.237', -20000.0, 0.01, -200.0, 'Deduct Credit-AuditWithdrawal', 0, '2025-09-30 12:50:29.000', 'mv');
                 """;
 
-        String rawQuerryEquity = """
+        String rawQuerryEquity =
+                """
                 INSERT INTO consolidated.mt___mt5_deals_coerced_dd
                 (brand, regulator, user_id, ucid, account, platform, server_id, server_name, account_type, account_group, account_currency, deal, `order`, `action`, entry, reason, contract_size, `time`, time_utc, symbol, symbol_underlying, base_currency, quote_currency, rate_usd_base, rate_usd_quote, rate_usd_acc, price, volume, volume_lots, notional_value_usd, profit, storage, commission, profit_usd, storage_usd, commission_usd, expert_id, position_id, `comment`, sl, tp, price_gateway, market_bid, market_ask, rate_profit, is_deleted, last_updated, internal_comment, is_abnormal_time, leverage, balance, equity, margin, free_margin, balance_usd, equity_usd, margin_usd, free_margin_usd, open_positions_nv_usd)
                 VALUES
@@ -86,7 +91,13 @@ public class MirrorTradeOnLastWithdrawalDataInserter {
     }
 
     protected static String trasformQuerry(String rawQuerry, ClientHelper client) {
-        return rawQuerry.replace("clientBrand", client.getBrand()).replace("clientRegulator", client.getRegulator()).replace("clientId", client.getUserId().toString()).replace("clientAccount", client.getTradingAccount().toString()).replace("clientServerId", client.getServerId().toString()).replace("clientUcid", client.getUcid());
+        return rawQuerry
+                .replace("clientBrand", client.getBrand())
+                .replace("clientRegulator", client.getRegulator())
+                .replace("clientId", client.getUserId().toString())
+                .replace("clientAccount", client.getTradingAccount().toString())
+                .replace("clientServerId", client.getServerId().toString())
+                .replace("clientUcid", client.getUcid());
     }
 
     public static void deleteData(ClientHelper client) {

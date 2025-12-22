@@ -20,8 +20,17 @@ public class BoAlertsObject {
 
     @Deprecated
     public BoAlertsObject(
-            Integer alertId, String ucid, String brand, String createdAt, String createdAtUtc, String resolvedAt,
-            String resolvedAtUtc, String status, String rule, String alertResolution, String lastUpdated) {
+            Integer alertId,
+            String ucid,
+            String brand,
+            String createdAt,
+            String createdAtUtc,
+            String resolvedAt,
+            String resolvedAtUtc,
+            String status,
+            String rule,
+            String alertResolution,
+            String lastUpdated) {
         this.alertId = alertId;
         this.ucid = ucid;
         this.brand = brand;
@@ -36,8 +45,17 @@ public class BoAlertsObject {
     }
 
     public BoAlertsObject(
-            Integer id, String ucid, String brand, String createdAt, String createdAtUtc, String resolvedAt,
-            String resolvedAtUtc, String status, String rule, String ruleAttributes, String alertResolution,
+            Integer id,
+            String ucid,
+            String brand,
+            String createdAt,
+            String createdAtUtc,
+            String resolvedAt,
+            String resolvedAtUtc,
+            String status,
+            String rule,
+            String ruleAttributes,
+            String alertResolution,
             String lastUpdated) {
         this.id = id;
         this.status = status;
@@ -47,9 +65,7 @@ public class BoAlertsObject {
         this.lastUpdated = lastUpdated;
     }
 
-    public BoAlertsObject() {
-
-    }
+    public BoAlertsObject() {}
 
     public String getRuleAttributes() {
         return ruleAttributes;
@@ -158,20 +174,41 @@ public class BoAlertsObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof BoAlertsObject that)) return false;
-        return Objects.equals(alertId, that.alertId) && Objects.equals(ucid, that.ucid) && Objects.equals(
-                brand, that.brand) && Objects.equals(createdAt, that.createdAt) && Objects.equals(
-                        createdAtUtc, that.createdAtUtc) && Objects.equals(resolvedAt, that.resolvedAt) && Objects.equals(
-                                resolvedAtUtc, that.resolvedAtUtc) && Objects.equals(status, that.status) && Objects.equals(
-                                        rule, that.rule) && Objects.equals(alertResolution, that.alertResolution) && Objects.equals(lastUpdated, that.lastUpdated);
+        return Objects.equals(alertId, that.alertId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(createdAt, that.createdAt)
+                && Objects.equals(createdAtUtc, that.createdAtUtc)
+                && Objects.equals(resolvedAt, that.resolvedAt)
+                && Objects.equals(resolvedAtUtc, that.resolvedAtUtc)
+                && Objects.equals(status, that.status)
+                && Objects.equals(rule, that.rule)
+                && Objects.equals(alertResolution, that.alertResolution)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(alertId, ucid, brand, createdAt, createdAtUtc, resolvedAt, resolvedAtUtc, status, rule, alertResolution, lastUpdated);
+        return Objects.hash(
+                alertId,
+                ucid,
+                brand,
+                createdAt,
+                createdAtUtc,
+                resolvedAt,
+                resolvedAtUtc,
+                status,
+                rule,
+                alertResolution,
+                lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "BoAlertsObject{" + "alertId=" + alertId + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", createdAt='" + createdAt + '\'' + ", createdAtUtc='" + createdAtUtc + '\'' + ", resolvedAt='" + resolvedAt + '\'' + ", resolvedAtUtc='" + resolvedAtUtc + '\'' + ", status='" + status + '\'' + ", rule='" + rule + '\'' + ", alertResolution='" + alertResolution + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "BoAlertsObject{" + "alertId=" + alertId + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\''
+                + ", createdAt='" + createdAt + '\'' + ", createdAtUtc='" + createdAtUtc + '\'' + ", resolvedAt='"
+                + resolvedAt + '\'' + ", resolvedAtUtc='" + resolvedAtUtc + '\'' + ", status='" + status + '\''
+                + ", rule='" + rule + '\'' + ", alertResolution='" + alertResolution + '\'' + ", lastUpdated='"
+                + lastUpdated + '\'' + '}';
     }
 }

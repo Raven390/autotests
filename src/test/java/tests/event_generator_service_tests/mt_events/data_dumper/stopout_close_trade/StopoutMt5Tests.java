@@ -1,5 +1,12 @@
 package tests.event_generator_service_tests.mt_events.data_dumper.stopout_close_trade;
 
+import static business_objects.kafka.mt_data_dumper_events.StopoutFactory.generateStopoutTradeDataDumperMt5;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.convertTimestampToIsoFormat;
+import static utils.Utils.getCurrentTimestampMillis;
+
 import business_objects.kafka.mt_data_dumper_events.TradeEventMt5;
 import business_objects.kafka.mt_events.TradeEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,13 +20,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
 
-import static business_objects.kafka.mt_data_dumper_events.StopoutFactory.generateStopoutTradeDataDumperMt5;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
-import static utils.Utils.convertTimestampToIsoFormat;
-import static utils.Utils.getCurrentTimestampMillis;
-
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_STOP_OUT_EVENT)
 @Tag(TEAM_CORE)
@@ -30,7 +30,8 @@ class StopoutMt5Tests extends TestBaseKafka {
     @Test
     @AllureId("1213")
     @Tag("CSV-1280")
-    @DisplayName("Generate stopout event with event generator service from MT5 data dumper source with all fields populated")
+    @DisplayName(
+            "Generate stopout event with event generator service from MT5 data dumper source with all fields populated")
     void generateMt5StopoutEventTest() throws JsonProcessingException, InterruptedException {
 
         TradeEventMt5 stopoutTradeMt5 = generateStopoutTradeDataDumperMt5();
@@ -40,27 +41,61 @@ class StopoutMt5Tests extends TestBaseKafka {
         stopoutTradeMt5.getPayload().setTimeUtc(time);
 
         Allure.step("Write message to mt5DealPerform topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(stopoutTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(stopoutTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from mt-events topic");
-        MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, String.valueOf(stopoutTradeMt5.getPayload().getLogin()), true);
+        MessageWithHeaders consumedMessage = kafka.consumeMessage(
+                KAFKA_TOPIC_MT_EVENTS,
+                String.valueOf(stopoutTradeMt5.getPayload().getLogin()),
+                true);
 
         TradeEvent retrievedStopoutMtEvent = objectMapper.readValue(consumedMessage.message(), TradeEvent.class);
 
         Allure.step("Verify kafka message");
-        assertThat("Check tradeId", retrievedStopoutMtEvent.tradeId, equalTo(stopoutTradeMt5.getPayload().getDeal()));
-        assertThat("Check symbol", retrievedStopoutMtEvent.symbol, equalTo(stopoutTradeMt5.getPayload().getSymbol()));
+        assertThat(
+                "Check tradeId",
+                retrievedStopoutMtEvent.tradeId,
+                equalTo(stopoutTradeMt5.getPayload().getDeal()));
+        assertThat(
+                "Check symbol",
+                retrievedStopoutMtEvent.symbol,
+                equalTo(stopoutTradeMt5.getPayload().getSymbol()));
         assertThat("Check id", retrievedStopoutMtEvent.id, instanceOf(String.class));
-        assertThat("Check serverId", retrievedStopoutMtEvent.serverId, equalTo(stopoutTradeMt5.getHeader().getServerId()));
-        assertThat("Check tradingAccount", retrievedStopoutMtEvent.tradingAccount, equalTo(stopoutTradeMt5.getPayload().getLogin()));
-        assertThat("Check volume", (long) retrievedStopoutMtEvent.volume, equalTo(stopoutTradeMt5.getPayload().getVolume()));
+        assertThat(
+                "Check serverId",
+                retrievedStopoutMtEvent.serverId,
+                equalTo(stopoutTradeMt5.getHeader().getServerId()));
+        assertThat(
+                "Check tradingAccount",
+                retrievedStopoutMtEvent.tradingAccount,
+                equalTo(stopoutTradeMt5.getPayload().getLogin()));
+        assertThat(
+                "Check volume",
+                (long) retrievedStopoutMtEvent.volume,
+                equalTo(stopoutTradeMt5.getPayload().getVolume()));
         assertThat("Check closeTime", retrievedStopoutMtEvent.closeTime, equalTo(convertedTimestamp));
         assertThat("Check closeTimeUtc", retrievedStopoutMtEvent.closeTimeUtc, equalTo(convertedTimestamp));
-        assertThat("Check equity", retrievedStopoutMtEvent.equity, equalTo(stopoutTradeMt5.getPayload().getEquity()));
-        assertThat("Check balance", retrievedStopoutMtEvent.balance, equalTo(stopoutTradeMt5.getPayload().getBalance()));
-        assertThat("Check leverage", (int) retrievedStopoutMtEvent.leverage, equalTo(stopoutTradeMt5.getPayload().getLeverage()));
-        assertThat("Check margin", retrievedStopoutMtEvent.margin, equalTo(stopoutTradeMt5.getPayload().getMargin()));
-        assertThat("Check freeMargin", retrievedStopoutMtEvent.freeMargin, equalTo(stopoutTradeMt5.getPayload().getFreeMargin()));
+        assertThat(
+                "Check equity",
+                retrievedStopoutMtEvent.equity,
+                equalTo(stopoutTradeMt5.getPayload().getEquity()));
+        assertThat(
+                "Check balance",
+                retrievedStopoutMtEvent.balance,
+                equalTo(stopoutTradeMt5.getPayload().getBalance()));
+        assertThat(
+                "Check leverage",
+                (int) retrievedStopoutMtEvent.leverage,
+                equalTo(stopoutTradeMt5.getPayload().getLeverage()));
+        assertThat(
+                "Check margin",
+                retrievedStopoutMtEvent.margin,
+                equalTo(stopoutTradeMt5.getPayload().getMargin()));
+        assertThat(
+                "Check freeMargin",
+                retrievedStopoutMtEvent.freeMargin,
+                equalTo(stopoutTradeMt5.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedStopoutMtEvent.eventDate, equalTo(convertedTimestamp));
         assertThat("Check type", retrievedStopoutMtEvent.type, equalTo("stopoutCloseTrade"));
     }

@@ -1,5 +1,13 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.*;
@@ -10,21 +18,12 @@ import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static helpers.database.DbHelper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
-import static utils.Utils.insertCrmAccountsToDb;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -59,8 +58,19 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID alertID = UUID.randomUUID();
         TradingAlertMessageV2 openTradeAlert = new TradingAlertMessageV2(
-                alertID, AlertMessageType.TRADING, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(1), crmTbUser.ucid, "HEDGING", "OpenTrade", "Suspicious trading pattern detected", rule, attributes, String.valueOf(account.account), "EURUSD", String.valueOf(account.serverIdSt)
-        );
+                alertID,
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(1),
+                crmTbUser.ucid,
+                "HEDGING",
+                "OpenTrade",
+                "Suspicious trading pattern detected",
+                rule,
+                attributes,
+                String.valueOf(account.account),
+                "EURUSD",
+                String.valueOf(account.serverIdSt));
 
         // Act: Produce alert to Kafka
         kafka.produceMessage(alertID.toString(), objectMapper.writeValueAsString(openTradeAlert), KAFKA_TOPIC_ALERTS);
@@ -76,7 +86,10 @@ class AlertsV2Test extends TestBaseWeb {
         // Assert: Verify mandatory attributes are displayed
         assertThat("Alert should be displayed", alertsPage.getAlertsCount(), equalTo(1));
         assertThat("Rule name should match", alertsPage.getAlertsRuleNamesList().getFirst(), equalTo("mirror_trading"));
-        assertThat("Trigger should be OpenTrade", alertsPage.getAlertsRuleTriggersList().getFirst(), equalTo("OpenTrade"));
+        assertThat(
+                "Trigger should be OpenTrade",
+                alertsPage.getAlertsRuleTriggersList().getFirst(),
+                equalTo("OpenTrade"));
 
         // Verify attributes contain flexible data
         String attributesText = alertsPage.getAlertsAttributesList().getFirst();
@@ -99,8 +112,19 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID alertId = UUID.randomUUID();
         TradingAlertMessageV2 closeTradeAlert = new TradingAlertMessageV2(
-                alertId, AlertMessageType.TRADING, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(2), crmTbUser.ucid, "MARKET_MANIPULATION", "CloseTrade", "Abnormal closing pattern", rule, attributes, String.valueOf(account.account), "GBPUSD", "srv-12"
-        );
+                alertId,
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(2),
+                crmTbUser.ucid,
+                "MARKET_MANIPULATION",
+                "CloseTrade",
+                "Abnormal closing pattern",
+                rule,
+                attributes,
+                String.valueOf(account.account),
+                "GBPUSD",
+                "srv-12");
 
         // Act
         kafka.produceMessage(alertId.toString(), objectMapper.writeValueAsString(closeTradeAlert), KAFKA_TOPIC_ALERTS);
@@ -117,7 +141,6 @@ class AlertsV2Test extends TestBaseWeb {
         assertThat("Trigger should be CloseTrade", alertsPage.getAlertsRuleTriggersList(), hasItem("CloseTrade"));
     }
 
-
     @Test
     @AllureId("1675")
     @DisplayName("Verify Multiple Alerts With Different Trigger Types")
@@ -129,8 +152,19 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID tradingAlertId = UUID.randomUUID();
         TradingAlertMessageV2 tradingAlert = new TradingAlertMessageV2(
-                tradingAlertId, AlertMessageType.TRADING, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(1), crmTbUser.ucid, "HEDGING", "OpenTrade", "Suspicious pattern", tradingRule, new HashMap<>(), String.valueOf(account.account), "EURUSD", "srv-45"
-        );
+                tradingAlertId,
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(1),
+                crmTbUser.ucid,
+                "HEDGING",
+                "OpenTrade",
+                "Suspicious pattern",
+                tradingRule,
+                new HashMap<>(),
+                String.valueOf(account.account),
+                "EURUSD",
+                "srv-45");
 
         BaseAlertMessageV2.Rule paymentRule = new BaseAlertMessageV2.Rule();
         paymentRule.name = "fraud_detection";
@@ -138,13 +172,31 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID paymentAlertId = UUID.randomUUID();
         PaymentAlertMessageV2 paymentAlert = new PaymentAlertMessageV2(
-                paymentAlertId, AlertMessageType.PAYMENT, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(2), crmTbUser.ucid, "POTENTIAL_ABUSE", "Deposit", "Suspicious payment", paymentRule, new HashMap<>(), String.valueOf(account.account), "srv-45", "CRYPTO", "500.00", "500.00", "USD", "D987654321", "evt-" + UUID.randomUUID()
-        );
+                paymentAlertId,
+                AlertMessageType.PAYMENT,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(2),
+                crmTbUser.ucid,
+                "POTENTIAL_ABUSE",
+                "Deposit",
+                "Suspicious payment",
+                paymentRule,
+                new HashMap<>(),
+                String.valueOf(account.account),
+                "srv-45",
+                "CRYPTO",
+                "500.00",
+                "500.00",
+                "USD",
+                "D987654321",
+                "evt-" + UUID.randomUUID());
 
         // Act: Send both alerts
-        kafka.produceMessage(tradingAlertId.toString(), objectMapper.writeValueAsString(tradingAlert), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                tradingAlertId.toString(), objectMapper.writeValueAsString(tradingAlert), KAFKA_TOPIC_ALERTS);
 
-        kafka.produceMessage(paymentAlertId.toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                paymentAlertId.toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -156,7 +208,10 @@ class AlertsV2Test extends TestBaseWeb {
 
         // Assert
         assertThat("Multiple alerts should be displayed", alertsPage.getAlertsCount(), greaterThanOrEqualTo(2));
-        assertThat("Both triggers should be present", alertsPage.getAlertsRuleTriggersList(), hasItems("OpenTrade", "Deposit"));
+        assertThat(
+                "Both triggers should be present",
+                alertsPage.getAlertsRuleTriggersList(),
+                hasItems("OpenTrade", "Deposit"));
     }
 
     @Test
@@ -170,8 +225,19 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID alertId = UUID.randomUUID();
         TradingAlertMessageV2 alert = new TradingAlertMessageV2(
-                alertId, AlertMessageType.TRADING, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(1), crmTbUser.ucid, "HEDGING", "OpenTrade", "Test alert", rule, new HashMap<>(), String.valueOf(account.account), "BTCUSD", "srv-45"
-        );
+                alertId,
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(1),
+                crmTbUser.ucid,
+                "HEDGING",
+                "OpenTrade",
+                "Test alert",
+                rule,
+                new HashMap<>(),
+                String.valueOf(account.account),
+                "BTCUSD",
+                "srv-45");
 
         // Act
         kafka.produceMessage(alertId.toString(), objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -205,8 +271,24 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID alertId = UUID.randomUUID();
         PaymentAlertMessageV2 alert = new PaymentAlertMessageV2(
-                alertId, AlertMessageType.PAYMENT, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(1), crmTbUser.ucid, "POTENTIAL_ABUSE", "Withdrawal", "Complex scenario", rule, flexibleAttributes, String.valueOf(account.account), "srv-45", "WIRE_TRANSFER", "10000.00", "10000.00", "EUR", "W555555555", "evt-" + UUID.randomUUID()
-        );
+                alertId,
+                AlertMessageType.PAYMENT,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(1),
+                crmTbUser.ucid,
+                "POTENTIAL_ABUSE",
+                "Withdrawal",
+                "Complex scenario",
+                rule,
+                flexibleAttributes,
+                String.valueOf(account.account),
+                "srv-45",
+                "WIRE_TRANSFER",
+                "10000.00",
+                "10000.00",
+                "EUR",
+                "W555555555",
+                "evt-" + UUID.randomUUID());
 
         // Act
         kafka.produceMessage(alertId.toString(), objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -238,8 +320,19 @@ class AlertsV2Test extends TestBaseWeb {
 
         UUID alertId = UUID.randomUUID();
         TradingAlertMessageV2 alert = new TradingAlertMessageV2(
-                alertId, AlertMessageType.TRADING, now, triggerTime, crmTbUser.ucid, "HEDGING", "OpenTrade", "Timestamp verification", rule, new HashMap<>(), String.valueOf(account.account), "EURUSD", "srv-45"
-        );
+                alertId,
+                AlertMessageType.TRADING,
+                now,
+                triggerTime,
+                crmTbUser.ucid,
+                "HEDGING",
+                "OpenTrade",
+                "Timestamp verification",
+                rule,
+                new HashMap<>(),
+                String.valueOf(account.account),
+                "EURUSD",
+                "srv-45");
 
         // Act
         kafka.produceMessage(alertId.toString(), objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -254,7 +347,10 @@ class AlertsV2Test extends TestBaseWeb {
         // Assert: Verify timestamps are displayed
         assertThat("Alert date should be Today", alertsPage.getAlertsDatesList().getFirst(), equalTo("Today"));
         String timePattern = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$";
-        assertThat("Alert time should match expected format", alertsPage.getAlertsTimesList().getFirst(), matchesPattern(timePattern));
+        assertThat(
+                "Alert time should match expected format",
+                alertsPage.getAlertsTimesList().getFirst(),
+                matchesPattern(timePattern));
     }
 
     @AfterEach

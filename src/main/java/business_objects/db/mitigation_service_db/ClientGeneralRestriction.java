@@ -17,11 +17,19 @@ public class ClientGeneralRestriction {
     private String correlationType;
     private String correlationId;
 
-    public ClientGeneralRestriction() {
-    }
+    public ClientGeneralRestriction() {}
 
-    public ClientGeneralRestriction(Long id, String ucid, String regulator, Long restrictionId, String comment,
-            String status, String cancellationReason, String failReason, String createdAt, String updatedAt) {
+    public ClientGeneralRestriction(
+            Long id,
+            String ucid,
+            String regulator,
+            Long restrictionId,
+            String comment,
+            String status,
+            String cancellationReason,
+            String failReason,
+            String createdAt,
+            String updatedAt) {
         this.id = id;
         this.ucid = ucid;
         this.regulator = regulator;
@@ -34,8 +42,7 @@ public class ClientGeneralRestriction {
         this.updatedAt = updatedAt;
     }
 
-    public ClientGeneralRestriction(String ucid, String regulator, Long restrictionId, String comment,
-            String status) {
+    public ClientGeneralRestriction(String ucid, String regulator, Long restrictionId, String comment, String status) {
         this.ucid = ucid;
         this.regulator = regulator;
         this.restrictionId = restrictionId;
@@ -43,8 +50,7 @@ public class ClientGeneralRestriction {
         this.status = status;
     }
 
-    public ClientGeneralRestriction(String ucid, String regulator, Long restrictionId,
-            String status) {
+    public ClientGeneralRestriction(String ucid, String regulator, Long restrictionId, String status) {
         this.ucid = ucid;
         this.regulator = regulator;
         this.restrictionId = restrictionId;
@@ -150,20 +156,38 @@ public class ClientGeneralRestriction {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ClientGeneralRestriction that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(
-                regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(
-                        comment, that.comment) && Objects.equals(status, that.status) && Objects.equals(
-                                cancellationReason, that.cancellationReason) && Objects.equals(failReason, that.failReason) && Objects.equals(
-                                        createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+        return Objects.equals(id, that.id)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(restrictionId, that.restrictionId)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(status, that.status)
+                && Objects.equals(cancellationReason, that.cancellationReason)
+                && Objects.equals(failReason, that.failReason)
+                && Objects.equals(createdAt, that.createdAt)
+                && Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ucid, regulator, restrictionId, comment, status, cancellationReason, failReason, createdAt, updatedAt);
+        return Objects.hash(
+                id,
+                ucid,
+                regulator,
+                restrictionId,
+                comment,
+                status,
+                cancellationReason,
+                failReason,
+                createdAt,
+                updatedAt);
     }
 
     @Override
     public String toString() {
-        return "ClientGeneralRestriction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", regulator='" + regulator + '\'' + ", restrictionId=" + restrictionId + ", comment='" + comment + '\'' + ", status='" + status + '\'' + ", cancellationReason='" + cancellationReason + '\'' + ", failReason='" + failReason + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
+        return "ClientGeneralRestriction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", regulator='" + regulator + '\''
+                + ", restrictionId=" + restrictionId + ", comment='" + comment + '\'' + ", status='" + status + '\''
+                + ", cancellationReason='" + cancellationReason + '\'' + ", failReason='" + failReason + '\''
+                + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
     }
 }

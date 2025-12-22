@@ -1,19 +1,5 @@
 package tests.rule_engine_service_tests.rules.trading;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.trading.LatencyArbitrageRuleDataFactory.setupLatencyArbitrageData;
@@ -22,6 +8,20 @@ import static helpers.database.DbHelper.stopSshTunnel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE)
@@ -41,7 +41,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -69,7 +69,8 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1373")
-    @DisplayName("Latency arbitrage rule. Exit without alert if user has less that 10 trading days. ElementId: Event_088xwgg")
+    @DisplayName(
+            "Latency arbitrage rule. Exit without alert if user has less that 10 trading days. ElementId: Event_088xwgg")
     void latencyArbitrageRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
 
@@ -79,7 +80,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().timestamp,
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
         assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
@@ -90,11 +94,20 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
         assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
 
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("Detected suspicious Latency Arbitrage pattern"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.reason,
+                is("Detected suspicious Latency Arbitrage pattern"));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.ticketId,
+                is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.account,
+                is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
@@ -105,7 +118,8 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1374")
-    @DisplayName("Latency arbitrage rule. Rebate Latency Branch. Total Profit / Cumulative deposit =< 0.2. ElementId: Event_1jau96v")
+    @DisplayName(
+            "Latency arbitrage rule. Rebate Latency Branch. Total Profit / Cumulative deposit =< 0.2. ElementId: Event_1jau96v")
     void latencyArbitrageRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
 
@@ -116,7 +130,8 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1375")
-    @DisplayName("Latency arbitrage rule. Rebate Latency Branch. rebates(client) / profit(client) < 0.3?. ElementId: Event_0cyuekk")
+    @DisplayName(
+            "Latency arbitrage rule. Rebate Latency Branch. rebates(client) / profit(client) < 0.3?. ElementId: Event_0cyuekk")
     void latencyArbitrageRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
 
@@ -137,7 +152,8 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1376")
-    @DisplayName("Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
+    @DisplayName(
+            "Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
     void latencyArbitrageRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
 
@@ -170,7 +186,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
         Allure.step("Verify there is alert in kafka");
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().timestamp,
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
         assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
@@ -181,17 +200,25 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
         assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
 
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("Detected suspicious Latency Arbitrage pattern + Rebate abuse"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.reason,
+                is("Detected suspicious Latency Arbitrage pattern + Rebate abuse"));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.ticketId,
+                is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.account,
+                is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Lattency arbitrage pattern");
-
     }
 }

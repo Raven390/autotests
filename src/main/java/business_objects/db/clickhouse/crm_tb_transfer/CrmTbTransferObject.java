@@ -30,7 +30,15 @@ public class CrmTbTransferObject {
 
     @Override
     public String toString() {
-        return "CrmTbTransferObject{" + "sourceIdSt=" + sourceIdSt + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", transferId=" + transferId + ", accountFrom=" + accountFrom + ", accountTo=" + accountTo + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", updateTime='" + updateTime + '\'' + ", updateTimeUtc='" + updateTimeUtc + '\'' + ", amountFrom=" + amountFrom + ", amount=" + amount + ", amountUsd=" + amountUsd + ", currencyFrom='" + currencyFrom + '\'' + ", currencyTo='" + currencyTo + '\'' + ", statusId=" + statusId + ", status='" + status + '\'' + ", isDel=" + isDel + ", isDeleted=" + isDeleted + ", internalComment='" + internalComment + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "CrmTbTransferObject{" + "sourceIdSt=" + sourceIdSt + ", brandUid=" + brandUid + ", brand='" + brand
+                + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\''
+                + ", transferId=" + transferId + ", accountFrom=" + accountFrom + ", accountTo=" + accountTo
+                + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", updateTime='"
+                + updateTime + '\'' + ", updateTimeUtc='" + updateTimeUtc + '\'' + ", amountFrom=" + amountFrom
+                + ", amount=" + amount + ", amountUsd=" + amountUsd + ", currencyFrom='" + currencyFrom + '\''
+                + ", currencyTo='" + currencyTo + '\'' + ", statusId=" + statusId + ", status='" + status + '\''
+                + ", isDel=" + isDel + ", isDeleted=" + isDeleted + ", internalComment='" + internalComment + '\''
+                + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 
     @Override
@@ -38,12 +46,59 @@ public class CrmTbTransferObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbTransferObject that = (CrmTbTransferObject) o;
-        return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(brandUid, that.brandUid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(transferId, that.transferId) && Objects.equals(accountFrom, that.accountFrom) && Objects.equals(accountTo, that.accountTo) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(updateTime, that.updateTime) && Objects.equals(updateTimeUtc, that.updateTimeUtc) && Objects.equals(amountFrom, that.amountFrom) && Objects.equals(amount, that.amount) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(currencyFrom, that.currencyFrom) && Objects.equals(currencyTo, that.currencyTo) && Objects.equals(statusId, that.statusId) && Objects.equals(status, that.status) && Objects.equals(isDel, that.isDel) && Objects.equals(isDeleted, that.isDeleted) && Objects.equals(internalComment, that.internalComment) && Objects.equals(lastUpdated, that.lastUpdated);
+        return Objects.equals(sourceIdSt, that.sourceIdSt)
+                && Objects.equals(brandUid, that.brandUid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(transferId, that.transferId)
+                && Objects.equals(accountFrom, that.accountFrom)
+                && Objects.equals(accountTo, that.accountTo)
+                && Objects.equals(createTime, that.createTime)
+                && Objects.equals(createTimeUtc, that.createTimeUtc)
+                && Objects.equals(updateTime, that.updateTime)
+                && Objects.equals(updateTimeUtc, that.updateTimeUtc)
+                && Objects.equals(amountFrom, that.amountFrom)
+                && Objects.equals(amount, that.amount)
+                && Objects.equals(amountUsd, that.amountUsd)
+                && Objects.equals(currencyFrom, that.currencyFrom)
+                && Objects.equals(currencyTo, that.currencyTo)
+                && Objects.equals(statusId, that.statusId)
+                && Objects.equals(status, that.status)
+                && Objects.equals(isDel, that.isDel)
+                && Objects.equals(isDeleted, that.isDeleted)
+                && Objects.equals(internalComment, that.internalComment)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceIdSt, brandUid, brand, regulator, userId, ucid, transferId, accountFrom, accountTo, createTime, createTimeUtc, updateTime, updateTimeUtc, amountFrom, amount, amountUsd, currencyFrom, currencyTo, statusId, status, isDel, isDeleted, internalComment, lastUpdated);
+        return Objects.hash(
+                sourceIdSt,
+                brandUid,
+                brand,
+                regulator,
+                userId,
+                ucid,
+                transferId,
+                accountFrom,
+                accountTo,
+                createTime,
+                createTimeUtc,
+                updateTime,
+                updateTimeUtc,
+                amountFrom,
+                amount,
+                amountUsd,
+                currencyFrom,
+                currencyTo,
+                statusId,
+                status,
+                isDel,
+                isDeleted,
+                internalComment,
+                lastUpdated);
     }
 
     public Long getSourceIdSt() {

@@ -6,11 +6,19 @@ import static utils.Constants.ROLE_UNKNOWN;
 public class UserFactory {
 
     public static User firstLoginUser() {
-        return new User(ID_FIRST_LOGIN, USERNAME_FIRST_LOGIN, PASSWORD_FIRST_LOGIN, FIRST_NAME_FIRST_LOGIN, LAST_NAME_FIRST_LOGIN, EMAIL_FIRST_LOGIN, ROLE_UNKNOWN);
+        return new User(
+                ID_FIRST_LOGIN,
+                USERNAME_FIRST_LOGIN,
+                PASSWORD_FIRST_LOGIN,
+                FIRST_NAME_FIRST_LOGIN,
+                LAST_NAME_FIRST_LOGIN,
+                EMAIL_FIRST_LOGIN,
+                ROLE_UNKNOWN);
     }
 
     public static User coreUser() {
-        return new User(ID_CORE, USERNAME_CORE, PASSWORD_CORE, FIRST_NAME_CORE, LAST_NAME_CORE, EMAIL_CORE, ROLE_UNKNOWN);
+        return new User(
+                ID_CORE, USERNAME_CORE, PASSWORD_CORE, FIRST_NAME_CORE, LAST_NAME_CORE, EMAIL_CORE, ROLE_UNKNOWN);
     }
 
     public static User devUser() {
@@ -18,35 +26,90 @@ public class UserFactory {
     }
 
     public static User autotestUserOne() {
-        return new User(ID_AUTOTEST_ONE, USERNAME_AUTOTEST_ONE, PASSWORD_BACKOFFICE_USERS, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_ONE, ROLE_UNKNOWN);
+        return new User(
+                ID_AUTOTEST_ONE,
+                USERNAME_AUTOTEST_ONE,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_ONE,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserAF() {
-        return new User(ID_AUTOTEST_ONE, USERNAME_AUTOTEST_AF, PASSWORD_AUTOTEST_AF, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_ONE, ROLE_UNKNOWN);
+        return new User(
+                ID_AUTOTEST_ONE,
+                USERNAME_AUTOTEST_AF,
+                PASSWORD_AUTOTEST_AF,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_ONE,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserPT() {
-        return new User(ID_PAYMENT_TEAM_USER, USERNAME_PAYMENT_TEAM_USER, PASSWORD_PAYMENT_TEAM_USER, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_ONE, ROLE_UNKNOWN);
+        return new User(
+                ID_PAYMENT_TEAM_USER,
+                USERNAME_PAYMENT_TEAM_USER,
+                PASSWORD_PAYMENT_TEAM_USER,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_ONE,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserPaymentSenior() {
-        return new User(ID_PAYMENT_SENIOR_USER, USERNAME_PAYMENT_SENIOR_USER, PASSWORD_BACKOFFICE_USERS, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_ONE, ROLE_UNKNOWN);
+        return new User(
+                ID_PAYMENT_SENIOR_USER,
+                USERNAME_PAYMENT_SENIOR_USER,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_ONE,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserOPSDuty() {
-        return new User(ID_AUTOTEST_OPS24_DUTY, EMAIL_AUTOTEST_OPS24_DUTY, PASSWORD_BACKOFFICE_USERS, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_OPS24_DUTY, ROLE_UNKNOWN);
+        return new User(
+                ID_AUTOTEST_OPS24_DUTY,
+                EMAIL_AUTOTEST_OPS24_DUTY,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_OPS24_DUTY,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserSeniorOPS() {
-        return new User(ID_AUTOTEST_OPS24_SENIOR, EMAIL_AUTOTEST_OPS24_SENIOR, PASSWORD_BACKOFFICE_USERS, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_OPS24_DUTY, ROLE_UNKNOWN);
+        return new User(
+                ID_AUTOTEST_OPS24_SENIOR,
+                EMAIL_AUTOTEST_OPS24_SENIOR,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_OPS24_DUTY,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserViewer() {
-        return new User(ID_AUTOTEST_ONE, EMAIL_AUTOTEST_VIEWER, PASSWORD_BACKOFFICE_USERS, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_VIEWER, ROLE_UNKNOWN);
+        return new User(
+                ID_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_VIEWER,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_VIEWER,
+                ROLE_UNKNOWN);
     }
 
     public static User autotestUserOPS24() {
-        return new User(ID_AUTOTEST_OPS24, EMAIL_AUTOTEST_OPS24, PASSWORD_BACKOFFICE_USERS, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_VIEWER, ROLE_UNKNOWN);
+        return new User(
+                ID_AUTOTEST_OPS24,
+                EMAIL_AUTOTEST_OPS24,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_ONE,
+                LAST_NAME_AUTOTEST_ONE,
+                EMAIL_AUTOTEST_VIEWER,
+                ROLE_UNKNOWN);
     }
-
 }

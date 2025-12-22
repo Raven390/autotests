@@ -1,7 +1,8 @@
 package helpers.data.enums;
 
 public enum AlertType {
-    TRADING("TRADING"), PAYMENT("PAYMENT");
+    TRADING("TRADING"),
+    PAYMENT("PAYMENT");
 
     private final String displayName;
 

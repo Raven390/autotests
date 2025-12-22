@@ -2,10 +2,8 @@ package business_objects.api.payment_gate.payments_decisions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
-
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostDecisionsRequestBody {
@@ -40,8 +38,7 @@ public class PostDecisionsRequestBody {
         private String code;
         private String value;
 
-        public Attribute() {
-        }
+        public Attribute() {}
 
         public Attribute(String code, String value) {
             this.code = code;
@@ -81,9 +78,7 @@ public class PostDecisionsRequestBody {
         }
     }
 
-
-    public PostDecisionsRequestBody() {
-    }
+    public PostDecisionsRequestBody() {}
 
     public PostDecisionsRequestBody(String decisionType, Integer decisionCode, String decidedAt) {
         this.decisionType = decisionType;

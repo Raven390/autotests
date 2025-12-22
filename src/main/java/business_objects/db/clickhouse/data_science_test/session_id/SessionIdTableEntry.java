@@ -7,8 +7,7 @@ public class SessionIdTableEntry {
     public String ucid;
     public String sessionId;
 
-    public SessionIdTableEntry() {
-    }
+    public SessionIdTableEntry() {}
 
     public SessionIdTableEntry(String ucid, String sessionId) {
         this.ucid = ucid;

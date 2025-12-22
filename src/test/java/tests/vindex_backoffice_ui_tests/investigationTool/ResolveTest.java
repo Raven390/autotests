@@ -1,5 +1,25 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
+import static helpers.api.AbuseRegistryHelper.*;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.FraudTypeStatus.*;
+import static helpers.data.enums.Restriction.*;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
+import static helpers.database.ArHelper.waitForClientToChangeStatus;
+import static helpers.database.BoHelper.*;
+import static helpers.database.CleanTableHelper.*;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
@@ -20,32 +40,9 @@ import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-
-import java.util.List;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
-import static helpers.api.AbuseRegistryHelper.*;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.FraudTypeStatus.*;
-import static helpers.data.enums.Restriction.*;
-import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
-import static helpers.database.ArHelper.waitForClientToChangeStatus;
-import static helpers.database.CleanTableHelper.*;
-import static helpers.database.BoHelper.*;
-import static helpers.database.DbHelper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static utils.Constants.*;
-import static utils.Utils.insertCrmAccountsToDb;
-
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -106,14 +103,32 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
         resolvePage.openResolveSuspicious();
-        assertThat("Check fraud types", resolvePage.getFraudTypesList(), containsInAnyOrder(FraudType.getVisibleFraudTypeNamesList().toArray()));
-        assertThat("Check hedging subtypes", resolvePage.getFraudSubtypesList(FraudType.HEDGING), containsInAnyOrder(FraudSubtype.INTERNAL.getName(), FraudSubtype.EXTERNAL.getName()));
-        assertThat("Check news trader subtypes", resolvePage.getFraudSubtypesList(FraudType.NEWS_TRADER), containsInAnyOrder(FraudSubtype.BEFORE_NEWS.getName(), FraudSubtype.AFTER_NEWS.getName()));
-        assertThat("Check swap arbitrage subtypes", resolvePage.getFraudSubtypesList(FraudType.SWAP_ARBITRAGE), containsInAnyOrder(FraudSubtype.SINGLE_ACCOUNT.getName(), FraudSubtype.HEDGING_STRATEGY.getName()));
+        assertThat(
+                "Check fraud types",
+                resolvePage.getFraudTypesList(),
+                containsInAnyOrder(FraudType.getVisibleFraudTypeNamesList().toArray()));
+        assertThat(
+                "Check hedging subtypes",
+                resolvePage.getFraudSubtypesList(FraudType.HEDGING),
+                containsInAnyOrder(FraudSubtype.INTERNAL.getName(), FraudSubtype.EXTERNAL.getName()));
+        assertThat(
+                "Check news trader subtypes",
+                resolvePage.getFraudSubtypesList(FraudType.NEWS_TRADER),
+                containsInAnyOrder(FraudSubtype.BEFORE_NEWS.getName(), FraudSubtype.AFTER_NEWS.getName()));
+        assertThat(
+                "Check swap arbitrage subtypes",
+                resolvePage.getFraudSubtypesList(FraudType.SWAP_ARBITRAGE),
+                containsInAnyOrder(FraudSubtype.SINGLE_ACCOUNT.getName(), FraudSubtype.HEDGING_STRATEGY.getName()));
         resolvePage.clickFraudListButton();
         resolvePage.addFraud(FraudType.BONUS_ABUSE);
-        assertThat("Check symbols list", resolvePage.getSymbolsList(), containsInAnyOrder(trade1.getSymbol(), trade2.getSymbol()));
-        assertThat("Check restrictions list", resolvePage.getRestrictionsList(), containsInAnyOrder(getVisibleRestrictionsList().toArray()));
+        assertThat(
+                "Check symbols list",
+                resolvePage.getSymbolsList(),
+                containsInAnyOrder(trade1.getSymbol(), trade2.getSymbol()));
+        assertThat(
+                "Check restrictions list",
+                resolvePage.getRestrictionsList(),
+                containsInAnyOrder(getVisibleRestrictionsList().toArray()));
     }
 
     @Test
@@ -134,12 +149,26 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.BONUS_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.CHARGEBACK);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -156,32 +185,72 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.GAP_TRADING);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.HEDGING, CONFIRMED, FraudSubtype.EXTERNAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.LATENCY_ARBITRAGE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.LOOPHOLE_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.LOSS_VOUCHER_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.MARKET_MANIPULATION);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -195,17 +264,35 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.NEWS_TRADER, CONFIRMED, FraudSubtype.AFTER_NEWS);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.PRICING_ERROR);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.REBATE_CHURNING);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -214,12 +301,22 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.SWAP_ARBITRAGE, CONFIRMED, FraudSubtype.SINGLE_ACCOUNT);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(ACCOUNT_CREATION.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.TLS_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), containsInAnyOrder(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), CLOSE_ONLY_MODE.getName()));
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -342,8 +439,13 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is CONFIRMED",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.CONFIRMED.getDisplayName()));
     }
 
     @Test
@@ -358,8 +460,13 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is FALSE_POSITIVE",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
     }
 
     @Test
@@ -377,8 +484,13 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.CPA_ABUSE);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
-        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is FRAUD_TYPE_MISMATCH", dbAlert.getAlertResolution(), is(AlertResolution.FRAUD_TYPE_MISMATCH.getDisplayName()));
+        Alert dbAlert = getObjectsFromDB(
+                        DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class)
+                .getFirst();
+        assertThat(
+                "Verify alert_resolution is FRAUD_TYPE_MISMATCH",
+                dbAlert.getAlertResolution(),
+                is(AlertResolution.FRAUD_TYPE_MISMATCH.getDisplayName()));
     }
 
     @Test
@@ -394,9 +506,19 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
-        Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
+        Abuser abuser = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        Abuser.class)
+                .getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(CONFIRMED.getStatus()));
-        AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
+        AbuserFraudType fraud = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                        String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()),
+                        AbuserFraudType.class)
+                .getFirst();
         assertThat("Verify client has confirmed fraud", fraud.getStatus(), is(CONFIRMED.getStatus()));
     }
 
@@ -413,9 +535,19 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, POTENTIAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), POTENTIAL);
-        Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
+        Abuser abuser = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        Abuser.class)
+                .getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(POTENTIAL.getStatus()));
-        AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
+        AbuserFraudType fraud = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                        String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()),
+                        AbuserFraudType.class)
+                .getFirst();
         assertThat("Verify client has potential fraud", fraud.getStatus(), is(POTENTIAL.getStatus()));
     }
 
@@ -434,9 +566,19 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, POTENTIAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), POTENTIAL);
-        Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
+        Abuser abuser = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        Abuser.class)
+                .getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(POTENTIAL.getStatus()));
-        AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
+        AbuserFraudType fraud = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                        String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()),
+                        AbuserFraudType.class)
+                .getFirst();
         assertThat("Verify client has potential fraud", fraud.getStatus(), is(POTENTIAL.getStatus()));
     }
 
@@ -454,10 +596,20 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
-        Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
+        Abuser abuser = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        Abuser.class)
+                .getFirst();
         assertThat("Verify client remained confirmed", abuser.getStatus(), is(CONFIRMED.getStatus()));
         Thread.sleep(2000);
-        AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
+        AbuserFraudType fraud = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                        String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()),
+                        AbuserFraudType.class)
+                .getFirst();
         assertThat("Verify client has confirmed fraud", fraud.getStatus(), is(CONFIRMED.getStatus()));
     }
 
@@ -475,9 +627,19 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
-        Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
+        Abuser abuser = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        Abuser.class)
+                .getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(CONFIRMED.getStatus()));
-        AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
+        AbuserFraudType fraud = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                        String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()),
+                        AbuserFraudType.class)
+                .getFirst();
         assertThat("Verify client has confirmed fraud", fraud.getStatus(), is(CONFIRMED.getStatus()));
     }
 
@@ -495,9 +657,19 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
-        Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
+        Abuser abuser = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        Abuser.class)
+                .getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(CONFIRMED.getStatus()));
-        AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
+        AbuserFraudType fraud = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                        String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()),
+                        AbuserFraudType.class)
+                .getFirst();
         assertThat("Verify client has confirmed fraud", fraud.getStatus(), is(CONFIRMED.getStatus()));
     }
 
@@ -505,15 +677,27 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("303")
     @DisplayName("Resolution works with withdrawal approval")
     void resolveTest12() throws Exception {
-        kafka.produceMessages(withdrawalAlert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(withdrawalAlert));
+        kafka.produceMessages(
+                withdrawalAlert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(withdrawalAlert));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove(RESOLVE_COMMENT);
-        WithdrawalApprovals actualKafkaApproval = objectMapper.readValue(kafka.consumeMessage(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalAlert.rule.attributes.withdrawalId), WithdrawalApprovals.class);
-        WithdrawalApprovals expectedKafkaApproval = new WithdrawalApprovals(null, null, Long.valueOf(withdrawalAlert.rule.attributes.withdrawalId), client.getBrand(), client.getRegulator(), "", "Approve", withdrawalAlert.rule.attributes.orderId, withdrawalAlert.rule.attributes.check);
+        WithdrawalApprovals actualKafkaApproval = objectMapper.readValue(
+                kafka.consumeMessage(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalAlert.rule.attributes.withdrawalId),
+                WithdrawalApprovals.class);
+        WithdrawalApprovals expectedKafkaApproval = new WithdrawalApprovals(
+                null,
+                null,
+                Long.valueOf(withdrawalAlert.rule.attributes.withdrawalId),
+                client.getBrand(),
+                client.getRegulator(),
+                "",
+                "Approve",
+                withdrawalAlert.rule.attributes.orderId,
+                withdrawalAlert.rule.attributes.check);
         assertThat("Verify kafka message for withdrawal approval", actualKafkaApproval, is(expectedKafkaApproval));
     }
 
@@ -532,9 +716,24 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addRestriction(ACCOUNT_CREATION.getName());
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), POTENTIAL);
-        Investigation investigation = getObjectsFromDB(DbName.POSTGRES, BO_INVESTIGATION_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Investigation.class).getFirst();
-        AbuserHistory history = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), AbuserHistory.class).getFirst();
-        ClientGeneralRestriction restriction = getObjectsFromDB(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format(UCID_WHERE, client.getUcid()), ClientGeneralRestriction.class).getFirst();
+        Investigation investigation = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        BO_INVESTIGATION_TABLE_NAME,
+                        String.format(ALERT_WHERE, client.getUcid()),
+                        Investigation.class)
+                .getFirst();
+        AbuserHistory history = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        AR_ABUSER_HISTORY_TABLE_NAME,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        AbuserHistory.class)
+                .getFirst();
+        ClientGeneralRestriction restriction = getObjectsFromDB(
+                        DbName.POSTGRES,
+                        MITIGATION_CLIENT_GENERAL_RESTRICTION,
+                        String.format(UCID_WHERE, client.getUcid()),
+                        ClientGeneralRestriction.class)
+                .getFirst();
         assertEquals(investigation.getId().toString(), restriction.getCorrelationId());
         assertEquals(investigation.getId().toString(), restriction.getCorrelationId());
         assertEquals("INVESTIGATION", history.getCorrelationType());

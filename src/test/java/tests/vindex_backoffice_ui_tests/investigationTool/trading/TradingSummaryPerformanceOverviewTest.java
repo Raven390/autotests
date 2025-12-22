@@ -1,20 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Stream;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -30,6 +15,20 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
 
@@ -105,7 +104,11 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(
+                        trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11,
+                        trade12));
     }
 
     @Test
@@ -121,8 +124,14 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify title", tradingPage.getPerformanceOverviewTableTitle(), equalTo("Performance overview"));
-        assertThat("Verify headers", tradingPage.getPerformanceOverviewTableHeaders(), contains("SYMBOL", "TICKETS", "WINRATE", "HFT", "PNL, USD"));
-        assertThat("Verify symbols", tradingPage.getPerformanceOverviewSymbols(), contains("GBPJPY", "USDEUR", "CZKAED", "EURUSD", "AEDCZK"));
+        assertThat(
+                "Verify headers",
+                tradingPage.getPerformanceOverviewTableHeaders(),
+                contains("SYMBOL", "TICKETS", "WINRATE", "HFT", "PNL, USD"));
+        assertThat(
+                "Verify symbols",
+                tradingPage.getPerformanceOverviewSymbols(),
+                contains("GBPJPY", "USDEUR", "CZKAED", "EURUSD", "AEDCZK"));
         // Deals
         assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("3"));
         assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("CZKAED"), equalTo("1"));
@@ -142,18 +151,35 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
         assertThat("Verify HFT", tradingPage.getPerformanceOverviewHftBySymbol("USDEUR"), equalTo("33.33%"));
         assertThat("Verify HFT", tradingPage.getPerformanceOverviewHftBySymbol("GBPJPY"), equalTo("100%"));
         // PNL
-        assertThat("Verify PNL", tradingPage.getPerformanceOverviewPnlBySymbol("EURUSD"), equalTo(calculateProfit(trade4, trade5, trade6)));
-        assertThat("Verify PNL", tradingPage.getPerformanceOverviewPnlBySymbol("CZKAED"), equalTo(calculateProfit(trade11)));
-        assertThat("Verify PNL", tradingPage.getPerformanceOverviewPnlBySymbol("AEDCZK"), equalTo(calculateProfit(trade10)));
-        assertThat("Verify PNL", tradingPage.getPerformanceOverviewPnlBySymbol("USDEUR"), equalTo(calculateProfit(trade1, trade2, trade3)));
-        assertThat("Verify PNL", tradingPage.getPerformanceOverviewPnlBySymbol("GBPJPY"), equalTo(calculateProfit(trade7, trade8, trade9)));
+        assertThat(
+                "Verify PNL",
+                tradingPage.getPerformanceOverviewPnlBySymbol("EURUSD"),
+                equalTo(calculateProfit(trade4, trade5, trade6)));
+        assertThat(
+                "Verify PNL",
+                tradingPage.getPerformanceOverviewPnlBySymbol("CZKAED"),
+                equalTo(calculateProfit(trade11)));
+        assertThat(
+                "Verify PNL",
+                tradingPage.getPerformanceOverviewPnlBySymbol("AEDCZK"),
+                equalTo(calculateProfit(trade10)));
+        assertThat(
+                "Verify PNL",
+                tradingPage.getPerformanceOverviewPnlBySymbol("USDEUR"),
+                equalTo(calculateProfit(trade1, trade2, trade3)));
+        assertThat(
+                "Verify PNL",
+                tradingPage.getPerformanceOverviewPnlBySymbol("GBPJPY"),
+                equalTo(calculateProfit(trade7, trade8, trade9)));
     }
 
     private static String calculateProfit(MtMt4TradesCoercedObject... trades) {
         DecimalFormat formatter = new DecimalFormat("#,###.#");
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
-        return formatter.format(Stream.of(trades).mapToDouble(t -> t.getProfitUsd() + t.getStorageUsd() + t.getCommissionUsd()).sum());
+        return formatter.format(Stream.of(trades)
+                .mapToDouble(t -> t.getProfitUsd() + t.getStorageUsd() + t.getCommissionUsd())
+                .sum());
     }
 
     @AfterAll

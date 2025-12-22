@@ -1,5 +1,24 @@
 package helpers.data;
 
+import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
+import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnection;
+import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.payout.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
+
+import businessObjects.db.clickhouse.ozTrades.OzTradesTableEntry;
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloatingTradesGroupBy;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
@@ -8,23 +27,26 @@ import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.client_cards.ClientCardsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_bp_callbacks.CrmBpCallbacksObject;
-import business_objects.db.clickhouse.crm_tb_deposit_channel.CrmTbDepositChannelObject;
-import business_objects.db.clickhouse.crm_tb_deposit_type.CrmTbDepositTypeObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal_type.CrmTbWithdrawalTypeObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
+import business_objects.db.clickhouse.crm_tb_deposit_channel.CrmTbDepositChannelObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_type.CrmTbDepositTypeObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal_type.CrmTbWithdrawalTypeObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntry;
+import business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntry;
+import business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntry;
+import business_objects.db.clickhouse.data_science_test.payout.PayoutTableEntry;
+import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
+import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
 import business_objects.db.clickhouse.dict_account_to_ucid.DictAccountToUcidObject;
 import business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_test.DictActiveTradingDaysByUcidObject;
 import business_objects.db.clickhouse.dict_is_test.DictIsTestObject;
-import business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntry;
-import business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionObject;
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
@@ -34,56 +56,31 @@ import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
-import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
 import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
+import business_objects.kafka.CustomEvent;
 import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.crm_events.*;
+import business_objects.kafka.crm_events.CallbackEvent.CallbackEvent;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.crm_events.TransferToWaEvent;
-import business_objects.kafka.crm_events.*;
-import business_objects.kafka.crm_events.CallbackEvent.CallbackEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
-import business_objects.kafka.CustomEvent;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.FraudTypeStatus;
-import helpers.database.DbName;
-import businessObjects.db.clickhouse.ozTrades.OzTradesTableEntry;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
-import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnection;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
-import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
-import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
-import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.*;
-import static helpers.database.CleanTableHelper.*;
-import static utils.Constants.*;
-import static utils.Utils.*;
+import java.util.UUID;
 
 public class DataHelper {
 
@@ -134,6 +131,7 @@ public class DataHelper {
     public List<DocumentTableEntry> documentTableEntries;
     public List<IpTableEntry> ipTableEntries;
     public List<DeviceIdTableEntry> deviceIdTableEntries;
+    public List<PayoutTableEntry> payoutTableEntries;
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject;
@@ -147,6 +145,7 @@ public class DataHelper {
     public List<UcidGeneralScore> ucidGeneralScores;
     public List<AppTbFinindexData> AppTbFinindexData;
     public CrmWithdrawalEvent crmWithdrawalEvent;
+    public CrmWithdrawalEventV2 crmWithdrawalEventV2;
     public CustomEvent customEvent;
     public MirrorScoreEvent mirrorScoreEvent;
     public InternalHedgeEvent internalHedgeEvent;
@@ -154,307 +153,6 @@ public class DataHelper {
 
     public DataHelper() {
         this.clientFraudTypes = new ArrayList<>();
-    }
-
-    public static void setupData(Map<String, DataHelper> map) {
-        startSshTunnel();
-        for (DataHelper data : map.values()) {
-            writeLog("WE ARE IN SETUP");
-            if (data.connections != null && (!data.connections.isEmpty())) try {
-                for (ConnectionTableEntry i : data.connections) {
-                    i.datetime = getCurrentTimestampDbFormat();
-                    writeLog("WE ARE INSERTING connections");
-
-                    executeQueryToDb(DbName.CLICKHOUSE, " INSERT INTO " + CONNECTIONS_TABLE_NAME + " (user_from, user_to, degree_connection, connection_score, connection_info, `datetime`, ver, status) VALUES('" + i.userFrom + "','" + i.userTo + "','" + i.degreeConnection + "','" + i.connectionScore + "','" + i.connectionInfo + "', NOW(), '1','new');");
-                }
-                waitForConnectionSearchToUpdate(data.connections.getFirst().userFrom);
-            } catch (Exception e) {
-                writeLog("Error while inserting connections into table: " + e.getMessage());
-            }
-            if (data.crmTbUserObject != null) {
-                insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
-            }
-            if (data.dictAccountToUcidObject != null) {
-                insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
-            }
-            if (data.dictActiveTradingDaysByUcidObject != null) {
-                data.dictActiveTradingDaysByUcidObject.forEach(tradingDays -> insertObjectToDb(DICT_ACTIVE_TRADE_DAYS_BY_UCID, tradingDays));
-            }
-            if (data.connectedUsers != null) {
-                data.connectedUsers.forEach(user -> insertObjectToDb(CRM_USER_TABLE_NAME, user));
-            }
-            if (data.lnSessionParsedObjectRegistration != null) {
-                insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
-            }
-            if (data.lnSessionParsedObject != null) {
-                insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
-            }
-            if (data.dictIsTestObject != null) {
-                deleteEntryFromDb(DICT_IS_TEST, "account =" + data.dictIsTestObject.account);
-                insertObjectToDb(DICT_IS_TEST, data.dictIsTestObject);
-            }
-            if (data.clientFraudTypes != null) {
-                data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
-            }
-            if (data.clientCards != null) {
-                data.clientCards.forEach(card -> insertObjectToDb(CLIENT_CARDS_TABLE_NAME, card));
-            }
-            if (data.crmTbAccountObject != null) {
-                insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
-            }
-            if (data.crmTbAccountForMtObject != null) {
-                insertObjectToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, data.crmTbAccountForMtObject);
-            }
-            if (data.MtMt4TradesObjects != null) {
-                insertObjectsToDb(MT4_TRADES_TABLE_NAME, data.MtMt4TradesObjects);
-            }
-            if (data.crmTbAccountObjectConnections != null) {
-                data.crmTbAccountObjectConnections.forEach(credit -> insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, credit));
-            }
-            if (data.mtTbCreditsObjects != null) {
-                data.mtTbCreditsObjects.forEach(credit -> insertObjectToDb(MT_CREDITS_TABLE_NAME, credit));
-            }
-            if (data.sessionIdTableEntries != null) {
-                data.sessionIdTableEntries.forEach(sessionIdTableEntry -> insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry));
-            }
-            if (data.callbacksObjects != null) {
-                data.callbacksObjects.forEach(callbacksObject -> insertObjectToDb(CALLBACKS_TABLE_NAME, callbacksObject));
-            }
-            if (data.emailTableEntries != null) {
-                data.emailTableEntries.forEach(emailTableEntry -> insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry));
-            }
-            if (data.segmentObjects != null) {
-                data.segmentObjects.forEach(s -> insertObjectToDb(SEGMENTATION_TABLE_NAME, s));
-            }
-            if (data.ipTableEntries != null) {
-                data.ipTableEntries.forEach(ipTableEntry -> insertObjectToDb(IP_TABLE_NAME, ipTableEntry));
-            }
-            if (data.phoneTableEntries != null) {
-                data.phoneTableEntries.forEach(phoneTableEntry -> insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry));
-            }
-            if (data.deviceIdTableEntries != null) {
-                data.deviceIdTableEntries.forEach(payout -> insertObjectToDb(DEVICE_ID_TABLE_NAME, payout));
-            }
-            if (data.crmTbWithdrawalObjects != null) {
-                data.crmTbWithdrawalObjects.forEach(withdrawal -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal));
-            }
-            if (data.crmTbWithdrawalTypeObjects != null) {
-                data.crmTbWithdrawalTypeObjects.forEach(withdrawalType -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE, withdrawalType));
-            }
-            if (data.crmTbDepositObjects != null) {
-                data.crmTbDepositObjects.forEach(deposit -> insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit));
-            }
-            if (data.crmTbDepositTypeObjects != null) {
-                data.crmTbDepositTypeObjects.forEach(type -> insertObjectToDb(CRM_DEPOSIT_TYPE_TABLE_NAME, type));
-            }
-            if (data.crmTbDepositChannelObjects != null) {
-                data.crmTbDepositChannelObjects.forEach(channel -> insertObjectToDb(CRM_DEPOSIT_CHANNEL_TABLE_NAME, channel));
-            }
-            if (data.crmTbBonusObjects != null) {
-                data.crmTbBonusObjects.forEach(bonus -> insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus));
-            }
-            if (data.mt5DealsCoercedObjects != null && !data.mt5DealsCoercedObjects.isEmpty()) {
-                insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, data.mt5DealsCoercedObjects);
-            }
-            if (data.S3FactLoginMetricsObjects != null && !data.S3FactLoginMetricsObjects.isEmpty()) {
-                insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, data.S3FactLoginMetricsObjects);
-            }
-            if (data.mtMt5PositionsObjects != null) {
-                data.mtMt5PositionsObjects.forEach(position -> insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position));
-            }
-            if (data.mtBalanceOrdersObjects != null) {
-                data.mtBalanceOrdersObjects.forEach(deal -> insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal));
-            }
-            if (data.documentTableEntries != null) {
-                data.documentTableEntries.forEach(document -> insertObjectToDb(DOCUMENT_TABLE_NAME, document));
-            }
-            if (data.mirrorLoginObjects != null) {
-                data.mirrorLoginObjects.forEach(deal -> insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal));
-            }
-            if (data.aggrCreditEquityRate != null) {
-                insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
-            }
-            if (data.aggrMirrorAccountsByTrades != null) {
-                insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data.aggrMirrorAccountsByTrades);
-            }
-            if (data.mtAccountObject != null) {
-                insertObjectToDb(MT_ACCOUNT_TABLE_NAME, data.mtAccountObject);
-            }
-            if (data.aggrCreditEquityRate != null) {
-                insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
-            }
-            if (data.mirrorLoginObjects != null) {
-                data.mirrorUcidObjects.forEach(mirrorUcidObject -> insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject));
-            }
-            if (data.loyaltyObjects != null) {
-                data.loyaltyObjects.forEach(loyaltyObjects -> insertObjectToDb(CRM_TB_LOYALTY_REDEMPTION, loyaltyObjects));
-            }
-            if (data.s3FactIbSalesCommissionsObject != null) {
-                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, salesComm));
-            }
-            if (data.ucidMirrorScore != null) {
-                insertObjectToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON, data.ucidMirrorScore);
-            }
-            if (data.boAlertsObjects != null) {
-                data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERTS_TABLE_NAME, alerts));
-            }
-            if (data.ozTradesTableObjects != null) {
-                data.ozTradesTableObjects.forEach(ozTrade -> insertObjectToDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, ozTrade));
-            }
-            if (data.ratesUsdCurrentObjects != null) {
-                data.ratesUsdCurrentObjects.forEach(rate -> insertObjectToDb(RATES_USD_CURRENT, rate));
-            }
-            if (data.ucidGeneralScore != null) {
-                insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScore);
-            }
-            if (data.ucidGeneralScores != null) {
-                data.ucidGeneralScores.forEach(score -> insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, score));
-            }
-            if (data.AppTbFinindexData != null) {
-                insertObjectsToDb(APP_TB_FININDEX_DATA, data.AppTbFinindexData);
-            }
-        }
-    }
-
-    public static void deleteData(Map<String, DataHelper> map) throws Exception {
-        for (DataHelper data : map.values()) {
-            if (data.crmTbUserObject != null) {
-                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
-            }
-            if (data.dictAccountToUcidObject != null) {
-                deleteEntryFromDb(DICT_ACCOUNT_TO_UCID, String.format("ucid = '%s'", data.dictAccountToUcidObject.ucid));
-            }
-            if (data.dictActiveTradingDaysByUcidObject != null) {
-                data.dictActiveTradingDaysByUcidObject.forEach(tradingDays -> deleteEntryFromDb(DICT_ACTIVE_TRADE_DAYS_BY_UCID, String.format("ucid = '%s'", tradingDays.ucid)));
-            }
-            if (data.connections != null) {
-                data.connections.forEach(connection -> deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom)));
-            }
-            if (data.lnSessionParsedObjectRegistration != null) {
-                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.getUserId()));
-            }
-            if (data.lnSessionParsedObjectLogin != null) {
-                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.getUserId()));
-            }
-            if (data.callbacksObjects != null) {
-                data.callbacksObjects.forEach(callbacksObject -> deleteEntryFromDb(CALLBACKS_TABLE_NAME, String.format("ucid = '%s'", callbacksObject.getUcid())));
-            }
-            if (data.lnSessionParsedObject != null) {
-                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.getUserId()));
-            }
-            if (data.clientFraudTypes != null) {
-                data.clientFraudTypes.forEach(fraud -> deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.getUcid())));
-            }
-            if (data.mtTbCreditsObjects != null) {
-                data.mtTbCreditsObjects.forEach(credit -> deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid)));
-            }
-            if (data.crmTbWithdrawalObjects != null) {
-                data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid())));
-            }
-            if (data.crmTbWithdrawalTypeObjects != null) try {
-                data.crmTbWithdrawalTypeObjects.forEach(withdrawalType -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("id = '%s'", withdrawalType.getId())));
-            } catch (Exception e) {
-                writeLog("Exception in deleteData: " + e.getMessage());
-            }
-            if (data.crmTbDepositObjects != null) {
-                data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid())));
-            }
-            if (data.crmTbDepositTypeObjects != null) {
-                data.crmTbDepositTypeObjects.forEach(depositType -> deleteEntryFromDb(CRM_DEPOSIT_TYPE_TABLE_NAME, String.format("id = '%s'", depositType.getId())));
-            }
-            if (data.crmTbDepositChannelObjects != null) {
-                data.crmTbDepositChannelObjects.forEach(depositChannel -> deleteEntryFromDb(CRM_DEPOSIT_CHANNEL_TABLE_NAME, String.format("id = '%s'", depositChannel.getId())));
-                data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid())));
-            }
-            if (data.crmTbBonusObjects != null) {
-                data.crmTbBonusObjects.forEach(bonus -> deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid)));
-            }
-            if (data.mtBalanceOrdersObjects != null) {
-                data.mtBalanceOrdersObjects.forEach(bonus -> deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid)));
-            }
-            if (data.mt5DealsCoercedObjects != null) {
-                data.mt5DealsCoercedObjects.forEach(deal -> deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.getServerId(), deal.getAccount())));
-            }
-            if (data.mtMt5PositionsObjects != null) {
-                data.mtMt5PositionsObjects.forEach(position -> deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("server_id = %s and account = %s", position.getServerId(), position.getAccount())));
-            }
-            if (data.mirrorLoginObjects != null) {
-                data.mirrorLoginObjects.forEach(mirrorLoginObject -> deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1)));
-            }
-            if (data.mirrorUcidObjects != null) {
-                data.mirrorUcidObjects.forEach(mirrorUcidObject -> deleteEntryFromDb(MIRROR_UCID_TABLE_NAME, String.format("ucid_1 = '%s'", mirrorUcidObject.ucid_1)));
-            }
-            if (data.sessionIdTableEntries != null) {
-                data.sessionIdTableEntries.forEach(sessionIdTableEntry -> deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId)));
-            }
-            if (data.emailTableEntries != null) {
-                data.emailTableEntries.forEach(emailTableEntry -> deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email)));
-            }
-            if (data.ipTableEntries != null) {
-                data.ipTableEntries.forEach(ipTableEntry -> deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip)));
-            }
-            if (data.phoneTableEntries != null) {
-                data.phoneTableEntries.forEach(phoneTableEntry -> deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum)));
-            }
-            if (data.deviceIdTableEntries != null) {
-                data.deviceIdTableEntries.forEach(deviceIdTableEntry -> deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId)));
-            }
-            if (data.aggrCreditEquityRate != null) {
-                deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = %s", data.clientHelper.getTradingAccount()));
-            }
-            if (data.aggrCreditEquityRate != null) {
-                data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
-            }
-            if (data.AppTbFinindexData != null) {
-                data.AppTbFinindexData.forEach(AppTbFinindexData -> deleteEntryFromDb(APP_TB_FININDEX_DATA, String.format("id = '%s'", AppTbFinindexData.getId())));
-            }
-            if (data.s3FactIbSalesCommissionsObject != null) {
-                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm.getUcid())));
-            }
-            if (data.S3FactLoginMetricsObjects != null) {
-                data.S3FactLoginMetricsObjects.forEach(mertic -> deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", mertic.getUcid())));
-            }
-            if (data.ucidMirrorScore != null) {
-                deleteObjectFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
-            }
-            if (data.boAlertsObjects != null) {
-                data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERTS_TABLE_NAME, String.format("alert_id = '%s'", alert.getAlertId())));
-            }
-            if (data.clientCards != null) {
-                deleteEntryFromDb(CLIENT_CARDS_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
-            }
-            if (data.ozTradesTableObjects != null) {
-                data.ozTradesTableObjects.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));
-            }
-            if (data.MtMt4TradesObjects != null) {
-                data.MtMt4TradesObjects.forEach(trade -> deleteEntryFromDb(MT4_TRADES_TABLE_NAME, String.format("ucid = '%s'", trade.getUcid())));
-            }
-            if (data.ucidGeneralScore != null) {
-                deleteEntryFromDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.ucidGeneralScore.getUcid()));
-            }
-            if (data.ucidGeneralScores != null) {
-                data.ucidGeneralScores.forEach(score -> deleteEntryFromDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, String.format("ucid = '%s'", score.getUcid())));
-            }
-            cleanUserRestrictionGeneral(data.clientHelper.getUcid());
-            closeAlert(data.clientHelper.getUcid());
-            if ((data.connectedUsers != null) && (!data.connectedUsers.isEmpty())) {
-                int size = data.connectedUsers.size();
-                var sb = new StringBuilder();
-                sb.append("(");
-                for (CrmTbUserObject user : data.connectedUsers) {
-                    sb.append("'");
-                    sb.append(user.ucid);
-                    sb.append("'");
-                    if (size > 1) {
-                        sb.append(",");
-                        size -= 1;
-                    }
-                }
-                sb.append(")");
-                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid in %s", sb));
-            }
-        }
-        stopSshTunnel();
     }
 
     public static DataHelper createClient(DataHelper dataHelper, ClientHelper clientHelper) {
@@ -468,9 +166,7 @@ public class DataHelper {
     }
 
     protected static void setupAttrConnectionPayoutIdAndNameBirthWithMaxScore(
-            DataHelper data,
-            ClientHelper connectedClient) {
-
+            DataHelper data, ClientHelper connectedClient) {
 
         if (data.connections == null) {
             data.connections = new ArrayList<>();
@@ -483,7 +179,7 @@ public class DataHelper {
         }
 
         connectedClient.setDeviceId(data.clientHelper.getDeviceId());
-        //add connection with connected client
+        // add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
         connectionInfo1.connectionAttributeName = "payout";
@@ -507,8 +203,7 @@ public class DataHelper {
     }
 
     protected static void setupAttrConnectionEmailPhoneWithCustomScore(
-            DataHelper data,
-            ClientHelper connectedClient, Double score) {
+            DataHelper data, ClientHelper connectedClient, Double score) {
 
         if (data.connections == null) {
             data.connections = new ArrayList<>();
@@ -522,7 +217,7 @@ public class DataHelper {
         connectedClient.setEmail(data.clientHelper.getEmail());
         connectedClient.setPhoneNumber(data.clientHelper.getPhoneNumber());
 
-        //add connection with connected client
+        // add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient, score);
         ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
         connectionInfo1.connectionAttributeName = "email";
@@ -537,23 +232,23 @@ public class DataHelper {
         connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1, connectionInfo2));
         connection.connectionScore = score;
         data.connections.add(connection);
-        //add email to LN record
+        // add email to LN record
         data.lnSessionParsedObject.setEmail(data.clientHelper.getEmail());
         data.lnSessionParsedObject.setMobile(data.clientHelper.getPhoneNumber());
 
-        //add to emails table records with same email for initial and connected clients
+        // add to emails table records with same email for initial and connected clients
 
         data.emailTableEntries.add(emailTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getEmail()));
         data.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClient, data.clientHelper.getEmail()));
 
-        //add to phone table records with same email for initial and connected clients
-        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getPhoneNumber()));
-        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(connectedClient, data.clientHelper.getPhoneNumber()));
+        // add to phone table records with same email for initial and connected clients
+        data.phoneTableEntries.add(
+                phoneTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getPhoneNumber()));
+        data.phoneTableEntries.add(
+                phoneTableEntryForConnectionSearch(connectedClient, data.clientHelper.getPhoneNumber()));
     }
 
-    public static void setupAttrConnectionDevice(
-            DataHelper data,
-            ClientHelper connectedClient) {
+    public static void setupAttrConnectionDevice(DataHelper data, ClientHelper connectedClient) {
 
         if (data.connections == null) {
             data.connections = new ArrayList<>();
@@ -563,7 +258,7 @@ public class DataHelper {
         }
         connectedClient.setDeviceId(data.clientHelper.getDeviceId());
 
-        //add connection with connected client
+        // add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
         connectionInfo1.connectionAttributeName = "device";
@@ -572,13 +267,15 @@ public class DataHelper {
         connectionInfo1.relationType = "exact";
         connection.connectionScore = 0.7;
         data.connections.add(connection);
-        //add email to LN record
+        // add email to LN record
         data.lnSessionParsedObject.setDeviceId(data.clientHelper.getDeviceId());
 
-        //add to emails table records with same email for initial and connected clients
+        // add to emails table records with same email for initial and connected clients
 
-        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getDeviceId()));
-        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
+        data.deviceIdTableEntries.add(
+                deviceIdTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getDeviceId()));
+        data.deviceIdTableEntries.add(
+                deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
     }
 
     public static void addConnectionByEmailPhoneAttribute(DataHelper data, ClientHelper clientTo, Double score) {
@@ -593,34 +290,33 @@ public class DataHelper {
         setupAttrConnectionEmailPhoneWithCustomScore(data, clientTo, score);
     }
 
-    public static void setupAttrConnectionPayoutId(
-            DataHelper data,
-            ClientHelper connectedClient) {
+    public static void setupAttrConnectionPayoutId(DataHelper data, ClientHelper connectedClient) {
 
         if (data.connections == null) {
             data.connections = new ArrayList<>();
         }
-        if (data.deviceIdTableEntries == null) {
-            data.deviceIdTableEntries = new ArrayList<>();
+        if (data.payoutTableEntries == null) {
+            data.payoutTableEntries = new ArrayList<>();
         }
-        connectedClient.setDeviceId(data.clientHelper.getDeviceId());
 
-        //add connection with connected client
+        connectedClient.setDeviceId(data.clientHelper.getDeviceId());
+        // add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
         connectionInfo1.connectionAttributeName = "payout";
         connectionInfo1.connectionAttributeValue = data.clientHelper.getDeviceId();
         connectionInfo1.sourceAttributeValue = data.clientHelper.getDeviceId();
         connectionInfo1.relationType = "exact";
+
+        connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1));
         connection.connectionScore = 1d;
         data.connections.add(connection);
-        //add email to LN record
+
+        String payoutId = UUID.randomUUID().toString();
+
         data.lnSessionParsedObject.setDeviceId(data.clientHelper.getDeviceId());
-
-        //add to emails table records with same email for initial and connected clients
-
-        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getDeviceId()));
-        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
+        data.payoutTableEntries.add(payoutTableEntryForConnectionSearch(data.clientHelper, payoutId));
+        data.payoutTableEntries.add(payoutTableEntryForConnectionSearch(connectedClient, payoutId));
     }
 
     public static void addConnectionByDeviceAttribute(DataHelper data, ClientHelper clientTo) {
@@ -662,7 +358,8 @@ public class DataHelper {
     public static DataHelper addFraudTypeToConnectedUser(DataHelper data, FraudTypeStatus status, FraudType fraudType)
             throws IOException, InterruptedException {
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(data.connectedClientHelpers.getFirst().getUcid(), FraudTypeOld.HEDGING.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(
+                data.connectedClientHelpers.getFirst().getUcid(), FraudTypeOld.HEDGING.getKey()));
 
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
 
@@ -684,5 +381,4 @@ public class DataHelper {
         alerts.getFirst().setStatus(status);
         this.boAlertsObjects = alerts;
     }
-
 }

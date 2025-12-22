@@ -1,6 +1,5 @@
 package businessObjects.db.clickhouse.ozTrades;
 
-
 public class OzTradesTableEntry {
 
     private Integer serverId;
@@ -74,8 +73,7 @@ public class OzTradesTableEntry {
     private String makerAdapter;
     private String ozBaseName;
 
-    public OzTradesTableEntry() {
-    }
+    public OzTradesTableEntry() {}
 
     public Integer getServerId() {
         return serverId;

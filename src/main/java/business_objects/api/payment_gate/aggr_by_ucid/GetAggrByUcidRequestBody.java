@@ -2,7 +2,6 @@ package business_objects.api.payment_gate.aggr_by_ucid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,11 +26,15 @@ public class GetAggrByUcidRequestBody {
     @JsonProperty("startedAt")
     private String startedAt; // ISO-8601 timestamp
 
-    public GetAggrByUcidRequestBody() {
-    }
+    public GetAggrByUcidRequestBody() {}
 
-    public GetAggrByUcidRequestBody(String schemaVersion, String type, Integer finalDecisionCode,
-            List<String> ruleName, List<String> ruleEndType, String startedAt) {
+    public GetAggrByUcidRequestBody(
+            String schemaVersion,
+            String type,
+            Integer finalDecisionCode,
+            List<String> ruleName,
+            List<String> ruleEndType,
+            String startedAt) {
         this.schemaVersion = schemaVersion;
         this.type = type;
         this.finalDecisionCode = finalDecisionCode;

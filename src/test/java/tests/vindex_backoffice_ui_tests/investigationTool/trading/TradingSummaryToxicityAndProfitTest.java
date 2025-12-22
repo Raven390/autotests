@@ -1,18 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -29,6 +16,18 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
@@ -39,13 +38,17 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
     private static final MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
     private static final Mt5DealsCoercedToxicityObject trade1 = generateMt5DealsCoercedToxicityByClient(client);
     private static final Mt5DealsCoercedToxicityObject trade2 = generateMt5DealsCoercedToxicityByClient(client);
-    private static final Mt5DealsCoercedToxicityObject trade3 = generateMt5DealsCoercedToxicityAdditionalByClient(client);
+    private static final Mt5DealsCoercedToxicityObject trade3 =
+            generateMt5DealsCoercedToxicityAdditionalByClient(client);
     private static final Mt5DealsCoercedToxicityObject trade4 = generateMt5DealsCoercedToxicityByClient(client);
-    private static final Mt5DealsCoercedToxicityObject trade5 = generateMt5DealsCoercedToxicityAdditionalByClient(client);
+    private static final Mt5DealsCoercedToxicityObject trade5 =
+            generateMt5DealsCoercedToxicityAdditionalByClient(client);
     private static final Mt5DealsCoercedToxicityObject trade6 = generateMt5DealsCoercedToxicityByClient(client);
-    private static final Mt5DealsCoercedToxicityObject trade7 = generateMt5DealsCoercedToxicityAdditionalByClient(client);
+    private static final Mt5DealsCoercedToxicityObject trade7 =
+            generateMt5DealsCoercedToxicityAdditionalByClient(client);
     private static final Mt5DealsCoercedToxicityObject trade8 = generateMt5DealsCoercedToxicityByClient(client);
-    private static final Mt5DealsCoercedToxicityObject trade9 = generateMt5DealsCoercedToxicityAdditionalByClient(client);
+    private static final Mt5DealsCoercedToxicityObject trade9 =
+            generateMt5DealsCoercedToxicityAdditionalByClient(client);
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -81,7 +84,9 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertCrmAccountsToDb(account, account2);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));
-        insertObjectsToDb(MT5_DEALS_COERCED_TOXICITY_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9));
+        insertObjectsToDb(
+                MT5_DEALS_COERCED_TOXICITY_TABLE_NAME,
+                List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9));
     }
 
     @Test
@@ -96,17 +101,42 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Toxicity & Profit chart title", tradingPage.getToxicityAndProfitChartTitle(), is("Toxicity and profitUSD"));
+        assertThat(
+                "Verify Toxicity & Profit chart title",
+                tradingPage.getToxicityAndProfitChartTitle(),
+                is("Toxicity and profitUSD"));
         assertThat("Verify Toxicity & Profit Y axis label", tradingPage.getToxicityAndProfitYAxisLabel(), is("45K"));
         String maxToxicity = "28,144";
         String maxProfit = "29,155";
-        assertThat("Verify Toxicity & Profit max toxicity value", tradingPage.getToxicityAndProfitMaxToxicityValue(), is(maxToxicity));
-        assertThat("Verify Toxicity & Profit max toxicity label", tradingPage.getToxicityAndProfitMaxToxicityLabel(), is("Max toxicity"));
-        assertThat("Verify Toxicity & Profit max profit value", tradingPage.getToxicityAndProfitMaxProfitValue(), is(maxProfit));
-        assertThat("Verify Toxicity & Profit max profit label", tradingPage.getToxicityAndProfitMaxProfitLabel(), is("Max profit"));
-        assertThat("Verify Toxicity & Profit max toxicity graph dot value", tradingPage.getToxicityAndProfitMaxToxicityGraphDot(), is(maxToxicity));
-        assertThat("Verify Toxicity & Profit x axis labels match expected pattern", tradingPage.getToxicityAndProfitXAxisLabels(), contains("Deals", "1", "2", "3", "4", "5", "6", "7"));
-        assertThat("Verify Toxicity & Profit tooltip", tradingPage.getToxicityAndProfitTooltip(), is("The chart only displays data available from September 6, 2024, onwards.  Data is updated once per hour."));
+        assertThat(
+                "Verify Toxicity & Profit max toxicity value",
+                tradingPage.getToxicityAndProfitMaxToxicityValue(),
+                is(maxToxicity));
+        assertThat(
+                "Verify Toxicity & Profit max toxicity label",
+                tradingPage.getToxicityAndProfitMaxToxicityLabel(),
+                is("Max toxicity"));
+        assertThat(
+                "Verify Toxicity & Profit max profit value",
+                tradingPage.getToxicityAndProfitMaxProfitValue(),
+                is(maxProfit));
+        assertThat(
+                "Verify Toxicity & Profit max profit label",
+                tradingPage.getToxicityAndProfitMaxProfitLabel(),
+                is("Max profit"));
+        assertThat(
+                "Verify Toxicity & Profit max toxicity graph dot value",
+                tradingPage.getToxicityAndProfitMaxToxicityGraphDot(),
+                is(maxToxicity));
+        assertThat(
+                "Verify Toxicity & Profit x axis labels match expected pattern",
+                tradingPage.getToxicityAndProfitXAxisLabels(),
+                contains("Deals", "1", "2", "3", "4", "5", "6", "7"));
+        assertThat(
+                "Verify Toxicity & Profit tooltip",
+                tradingPage.getToxicityAndProfitTooltip(),
+                is(
+                        "The chart only displays data available from September 6, 2024, onwards.  Data is updated once per hour."));
     }
 
     @AfterAll

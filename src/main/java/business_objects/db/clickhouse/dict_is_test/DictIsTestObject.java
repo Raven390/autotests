@@ -2,7 +2,6 @@ package business_objects.db.clickhouse.dict_is_test;
 
 import java.util.Objects;
 
-
 public class DictIsTestObject {
     // Declare variables
     public Integer serverIdSt;
@@ -11,9 +10,7 @@ public class DictIsTestObject {
     public Integer isTest;
     public String lastUpdated;
 
-
-    public DictIsTestObject() {
-    }
+    public DictIsTestObject() {}
 
     public DictIsTestObject(
             Integer serverIdSt, Integer account, String accountGroup, Integer isTest, String lastUpdated) {
@@ -67,9 +64,11 @@ public class DictIsTestObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DictIsTestObject that)) return false;
-        return Objects.equals(serverIdSt, that.serverIdSt) && Objects.equals(account, that.account) && Objects.equals(
-                accountGroup, that.accountGroup) && Objects.equals(isTest, that.isTest) && Objects.equals(
-                        lastUpdated, that.lastUpdated);
+        return Objects.equals(serverIdSt, that.serverIdSt)
+                && Objects.equals(account, that.account)
+                && Objects.equals(accountGroup, that.accountGroup)
+                && Objects.equals(isTest, that.isTest)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
@@ -79,6 +78,7 @@ public class DictIsTestObject {
 
     @Override
     public String toString() {
-        return "DictIsTestObject{" + "serverIdSt=" + serverIdSt + ", account=" + account + ", accountGroup='" + accountGroup + '\'' + ", isTest=" + isTest + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "DictIsTestObject{" + "serverIdSt=" + serverIdSt + ", account=" + account + ", accountGroup='"
+                + accountGroup + '\'' + ", isTest=" + isTest + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

@@ -1,11 +1,11 @@
 package helpers.data;
 
+import static utils.Utils.getUcidByUserIdAndBrand;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import lombok.*;
-
-import static utils.Utils.getUcidByUserIdAndBrand;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
@@ -43,9 +42,18 @@ public class NewTradingEnvRestrictionRequestBody {
     @JsonProperty("applicationReason")
     private String applicationReason = null;
 
-    public NewTradingEnvRestrictionRequestBody(String applicationReason, String level, Integer serverId,
-            BigInteger accountId, List<AdditionalParamEntry> additionalParams, UpdatedBy updatedBy,
-            String correlationId, CorrelationType correlationType, String comment, String code, String ucid,
+    public NewTradingEnvRestrictionRequestBody(
+            String applicationReason,
+            String level,
+            Integer serverId,
+            BigInteger accountId,
+            List<AdditionalParamEntry> additionalParams,
+            UpdatedBy updatedBy,
+            String correlationId,
+            CorrelationType correlationType,
+            String comment,
+            String code,
+            String ucid,
             RestrictionType type) {
         this.applicationReason = applicationReason;
         this.level = level;
@@ -161,16 +169,43 @@ public class NewTradingEnvRestrictionRequestBody {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         NewTradingEnvRestrictionRequestBody that = (NewTradingEnvRestrictionRequestBody) o;
-        return type == that.type && Objects.equals(ucid, that.ucid) && Objects.equals(code, that.code) && Objects.equals(comment, that.comment) && correlationType == that.correlationType && Objects.equals(correlationId, that.correlationId) && Objects.equals(updatedBy, that.updatedBy) && Objects.equals(additionalParams, that.additionalParams) && Objects.equals(accountId, that.accountId) && Objects.equals(serverId, that.serverId) && Objects.equals(level, that.level) && Objects.equals(applicationReason, that.applicationReason);
+        return type == that.type
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(code, that.code)
+                && Objects.equals(comment, that.comment)
+                && correlationType == that.correlationType
+                && Objects.equals(correlationId, that.correlationId)
+                && Objects.equals(updatedBy, that.updatedBy)
+                && Objects.equals(additionalParams, that.additionalParams)
+                && Objects.equals(accountId, that.accountId)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(level, that.level)
+                && Objects.equals(applicationReason, that.applicationReason);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, ucid, code, comment, correlationType, correlationId, updatedBy, additionalParams, accountId, serverId, level, applicationReason);
+        return Objects.hash(
+                type,
+                ucid,
+                code,
+                comment,
+                correlationType,
+                correlationId,
+                updatedBy,
+                additionalParams,
+                accountId,
+                serverId,
+                level,
+                applicationReason);
     }
 
     @Override
     public String toString() {
-        return "NewTradingEnvRestrictionRequestBody{" + "type=" + type + ", ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", comment='" + comment + '\'' + ", correlationType=" + correlationType + ", correlationId='" + correlationId + '\'' + ", updatedBy=" + updatedBy + ", additionalParams=" + additionalParams + ", accountId=" + accountId + ", serverId=" + serverId + ", level='" + level + '\'' + ", applicationReason='" + applicationReason + '\'' + '}';
+        return "NewTradingEnvRestrictionRequestBody{" + "type=" + type + ", ucid='" + ucid + '\'' + ", code='" + code
+                + '\'' + ", comment='" + comment + '\'' + ", correlationType=" + correlationType + ", correlationId='"
+                + correlationId + '\'' + ", updatedBy=" + updatedBy + ", additionalParams=" + additionalParams
+                + ", accountId=" + accountId + ", serverId=" + serverId + ", level='" + level + '\''
+                + ", applicationReason='" + applicationReason + '\'' + '}';
     }
 }

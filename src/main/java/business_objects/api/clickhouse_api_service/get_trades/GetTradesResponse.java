@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_trades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetTradesResponse {
@@ -39,12 +38,19 @@ public class GetTradesResponse {
     @JsonProperty("comment")
     public String comment;
 
-    public GetTradesResponse() {
-    }
+    public GetTradesResponse() {}
 
     public GetTradesResponse(
-            String tradeDate, Long tradeId, Integer tradingAccount, Integer action, Integer entry,
-            String symbol, Double profit, Double profitUsd, Double volumeInLots, String comment) {
+            String tradeDate,
+            Long tradeId,
+            Integer tradingAccount,
+            Integer action,
+            Integer entry,
+            String symbol,
+            Double profit,
+            Double profitUsd,
+            Double volumeInLots,
+            String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -57,8 +63,16 @@ public class GetTradesResponse {
         this.comment = comment;
     }
 
-    public GetTradesResponse(String tradeDate, Long tradeId, Integer tradingAccount, Integer action, Integer entry,
-            String symbol, Double profit, Double profitUsd, String comment) {
+    public GetTradesResponse(
+            String tradeDate,
+            Long tradeId,
+            Integer tradingAccount,
+            Integer action,
+            Integer entry,
+            String symbol,
+            Double profit,
+            Double profitUsd,
+            String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -73,20 +87,29 @@ public class GetTradesResponse {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof GetTradesResponse that)) return false;
-        return Objects.equals(tradeDate, that.tradeDate) && Objects.equals(
-                tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(action, that.action) && Objects.equals(
-                        entry, that.entry) && Objects.equals(symbol, that.symbol) && Objects.equals(profit, that.profit) && Objects.equals(
-                                profitUsd, that.profitUsd) && Objects.equals(volumeInLots, that.volumeInLots) && Objects.equals(
-                                        comment, that.comment);
+        return Objects.equals(tradeDate, that.tradeDate)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(action, that.action)
+                && Objects.equals(entry, that.entry)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(volumeInLots, that.volumeInLots)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tradeDate, tradeId, tradingAccount, action, entry, symbol, profit, profitUsd, volumeInLots, comment);
+        return Objects.hash(
+                tradeDate, tradeId, tradingAccount, action, entry, symbol, profit, profitUsd, volumeInLots, comment);
     }
 
     @Override
     public String toString() {
-        return "GetTradesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", action=" + action + ", entry=" + entry + ", symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + ", volumeInLots=" + volumeInLots + ", comment='" + comment + '\'' + '}';
+        return "GetTradesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount="
+                + tradingAccount + ", action=" + action + ", entry=" + entry + ", symbol='" + symbol + '\''
+                + ", profit=" + profit + ", profitUsd=" + profitUsd + ", volumeInLots=" + volumeInLots + ", comment='"
+                + comment + '\'' + '}';
     }
 }

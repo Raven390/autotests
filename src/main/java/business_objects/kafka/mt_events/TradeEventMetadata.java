@@ -1,7 +1,6 @@
 package business_objects.kafka.mt_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class TradeEventMetadata {
@@ -12,8 +11,7 @@ public class TradeEventMetadata {
     @JsonProperty("created")
     public String created;
 
-    public TradeEventMetadata() {
-    }
+    public TradeEventMetadata() {}
 
     public TradeEventMetadata(String platform) {
         this.platform = platform;

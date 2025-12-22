@@ -1,22 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.investigationTool.TradingPage;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
@@ -29,12 +12,38 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.investigationTool.TradingPage;
+import tests.TestBaseWeb;
+
 class TradingOpenPositionsTest extends TestBaseWeb {
 
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(242_401).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(242_401_001).tradingAccount2(242_401_002).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(242_401)
+                .uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(242_401_001)
+                .tradingAccount2(242_401_002)
+                .serverId(42)
+                .build();
     }
+
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static CrmTbAccountObject account2;
@@ -83,11 +92,16 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         openPositions.navigateOpenPositions(client.getUcid());
         openPositions.checkAccountCellValue(client.getTradingAccount(), mt4trade.getPlatform());
         openPositions.checkAccountCellValue(client.getTradingAccount2(), deal.getPlatform());
-        openPositions.checkTypeCellValue(client.getTradingAccount2(), deal.getSymbol(), TradingPage.translateActionMT5(deal.getAction()));
-        openPositions.checkTypeCellValue(client.getTradingAccount(), mt4trade.getSymbol(), TradingPage.translateActionMT4(mt4trade.getCmd()));
-        openPositions.checkVolumeCellValue(client.getTradingAccount2(), position.getVolumeLots(), position.getNotionalValueUsd());
-        openPositions.checkVolumeCellValue(client.getTradingAccount(), mt4trade.getVolumeLots(), mt4trade.getOpenNotionalValueUsd());
-        openPositions.checkOpenCellValue(client.getTradingAccount2(), position.getPriceOpen(), position.getTimeCreate());
+        openPositions.checkTypeCellValue(
+                client.getTradingAccount2(), deal.getSymbol(), TradingPage.translateActionMT5(deal.getAction()));
+        openPositions.checkTypeCellValue(
+                client.getTradingAccount(), mt4trade.getSymbol(), TradingPage.translateActionMT4(mt4trade.getCmd()));
+        openPositions.checkVolumeCellValue(
+                client.getTradingAccount2(), position.getVolumeLots(), position.getNotionalValueUsd());
+        openPositions.checkVolumeCellValue(
+                client.getTradingAccount(), mt4trade.getVolumeLots(), mt4trade.getOpenNotionalValueUsd());
+        openPositions.checkOpenCellValue(
+                client.getTradingAccount2(), position.getPriceOpen(), position.getTimeCreate());
         openPositions.checkOpenCellValue(client.getTradingAccount(), mt4trade.getOpenPrice(), mt4trade.getOpenTime());
         openPositions.checkTpSlCellValue(client.getTradingAccount2(), position.getTp(), position.getSl());
         openPositions.checkTpSlCellValue(client.getTradingAccount(), mt4trade.getTp(), mt4trade.getSl());
@@ -97,13 +111,14 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         openPositions.checkSwapCellValue(client.getTradingAccount(), mt4trade.getStorageUsd());
         openPositions.checkCommissionCellValue(client.getTradingAccount2(), deal.getCommissionUsd());
         openPositions.checkCommissionCellValue(client.getTradingAccount(), mt4trade.getCommissionUsd());
-        openPositions.checkMethodCellValue(client.getTradingAccount2(), TradingPage.translateReasonMT5(position.getReason()));
-        openPositions.checkMethodCellValue(client.getTradingAccount(), TradingPage.translateReasonMT4(mt4trade.getReason().intValue()));
+        openPositions.checkMethodCellValue(
+                client.getTradingAccount2(), TradingPage.translateReasonMT5(position.getReason()));
+        openPositions.checkMethodCellValue(
+                client.getTradingAccount(),
+                TradingPage.translateReasonMT4(mt4trade.getReason().intValue()));
         openPositions.checkCommentCellValue(client.getTradingAccount2(), position.getComment());
         openPositions.checkCommentCellValue(client.getTradingAccount(), mt4trade.getComment());
-
     }
-
 
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -130,7 +145,6 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         openPositions.navigateOpenPositions(client.getUcid());
         openPositions.openPositionsRenders();
     }
-
 
     @Disabled("not yet implemented")
     @Test
@@ -188,8 +202,5 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         tradingPage.fillVolumeLotValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();
         tradingPage.checkVolumeCellsContentLots(from, to);
-
     }
-
-
 }

@@ -1,41 +1,5 @@
 package tests.mitigation_service_api_tests;
 
-import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
-import business_objects.api.lark.chatHistory.ByBitRestrictionBotMessage;
-import business_objects.api.lark.chatHistory.ChatHistoryResponse;
-import business_objects.api.mitigation_service.*;
-import business_objects.api.mitigation_service.CancelRestrictionByBitRequest;
-import business_objects.api.mitigation_service.PostRestrictionByBitRequest;
-import business_objects.api.mitigation_service.PostRestrictionByBitResponse;
-import business_objects.api.mitigation_service.PostRestrictionRequestBody;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.restriction_events.ApplyTradingEnvironmentRestrictionMessage;
-import business_objects.kafka.restriction_events.ClientRestrictionApply;
-import com.fasterxml.jackson.core.type.TypeReference;
-import helpers.api.RestrictionHelper;
-import helpers.data.ClientHelper;
-import helpers.data.enums.*;
-import helpers.database.AuHelper;
-import helpers.database.CleanTableHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import okhttp3.Response;
-import org.awaitility.Awaitility;
-import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.investigationTool.RestrictionPage;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
 import static business_objects.api.lark.LarkRequest.getMessagesChatLast10Minutes;
 import static business_objects.api.lark.LarkRequest.getTenantToken;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
@@ -66,15 +30,59 @@ import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
+import business_objects.api.lark.chatHistory.ByBitRestrictionBotMessage;
+import business_objects.api.lark.chatHistory.ChatHistoryResponse;
+import business_objects.api.mitigation_service.*;
+import business_objects.api.mitigation_service.CancelRestrictionByBitRequest;
+import business_objects.api.mitigation_service.PostRestrictionByBitRequest;
+import business_objects.api.mitigation_service.PostRestrictionByBitResponse;
+import business_objects.api.mitigation_service.PostRestrictionRequestBody;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.restriction_events.ApplyTradingEnvironmentRestrictionMessage;
+import business_objects.kafka.restriction_events.ClientRestrictionApply;
+import com.fasterxml.jackson.core.type.TypeReference;
+import helpers.api.RestrictionHelper;
+import helpers.data.ClientHelper;
+import helpers.data.enums.*;
+import helpers.database.AuHelper;
+import helpers.database.CleanTableHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import okhttp3.Response;
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.investigationTool.RestrictionPage;
+import tests.TestBaseApi;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
 class MitigationServiceApiTest extends TestBaseApi {
 
     static ClientHelper restrictionClient;
+
     static {
-        restrictionClient = ClientHelper.builder().userId(141_401).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(14_140_101).serverId(42).build();
+        restrictionClient = ClientHelper.builder()
+                .userId(141_401)
+                .uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(14_140_101)
+                .serverId(42)
+                .build();
     }
+
     static ClientHelper byBitClient = getRandomBybitClient();
     static CrmTbUserObject byBitUser = generateUserByClient(byBitClient);
     static CrmTbAccountObject activeByBit = generateStaticCrmTbAccountActive(byBitClient);
@@ -116,8 +124,13 @@ class MitigationServiceApiTest extends TestBaseApi {
     void successIfRestrictionAlreadyApplied() throws Exception {
 
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                restrictionClient.getUcid(), "05", "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("API", "QA")
-        );
+                restrictionClient.getUcid(),
+                "05",
+                "GENERAL",
+                null,
+                null,
+                "Integration test",
+                new PostRestrictionRequestBody.UpdatedBy("API", "QA"));
 
         Allure.step("Send and check first request");
         Response response = postRestriction(postRestrictionRequestBody);
@@ -127,7 +140,6 @@ class MitigationServiceApiTest extends TestBaseApi {
         Response response2 = putRestriction(postRestrictionRequestBody);
 
         assertEquals(response2.code(), 200);
-
     }
 
     @Test
@@ -139,7 +151,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
@@ -154,7 +167,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -169,7 +183,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -184,7 +199,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -199,7 +215,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -214,10 +231,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -230,10 +260,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -246,7 +289,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -261,7 +305,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -276,10 +321,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -292,10 +350,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -308,10 +379,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -324,10 +408,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -340,7 +437,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -355,10 +453,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -371,7 +482,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -386,7 +498,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -401,7 +514,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
+        setRestrictionAPIGeneralResponse(
+                restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
@@ -416,10 +530,23 @@ class MitigationServiceApiTest extends TestBaseApi {
         String applyReason = "reason" + getCurrentTimestampSeconds();
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
-        String restrictionIdRaw = setRestrictionAPITradeResponse(restrictionClient.getUcid(), restriction.getCode(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), applyReason, updatedBySystem, updatedByUser);
+        String restrictionIdRaw = setRestrictionAPITradeResponse(
+                restrictionClient.getUcid(),
+                restriction.getCode(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                applyReason,
+                updatedBySystem,
+                updatedByUser);
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         AuHelper.checkRestrictionApplyAudit(restrictionClient.getUcid());
-        RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
+        RestrictionPage.checkKafkaRequestApplyAccount(
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                525_600,
+                restrictionID,
+                applyReason,
+                restriction.getCode());
         RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restriction.getId());
     }
 
@@ -429,14 +556,31 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1075")
     @DisplayName("Verify logic for internalReason field with check format")
     void internalReasonTest() throws IOException, InterruptedException {
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                restrictionClient.getUcid(),
+                "05",
+                "GENERAL",
+                null,
+                null,
+                null,
+                new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                new PostRestrictionRequestBody.AdditionalParam[] {
+                    new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "potentialFraudTypes", "array", new String[] {"HEDGING"}),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "confirmedFraudTypes", "array", new String[] {"PRICING_ERROR"})
+                });
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
         KafkaHelper kafka = new KafkaHelper();
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+        List<String> consumedMessages = kafka.consumeMessages(
+                KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                restrictionClient.getUserId().toString());
         boolean internalReasonFound = false;
-        String expectedInternalReason = """
+        String expectedInternalReason =
+                """
                 Potential Fraud Type: Hedging (mirror trading) - Description: Client are engaging in Hedging (Mirror trading) fraud in order to abuse our deposit bonus scheme and gain guaranteed profit through their trades.
                 Confirmed Fraud Type: Pricing errors - Description: Client is taking advantage of errors in our quotes/pricing in order to make guaranteed profits.
                 Restriction: Login CRM - Description: Considering the severity of certain clients' actions, their accounts need to be blocked completely. This can be relevant for more serious cases of Market manipulation, thin liquidity scalping, gap trading and more.
@@ -444,7 +588,8 @@ class MitigationServiceApiTest extends TestBaseApi {
         for (String message : consumedMessages) {
             ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
             writeLog((kafkaMessage.restrictions[0].internalReason));
-            if ((kafkaMessage.restrictions.length == 1) && Objects.equals(kafkaMessage.restrictions[0].internalReason, expectedInternalReason)) {
+            if ((kafkaMessage.restrictions.length == 1)
+                    && Objects.equals(kafkaMessage.restrictions[0].internalReason, expectedInternalReason)) {
                 internalReasonFound = true;
             }
         }
@@ -459,12 +604,26 @@ class MitigationServiceApiTest extends TestBaseApi {
     void internalReasonTest1() throws IOException, InterruptedException {
         String fraudCode = HEDGING.getCode();
         String restrictionCode = ACCOUNT_CREATION.getCode();
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                restrictionClient.getUcid(),
+                restrictionCode,
+                "GENERAL",
+                null,
+                null,
+                null,
+                new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                new PostRestrictionRequestBody.AdditionalParam[] {
+                    new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "potentialFraudTypes", "array", new String[] {fraudCode})
+                });
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
         KafkaHelper kafka = new KafkaHelper();
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+        List<String> consumedMessages = kafka.consumeMessages(
+                KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                restrictionClient.getUserId().toString());
         for (String message : consumedMessages) {
             ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
             writeLog((kafkaMessage.restrictions[0].internalReason));
@@ -478,17 +637,34 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1973")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction INTERNAL_TRANSFER, fraud LATENCY_ARBITRAGE confirmed, CPA_ABUSE potential")
+    @DisplayName(
+            "Verify logic for internalReason field restriction INTERNAL_TRANSFER, fraud LATENCY_ARBITRAGE confirmed, CPA_ABUSE potential")
     void internalReasonTest2() throws IOException, InterruptedException {
         String fraudCode = LATENCY_ARBITRAGE.getCode();
         String fraudCode2 = CPA_ABUSE.getCode();
         String restrictionCode = INTERNAL_TRANSFER.getCode();
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode2}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                restrictionClient.getUcid(),
+                restrictionCode,
+                "GENERAL",
+                null,
+                null,
+                null,
+                new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                new PostRestrictionRequestBody.AdditionalParam[] {
+                    new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "potentialFraudTypes", "array", new String[] {fraudCode2}),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "confirmedFraudTypes", "array", new String[] {fraudCode})
+                });
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
         KafkaHelper kafka = new KafkaHelper();
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+        List<String> consumedMessages = kafka.consumeMessages(
+                KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                restrictionClient.getUserId().toString());
         for (String message : consumedMessages) {
             ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
             writeLog((kafkaMessage.restrictions[0].internalReason));
@@ -503,19 +679,36 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1973")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud -BONUS_ABUSE,NBP_ABUSE , LOSS_VOUCHER_ABUSE GAP_TRADING potential")
+    @DisplayName(
+            "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud -BONUS_ABUSE,NBP_ABUSE , LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest3() throws IOException, InterruptedException {
         String fraudCode = BONUS_ABUSE.getCode();
         String fraudCode2 = LOSS_VOUCHER_ABUSE.getCode();
         String fraudCode3 = NBP_ABUSE.getCode();
         String fraudCode4 = GAP_TRADING.getCode();
         String restrictionCode = DEPOSITS.getCode();
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode2, fraudCode4}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode, fraudCode3})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                restrictionClient.getUcid(),
+                restrictionCode,
+                "GENERAL",
+                null,
+                null,
+                null,
+                new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                new PostRestrictionRequestBody.AdditionalParam[] {
+                    new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "potentialFraudTypes", "array", new String[] {fraudCode2, fraudCode4}),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "confirmedFraudTypes", "array", new String[] {fraudCode, fraudCode3})
+                });
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
         KafkaHelper kafka = new KafkaHelper();
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+        List<String> consumedMessages = kafka.consumeMessages(
+                KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                restrictionClient.getUserId().toString());
         for (String message : consumedMessages) {
             ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
             writeLog((kafkaMessage.restrictions[0].internalReason));
@@ -532,7 +725,8 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1974")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud - for each frauds not exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
+    @DisplayName(
+            "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud - for each frauds not exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest4() throws Exception {
         List<InternalReason> unexceptionalFraudReason = getNonExceptionalReasons("FRAUD");
         for (InternalReason i : unexceptionalFraudReason) {
@@ -540,12 +734,28 @@ class MitigationServiceApiTest extends TestBaseApi {
             String fraudCode2 = LOSS_VOUCHER_ABUSE.getCode();
             String fraudCode3 = NBP_ABUSE.getCode();
             String restrictionCode = DEPOSITS.getCode();
-            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode2, fraudCode3}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode})});
+            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                    restrictionClient.getUcid(),
+                    restrictionCode,
+                    "GENERAL",
+                    null,
+                    null,
+                    null,
+                    new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                    new PostRestrictionRequestBody.AdditionalParam[] {
+                        new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "potentialFraudTypes", "array", new String[] {fraudCode2, fraudCode3}),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "confirmedFraudTypes", "array", new String[] {fraudCode})
+                    });
             Response response = postRestriction(postRestriction);
             assertThat("Verify 200 response code", response.code(), is(200));
             assertThat(response.body(), notNullValue());
             KafkaHelper kafka = new KafkaHelper();
-            List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+            List<String> consumedMessages = kafka.consumeMessages(
+                    KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                    restrictionClient.getUserId().toString());
             for (String message : consumedMessages) {
                 ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
                 writeLog("internal reason in found message is: \n" + (kafkaMessage.restrictions[0].internalReason));
@@ -565,7 +775,8 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1974")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction DEPOSITS, Potential fraud - for each frauds not exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING confirmed")
+    @DisplayName(
+            "Verify logic for internalReason field restriction DEPOSITS, Potential fraud - for each frauds not exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING confirmed")
     void internalReasonTest5() throws Exception {
         List<InternalReason> unexceptionalFraudReason = getNonExceptionalReasons("FRAUD");
         for (InternalReason i : unexceptionalFraudReason) {
@@ -573,12 +784,28 @@ class MitigationServiceApiTest extends TestBaseApi {
             String fraudCode2 = LOSS_VOUCHER_ABUSE.getCode();
             String fraudCode3 = NBP_ABUSE.getCode();
             String restrictionCode = DEPOSITS.getCode();
-            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode2, fraudCode3})});
+            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                    restrictionClient.getUcid(),
+                    restrictionCode,
+                    "GENERAL",
+                    null,
+                    null,
+                    null,
+                    new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                    new PostRestrictionRequestBody.AdditionalParam[] {
+                        new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "potentialFraudTypes", "array", new String[] {fraudCode}),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "confirmedFraudTypes", "array", new String[] {fraudCode2, fraudCode3})
+                    });
             Response response = postRestriction(postRestriction);
             assertThat("Verify 200 response code", response.code(), is(200));
             assertThat(response.body(), notNullValue());
             KafkaHelper kafka = new KafkaHelper();
-            List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+            List<String> consumedMessages = kafka.consumeMessages(
+                    KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                    restrictionClient.getUserId().toString());
             for (String message : consumedMessages) {
                 ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
                 writeLog("internal reason in found message is: \n" + (kafkaMessage.restrictions[0].internalReason));
@@ -598,7 +825,8 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1979")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction DEPOSITS, Potential fraud - for each frauds exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING confirmed")
+    @DisplayName(
+            "Verify logic for internalReason field restriction DEPOSITS, Potential fraud - for each frauds exceptional, LOSS_VOUCHER_ABUSE GAP_TRADING confirmed")
     void internalReasonTest6() throws Exception {
         List<InternalReason> exceptionalFraudReasonFiltered = List.of(EXCHANGER, UPGRADER, POTENTIAL_CHARGEBACK);
         for (InternalReason i : exceptionalFraudReasonFiltered) {
@@ -606,12 +834,28 @@ class MitigationServiceApiTest extends TestBaseApi {
             String fraudCode2 = LOSS_VOUCHER_ABUSE.getCode();
             String fraudCode3 = NBP_ABUSE.getCode();
             String restrictionCode = DEPOSITS.getCode();
-            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode2, fraudCode3})});
+            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                    restrictionClient.getUcid(),
+                    restrictionCode,
+                    "GENERAL",
+                    null,
+                    null,
+                    null,
+                    new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                    new PostRestrictionRequestBody.AdditionalParam[] {
+                        new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "potentialFraudTypes", "array", new String[] {fraudCode}),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "confirmedFraudTypes", "array", new String[] {fraudCode2, fraudCode3})
+                    });
             Response response = postRestriction(postRestriction);
             assertThat("Verify 200 response code", response.code(), is(200));
             assertThat(response.body(), notNullValue());
             KafkaHelper kafka = new KafkaHelper();
-            List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+            List<String> consumedMessages = kafka.consumeMessages(
+                    KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                    restrictionClient.getUserId().toString());
             for (String message : consumedMessages) {
                 ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
                 writeLog("internal reason in found message is: \n" + (kafkaMessage.restrictions[0].internalReason));
@@ -631,7 +875,8 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1980")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud - EXCHANGER UPGRADER, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
+    @DisplayName(
+            "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud - EXCHANGER UPGRADER, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest8() throws Exception {
         List<InternalReason> exceptionalFraudReasonFiltered = List.of(EXCHANGER, UPGRADER);
         for (InternalReason i : exceptionalFraudReasonFiltered) {
@@ -639,12 +884,28 @@ class MitigationServiceApiTest extends TestBaseApi {
             String fraudCode2 = LOSS_VOUCHER_ABUSE.getCode();
             String fraudCode3 = NBP_ABUSE.getCode();
             String restrictionCode = DEPOSITS.getCode();
-            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode}), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode2, fraudCode3})});
+            PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                    restrictionClient.getUcid(),
+                    restrictionCode,
+                    "GENERAL",
+                    null,
+                    null,
+                    null,
+                    new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                    new PostRestrictionRequestBody.AdditionalParam[] {
+                        new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "confirmedFraudTypes", "array", new String[] {fraudCode}),
+                        new PostRestrictionRequestBody.AdditionalParam(
+                                "potentialFraudTypes", "array", new String[] {fraudCode2, fraudCode3})
+                    });
             Response response = postRestriction(postRestriction);
             assertThat("Verify 200 response code", response.code(), is(200));
             assertThat(response.body(), notNullValue());
             KafkaHelper kafka = new KafkaHelper();
-            List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+            List<String> consumedMessages = kafka.consumeMessages(
+                    KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                    restrictionClient.getUserId().toString());
             for (String message : consumedMessages) {
                 ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
                 writeLog("internal reason in found message is: \n" + (kafkaMessage.restrictions[0].internalReason));
@@ -664,19 +925,36 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1981")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @DisplayName("Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud Chargeback, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
+    @DisplayName(
+            "Verify logic for internalReason field restriction DEPOSITS, Confirmed fraud Chargeback, LOSS_VOUCHER_ABUSE GAP_TRADING potential")
     void internalReasonTest7() throws Exception {
         InternalReason i = CONFIRMED_CHARGEBACK;
         String fraudCode = FraudType.valueOfCode(i.getCode()).getCode();
         String fraudCode2 = LOSS_VOUCHER_ABUSE.getCode();
         String fraudCode3 = NBP_ABUSE.getCode();
         String restrictionCode = DEPOSITS.getCode();
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), restrictionCode, "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{fraudCode}), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{fraudCode2, fraudCode3})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(
+                restrictionClient.getUcid(),
+                restrictionCode,
+                "GENERAL",
+                null,
+                null,
+                null,
+                new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"),
+                new PostRestrictionRequestBody.AdditionalParam[] {
+                    new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "confirmedFraudTypes", "array", new String[] {fraudCode}),
+                    new PostRestrictionRequestBody.AdditionalParam(
+                            "potentialFraudTypes", "array", new String[] {fraudCode2, fraudCode3})
+                });
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
         KafkaHelper kafka = new KafkaHelper();
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+        List<String> consumedMessages = kafka.consumeMessages(
+                KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY,
+                restrictionClient.getUserId().toString());
         for (String message : consumedMessages) {
             ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
             writeLog("internal reason in found message is: \n" + (kafkaMessage.restrictions[0].internalReason));
@@ -707,48 +985,77 @@ class MitigationServiceApiTest extends TestBaseApi {
         Response response0 = postRestrictionByBit(bb);
         assertEquals(200, response0.code());
 
-        PostRestrictionByBitResponse applyResponse = objectMapper.readValue(response0.body().string(), PostRestrictionByBitResponse.class);
+        PostRestrictionByBitResponse applyResponse =
+                objectMapper.readValue(response0.body().string(), PostRestrictionByBitResponse.class);
 
         Thread.sleep(1000);
 
-        CancelRestrictionByBitRequest.UpdatedBy cancelBy = new CancelRestrictionByBitRequest.UpdatedBy(updatedByUser, updatedBySystem);
-        CancelRestrictionByBitRequest cancelRequest = new CancelRestrictionByBitRequest(applyResponse.getId(), cancellationReason, cancelBy);
+        CancelRestrictionByBitRequest.UpdatedBy cancelBy =
+                new CancelRestrictionByBitRequest.UpdatedBy(updatedByUser, updatedBySystem);
+        CancelRestrictionByBitRequest cancelRequest =
+                new CancelRestrictionByBitRequest(applyResponse.getId(), cancellationReason, cancelBy);
         Response responseCancel = cancelRestrictionByIdByBit(cancelRequest);
         assertEquals(200, responseCancel.code());
 
         Response tenant = getTenantToken("cli_a829a3882cb8902f", "x3Tu9aG8DBY8XOQXc0WZneu8lQdauXR2");
-        String token = objectMapper.readValue(tenant.body().string(), TenantAccessTokenResponse.class).getTenantAccessToken();
+        String token = objectMapper
+                .readValue(tenant.body().string(), TenantAccessTokenResponse.class)
+                .getTenantAccessToken();
         Response messageHistory = getMessagesChatLast10Minutes(token, "oc_dfeae72f51c406fadbc16c3890678895");
-        ChatHistoryResponse response = objectMapper.readValue(messageHistory.body().string(), ChatHistoryResponse.class);
+        ChatHistoryResponse response =
+                objectMapper.readValue(messageHistory.body().string(), ChatHistoryResponse.class);
         List<ChatHistoryResponse.LarkApiDataItem> items = response.getData().getItems();
 
-        //check apply message
-        List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered = items.stream().filter(i -> i.getBody().getContent().contains(applyReason)).toList();
-        String clearedContent = itemsFiltered.getFirst().getBody().getContent().replace("\\n", "").replace("\\", "");
+        // check apply message
+        List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered = items.stream()
+                .filter(i -> i.getBody().getContent().contains(applyReason))
+                .toList();
+        String clearedContent = itemsFiltered
+                .getFirst()
+                .getBody()
+                .getContent()
+                .replace("\\n", "")
+                .replace("\\", "");
         ByBitRestrictionBotMessage message = objectMapper.readValue(clearedContent, ByBitRestrictionBotMessage.class);
         Allure.step("check that message  title is correct");
         assertEquals("Withdrawal ban was applied", message.getTitle());
         Allure.step("check that message contains accountId");
-        assertEquals(": " + byBitClient.getTradingAccount(), message.getElements().getFirst().get(1).getText());
+        assertEquals(
+                ": " + byBitClient.getTradingAccount(),
+                message.getElements().getFirst().get(1).getText());
         Allure.step("check that message contains userId");
-        assertEquals(": " + byBitClient.getUserId(), message.getElements().getFirst().get(3).getText());
+        assertEquals(
+                ": " + byBitClient.getUserId(),
+                message.getElements().getFirst().get(3).getText());
         Allure.step("check that message contains cancellation reason");
         assertEquals(": " + applyReason, message.getElements().getFirst().get(5).getText());
 
-        //check cancellation message
-        List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered2 = items.stream().filter(i -> i.getBody().getContent().contains(cancellationReason)).toList();
-        String clearedContent2 = itemsFiltered2.getFirst().getBody().getContent().replace("\\n", "").replace("\\", "");
+        // check cancellation message
+        List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered2 = items.stream()
+                .filter(i -> i.getBody().getContent().contains(cancellationReason))
+                .toList();
+        String clearedContent2 = itemsFiltered2
+                .getFirst()
+                .getBody()
+                .getContent()
+                .replace("\\n", "")
+                .replace("\\", "");
         ByBitRestrictionBotMessage message2 = objectMapper.readValue(clearedContent2, ByBitRestrictionBotMessage.class);
         Allure.step("check that message  title is correct");
         assertEquals("Withdrawal restriction: Removal request", message2.getTitle());
         Allure.step("check that message contains accountId");
-        assertEquals(": " + byBitClient.getTradingAccount(), message2.getElements().getFirst().get(1).getText());
+        assertEquals(
+                ": " + byBitClient.getTradingAccount(),
+                message2.getElements().getFirst().get(1).getText());
         Allure.step("check that message contains userId");
-        assertEquals(": " + byBitClient.getUserId(), message2.getElements().getFirst().get(3).getText());
+        assertEquals(
+                ": " + byBitClient.getUserId(),
+                message2.getElements().getFirst().get(3).getText());
         Allure.step("check that message contains cancellation reason");
-        assertEquals(": " + cancellationReason, message2.getElements().getFirst().get(5).getText());
+        assertEquals(
+                ": " + cancellationReason,
+                message2.getElements().getFirst().get(5).getText());
     }
-
 
     @Test
     @AllureId("1987")
@@ -765,7 +1072,6 @@ class MitigationServiceApiTest extends TestBaseApi {
         Allure.step("Send and check first request");
         Response response = postRestrictionByBit(bb);
         assertEquals(200, response.code());
-
     }
 
     @Test
@@ -775,41 +1081,91 @@ class MitigationServiceApiTest extends TestBaseApi {
     void putWorseTradingRestrictionV3() throws Exception {
         var timeout = 20_000;
         var rq1 = new NewTradingEnvRestrictionRequestBody(
-                "Application reason", "LOW", restrictionClient.getServerId(), new BigInteger(restrictionClient.getTradingAccount() + ""), Collections.emptyList(), new UpdatedBy().system("Rule Engine"), UUID.randomUUID().toString(), CorrelationType.RULE_ENGINE, "Comment 1", "23", restrictionClient.getUcid(), RestrictionType.TRADING_ENVIRONMENT);
+                "Application reason",
+                "LOW",
+                restrictionClient.getServerId(),
+                new BigInteger(restrictionClient.getTradingAccount() + ""),
+                Collections.emptyList(),
+                new UpdatedBy().system("Rule Engine"),
+                UUID.randomUUID().toString(),
+                CorrelationType.RULE_ENGINE,
+                "Comment 1",
+                "23",
+                restrictionClient.getUcid(),
+                RestrictionType.TRADING_ENVIRONMENT);
         try (var response1 = RestrictionHelper.putRestrictionV3(rq1)) {
-            Awaitility.await().pollDelay(Duration.ofMillis(timeout / 20)).pollInterval(Duration.ofMillis(timeout / 20)).atMost(Duration.ofMillis(timeout)).until(() -> RestrictionHelper.getClientRestrictionsV3(restrictionClient.getUcid()), getResponse -> {
-                try (getResponse) {
-                    assertNotNull(getResponse);
-                    assertEquals(200, response1.code());
-                    assertNotNull(getResponse.body());
-                    var restrictionsJson = getResponse.body().string();
-                    var listReference = new TypeReference<List<ClientRestriction>>() {
-                    };
-                    var actual = objectMapper.readValue(restrictionsJson, listReference);
-                    return actual.stream().filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT).map(ClientTradingEnvironmentRestriction.class::cast).anyMatch(r -> Objects.equals(r.getLevel(), "LOW") && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            Awaitility.await()
+                    .pollDelay(Duration.ofMillis(timeout / 20))
+                    .pollInterval(Duration.ofMillis(timeout / 20))
+                    .atMost(Duration.ofMillis(timeout))
+                    .until(
+                            () -> RestrictionHelper.getClientRestrictionsV3(restrictionClient.getUcid()),
+                            getResponse -> {
+                                try (getResponse) {
+                                    assertNotNull(getResponse);
+                                    assertEquals(200, response1.code());
+                                    assertNotNull(getResponse.body());
+                                    var restrictionsJson = getResponse.body().string();
+                                    var listReference = new TypeReference<List<ClientRestriction>>() {};
+                                    var actual = objectMapper.readValue(restrictionsJson, listReference);
+                                    return actual.stream()
+                                            .filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT)
+                                            .map(ClientTradingEnvironmentRestriction.class::cast)
+                                            .anyMatch(r -> Objects.equals(r.getLevel(), "LOW")
+                                                    && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
         }
-        RestrictionPage.checkKafkaRequestApplyTradingEnv(ApplyTradingEnvironmentRestrictionMessage.builder().clientId(new BigInteger(restrictionClient.getUserId() + "")).brand(restrictionClient.getBrand()).accountId(new BigInteger(restrictionClient.getTradingAccount() + "")).serverId(restrictionClient.getServerId()).initialBanDurationInMinutes(525_600).restriction(ApplyTradingEnvironmentRestrictionMessage.TradingEnvironmentRestriction.builder().restrictionCode("23").riskLevel("low").build()).build());
+        RestrictionPage.checkKafkaRequestApplyTradingEnv(ApplyTradingEnvironmentRestrictionMessage.builder()
+                .clientId(new BigInteger(restrictionClient.getUserId() + ""))
+                .brand(restrictionClient.getBrand())
+                .accountId(new BigInteger(restrictionClient.getTradingAccount() + ""))
+                .serverId(restrictionClient.getServerId())
+                .initialBanDurationInMinutes(525_600)
+                .restriction(ApplyTradingEnvironmentRestrictionMessage.TradingEnvironmentRestriction.builder()
+                        .restrictionCode("23")
+                        .riskLevel("low")
+                        .build())
+                .build());
         var rq2 = new NewTradingEnvRestrictionRequestBody(
-                "Application reason", "LOW", restrictionClient.getServerId(), new BigInteger(restrictionClient.getTradingAccount() + ""), Collections.emptyList(), new UpdatedBy().system("Rule Engine"), UUID.randomUUID().toString(), CorrelationType.RULE_ENGINE, "Comment 1", "23", restrictionClient.getUcid(), RestrictionType.TRADING_ENVIRONMENT);
+                "Application reason",
+                "LOW",
+                restrictionClient.getServerId(),
+                new BigInteger(restrictionClient.getTradingAccount() + ""),
+                Collections.emptyList(),
+                new UpdatedBy().system("Rule Engine"),
+                UUID.randomUUID().toString(),
+                CorrelationType.RULE_ENGINE,
+                "Comment 1",
+                "23",
+                restrictionClient.getUcid(),
+                RestrictionType.TRADING_ENVIRONMENT);
         try (var response2 = RestrictionHelper.putRestrictionV3(rq2)) {
-            Awaitility.await().pollDelay(Duration.ofMillis(timeout / 20)).pollInterval(Duration.ofMillis(timeout / 20)).atMost(Duration.ofMillis(timeout)).until(() -> RestrictionHelper.getClientRestrictionsV3(restrictionClient.getUcid()), getResponse -> {
-                try (getResponse) {
-                    assertNotNull(getResponse);
-                    assertEquals(200, response2.code());
-                    assertNotNull(getResponse.body());
-                    var restrictionsJson = getResponse.body().string();
-                    var listReference = new TypeReference<List<ClientRestriction>>() {
-                    };
-                    var actual = objectMapper.readValue(restrictionsJson, listReference);
-                    return actual.stream().filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT).map(ClientTradingEnvironmentRestriction.class::cast).anyMatch(r -> Objects.equals(r.getLevel(), "LOW") && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            Awaitility.await()
+                    .pollDelay(Duration.ofMillis(timeout / 20))
+                    .pollInterval(Duration.ofMillis(timeout / 20))
+                    .atMost(Duration.ofMillis(timeout))
+                    .until(
+                            () -> RestrictionHelper.getClientRestrictionsV3(restrictionClient.getUcid()),
+                            getResponse -> {
+                                try (getResponse) {
+                                    assertNotNull(getResponse);
+                                    assertEquals(200, response2.code());
+                                    assertNotNull(getResponse.body());
+                                    var restrictionsJson = getResponse.body().string();
+                                    var listReference = new TypeReference<List<ClientRestriction>>() {};
+                                    var actual = objectMapper.readValue(restrictionsJson, listReference);
+                                    return actual.stream()
+                                            .filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT)
+                                            .map(ClientTradingEnvironmentRestriction.class::cast)
+                                            .anyMatch(r -> Objects.equals(r.getLevel(), "LOW")
+                                                    && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
         }
     }
 }

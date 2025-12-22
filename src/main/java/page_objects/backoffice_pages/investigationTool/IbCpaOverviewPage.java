@@ -4,10 +4,9 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.ArrayList;
 import java.util.List;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class IbCpaOverviewPage extends AbstractPage {
 
@@ -30,23 +29,37 @@ public class IbCpaOverviewPage extends AbstractPage {
 
     private static final String OVERVIEW_SUBHEADER = "//div[contains(@class,'v-drawer-header__sub-header')]";
     private static final String UNDER_THIS_SECTION = "//div[contains(@class,'v-registration-source-drawer-referrals')]";
-    private static final String CLIENTS_PERFORMANCE_SECTION = "//div[contains(@class,'v-registration-source-drawer-performance')]";
-    private static final String CLIENTS_TOTALS_SECTION = "//div[@class='v-drawer-section-layout v-registration-source-drawer-totals']";
+    private static final String CLIENTS_PERFORMANCE_SECTION =
+            "//div[contains(@class,'v-registration-source-drawer-performance')]";
+    private static final String CLIENTS_TOTALS_SECTION =
+            "//div[@class='v-drawer-section-layout v-registration-source-drawer-totals']";
     private static final String OVERVIEW_CHART = "//div[@class='v-registration-source-chart']";
 
     public IbCpaOverviewPage(Page page) {
         super(page);
-        overviewTitle = page.locator("//div[@class='v-drawer-header__title-container']").last();
-        overviewSubheaderText = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text']", OVERVIEW_SUBHEADER));
-        overviewSubheaderIcon = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__icon']/descendant::button", OVERVIEW_SUBHEADER));
-        underThisTitle = page.locator(String.format("%s/descendant::div[contains(@class,'g-text_variant_subheader-2')]", UNDER_THIS_SECTION));
-        underThisItems = page.locator(String.format("%s/descendant::div[@class='v-registration-source-drawer-referrals__items']/div", UNDER_THIS_SECTION));
-        clientsPerformanceTitle = page.locator(String.format("%s/div", CLIENTS_PERFORMANCE_SECTION)).first();
-        clientsPerformanceFeatures = page.locator(String.format("%s/descendant::div[@class='v-registration-source-drawer-performance__feature']", CLIENTS_PERFORMANCE_SECTION));
-        clientsTotalsTitle = page.locator(String.format("%s/div", CLIENTS_TOTALS_SECTION)).first();
-        clientsTotalsItems = page.locator(String.format("%s/descendant::div[@class='v-registration-source-drawer-totals__items']/div", CLIENTS_TOTALS_SECTION));
-        chartYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", OVERVIEW_CHART));
-        chartXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/div", OVERVIEW_CHART));
+        overviewTitle =
+                page.locator("//div[@class='v-drawer-header__title-container']").last();
+        overviewSubheaderText =
+                page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text']", OVERVIEW_SUBHEADER));
+        overviewSubheaderIcon = page.locator(String.format(
+                "%s/descendant::div[@class='v-text-with-icon__icon']/descendant::button", OVERVIEW_SUBHEADER));
+        underThisTitle = page.locator(
+                String.format("%s/descendant::div[contains(@class,'g-text_variant_subheader-2')]", UNDER_THIS_SECTION));
+        underThisItems = page.locator(String.format(
+                "%s/descendant::div[@class='v-registration-source-drawer-referrals__items']/div", UNDER_THIS_SECTION));
+        clientsPerformanceTitle = page.locator(String.format("%s/div", CLIENTS_PERFORMANCE_SECTION))
+                .first();
+        clientsPerformanceFeatures = page.locator(String.format(
+                "%s/descendant::div[@class='v-registration-source-drawer-performance__feature']",
+                CLIENTS_PERFORMANCE_SECTION));
+        clientsTotalsTitle =
+                page.locator(String.format("%s/div", CLIENTS_TOTALS_SECTION)).first();
+        clientsTotalsItems = page.locator(String.format(
+                "%s/descendant::div[@class='v-registration-source-drawer-totals__items']/div", CLIENTS_TOTALS_SECTION));
+        chartYAxisLabel = page.locator(
+                String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", OVERVIEW_CHART));
+        chartXAxisLabels = page.locator(
+                String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/div", OVERVIEW_CHART));
         lowerLevelIbTab = page.locator("//div[@title='Lower-level IB']");
         tableHeader = page.locator("//div[contains(@class,'header-cell') and not(contains(@class,'icon'))]");
         tableRow = page.locator("//div[contains(@class,'v-body-row')]");
@@ -66,7 +79,10 @@ public class IbCpaOverviewPage extends AbstractPage {
 
     @Step("Click overview subheader icon")
     public void clickOverviewSubheaderIcon() {
-        page.waitForSelector(String.format("%s/descendant::div[@class='v-text-with-icon__icon']/descendant::button", OVERVIEW_SUBHEADER), new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
+        page.waitForSelector(
+                String.format(
+                        "%s/descendant::div[@class='v-text-with-icon__icon']/descendant::button", OVERVIEW_SUBHEADER),
+                new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
         overviewSubheaderIcon.click();
     }
 

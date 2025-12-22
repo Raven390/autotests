@@ -1,25 +1,25 @@
 package tests.rule_engine_service_tests.rules.general;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.general.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_REGISTRATION_RULE)
@@ -39,11 +39,12 @@ class RegistrationRuleTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
     }
 
     @Test
-    @DisplayName("Registration rule: Exit without alert if amount of abusers in connections < 10% and lexis score is not high. ElementId: end_no_alert")
+    @DisplayName(
+            "Registration rule: Exit without alert if amount of abusers in connections < 10% and lexis score is not high. ElementId: end_no_alert")
     @AllureId("155")
     void registrationRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -54,7 +55,8 @@ class RegistrationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule. Exit with alert if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
+    @DisplayName(
+            "Registration rule. Exit with alert if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
     @AllureId("156")
     void registrationRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -85,7 +87,10 @@ class RegistrationRuleTests extends TestBaseRule {
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat(
+                "Check regulator",
+                clientGeneralRestrictions.getFirst().getRegulator(),
+                is(data.clientHelper.getRegulator()));
         assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(9L));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
 
@@ -94,12 +99,16 @@ class RegistrationRuleTests extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
-        assertThat("", dbAlerts.getFirst().getRuleAttributes(), containsString("{\"Reason\": \"Linked hedging abuser\", \"Max Connection Score\": \"0.75\"}"));
+        assertThat(
+                "",
+                dbAlerts.getFirst().getRuleAttributes(),
+                containsString("{\"Reason\": \"Linked hedging abuser\", \"Max Connection Score\": \"0.75\"}"));
     }
 
     @Test
     @AllureId("1485")
-    @DisplayName("Registration rule. Connection search. Medium hedge potential, ln risk rating = low. ElementId: end_no_alert")
+    @DisplayName(
+            "Registration rule. Connection search. Medium hedge potential, ln risk rating = low. ElementId: end_no_alert")
     void registrationRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
 

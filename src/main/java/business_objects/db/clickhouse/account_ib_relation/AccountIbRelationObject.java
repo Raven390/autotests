@@ -215,16 +215,70 @@ public class AccountIbRelationObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AccountIbRelationObject that = (AccountIbRelationObject) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(directIb, that.directIb) && Objects.equals(directIbLevel, that.directIbLevel) && Objects.equals(directIbRebateAccount, that.directIbRebateAccount) && Objects.equals(masterIb, that.masterIb) && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount) && Objects.equals(salesId, that.salesId) && Objects.equals(salesOrgId, that.salesOrgId) && Objects.equals(accountPIds, that.accountPIds) && Objects.equals(recordEffectiveStartDate, that.recordEffectiveStartDate) && Objects.equals(recordEffectiveEndDate, that.recordEffectiveEndDate) && Objects.equals(recordActiveFlag, that.recordActiveFlag) && Objects.equals(isDel, that.isDel) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(recordDeletedFlag, that.recordDeletedFlag) && Objects.equals(lastUpdated, that.lastUpdated);
+        return Objects.equals(userId, that.userId)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(directIb, that.directIb)
+                && Objects.equals(directIbLevel, that.directIbLevel)
+                && Objects.equals(directIbRebateAccount, that.directIbRebateAccount)
+                && Objects.equals(masterIb, that.masterIb)
+                && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount)
+                && Objects.equals(salesId, that.salesId)
+                && Objects.equals(salesOrgId, that.salesOrgId)
+                && Objects.equals(accountPIds, that.accountPIds)
+                && Objects.equals(recordEffectiveStartDate, that.recordEffectiveStartDate)
+                && Objects.equals(recordEffectiveEndDate, that.recordEffectiveEndDate)
+                && Objects.equals(recordActiveFlag, that.recordActiveFlag)
+                && Objects.equals(isDel, that.isDel)
+                && Objects.equals(createTime, that.createTime)
+                && Objects.equals(createTimeUtc, that.createTimeUtc)
+                && Objects.equals(recordDeletedFlag, that.recordDeletedFlag)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, brand, regulator, ucid, account, serverId, serverName, directIb, directIbLevel, directIbRebateAccount, masterIb, masterIbRebateAccount, salesId, salesOrgId, accountPIds, recordEffectiveStartDate, recordEffectiveEndDate, recordActiveFlag, isDel, createTime, createTimeUtc, recordDeletedFlag, lastUpdated);
+        return Objects.hash(
+                userId,
+                brand,
+                regulator,
+                ucid,
+                account,
+                serverId,
+                serverName,
+                directIb,
+                directIbLevel,
+                directIbRebateAccount,
+                masterIb,
+                masterIbRebateAccount,
+                salesId,
+                salesOrgId,
+                accountPIds,
+                recordEffectiveStartDate,
+                recordEffectiveEndDate,
+                recordActiveFlag,
+                isDel,
+                createTime,
+                createTimeUtc,
+                recordDeletedFlag,
+                lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "AccountIbRelationObject{" + "userId=" + userId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", directIb=" + directIb + ", directIbLevel=" + directIbLevel + ", directIbRebateAccount=" + directIbRebateAccount + ", masterIb=" + masterIb + ", masterIbRebateAccount=" + masterIbRebateAccount + ", salesId=" + salesId + ", salesOrgId=" + salesOrgId + ", accountPIds='" + accountPIds + '\'' + ", recordEffectiveStartDate='" + recordEffectiveStartDate + '\'' + ", recordEffectiveEndDate='" + recordEffectiveEndDate + '\'' + ", recordActiveFlag=" + recordActiveFlag + ", isDel=" + isDel + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", recordDeletedFlag='" + recordDeletedFlag + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "AccountIbRelationObject{" + "userId=" + userId + ", brand='" + brand + '\'' + ", regulator='"
+                + regulator + '\'' + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverId=" + serverId
+                + ", serverName='" + serverName + '\'' + ", directIb=" + directIb + ", directIbLevel=" + directIbLevel
+                + ", directIbRebateAccount=" + directIbRebateAccount + ", masterIb=" + masterIb
+                + ", masterIbRebateAccount=" + masterIbRebateAccount + ", salesId=" + salesId + ", salesOrgId="
+                + salesOrgId + ", accountPIds='" + accountPIds + '\'' + ", recordEffectiveStartDate='"
+                + recordEffectiveStartDate + '\'' + ", recordEffectiveEndDate='" + recordEffectiveEndDate + '\''
+                + ", recordActiveFlag=" + recordActiveFlag + ", isDel=" + isDel + ", createTime='" + createTime + '\''
+                + ", createTimeUtc='" + createTimeUtc + '\'' + ", recordDeletedFlag='" + recordDeletedFlag + '\''
+                + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

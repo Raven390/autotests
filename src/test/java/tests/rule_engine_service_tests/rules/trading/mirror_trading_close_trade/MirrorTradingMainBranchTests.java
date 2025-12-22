@@ -1,19 +1,19 @@
 package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade;
 
+import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingMainBranchDataFactory.setupMirrorTradingMainBranchRuleData;
+import static utils.Constants.*;
+
+import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingMainBranchDataFactory.setupMirrorTradingMainBranchRuleData;
-import static utils.Constants.*;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_RULE)
@@ -33,7 +33,7 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
     }
 
     @Test
@@ -58,7 +58,8 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading. Exit without alert if user has no mirrorMatch trades. ElementId: get_matching_opposite_trades_exit")
+    @DisplayName(
+            "Mirror trading. Exit without alert if user has no mirrorMatch trades. ElementId: get_matching_opposite_trades_exit")
     void mirrorTradeRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
 
@@ -70,14 +71,10 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("Mirror trading. Exit without alerts if deposits > 5000. ElementId:  Event_end_2")
-    void mirrorTradeRuleTest4() throws Exception {
-
-    }
+    void mirrorTradeRuleTest4() throws Exception {}
 
     @Disabled
     @Test
     @DisplayName("Mirror trading. Exit without alerts if trades > 300. ElementId: Event_end_2")
-    void mirrorTradeRuleTest5() throws Exception {
-
-    }
+    void mirrorTradeRuleTest5() throws Exception {}
 }

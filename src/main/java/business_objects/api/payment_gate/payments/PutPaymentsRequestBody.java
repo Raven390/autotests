@@ -1,7 +1,6 @@
 package business_objects.api.payment_gate.payments;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,8 +12,7 @@ public class PutPaymentsRequestBody {
     @JsonProperty("decisionId")
     private Integer decisionId;
 
-    public PutPaymentsRequestBody() {
-    }
+    public PutPaymentsRequestBody() {}
 
     public PutPaymentsRequestBody(UUID paymentId, Integer decisionId) {
         this.paymentId = paymentId;

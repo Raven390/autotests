@@ -13,12 +13,18 @@ public class UcidGeneralScore {
     Double cumSumScore;
     Double ucidScore;
 
-    public UcidGeneralScore() {
-    }
+    public UcidGeneralScore() {}
 
     public UcidGeneralScore(
-            String ucid, String id, Integer action, String timeUtc, String insertTimeUtc, Double modelScore,
-            Integer countAction, Double cumSumScore, Double ucidScore) {
+            String ucid,
+            String id,
+            Integer action,
+            String timeUtc,
+            String insertTimeUtc,
+            Double modelScore,
+            Integer countAction,
+            Double cumSumScore,
+            Double ucidScore) {
         this.ucid = ucid;
         this.id = id;
         this.action = action;
@@ -33,11 +39,15 @@ public class UcidGeneralScore {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof UcidGeneralScore that)) return false;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(id, that.id) && Objects.equals(
-                action, that.action) && Objects.equals(timeUtc, that.timeUtc) && Objects.equals(
-                        insertTimeUtc, that.insertTimeUtc) && Objects.equals(modelScore, that.modelScore) && Objects.equals(
-                                countAction, that.countAction) && Objects.equals(cumSumScore, that.cumSumScore) && Objects.equals(
-                                        ucidScore, that.ucidScore);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(id, that.id)
+                && Objects.equals(action, that.action)
+                && Objects.equals(timeUtc, that.timeUtc)
+                && Objects.equals(insertTimeUtc, that.insertTimeUtc)
+                && Objects.equals(modelScore, that.modelScore)
+                && Objects.equals(countAction, that.countAction)
+                && Objects.equals(cumSumScore, that.cumSumScore)
+                && Objects.equals(ucidScore, that.ucidScore);
     }
 
     @Override
@@ -47,7 +57,10 @@ public class UcidGeneralScore {
 
     @Override
     public String toString() {
-        return "UcidGeneralScore{" + "ucid='" + ucid + '\'' + ", id='" + id + '\'' + ", action=" + action + ", timeUtc='" + timeUtc + '\'' + ", insertTimeUtc='" + insertTimeUtc + '\'' + ", modelScore=" + modelScore + ", countAction=" + countAction + ", cumSumScore=" + cumSumScore + ", ucidScore=" + ucidScore + '\'' + '}';
+        return "UcidGeneralScore{" + "ucid='" + ucid + '\'' + ", id='" + id + '\'' + ", action=" + action
+                + ", timeUtc='" + timeUtc + '\'' + ", insertTimeUtc='" + insertTimeUtc + '\'' + ", modelScore="
+                + modelScore + ", countAction=" + countAction + ", cumSumScore=" + cumSumScore + ", ucidScore="
+                + ucidScore + '\'' + '}';
     }
 
     public String getUcid() {

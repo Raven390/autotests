@@ -1,7 +1,11 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionStatusDeduction {
-    NO_DEDUCTION("NO_DEDUCTION"), TO_BE_DEDUCTED("TO_BE_DEDUCTED"), PROCESSING("PROCESSING"), DEDUCTED("DEDUCTED"), FAILED("FAILED");
+    NO_DEDUCTION("NO_DEDUCTION"),
+    TO_BE_DEDUCTED("TO_BE_DEDUCTED"),
+    PROCESSING("PROCESSING"),
+    DEDUCTED("DEDUCTED"),
+    FAILED("FAILED");
 
     private final String displayName;
 
@@ -12,5 +16,4 @@ public enum DeductionStatusDeduction {
     public String getDisplayName() {
         return displayName;
     }
-
 }

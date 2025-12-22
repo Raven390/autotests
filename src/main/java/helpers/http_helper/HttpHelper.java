@@ -1,18 +1,17 @@
 package helpers.http_helper;
 
-import io.qameta.allure.Step;
+import static utils.Utils.writeLog;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.*;
-
-import javax.net.ssl.*;
+import io.qameta.allure.Step;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
-
-import static utils.Utils.writeLog;
+import javax.net.ssl.*;
+import okhttp3.*;
 
 public class HttpHelper {
 
@@ -28,20 +27,19 @@ public class HttpHelper {
     private static OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
-            TrustManager[] trustAllCertificates = new TrustManager[]{new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType) {
-                }
+            TrustManager[] trustAllCertificates = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
 
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain, String authType) {
-                }
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {}
 
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
                 }
-            }
             };
 
             // Install the all-trusting trust manager
@@ -51,8 +49,9 @@ public class HttpHelper {
             // Create an SSL socket factory with our all-trusting manager
             SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-            return new OkHttpClient.Builder().sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCertificates[0]).hostnameVerifier((
-                    hostname, session) -> true) // Disable hostname verification
+            return new OkHttpClient.Builder()
+                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCertificates[0])
+                    .hostnameVerifier((hostname, session) -> true) // Disable hostname verification
                     .build();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -73,14 +72,16 @@ public class HttpHelper {
     }
 
     @Step("Send post request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendPostRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
-            Object requestBody) throws IOException {
+    public Response sendPostRequest(
+            String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap, Object requestBody)
+            throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
         writeLog("Body: " + jsonBody);
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
-        Request request = buildRequestWithHeaders(httpUrl, headersMap).post(body).build();
+        Request request =
+                buildRequestWithHeaders(httpUrl, headersMap).post(body).build();
 
         writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
@@ -91,11 +92,13 @@ public class HttpHelper {
     }
 
     @Step("Send post request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendPostRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
-            RequestBody requestBody) throws IOException {
+    public Response sendPostRequest(
+            String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap, RequestBody requestBody)
+            throws IOException {
         writeLog("Request Body: " + requestBody);
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
-        Request request = buildRequestWithHeaders(httpUrl, headersMap).post(requestBody).build();
+        Request request =
+                buildRequestWithHeaders(httpUrl, headersMap).post(requestBody).build();
         writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
         writeLog("Response : " + response);
@@ -104,8 +107,9 @@ public class HttpHelper {
     }
 
     @Step("Send put request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendPutRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
-            Object requestBody) throws IOException {
+    public Response sendPutRequest(
+            String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap, Object requestBody)
+            throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
         writeLog("Body: " + jsonBody);
@@ -122,14 +126,16 @@ public class HttpHelper {
     }
 
     @Step("Send delete request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendDeleteRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
-            Object requestBody) throws IOException {
+    public Response sendDeleteRequest(
+            String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap, Object requestBody)
+            throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
         writeLog("Body: " + jsonBody);
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
-        Request request = buildRequestWithHeaders(httpUrl, headersMap).delete(body).build();
+        Request request =
+                buildRequestWithHeaders(httpUrl, headersMap).delete(body).build();
 
         writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();

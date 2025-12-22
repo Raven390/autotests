@@ -1,10 +1,9 @@
 package business_objects.api.payment_gate.payments_decisions;
 
-import helpers.data.enums.payment_gate.Decision;
-
-import java.util.ArrayList;
-
 import static utils.Utils.getRandomDateTimeIsoUtc;
+
+import helpers.data.enums.payment_gate.Decision;
+import java.util.ArrayList;
 
 public class PaymentsRequestBodyFactory {
 

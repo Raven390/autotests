@@ -1,25 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.backoffice_db.IllegalTrades;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -35,6 +15,24 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
+import business_objects.db.backoffice_db.IllegalTrades;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.AllureId;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 class IllegalProfitCalculationTest extends TestBaseWeb {
@@ -42,8 +40,10 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
 
-    private static final CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client);;
-    private static final CrmTbAccountObject account2 = generateAdditionalCrmTbAccountDataForUi(client);;
+    private static final CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client);
+    ;
+    private static final CrmTbAccountObject account2 = generateAdditionalCrmTbAccountDataForUi(client);
+    ;
 
     private static MtMt4TradesCoercedObject balance1;
     private static MtMt4TradesCoercedObject balance2;
@@ -71,7 +71,7 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
 
         var now = OffsetDateTime.now();
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        //balance
+        // balance
         balance1 = generateMt4TradesCoerced(client);
         balance1.setTicketType("Balance");
         balance1.setOpenTime(now.minusDays(2).format(formatter));
@@ -95,7 +95,7 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
         balance2.setStorage(0d);
         balance2.setStorageUsd(0d);
 
-        //Buy
+        // Buy
         buy1 = generateMt4TradesCoerced(client);
         buy1.setOpenTime(now.minusDays(1).format(formatter));
         buy1.setOpenTimeUtc(now.minusDays(1).format(formatter));
@@ -119,7 +119,7 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
         buy2.setStorage(20d);
         buy2.setStorageUsd(20d);
 
-        //Sell
+        // Sell
         sell1 = generateMt4TradesCoerced(client);
         sell1.setOpenTime(now.format(formatter));
         sell1.setOpenTimeUtc(now.format(formatter));
@@ -143,22 +143,32 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
         sell2.setStorage(40d);
         sell2.setStorageUsd(40d);
 
-        //Inserts
-        insertObjectsToDb(DbName.CLICKHOUSE, MT4_TRADES_COERCED_TABLE_NAME, List.of(
-                balance1, balance2, buy1, buy2, sell1, sell2
-        ));
+        // Inserts
+        insertObjectsToDb(
+                DbName.CLICKHOUSE,
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(balance1, balance2, buy1, buy2, sell1, sell2));
     }
 
     @AfterAll
     static void teardown() throws SQLException {
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("account = '%s' OR account = '%s'", account1.account, account2.account));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s' OR account = '%s'", account1.account, account2.account));
+        deleteEntryFromDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                String.format("account = '%s' OR account = '%s'", account1.account, account2.account));
+        deleteEntryFromDb(
+                MT_ACCOUNT_TABLE_NAME,
+                String.format("account = '%s' OR account = '%s'", account1.account, account2.account));
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
     }
 
     @AfterEach
     void afterEach() throws Exception {
-        deleteEntryFromDb(DbName.POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("(account = '%s' OR account = '%s') AND server_id = %s", account1.account, account2.account, client.getServerId()));
+        deleteEntryFromDb(
+                DbName.POSTGRES,
+                BO_ILLEGAL_TRADES_TABLE_NAME,
+                String.format(
+                        "(account = '%s' OR account = '%s') AND server_id = %s",
+                        account1.account, account2.account, client.getServerId()));
     }
 
     @Test
@@ -176,29 +186,53 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
         tradingPage.clickSelectAllTradesAsIllegal();
         tradingPage.waitForPageToLoad();
 
-        var acc1IllegalProfit = buy1.getProfitUsd() + buy1.getCommissionUsd() + buy1.getStorageUsd() + sell1.getProfitUsd() + sell1.getCommissionUsd() + sell1.getStorageUsd();
-        var acc2IllegalProfit = buy2.getProfitUsd() + buy2.getCommissionUsd() + buy2.getStorageUsd() + sell2.getProfitUsd() + sell2.getCommissionUsd() + sell2.getStorageUsd();
+        var acc1IllegalProfit = buy1.getProfitUsd()
+                + buy1.getCommissionUsd()
+                + buy1.getStorageUsd()
+                + sell1.getProfitUsd()
+                + sell1.getCommissionUsd()
+                + sell1.getStorageUsd();
+        var acc2IllegalProfit = buy2.getProfitUsd()
+                + buy2.getCommissionUsd()
+                + buy2.getStorageUsd()
+                + sell2.getProfitUsd()
+                + sell2.getCommissionUsd()
+                + sell2.getStorageUsd();
         var expectedIllegalAmount = acc1IllegalProfit + acc2IllegalProfit;
         var selected = tradingPage.getSelectedIllegalTradesCounter();
         var illegalProfit = tradingPage.getSelectedIllegalProfitAmount();
         var accountsQuantityString = tradingPage.getSelectedIllegalProfitAccountsQuantity();
         var bigDecimalIllegalProfit = parseMoney(illegalProfit);
         var bigDecimalExpectedIllegalProfit = BigDecimal.valueOf(expectedIllegalAmount);
-        var diff = bigDecimalIllegalProfit.subtract(bigDecimalExpectedIllegalProfit).abs();
+        var diff = bigDecimalIllegalProfit
+                .subtract(bigDecimalExpectedIllegalProfit)
+                .abs();
         assertThat("4 deals selected check", selected, equalTo("4 selected"));
         assertThat("IllegalProfit amount check", diff, lessThanOrEqualTo(new BigDecimal("0.0000001")));
         assertThat("account count check", accountsQuantityString, equalTo("profit on 2 accounts"));
 
         tradingPage.clickSaveAsIllegalProfit();
         var text = tradingPage.getToastMessageText();
-        assertThat("Toaster text", text, equalTo("Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
+        assertThat(
+                "Toaster text",
+                text,
+                equalTo(
+                        "Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
 
-        var illegalTrades = getObjectsFromDB(DbName.POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("account = '%s' OR account = '%s'", account1.account, account2.account), IllegalTrades.class);
+        var illegalTrades = getObjectsFromDB(
+                DbName.POSTGRES,
+                BO_ILLEGAL_TRADES_TABLE_NAME,
+                String.format("account = '%s' OR account = '%s'", account1.account, account2.account),
+                IllegalTrades.class);
         var illegalTradesMap = illegalTrades.stream().collect(Collectors.toMap(IllegalTrades::getAccount, identity()));
-        var illegalProfit1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
-        var ticketCount1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
-        var illegalProfit2 = illegalTradesMap.get(String.valueOf(account2.getAccount())).getIllegalProfit();
-        var ticketCount2 = illegalTradesMap.get(String.valueOf(account2.getAccount())).getTicketCount();
+        var illegalProfit1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
+        var ticketCount1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
+        var illegalProfit2 =
+                illegalTradesMap.get(String.valueOf(account2.getAccount())).getIllegalProfit();
+        var ticketCount2 =
+                illegalTradesMap.get(String.valueOf(account2.getAccount())).getTicketCount();
 
         var diffWithSaved1 = illegalProfit1 - acc1IllegalProfit;
         assertThat("acc1 saved illegal profit check", diffWithSaved1, lessThanOrEqualTo(0.000_000_1d));
@@ -230,26 +264,43 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
 
         tradingPage.clickSelectAllTradesAsIllegal();
 
-        var acc1IllegalProfit = buy1.getProfitUsd() + buy1.getCommissionUsd() + buy1.getStorageUsd() + sell1.getProfitUsd() + sell1.getCommissionUsd() + sell1.getStorageUsd();
+        var acc1IllegalProfit = buy1.getProfitUsd()
+                + buy1.getCommissionUsd()
+                + buy1.getStorageUsd()
+                + sell1.getProfitUsd()
+                + sell1.getCommissionUsd()
+                + sell1.getStorageUsd();
         var selected = tradingPage.getSelectedIllegalTradesCounter();
         var illegalProfit = tradingPage.getSelectedIllegalProfitAmount();
         var accountsQuantityString = tradingPage.getSelectedIllegalProfitAccountsQuantity();
         var bigDecimalIllegalProfit = parseMoney(illegalProfit);
         var bigDecimalExpectedIllegalProfit = BigDecimal.valueOf(acc1IllegalProfit);
-        var diff = bigDecimalIllegalProfit.subtract(bigDecimalExpectedIllegalProfit).abs();
+        var diff = bigDecimalIllegalProfit
+                .subtract(bigDecimalExpectedIllegalProfit)
+                .abs();
         assertThat("2 deals selected check", selected, equalTo("2 selected"));
         assertThat("IllegalProfit acc1 filter amount check", diff, lessThanOrEqualTo(new BigDecimal("0.0000001")));
         assertThat("account count check", accountsQuantityString, equalTo("profit on 1 account"));
 
         tradingPage.clickSaveAsIllegalProfit();
         var text = tradingPage.getToastMessageText();
-        assertThat("Toaster text", text, equalTo("Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
+        assertThat(
+                "Toaster text",
+                text,
+                equalTo(
+                        "Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
 
-        var illegalTrades = getObjectsFromDB(DbName.POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("account = '%s' OR account = '%s'", account1.account, account2.account), IllegalTrades.class);
+        var illegalTrades = getObjectsFromDB(
+                DbName.POSTGRES,
+                BO_ILLEGAL_TRADES_TABLE_NAME,
+                String.format("account = '%s' OR account = '%s'", account1.account, account2.account),
+                IllegalTrades.class);
         assertThat(illegalTrades.size(), equalTo(1));
         var illegalTradesMap = illegalTrades.stream().collect(Collectors.toMap(IllegalTrades::getAccount, identity()));
-        var illegalProfit1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
-        var ticketCount1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
+        var illegalProfit1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
+        var ticketCount1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
 
         var diffWithSaved1 = illegalProfit1 - acc1IllegalProfit;
         assertThat("acc1 saved illegal profit check", diffWithSaved1, lessThanOrEqualTo(0.000_000_1d));
@@ -274,26 +325,43 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
         tradingPage.selectIllegalTradeByTicket(buy2.getTicket());
         tradingPage.selectIllegalTradeByTicket(sell2.getTicket());
 
-        var acc1IllegalProfit = buy1.getProfitUsd() + buy1.getCommissionUsd() + buy1.getStorageUsd() + sell1.getProfitUsd() + sell1.getCommissionUsd() + sell1.getStorageUsd();
+        var acc1IllegalProfit = buy1.getProfitUsd()
+                + buy1.getCommissionUsd()
+                + buy1.getStorageUsd()
+                + sell1.getProfitUsd()
+                + sell1.getCommissionUsd()
+                + sell1.getStorageUsd();
         var selected = tradingPage.getSelectedIllegalTradesCounter();
         var illegalProfit = tradingPage.getSelectedIllegalProfitAmount();
         var accountsQuantityString = tradingPage.getSelectedIllegalProfitAccountsQuantity();
         var bigDecimalIllegalProfit = parseMoney(illegalProfit);
         var bigDecimalExpectedIllegalProfit = BigDecimal.valueOf(acc1IllegalProfit);
-        var diff = bigDecimalIllegalProfit.subtract(bigDecimalExpectedIllegalProfit).abs();
+        var diff = bigDecimalIllegalProfit
+                .subtract(bigDecimalExpectedIllegalProfit)
+                .abs();
         assertThat("2 deals selected check", selected, equalTo("2 selected"));
         assertThat("IllegalProfit acc1 filter amount check", diff, lessThanOrEqualTo(new BigDecimal("0.0000001")));
         assertThat("account count check", accountsQuantityString, equalTo("profit on 1 account"));
 
         tradingPage.clickSaveAsIllegalProfit();
         var text = tradingPage.getToastMessageText();
-        assertThat("Toaster text", text, equalTo("Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
+        assertThat(
+                "Toaster text",
+                text,
+                equalTo(
+                        "Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
 
-        var illegalTrades = getObjectsFromDB(DbName.POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("account = '%s' OR account = '%s'", account1.account, account2.account), IllegalTrades.class);
+        var illegalTrades = getObjectsFromDB(
+                DbName.POSTGRES,
+                BO_ILLEGAL_TRADES_TABLE_NAME,
+                String.format("account = '%s' OR account = '%s'", account1.account, account2.account),
+                IllegalTrades.class);
         assertThat(illegalTrades.size(), equalTo(1));
         var illegalTradesMap = illegalTrades.stream().collect(Collectors.toMap(IllegalTrades::getAccount, identity()));
-        var illegalProfit1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
-        var ticketCount1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
+        var illegalProfit1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
+        var ticketCount1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
 
         var diffWithSaved1 = illegalProfit1 - acc1IllegalProfit;
         assertThat("acc1 saved illegal profit check", diffWithSaved1, lessThanOrEqualTo(0.000_000_1d));
@@ -327,20 +395,32 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
         var accountsQuantityString = tradingPage.getSelectedIllegalProfitAccountsQuantity();
         var bigDecimalIllegalProfit = parseMoney(illegalProfit);
         var bigDecimalExpectedIllegalProfit = BigDecimal.valueOf(buy1IllegalProfit);
-        var diff = bigDecimalIllegalProfit.subtract(bigDecimalExpectedIllegalProfit).abs();
+        var diff = bigDecimalIllegalProfit
+                .subtract(bigDecimalExpectedIllegalProfit)
+                .abs();
         assertThat("1 deals selected check", selected, equalTo("1 selected"));
         assertThat("IllegalProfit buy1 filter amount check", diff, lessThanOrEqualTo(new BigDecimal("0.0000001")));
         assertThat("account count check", accountsQuantityString, equalTo("profit on 1 account"));
 
         tradingPage.clickSaveAsIllegalProfit();
         var text = tradingPage.getToastMessageText();
-        assertThat("Toaster text", text, equalTo("Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
+        assertThat(
+                "Toaster text",
+                text,
+                equalTo(
+                        "Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
 
-        var illegalTrades = getObjectsFromDB(DbName.POSTGRES, BO_ILLEGAL_TRADES_TABLE_NAME, String.format("account = '%s' OR account = '%s'", account1.account, account2.account), IllegalTrades.class);
+        var illegalTrades = getObjectsFromDB(
+                DbName.POSTGRES,
+                BO_ILLEGAL_TRADES_TABLE_NAME,
+                String.format("account = '%s' OR account = '%s'", account1.account, account2.account),
+                IllegalTrades.class);
         assertThat(illegalTrades.size(), equalTo(1));
         var illegalTradesMap = illegalTrades.stream().collect(Collectors.toMap(IllegalTrades::getAccount, identity()));
-        var illegalProfit1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
-        var ticketCount1 = illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
+        var illegalProfit1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getIllegalProfit();
+        var ticketCount1 =
+                illegalTradesMap.get(String.valueOf(account1.getAccount())).getTicketCount();
 
         var diffWithSaved1 = illegalProfit1 - buy1IllegalProfit;
         assertThat("acc1 saved illegal profit check", diffWithSaved1, lessThanOrEqualTo(0.000_000_1d));

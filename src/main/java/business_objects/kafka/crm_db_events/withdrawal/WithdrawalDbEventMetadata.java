@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_db_events.withdrawal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class WithdrawalDbEventMetadata {
@@ -41,12 +40,21 @@ public class WithdrawalDbEventMetadata {
     @JsonProperty("stream-position")
     public String streamPosition;
 
-    public WithdrawalDbEventMetadata() {
-    }
+    public WithdrawalDbEventMetadata() {}
 
-    public WithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType,
-            String schemaName, String tableName, String transactionId, String transactionRecordId,
-            String prevTransactionId, String prevTransactionRecordId, String commitTimestamp, String streamPosition) {
+    public WithdrawalDbEventMetadata(
+            String timestamp,
+            String recordType,
+            String operation,
+            String partitionKeyType,
+            String schemaName,
+            String tableName,
+            String transactionId,
+            String transactionRecordId,
+            String prevTransactionId,
+            String prevTransactionRecordId,
+            String commitTimestamp,
+            String streamPosition) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -61,9 +69,18 @@ public class WithdrawalDbEventMetadata {
         this.streamPosition = streamPosition;
     }
 
-    public WithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType,
-            String schemaName, String transactionId, String transactionRecordId, String prevTransactionId,
-            String commitTimestamp, String streamPosition, String prevTransactionRecordId) {
+    public WithdrawalDbEventMetadata(
+            String timestamp,
+            String recordType,
+            String operation,
+            String partitionKeyType,
+            String schemaName,
+            String transactionId,
+            String transactionRecordId,
+            String prevTransactionId,
+            String commitTimestamp,
+            String streamPosition,
+            String prevTransactionRecordId) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -82,16 +99,45 @@ public class WithdrawalDbEventMetadata {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WithdrawalDbEventMetadata that = (WithdrawalDbEventMetadata) o;
-        return Objects.equals(timestamp, that.timestamp) && Objects.equals(recordType, that.recordType) && Objects.equals(operation, that.operation) && Objects.equals(partitionKeyType, that.partitionKeyType) && Objects.equals(schemaName, that.schemaName) && Objects.equals(tableName, that.tableName) && Objects.equals(transactionId, that.transactionId) && Objects.equals(transactionRecordId, that.transactionRecordId) && Objects.equals(prevTransactionId, that.prevTransactionId) && Objects.equals(prevTransactionRecordId, that.prevTransactionRecordId) && Objects.equals(commitTimestamp, that.commitTimestamp) && Objects.equals(streamPosition, that.streamPosition);
+        return Objects.equals(timestamp, that.timestamp)
+                && Objects.equals(recordType, that.recordType)
+                && Objects.equals(operation, that.operation)
+                && Objects.equals(partitionKeyType, that.partitionKeyType)
+                && Objects.equals(schemaName, that.schemaName)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(transactionId, that.transactionId)
+                && Objects.equals(transactionRecordId, that.transactionRecordId)
+                && Objects.equals(prevTransactionId, that.prevTransactionId)
+                && Objects.equals(prevTransactionRecordId, that.prevTransactionRecordId)
+                && Objects.equals(commitTimestamp, that.commitTimestamp)
+                && Objects.equals(streamPosition, that.streamPosition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
+        return Objects.hash(
+                timestamp,
+                recordType,
+                operation,
+                partitionKeyType,
+                schemaName,
+                tableName,
+                transactionId,
+                transactionRecordId,
+                prevTransactionId,
+                prevTransactionRecordId,
+                commitTimestamp,
+                streamPosition);
     }
 
     @Override
     public String toString() {
-        return "WithdrawalDbEventMetadata{" + "timestamp='" + timestamp + '\'' + ", recordType='" + recordType + '\'' + ", operation='" + operation + '\'' + ", partitionKeyType='" + partitionKeyType + '\'' + ", schemaName='" + schemaName + '\'' + ", tableName='" + tableName + '\'' + ", transactionId='" + transactionId + '\'' + ", transactionRecordId='" + transactionRecordId + '\'' + ", prevTransactionId='" + prevTransactionId + '\'' + ", prevTransactionRecordId='" + prevTransactionRecordId + '\'' + ", commitTimestamp='" + commitTimestamp + '\'' + ", streamPosition='" + streamPosition + '\'' + '}';
+        return "WithdrawalDbEventMetadata{" + "timestamp='" + timestamp + '\'' + ", recordType='" + recordType + '\''
+                + ", operation='" + operation + '\'' + ", partitionKeyType='" + partitionKeyType + '\''
+                + ", schemaName='" + schemaName + '\'' + ", tableName='" + tableName + '\'' + ", transactionId='"
+                + transactionId + '\'' + ", transactionRecordId='" + transactionRecordId + '\''
+                + ", prevTransactionId='" + prevTransactionId + '\'' + ", prevTransactionRecordId='"
+                + prevTransactionRecordId + '\'' + ", commitTimestamp='" + commitTimestamp + '\'' + ", streamPosition='"
+                + streamPosition + '\'' + '}';
     }
 }

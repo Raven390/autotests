@@ -1,7 +1,6 @@
 package business_objects.api.abuse_registry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -19,11 +18,10 @@ public class PostFraudTypesRequestBody {
     @JsonProperty("fraudTypes")
     private List<FraudTypeWithStatus> fraudTypes;
 
-    public PostFraudTypesRequestBody() {
-    }
+    public PostFraudTypesRequestBody() {}
 
-    public PostFraudTypesRequestBody(String actor, String system, String comment,
-            List<FraudTypeWithStatus> fraudTypes) {
+    public PostFraudTypesRequestBody(
+            String actor, String system, String comment, List<FraudTypeWithStatus> fraudTypes) {
         this.actor = actor;
         this.system = system;
         this.comment = comment;
@@ -64,7 +62,8 @@ public class PostFraudTypesRequestBody {
 
     @Override
     public String toString() {
-        return "PostFraudTypesRequestBody{" + "actor='" + actor + '\'' + ", system='" + system + '\'' + ", comment='" + comment + '\'' + ", fraudTypes=" + fraudTypes + '}';
+        return "PostFraudTypesRequestBody{" + "actor='" + actor + '\'' + ", system='" + system + '\'' + ", comment='"
+                + comment + '\'' + ", fraudTypes=" + fraudTypes + '}';
     }
 
     public static class FraudTypeWithStatus {

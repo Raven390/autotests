@@ -1,15 +1,13 @@
 package page_objects.backoffice_pages.search;
 
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static utils.ConfigFactory.BASE_URL_E2E;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class SearchPage extends AbstractPage {
 
@@ -167,7 +165,6 @@ public class SearchPage extends AbstractPage {
         Locator tooltip = page.locator("div.g-tooltip__content, div.v-tooltip__content");
         tooltip.waitFor();
 
-
         // Get all restriction items from tooltip
         List<String> restrictions = new ArrayList<>();
         List<Locator> restrictionItems = tooltip.locator("span").all();
@@ -207,7 +204,10 @@ public class SearchPage extends AbstractPage {
 
         @Override
         public String toString() {
-            return "SearchResultRow{" + "rowDataQa='" + rowDataQa + '\'' + ", serverName='" + serverName + '\'' + ", account='" + account + '\'' + ", client='" + client + '\'' + ", accountInfo='" + accountInfo + '\'' + ", behavior='" + behavior + '\'' + ", country='" + country + '\'' + ", salesGroup='" + salesGroup + '\'' + ", balance='" + balance + '\'' + ", equity='" + equity + '\'' + '}';
+            return "SearchResultRow{" + "rowDataQa='" + rowDataQa + '\'' + ", serverName='" + serverName + '\''
+                    + ", account='" + account + '\'' + ", client='" + client + '\'' + ", accountInfo='" + accountInfo
+                    + '\'' + ", behavior='" + behavior + '\'' + ", country='" + country + '\'' + ", salesGroup='"
+                    + salesGroup + '\'' + ", balance='" + balance + '\'' + ", equity='" + equity + '\'' + '}';
         }
     }
 }

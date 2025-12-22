@@ -30,5 +30,4 @@ public class ClientRestrictionCancel {
         @JsonProperty("internalReason")
         public String internalReason;
     }
-
 }

@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.account_ib_relation;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
-
-import static utils.Utils.*;
 
 public class AccountIbRelationFactory {
     public static AccountIbRelationObject generateAccountIbRelationObjectByClient(ClientHelper client) {
@@ -15,8 +15,10 @@ public class AccountIbRelationFactory {
         relation.setUcid(client.getUcid());
         relation.setAccount(client.getTradingAccount().longValue());
         relation.setServerId(client.getServerId());
-        relation.setRecordEffectiveStartDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 1, 0, 0, 0, 0));
-        relation.setRecordEffectiveEndDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, -1, 0, 0, 0, 0));
+        relation.setRecordEffectiveStartDate(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 1, 0, 0, 0, 0));
+        relation.setRecordEffectiveEndDate(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, -1, 0, 0, 0, 0));
         relation.setRecordActiveFlag(true);
         relation.setCreateTime(getCurrentTimestampDbFormat());
         relation.setCreateTimeUtc(getCurrentTimestampDbFormat());
@@ -34,8 +36,10 @@ public class AccountIbRelationFactory {
         relation.setUcid(client.getUcid());
         relation.setAccount(client.getTradingAccount2().longValue());
         relation.setServerId(client.getServerId());
-        relation.setRecordEffectiveStartDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 1, 0, 0, 0, 0));
-        relation.setRecordEffectiveEndDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, -1, 0, 0, 0, 0));
+        relation.setRecordEffectiveStartDate(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 1, 0, 0, 0, 0));
+        relation.setRecordEffectiveEndDate(
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, -1, 0, 0, 0, 0));
         relation.setRecordActiveFlag(true);
         relation.setCreateTime(getCurrentTimestampDbFormat());
         relation.setCreateTimeUtc(getCurrentTimestampDbFormat());

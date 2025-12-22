@@ -1,9 +1,7 @@
 package business_objects.api.clickhouse_api_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
-
 
 public class ClickhouseApiErrorResponse {
 
@@ -25,8 +23,7 @@ public class ClickhouseApiErrorResponse {
     @JsonProperty("instance")
     String instance;
 
-    public ClickhouseApiErrorResponse() {
-    }
+    public ClickhouseApiErrorResponse() {}
 
     public ClickhouseApiErrorResponse(
             String error, Integer status, String type, String title, String detail, String instance) {
@@ -42,9 +39,12 @@ public class ClickhouseApiErrorResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ClickhouseApiErrorResponse that = (ClickhouseApiErrorResponse) o;
-        return Objects.equals(error, that.error) && Objects.equals(status, that.status) && Objects.equals(
-                type, that.type) && Objects.equals(title, that.title) && Objects.equals(detail, that.detail) && Objects.equals(
-                        instance, that.instance);
+        return Objects.equals(error, that.error)
+                && Objects.equals(status, that.status)
+                && Objects.equals(type, that.type)
+                && Objects.equals(title, that.title)
+                && Objects.equals(detail, that.detail)
+                && Objects.equals(instance, that.instance);
     }
 
     @Override
@@ -54,7 +54,8 @@ public class ClickhouseApiErrorResponse {
 
     @Override
     public String toString() {
-        return "GetBonusesResponseError{" + "error='" + error + '\'' + ", status=" + status + ", type='" + type + '\'' + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
+        return "GetBonusesResponseError{" + "error='" + error + '\'' + ", status=" + status + ", type='" + type + '\''
+                + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
     }
 
     public String getError() {

@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_symbol_groups;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetSymbolGroupsResponse {
@@ -33,4 +32,3 @@ public class GetSymbolGroupsResponse {
         return "GetSymbolGroupsResponse{" + "group=" + group + '}';
     }
 }
-

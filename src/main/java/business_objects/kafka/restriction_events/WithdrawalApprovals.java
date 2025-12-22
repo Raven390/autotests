@@ -1,7 +1,6 @@
 package business_objects.kafka.restriction_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class WithdrawalApprovals {
@@ -33,11 +32,18 @@ public class WithdrawalApprovals {
     @JsonProperty("checkName")
     private String checkName;
 
-    public WithdrawalApprovals() {
-    }
+    public WithdrawalApprovals() {}
 
-    public WithdrawalApprovals(String timestamp, String messageId, Long transferId, String brand, String regulator,
-            String internalReason, String status, String orderNumber, String checkName) {
+    public WithdrawalApprovals(
+            String timestamp,
+            String messageId,
+            Long transferId,
+            String brand,
+            String regulator,
+            String internalReason,
+            String status,
+            String orderNumber,
+            String checkName) {
         this.setTimestamp(timestamp);
         this.setMessageId(messageId);
         this.setTransferId(transferId);
@@ -125,7 +131,13 @@ public class WithdrawalApprovals {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         WithdrawalApprovals that = (WithdrawalApprovals) o;
-        return Objects.equals(transferId, that.transferId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(internalReason, that.internalReason) && Objects.equals(status, that.status) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(checkName, that.checkName);
+        return Objects.equals(transferId, that.transferId)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(internalReason, that.internalReason)
+                && Objects.equals(status, that.status)
+                && Objects.equals(orderNumber, that.orderNumber)
+                && Objects.equals(checkName, that.checkName);
     }
 
     @Override
@@ -135,6 +147,9 @@ public class WithdrawalApprovals {
 
     @Override
     public String toString() {
-        return "WithdrawalApprovals{" + "timestamp='" + timestamp + '\'' + ", messageId='" + messageId + '\'' + ", transferId=" + transferId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", internalReason='" + internalReason + '\'' + ", status='" + status + '\'' + ", orderNumber='" + orderNumber + '\'' + ", checkName='" + checkName + '\'' + '}';
+        return "WithdrawalApprovals{" + "timestamp='" + timestamp + '\'' + ", messageId='" + messageId + '\''
+                + ", transferId=" + transferId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\''
+                + ", internalReason='" + internalReason + '\'' + ", status='" + status + '\'' + ", orderNumber='"
+                + orderNumber + '\'' + ", checkName='" + checkName + '\'' + '}';
     }
 }

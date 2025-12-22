@@ -42,5 +42,4 @@ public class AccountRestrictionApply {
         @JsonProperty("sites")
         public String[] sites;
     }
-
 }

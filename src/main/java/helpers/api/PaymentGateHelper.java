@@ -1,15 +1,14 @@
 package helpers.api;
 
+import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
+import static utils.Utils.getRandomDateTimeIsoUtc;
+
 import business_objects.api.payment_gate.payments_decisions.PutDecisionsRequestBody;
 import helpers.data.enums.payment_gate.Decision;
 import io.qameta.allure.Step;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-
-import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
-import static utils.Utils.getRandomDateTimeIsoUtc;
 
 public class PaymentGateHelper {
 

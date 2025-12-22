@@ -1,47 +1,101 @@
 package helpers.asserts;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
-import helpers.data.ClientHelper;
-
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 
+import business_objects.kafka.alerts.RuleAlertV2;
+import helpers.data.DataHelper;
+import io.qameta.allure.Step;
+import java.util.List;
+
 public class AlertsAssertsHelper {
 
-    public static boolean assertAlertsWithdrawalNotificationRule(PaymentEventsObject paymentEventsObject,
-            List<RuleAlert> alerts, List<Alert> dbAlerts,
-            CrmWithdrawalEvent withdrawalEvent, ClientHelper client) {
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().alertId, is(withdrawalEvent.getId()));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
-        assertThat("Verify alert", alerts.getFirst().ucid, is(client.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(withdrawalEvent.getEventDate()));
+    @Step("Assert risk withdrawal alert")
+    public static void assertRiskWithdrawalAlert(DataHelper data, List<RuleAlertV2> alerts) {
+        assertThat("Alerts list should contain exactly 1 item", alerts.size(), is(1));
+        assertThat(
+                "Rule version should not be null", alerts.getFirst().getRule().getVer(), is(notNullValue()));
+        assertThat(
+                "Rule name should be 'Withdrawal Review'",
+                alerts.getFirst().getRule().getName(),
+                is("Withdrawal Review"));
+        assertThat(
+                "Attributes.withdrawalId should match crmWithdrawalEventV2.withdrawalId",
+                alerts.getFirst().getAttributes().getWithdrawalId(),
+                is(data.crmWithdrawalEventV2.getWithdrawalId()));
+        assertThat(
+                "Attributes.paymentChannel should match crmWithdrawalEventV2.paymentChannelName",
+                alerts.getFirst().getAttributes().getPaymentChannel(),
+                is(data.crmWithdrawalEventV2.getPaymentChannelName()));
+        assertThat(
+                "Attributes.platform should match crmWithdrawalEventV2.accountType",
+                alerts.getFirst().getAttributes().getPlatform(),
+                is(data.crmWithdrawalEventV2.getAccountType()));
+        assertThat("AmountUsd should be a Double", alerts.getFirst().getAmountUsd(), is(instanceOf(Double.class)));
+        assertThat("Amount should be a Double", alerts.getFirst().getAmount(), is(instanceOf(Double.class)));
+        assertThat("PaymentMethod should be 'CRYPTO'", alerts.getFirst().getPaymentMethod(), is("CRYPTO"));
+        assertThat(
+                "AlertId should match crmWithdrawalEventV2.id",
+                alerts.getFirst().getAlertId(),
+                is(data.crmWithdrawalEventV2.getId()));
+        assertThat("MerchantOrderId should not be null", alerts.getFirst().getMerchantOrderId(), is(notNullValue()));
+        assertThat(
+                "Reason should be 'Potential fraud detected'",
+                alerts.getFirst().getReason(),
+                is("Potential fraud detected"));
+        assertThat(
+                "TriggerCreatedTime should not be null", alerts.getFirst().getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("FraudType should be 'POTENTIAL_ABUSE'", alerts.getFirst().getFraudType(), is("POTENTIAL_ABUSE"));
+        assertThat("Currency should not be null", alerts.getFirst().getCurrency(), is(notNullValue()));
+        assertThat("Account should not be null", alerts.getFirst().getAccount(), is(notNullValue()));
+        assertThat("Trigger should be 'Withdrawal'", alerts.getFirst().getTrigger(), is("Withdrawal"));
+        assertThat("Timestamp should not be null", alerts.getFirst().getTimestamp(), is(notNullValue()));
+        assertThat("Ucid should match client's ucid", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is("TRADING"));
+    }
 
-        assertThat("Verify alert", alerts.getFirst().rule.name, is("Withdrawal Review"));
-        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("POTENTIAL_ABUSE"));
-        assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Withdrawal"));
-        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
-
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.platform, is(withdrawalEvent.getAccountType()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.currency, is(withdrawalEvent.getWithdrawalCurrency()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.createTime, is(withdrawalEvent.getWithdrawalApplicationTime()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.paymentType, is(withdrawalEvent.getPaymentMethodCode()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.check, is(withdrawalEvent.getCheckName()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(withdrawalEvent.getMt4Account())));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.paymentChannel, is(withdrawalEvent.getPaymentChannelName()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.amount, is("1"));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.date, is(withdrawalEvent.getEventDate()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.withdrawalId, is(String.valueOf(withdrawalEvent.getWithdrawalId())));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.orderId, is(withdrawalEvent.getMerchantOrderId()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.regulator, is(withdrawalEvent.getRegulator()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.brand, is(withdrawalEvent.getBrand()));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.paymentId, is(paymentEventsObject.getPaymentId().toString()));
-        return true;
+    @Step("Assert risk transfer alert")
+    public static void assertRiskTransferToWaAlert(DataHelper data, List<RuleAlertV2> alerts) {
+        assertThat("Alerts list should contain exactly 1 item", alerts.size(), is(1));
+        assertThat(
+                "Rule version should not be null", alerts.getFirst().getRule().getVer(), is(notNullValue()));
+        assertThat(
+                "Rule name should be 'Withdrawal Review'",
+                alerts.getFirst().getRule().getName(),
+                is("Withdrawal Review"));
+        assertThat(
+                "Attributes.withdrawalId should match transferToWaEvent.transferId",
+                alerts.getFirst().getAttributes().getWithdrawalId(),
+                is(data.transferToWaEvent.getTransferId()));
+        assertThat(
+                "Attributes.paymentChannel should be 'Wallet-Transfer'",
+                alerts.getFirst().getAttributes().getPaymentChannel(),
+                is("Wallet-Transfer"));
+        assertThat(
+                "Attributes.platform should match transferToWaEvent.accountType",
+                alerts.getFirst().getAttributes().getPlatform(),
+                is(data.transferToWaEvent.getAccountType()));
+        assertThat("AmountUsd should be a Double", alerts.getFirst().getAmountUsd(), is(instanceOf(Double.class)));
+        assertThat("Amount should be a Double", alerts.getFirst().getAmount(), is(instanceOf(Double.class)));
+        assertThat("PaymentMethod should be 'CRYPTO'", alerts.getFirst().getPaymentMethod(), is("CRYPTO"));
+        assertThat(
+                "AlertId should match transferToWaEvent.id",
+                alerts.getFirst().getAlertId(),
+                is(data.transferToWaEvent.getId().toString()));
+        assertThat("MerchantOrderId should not be null", alerts.getFirst().getMerchantOrderId(), is(notNullValue()));
+        assertThat(
+                "Reason should be 'Potential fraud detected'",
+                alerts.getFirst().getReason(),
+                is("Potential fraud detected"));
+        assertThat(
+                "TriggerCreatedTime should not be null", alerts.getFirst().getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("FraudType should be 'POTENTIAL_ABUSE'", alerts.getFirst().getFraudType(), is("POTENTIAL_ABUSE"));
+        assertThat("Currency should not be null", alerts.getFirst().getCurrency(), is(notNullValue()));
+        assertThat("Account should not be null", alerts.getFirst().getAccount(), is(notNullValue()));
+        assertThat("Trigger should be 'transferToWA'", alerts.getFirst().getTrigger(), is("transferToWA"));
+        assertThat("Timestamp should not be null", alerts.getFirst().getTimestamp(), is(notNullValue()));
+        assertThat("Ucid should match client's ucid", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is("TRADING"));
     }
 }
