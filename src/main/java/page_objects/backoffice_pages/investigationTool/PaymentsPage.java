@@ -1,5 +1,9 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Utils.writeLog;
+
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -7,16 +11,10 @@ import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.VerificationStatus;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.Utils.writeLog;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class PaymentsPage extends AbstractPage {
 
@@ -107,33 +105,44 @@ public class PaymentsPage extends AbstractPage {
     private final Locator connectedClientsTableRows;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
-    private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
-    private static final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR = "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
-    private static final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
-    private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class,'v-cash-flow-chart-line_type_deposit')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
-    private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class,'v-cash-flow-chart-line_type_withdrawal')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
+    private static final String FINANCIAL_TRANSACTIONS_SELECTOR =
+            "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
+    private static final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR =
+            "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
+    private static final String CASHFLOW_EMPTY_STATE_SELECTOR =
+            "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
+    private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR =
+            "//*[contains(@class,'v-cash-flow-chart-line_type_deposit')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
+    private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR =
+            "//*[contains(@class,'v-cash-flow-chart-line_type_withdrawal')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
     private static final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
-    private static final String TIMELINE_SECTION = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
+    private static final String TIMELINE_SECTION =
+            TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
     private static final String TIMELINE_BAR = TIMELINE_SECTION + "//*[@class = 'v-range-timeline-section__bar']";
     private static final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
     private static final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
-    private static final String PAYMENT_PROFILE_ITEM = "//*[contains(@class,'v-payment-profiles-list__profile-name') and text()='%s']";
-    private static final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
+    private static final String PAYMENT_PROFILE_ITEM =
+            "//*[contains(@class,'v-payment-profiles-list__profile-name') and text()='%s']";
+    private static final String ACTIVE_TIMELINE_SECTION_SELECTOR =
+            "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
     private static final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
     private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]//button";
     private static final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
-    private static final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
+    private static final String CASHFLOW_SECTION_SELECTOR =
+            "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
     private static final String CASHFLOW_HEADER_SELECTOR = "//*[@data-qa='payments__cashflow_chart__features']";
     private static final String FILTER_BY_PLACEHOLDER_PATTERN = "//span[text()='%s']/..";
-    private static final String WIDGET_BY_TITLE_PATTERN = "//div[contains(@class,'v-payments-summary-card__title') and text()='%s']/ancestor::div[@class='v-payments-summary-card']";
+    private static final String WIDGET_BY_TITLE_PATTERN =
+            "//div[contains(@class,'v-payments-summary-card__title') and text()='%s']/ancestor::div[@class='v-payments-summary-card']";
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
-    public static final String PAYMENT_SUMMARY_PANEL_TEMPLATE = "//div[@data-qa='payments_summary']//*[contains(@class, 'v-summary-metrics')]//*[text()='%s']/../..";
+    public static final String PAYMENT_SUMMARY_PANEL_TEMPLATE =
+            "//div[@data-qa='payments_summary']//*[contains(@class, 'v-summary-metrics')]//*[text()='%s']/../..";
     public static final String PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE = "//span[text()='%s']/../span[2]";
     public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected clients')]";
-    public static final String OPEN_VERIFICATION_DRAWER_BUTTON = "//*[@data-qa='payment_profile__view_drawer__change_status']";
-
+    public static final String OPEN_VERIFICATION_DRAWER_BUTTON =
+            "//*[@data-qa='payment_profile__view_drawer__change_status']";
 
     public PaymentsPage(Page page) {
         super(page);
@@ -142,15 +151,20 @@ public class PaymentsPage extends AbstractPage {
         this.financialTransactionsChart = page.locator(FINANCIAL_TRANSACTIONS_SELECTOR);
         this.cashflowDepositEmptyState = page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR);
         this.transactionTooltipTitleDate = page.locator(".v-payments-summary-transcations-tooltip__title");
-        this.financialDateGraphContainer = page.locator("//div[text()='Financial transactions']/ancestor::div//div/div[@class='v-bar-chart__section']");
+        this.financialDateGraphContainer = page.locator(
+                "//div[text()='Financial transactions']/ancestor::div//div/div[@class='v-bar-chart__section']");
         this.financialTransactionGraphSection = page.locator(".v-bar-chart__section-container");
-        this.financialDateGraphContainerTooltipTitle = page.locator("//div[contains(@class,'v-payments-summary-transcations-tooltip__title')]");
-        this.financialDateGraphContainerTooltip = page.locator("//div[@class='v-payments-summary-transcations-tooltip']");
+        this.financialDateGraphContainerTooltipTitle =
+                page.locator("//div[contains(@class,'v-payments-summary-transcations-tooltip__title')]");
+        this.financialDateGraphContainerTooltip =
+                page.locator("//div[@class='v-payments-summary-transcations-tooltip']");
         this.clearSelectedAccountsButton = page.locator(".g-select-clear");
-        this.accountSelectionWindow = page.locator(".v-payments-summary-filters__accounts button.g-select-control__button");
+        this.accountSelectionWindow =
+                page.locator(".v-payments-summary-filters__accounts button.g-select-control__button");
         this.timelineSection = page.locator(TIMELINE_SECTION);
         this.dateFilterSelectionButton = page.locator(".v-date-picker__select  button");
-        this.calendarSelectionButton = page.locator("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='Custom dates']");
+        this.calendarSelectionButton = page.locator(
+                "//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='Custom dates']");
         this.timelineThumb = page.locator(".v-range-timeline-thumb");
         this.inactiveTimelineSection = page.locator(".v-range-timeline-section_isTransparent");
         this.activeTimelineSection = page.locator(ACTIVE_TIMELINE_SECTION_SELECTOR);
@@ -189,37 +203,61 @@ public class PaymentsPage extends AbstractPage {
         this.updateVerificationStatusButton = page.locator("//button[@data-qa='payment_profile__edit_drawer__submit']");
         this.commentInput = page.locator("//*[@data-qa='payment_profile__edit_drawer__comment_input']//textarea");
         this.successToast = page.locator(".g-toast__container").first();
-        this.paymentProfileDrawerSubheader = page.locator("//div[@class='v-payment-profile-drawer-view-header__subheader']");
+        this.paymentProfileDrawerSubheader =
+                page.locator("//div[@class='v-payment-profile-drawer-view-header__subheader']");
 
         this.transactionsButton = page.locator("input[type='radio'][value='TRANSACTIONS']");
-        this.transactionsFilterButton = page.locator("button[data-qa='trading_open_positions__controls__filter_button']");
+        this.transactionsFilterButton =
+                page.locator("button[data-qa='trading_open_positions__controls__filter_button']");
         this.transactionHistoryRows = page.locator("div.v-body-row[data-qa^='transaction_history__table__rows__']");
         this.transactionFilterDrawer = page.locator("div.v-drawer__drawer-content[data-qa='drawer_body']");
-        this.transactionFilterOrderInput = page.locator("div.v-transaction-history-filter__filter-container:has-text('Order') input[placeholder='Enter order number']");
-        this.transactionFilterApplyButton = page.locator("button[data-qa='transaction_history__filters__apply_button']");
-        this.transactionFilterTypeDeposit = page.locator("button[data-qa='transaction_history__filters__types__item__deposit']");
-        this.transactionFilterTypeWithdrawal = page.locator("button[data-qa='transaction_history__filters__types__item__withdrawal']");
-        this.transactionFilterDateToday = page.locator("button[data-qa='transaction_history__filter__date_range_preset_today__preset__0']");
-        this.transactionFilterMethodInput = page.locator("div[data-qa='transaction_history__filters__attributes'] input[placeholder='Payment family or profile name']");
+        this.transactionFilterOrderInput = page.locator(
+                "div.v-transaction-history-filter__filter-container:has-text('Order') input[placeholder='Enter order number']");
+        this.transactionFilterApplyButton =
+                page.locator("button[data-qa='transaction_history__filters__apply_button']");
+        this.transactionFilterTypeDeposit =
+                page.locator("button[data-qa='transaction_history__filters__types__item__deposit']");
+        this.transactionFilterTypeWithdrawal =
+                page.locator("button[data-qa='transaction_history__filters__types__item__withdrawal']");
+        this.transactionFilterDateToday =
+                page.locator("button[data-qa='transaction_history__filter__date_range_preset_today__preset__0']");
+        this.transactionFilterMethodInput = page.locator(
+                "div[data-qa='transaction_history__filters__attributes'] input[placeholder='Payment family or profile name']");
         this.transactionFilterMethodSection = page.locator("div[data-qa='transaction_history__filters__attributes']");
-        this.transactionFilterStatusSection = page.locator("div.v-checkbox-list[data-qa='transaction_history__filters__status']");
+        this.transactionFilterStatusSection =
+                page.locator("div.v-checkbox-list[data-qa='transaction_history__filters__status']");
 
         this.transactionDetailsDrawer = page.locator("div.v-drawer__drawer-content[data-qa='drawer_body']");
         this.transactionDetailsDrawerHeader = page.locator("div[data-qa='drawer_header']");
-        this.transactionDetailsTransactionSection = page.locator("//div[@class='v-transaction-history-details__attributes'][1]");
-        this.transactionDetailsPaymentProfileSection = page.locator("//div[@class='v-transaction-history-details__attributes'][2]");
-        this.transactionDetailsRiskAuditSection = page.locator("//div[@class='v-transaction-history-details__attributes'][3]");
-        this.transactionsShowProfilesButton = page.locator("//*[@data-qa='trading_open_positions__controls__profiles_button']");
-        this.transactionsProfilesPanelToggleButton = page.locator("//*[@data-qa='transaction_history__profiles_panel_toggle']");
-        this.paymentProfileDrawerName = page.locator(".v-payment-profile-drawer-view-header__subheader .g-text_variant_body-2").first();
+        this.transactionDetailsTransactionSection =
+                page.locator("//div[@class='v-transaction-history-details__attributes'][1]");
+        this.transactionDetailsPaymentProfileSection =
+                page.locator("//div[@class='v-transaction-history-details__attributes'][2]");
+        this.transactionDetailsRiskAuditSection =
+                page.locator("//div[@class='v-transaction-history-details__attributes'][3]");
+        this.transactionsShowProfilesButton =
+                page.locator("//*[@data-qa='trading_open_positions__controls__profiles_button']");
+        this.transactionsProfilesPanelToggleButton =
+                page.locator("//*[@data-qa='transaction_history__profiles_panel_toggle']");
+        this.paymentProfileDrawerName = page.locator(
+                        ".v-payment-profile-drawer-view-header__subheader .g-text_variant_body-2")
+                .first();
         this.paymentProfileDrawerOverviewTab = page.locator("//div[@role='tab' and @title='Overview']");
-        this.paymentProfileDrawerConnectedClientsTab = page.locator("//div[@role='tab' and @title='Connected clients']");
+        this.paymentProfileDrawerConnectedClientsTab =
+                page.locator("//div[@role='tab' and @title='Connected clients']");
         this.paymentProfileDrawerCloseButton = page.locator("//*[@data-qa='drawer_header__close_button']");
-        this.paymentProfileDrawerDetailsRows = page.locator(".v-payment-profile-overview__details").first().locator(".v-payment-profile-overview__detail-row");
-        this.paymentProfileDrawerVerificationRows = page.locator(".v-payment-profile-overview__details").last().locator(".v-payment-profile-overview__detail-row");
-        this.paymentProfileDrawerProfileTotalsDeposits = page.locator("[data-qa='drawer_payment_profile_details_total_deposit']");
-        this.paymentProfileDrawerProfileTotalsWithdrawals = page.locator("[data-qa='drawer_payment_profile_details_total_withdrawals']");
-        this.paymentProfileDrawerProfileTotalsNetDeposits = page.locator("[data-qa='drawer_payment_profile_details_total_net_deposit']");
+        this.paymentProfileDrawerDetailsRows = page.locator(".v-payment-profile-overview__details")
+                .first()
+                .locator(".v-payment-profile-overview__detail-row");
+        this.paymentProfileDrawerVerificationRows = page.locator(".v-payment-profile-overview__details")
+                .last()
+                .locator(".v-payment-profile-overview__detail-row");
+        this.paymentProfileDrawerProfileTotalsDeposits =
+                page.locator("[data-qa='drawer_payment_profile_details_total_deposit']");
+        this.paymentProfileDrawerProfileTotalsWithdrawals =
+                page.locator("[data-qa='drawer_payment_profile_details_total_withdrawals']");
+        this.paymentProfileDrawerProfileTotalsNetDeposits =
+                page.locator("[data-qa='drawer_payment_profile_details_total_net_deposit']");
         this.connectedClientsTableRows = page.locator(".v-body-row[data-qa*='virtualized_table__rows__']");
     }
 
@@ -269,7 +307,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Click transaction payment family: {familyName}")
     public void clickTransactionPaymentFamily(String familyName) {
-        Locator familyLocator = page.locator(String.format("//*[@data-qa='transaction_history__payment_family__%s']", familyName));
+        Locator familyLocator =
+                page.locator(String.format("//*[@data-qa='transaction_history__payment_family__%s']", familyName));
         familyLocator.scrollIntoViewIfNeeded();
         familyLocator.click();
         waitForPageToLoad();
@@ -277,7 +316,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Click transaction payment profile: {profileName}")
     public void clickTransactionPaymentProfile(String profileName) {
-        Locator profileLocator = page.locator(String.format("//*[@data-qa='transaction_history__payment_profile__%s']", profileName));
+        Locator profileLocator =
+                page.locator(String.format("//*[@data-qa='transaction_history__payment_profile__%s']", profileName));
         profileLocator.scrollIntoViewIfNeeded();
         profileLocator.click();
         waitForPageToLoad();
@@ -285,7 +325,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Remove transaction filter by payment family: {familyName}")
     public void removeTransactionFilterByPaymentFamily(String familyName) {
-        String dataQa = String.format("transaction_history__filters__attributes__checked_item__%s:%s", familyName, familyName);
+        String dataQa =
+                String.format("transaction_history__filters__attributes__checked_item__%s:%s", familyName, familyName);
         Locator filterLabel = page.locator(String.format("//*[@data-qa='%s']", dataQa));
         Locator removeButton = filterLabel.locator("button.g-label__addon");
         removeButton.click();
@@ -295,7 +336,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Remove transaction filter by payment profile: {profileName}")
     public void removeTransactionFilterByPaymentProfile(String familyName, String profileName) {
-        String dataQa = String.format("transaction_history__filters__attributes__checked_item__%s:%s", familyName, profileName);
+        String dataQa =
+                String.format("transaction_history__filters__attributes__checked_item__%s:%s", familyName, profileName);
         Locator filterLabel = page.locator(String.format("//*[@data-qa='%s']", dataQa));
         Locator removeButton = filterLabel.locator("button.g-label__addon");
         removeButton.click();
@@ -305,7 +347,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Click on transaction payment profile link by order number: {orderNumber}")
     public void clickTransactionPaymentProfileLinkByOrderNumber(String orderNumber) {
-        Locator methodCell = page.locator(String.format("//*[@data-qa='transaction_history__table__rows__%s__method']", orderNumber));
+        Locator methodCell = page.locator(
+                String.format("//*[@data-qa='transaction_history__table__rows__%s__method']", orderNumber));
         Locator paymentProfileLink = methodCell.locator(".v-transaction-history__payment-profile-link");
         paymentProfileLink.scrollIntoViewIfNeeded();
         paymentProfileLink.click();
@@ -353,7 +396,9 @@ public class PaymentsPage extends AbstractPage {
         for (int i = 0; i < paymentProfileDrawerDetailsRows.count(); i++) {
             Locator row = paymentProfileDrawerDetailsRows.nth(i);
             String key = row.locator(".g-text_variant_body-1").textContent().trim();
-            String value = row.locator(".v-payment-profile-overview__detail-value").textContent().trim();
+            String value = row.locator(".v-payment-profile-overview__detail-value")
+                    .textContent()
+                    .trim();
             details.put(key, value);
         }
         return details;
@@ -365,7 +410,9 @@ public class PaymentsPage extends AbstractPage {
         for (int i = 0; i < paymentProfileDrawerVerificationRows.count(); i++) {
             Locator row = paymentProfileDrawerVerificationRows.nth(i);
             String key = row.locator(".g-text_variant_body-1").textContent().trim();
-            String value = row.locator(".v-payment-profile-overview__detail-value").textContent().trim();
+            String value = row.locator(".v-payment-profile-overview__detail-value")
+                    .textContent()
+                    .trim();
             verification.put(key, value);
         }
         return verification;
@@ -398,8 +445,7 @@ public class PaymentsPage extends AbstractPage {
         waitForPageToLoad();
     }
 
-    public record PaymentFamilyBlock(String header, List<String> rowDataList) {
-    }
+    public record PaymentFamilyBlock(String header, List<String> rowDataList) {}
 
     @Step("Get payment profile list")
     public List<PaymentFamilyBlock> getPaymentProfilesList() {
@@ -459,26 +505,33 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Get payment profile verification drawer")
     public String getPaymentProfileVerificationDrawerName() {
-        return page.waitForSelector("//*[@data-qa='payment_profile__edit_drawer__profile_name']").textContent();
+        return page.waitForSelector("//*[@data-qa='payment_profile__edit_drawer__profile_name']")
+                .textContent();
     }
 
     @Step("Select verification status")
     public void selectVerificationStatus(VerificationStatus verificationStatus) {
-        page.waitForSelector(String.format("//*[@data-qa='payment_profile__edit_drawer__verification_status_selector__item__%s']", verificationStatus.toString())).click();
+        page.waitForSelector(String.format(
+                        "//*[@data-qa='payment_profile__edit_drawer__verification_status_selector__item__%s']",
+                        verificationStatus.toString()))
+                .click();
     }
 
     @Step("Send status update")
     public void commentAndSendVerificationStatus(String comment) {
         commentInput.fill(comment);
         updateVerificationStatusButton.click();
-        successToast.getByText("Verification status updated").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        successToast
+                .getByText("Verification status updated")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Get payment profile details connected clients")
     public List<String> getPaymentProfileDetailsConnectedClients() {
         page.waitForSelector("//*[@data-qa= 'virtualized_table']");
         List<String> list = new ArrayList<>();
-        Locator locator = page.locator("//*[contains(@data-qa, 'virtualized_table__rows__') and contains(@data-qa, '-') and string-length(translate(substring-after(@data-qa, '-'), '0123456789', '')) = 0]");
+        Locator locator = page.locator(
+                "//*[contains(@data-qa, 'virtualized_table__rows__') and contains(@data-qa, '-') and string-length(translate(substring-after(@data-qa, '-'), '0123456789', '')) = 0]");
         for (int i = 0; i < locator.count(); i++) {
             list.add(locator.nth(i).textContent());
         }
@@ -488,18 +541,26 @@ public class PaymentsPage extends AbstractPage {
     @Step("Check transaction details drawer is visible")
     public void checkTransactionDetailsDrawerIsVisible() {
         transactionDetailsDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertTrue(transactionDetailsDrawerHeader.getByText("Transaction details").isVisible());
+        assertTrue(
+                transactionDetailsDrawerHeader.getByText("Transaction details").isVisible());
     }
 
     @Step("Get transaction details data")
     public Map<String, String> getTransactionDetailsData() {
         Map<String, String> transactionData = new HashMap<>();
-        Locator attributesList = transactionDetailsTransactionSection.locator(".v-transaction-history-details__attribute");
+        Locator attributesList =
+                transactionDetailsTransactionSection.locator(".v-transaction-history-details__attribute");
 
         for (int i = 0; i < attributesList.count(); i++) {
             Locator attribute = attributesList.nth(i);
-            String label = attribute.locator(".v-transaction-history-details__attribute-label").textContent().trim();
-            String value = attribute.locator(".v-transaction-history-details__attribute-value").textContent().trim();
+            String label = attribute
+                    .locator(".v-transaction-history-details__attribute-label")
+                    .textContent()
+                    .trim();
+            String value = attribute
+                    .locator(".v-transaction-history-details__attribute-value")
+                    .textContent()
+                    .trim();
             transactionData.put(label, value);
         }
 
@@ -509,12 +570,19 @@ public class PaymentsPage extends AbstractPage {
     @Step("Get payment profile details data from transaction drawer")
     public Map<String, String> getPaymentProfileDetailsDataFromDrawer() {
         Map<String, String> paymentProfileData = new HashMap<>();
-        Locator attributesList = transactionDetailsPaymentProfileSection.locator(".v-transaction-history-details__attribute");
+        Locator attributesList =
+                transactionDetailsPaymentProfileSection.locator(".v-transaction-history-details__attribute");
 
         for (int i = 0; i < attributesList.count(); i++) {
             Locator attribute = attributesList.nth(i);
-            String label = attribute.locator(".v-transaction-history-details__attribute-label").textContent().trim();
-            String value = attribute.locator(".v-transaction-history-details__attribute-value").textContent().trim();
+            String label = attribute
+                    .locator(".v-transaction-history-details__attribute-label")
+                    .textContent()
+                    .trim();
+            String value = attribute
+                    .locator(".v-transaction-history-details__attribute-value")
+                    .textContent()
+                    .trim();
             paymentProfileData.put(label, value);
         }
 
@@ -530,12 +598,19 @@ public class PaymentsPage extends AbstractPage {
             return riskAuditData; // Return empty map if section doesn't exist
         }
 
-        Locator attributesList = transactionDetailsRiskAuditSection.locator(".v-transaction-history-details__attribute");
+        Locator attributesList =
+                transactionDetailsRiskAuditSection.locator(".v-transaction-history-details__attribute");
 
         for (int i = 0; i < attributesList.count(); i++) {
             Locator attribute = attributesList.nth(i);
-            String label = attribute.locator(".v-transaction-history-details__attribute-label").textContent().trim();
-            String value = attribute.locator(".v-transaction-history-details__attribute-value").textContent().trim();
+            String label = attribute
+                    .locator(".v-transaction-history-details__attribute-label")
+                    .textContent()
+                    .trim();
+            String value = attribute
+                    .locator(".v-transaction-history-details__attribute-value")
+                    .textContent()
+                    .trim();
             riskAuditData.put(label, value);
         }
 
@@ -563,21 +638,25 @@ public class PaymentsPage extends AbstractPage {
     public TransactionRow getTransactionByOrderNumber(String orderNumber) {
         String baseLocator = String.format("div[data-qa='transaction_history__table__rows__%s", orderNumber);
         return new TransactionRow(
-                page.locator(baseLocator + "__created']").textContent(), page.locator(baseLocator + "__type']").textContent(), page.locator(baseLocator + "__account']").textContent(), page.locator(baseLocator + "__method']").textContent(), page.locator(baseLocator + "__submitted']").textContent(), page.locator(baseLocator + "__processed']").textContent(), page.locator(baseLocator + "__risk_audit']").textContent(), page.locator(baseLocator + "__rejection_reason']").textContent()
-        );
+                page.locator(baseLocator + "__created']").textContent(),
+                page.locator(baseLocator + "__type']").textContent(),
+                page.locator(baseLocator + "__account']").textContent(),
+                page.locator(baseLocator + "__method']").textContent(),
+                page.locator(baseLocator + "__submitted']").textContent(),
+                page.locator(baseLocator + "__processed']").textContent(),
+                page.locator(baseLocator + "__risk_audit']").textContent(),
+                page.locator(baseLocator + "__rejection_reason']").textContent());
     }
 
     public record TransactionRow(
-                                 String created,
-                                 String type,
-                                 String account,
-                                 String method,
-                                 String submitted,
-                                 String processed,
-                                 String riskAudit,
-                                 String rejectionReason
-    ) {
-    }
+            String created,
+            String type,
+            String account,
+            String method,
+            String submitted,
+            String processed,
+            String riskAudit,
+            String rejectionReason) {}
 
     @Step("Filter transactions by order number: {orderNumber}")
     public void filterTransactionsByOrderNumber(String orderNumber) {
@@ -613,7 +692,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Filter transactions by account: {accountNumber}")
     public void filterTransactionsByAccount(String accountNumber) {
-        Locator accountCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__accounts__item__%s']", accountNumber));
+        Locator accountCheckbox = page.locator(String.format(
+                "label.g-checkbox[data-qa='transaction_history__filters__accounts__item__%s']", accountNumber));
         accountCheckbox.scrollIntoViewIfNeeded();
         page.waitForTimeout(300);
 
@@ -627,7 +707,8 @@ public class PaymentsPage extends AbstractPage {
 
     @Step("Uncheck account filter: {accountNumber}")
     public void uncheckAccountFilter(String accountNumber) {
-        Locator accountCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__accounts__item__%s']", accountNumber));
+        Locator accountCheckbox = page.locator(String.format(
+                "label.g-checkbox[data-qa='transaction_history__filters__accounts__item__%s']", accountNumber));
         accountCheckbox.scrollIntoViewIfNeeded();
         page.waitForTimeout(300);
 
@@ -664,7 +745,8 @@ public class PaymentsPage extends AbstractPage {
         transactionFilterStatusSection.scrollIntoViewIfNeeded();
         page.waitForTimeout(300);
 
-        Locator statusCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__status__item__%s']", status));
+        Locator statusCheckbox = page.locator(
+                String.format("label.g-checkbox[data-qa='transaction_history__filters__status__item__%s']", status));
         statusCheckbox.click();
         page.waitForTimeout(200);
 
@@ -678,7 +760,8 @@ public class PaymentsPage extends AbstractPage {
         transactionFilterStatusSection.scrollIntoViewIfNeeded();
         page.waitForTimeout(300);
 
-        Locator statusCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__status__item__%s']", status));
+        Locator statusCheckbox = page.locator(
+                String.format("label.g-checkbox[data-qa='transaction_history__filters__status__item__%s']", status));
         Locator checkbox = statusCheckbox.locator("input[type='checkbox']");
 
         if (checkbox.isChecked()) {
@@ -695,7 +778,6 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Check that financial transaction graph empty state is visible");
         page.waitForSelector(FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR);
         assertTrue(page.locator(FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR).isVisible());
-
     }
 
     @Step("Open users operations tab")
@@ -703,7 +785,6 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Check that financial transaction graph empty state is NOT visible");
         page.waitForTimeout(100);
         assertTrue(page.locator(FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR).isHidden());
-
     }
 
     @Step("Open users operations tab")
@@ -711,7 +792,6 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Check that Cashflow graph empty state is visible");
         checkCashflowEmptyStateDepositIsVisible();
         checkCashflowEmptyStateWithdrawalIsVisible();
-
     }
 
     @Step("Open users operations tab")
@@ -720,7 +800,6 @@ public class PaymentsPage extends AbstractPage {
         waitForPageToLoad();
         checkCashflowEmptyStateDepositIsNotVisible();
         checkCashflowEmptyStateWithdrawalIsNotVisible();
-
     }
 
     public void checkCashflowEmptyStateDepositIsVisible() {
@@ -732,7 +811,6 @@ public class PaymentsPage extends AbstractPage {
     public void checkCashflowEmptyStateDepositIsNotVisible() {
         Allure.step("Check that Cashflow graph empty state on deposit side is not visible");
         assertFalse(page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR).isVisible());
-
     }
 
     public void clickOnAccountSelectionWindow() {
@@ -743,47 +821,55 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Check that Cashflow graph empty state on withdrawal side is visible");
         page.waitForSelector(CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR);
         assertTrue(page.locator(CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR).isVisible());
-
     }
 
     public void checkCashflowEmptyStateWithdrawalIsNotVisible() {
         Allure.step("Check that Cashflow graph empty state on withdrawal side is not visible");
         assertFalse(page.locator(CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR).isVisible());
-
     }
 
     public void hoverOverCashflowLineByTypeDeposit(String typeSource) {
         String type = getPaymentType(typeSource);
         Allure.step("hover mouse over cashflow deposit line by type " + type);
-        page.waitForSelector("//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]");
-        page.locator("//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]").hover(new Locator.HoverOptions().setForce(true));
-
+        page.waitForSelector(
+                "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '"
+                        + type + "')]");
+        page.locator(
+                        "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '"
+                                + type + "')]")
+                .hover(new Locator.HoverOptions().setForce(true));
     }
 
     public void hoverOverCashflowLineByTypeWithdrawal(String typeSource) {
         String type = getPaymentType(typeSource);
         Allure.step("hover mouse over cashflow withdrawal line by type " + type);
-        page.waitForSelector("//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]");
-        page.locator("//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]").hover();
-
+        page.waitForSelector(
+                "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '"
+                        + type + "')]");
+        page.locator(
+                        "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '"
+                                + type + "')]")
+                .hover();
     }
 
     public void checkTotalCountByPaymentSystem(String paymentSystem, String totalCount) {
         Allure.step("Check total count by payment system name in appeared tip");
-        page.waitForSelector("//span[text()='" + paymentSystem + "']/following-sibling::span[text()='" + totalCount + "']");
-        assertTrue(page.waitForSelector("//span[text()='" + paymentSystem + "']/following-sibling::span[text()='" + totalCount + "']").isVisible());
-
+        page.waitForSelector(
+                "//span[text()='" + paymentSystem + "']/following-sibling::span[text()='" + totalCount + "']");
+        assertTrue(page.waitForSelector(
+                        "//span[text()='" + paymentSystem + "']/following-sibling::span[text()='" + totalCount + "']")
+                .isVisible());
     }
 
     public void checkTotalCountByPaymentSystem(String paymentSystem, Double totalCount) {
         checkTotalCountByPaymentSystem(paymentSystem, dfwholed.format(Math.round(totalCount)));
-
     }
 
-    public void checkFinancialTransactionsTilesValues(String title, String expectedTotalValue,
-            String expectedTotalOperations) {
+    public void checkFinancialTransactionsTilesValues(
+            String title, String expectedTotalValue, String expectedTotalOperations) {
         Allure.step("Check vales in financial operations tile " + title);
-        String baseLocator = "//div[contains(text(),'" + title + "')]/../..//*[contains(@class, 'v-payments-summary-card__total')]";
+        String baseLocator =
+                "//div[contains(text(),'" + title + "')]/../..//*[contains(@class, 'v-payments-summary-card__total')]";
         page.waitForSelector(baseLocator);
         String actualValue = page.locator(baseLocator + "/../div[1]").textContent();
         String actualOperations = page.locator(baseLocator + "/../div[2]").textContent();
@@ -792,15 +878,17 @@ public class PaymentsPage extends AbstractPage {
         assertTrue(actualOperations.contains(expectedTotalOperations));
     }
 
-    public void checkFinancialTransactionsTilesValues(String title, Double expectedTotalValue,
-            Integer expectedTotalOperations) {
-        checkFinancialTransactionsTilesValues(title, decimalFormat.format(expectedTotalValue), expectedTotalOperations.toString());
+    public void checkFinancialTransactionsTilesValues(
+            String title, Double expectedTotalValue, Integer expectedTotalOperations) {
+        checkFinancialTransactionsTilesValues(
+                title, decimalFormat.format(expectedTotalValue), expectedTotalOperations.toString());
     }
 
     public void checkCashflowTopPaymentSystemTypesHeaderDeposit(String expectedCategorySource, String expectedAmount) {
         String expectedCategory = getPaymentType(expectedCategorySource);
         Allure.step("Check top payment category and its total amount in usd Deposit");
-        String topCatTileLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div/*[@class ='v-chart-wrapper__feature']/div[contains(text(), 'deposit')]");
+        String topCatTileLocator = (CASHFLOW_SECTION_SELECTOR
+                + "/../following-sibling::div/*[@class ='v-chart-wrapper__feature']/div[contains(text(), 'deposit')]");
         String topCatLocator = topCatTileLocator + "/following-sibling::div[2]";
         page.waitForSelector(topCatLocator);
         String topCategory = page.locator(topCatLocator).textContent();
@@ -847,10 +935,11 @@ public class PaymentsPage extends AbstractPage {
         checkCashflowTopPaymentSystemTypesHeaderDeposit(expectedCategory, dfwholed.format(expectedAmount));
     }
 
-    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategorySource,
-            String expectedAmount) {
+    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(
+            String expectedCategorySource, String expectedAmount) {
         Allure.step("Check top payment category and its total amount in usd Withdrawal");
-        String topCatTileLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div/*[@class ='v-chart-wrapper__feature']/div[contains(text(), 'withdrawal')]");
+        String topCatTileLocator = (CASHFLOW_SECTION_SELECTOR
+                + "/../following-sibling::div/*[@class ='v-chart-wrapper__feature']/div[contains(text(), 'withdrawal')]");
         String topCatLocator = topCatTileLocator + "/following-sibling::div[2]";
         page.waitForSelector(topCatLocator);
         String expectedCategory = getPaymentType(expectedCategorySource);
@@ -970,15 +1059,19 @@ public class PaymentsPage extends AbstractPage {
 
     public void checkFinancialTransactionsRowInTooltip(String rowTitle, String expectedValue) {
         Allure.step("Check value in line " + rowTitle + " in appeared tooltip");
-        page.waitForSelector("//div[@class='v-payments-summary-transcations-tooltip__type']//span[text()='" + rowTitle + "']/following-sibling::span");
-        String actualValue = page.locator("//div[@class='v-payments-summary-transcations-tooltip__type']//span[text()='" + rowTitle + "']/following-sibling::span").textContent();
+        page.waitForSelector("//div[@class='v-payments-summary-transcations-tooltip__type']//span[text()='" + rowTitle
+                + "']/following-sibling::span");
+        String actualValue = page.locator("//div[@class='v-payments-summary-transcations-tooltip__type']//span[text()='"
+                        + rowTitle + "']/following-sibling::span")
+                .textContent();
         assertEquals(expectedValue, actualValue);
     }
 
     public void selectTradingAccount(String accountId) {
         Allure.step("Click on select account button in dropdown list");
         page.waitForSelector("[data-qa='select-popup']");
-        page.locator("//div[@data-qa='select-list']//*[text()='" + accountId + "']").click();
+        page.locator("//div[@data-qa='select-list']//*[text()='" + accountId + "']")
+                .click();
     }
 
     public void selectTradingAccount(int accountId) {
@@ -1009,8 +1102,11 @@ public class PaymentsPage extends AbstractPage {
     public void selectDateFilter(String filterName) {
         Allure.step("select type of filtration by date " + filterName);
         dateFilterSelectionButton.click();
-        page.waitForSelector("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='" + filterName + "']");
-        page.locator("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='" + filterName + "']").click();
+        page.waitForSelector("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='"
+                + filterName + "']");
+        page.locator("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='" + filterName
+                        + "']")
+                .click();
     }
 
     public void clickOnTimelineSectionByIndex(int sectionIndex) {
@@ -1050,7 +1146,10 @@ public class PaymentsPage extends AbstractPage {
             i++;
         }
         Allure.step("check that timeline section number " + (sectionIndex + 1) + " is inactive");
-        assertTrue(page.locator(TIMELINE_SECTION).nth(sectionIndex).and(inactiveTimelineSection).isVisible());
+        assertTrue(page.locator(TIMELINE_SECTION)
+                .nth(sectionIndex)
+                .and(inactiveTimelineSection)
+                .isVisible());
     }
 
     public void checkLastTimelineSectionInactive() {
@@ -1063,9 +1162,13 @@ public class PaymentsPage extends AbstractPage {
         }
         int count = timelineSection.count();
         page.waitForTimeout(500);
-        int filterCount = timelineSection.nth(count - 1).and(inactiveTimelineSection).count();
+        int filterCount =
+                timelineSection.nth(count - 1).and(inactiveTimelineSection).count();
         writeLog("count of filters is" + filterCount);
-        timelineSection.nth(count - 1).and(inactiveTimelineSection).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        timelineSection
+                .nth(count - 1)
+                .and(inactiveTimelineSection)
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     public void shiftLeftTimelineThumbToTimelineSectionIndex(int sectionIndex) {
@@ -1293,17 +1396,19 @@ public class PaymentsPage extends AbstractPage {
             transformedType = "Bank Transfers";
         } else if (inputType.toLowerCase().contains("card")) {
             transformedType = "Cards";
-        } else if (inputType.toLowerCase().contains("crypto") || inputType.toLowerCase().contains("pix")) {
+        } else if (inputType.toLowerCase().contains("crypto")
+                || inputType.toLowerCase().contains("pix")) {
             transformedType = "Crypto";
-        } else
-            if (inputType.toLowerCase().contains("union") || inputType.toLowerCase().contains("wise") || inputType.toLowerCase().contains("p2p")) {
-                transformedType = "P2P";
-            } else
-                if (inputType.toLowerCase().contains("local depositor") || inputType.toLowerCase().contains("offline payment")) {
-                    transformedType = "Other";
-                } else {
-                    transformedType = "Payment Services";
-                }
+        } else if (inputType.toLowerCase().contains("union")
+                || inputType.toLowerCase().contains("wise")
+                || inputType.toLowerCase().contains("p2p")) {
+            transformedType = "P2P";
+        } else if (inputType.toLowerCase().contains("local depositor")
+                || inputType.toLowerCase().contains("offline payment")) {
+            transformedType = "Other";
+        } else {
+            transformedType = "Payment Services";
+        }
 
         return transformedType;
     }
@@ -1357,7 +1462,8 @@ public class PaymentsPage extends AbstractPage {
         String panelLocator = String.format(PAYMENT_SUMMARY_PANEL_TEMPLATE, panelName);
         page.waitForSelector(panelLocator).waitForElementState(ElementState.VISIBLE);
         var panel = page.locator(panelLocator);
-        var metricValue = panel.locator(String.format(PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE, metricName)).textContent();
+        var metricValue = panel.locator(String.format(PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE, metricName))
+                .textContent();
         assertEquals(expectedValue, metricValue);
     }
 
@@ -1366,7 +1472,8 @@ public class PaymentsPage extends AbstractPage {
         String panelLocator = String.format(PAYMENT_SUMMARY_PANEL_TEMPLATE, panelName);
         page.waitForSelector(panelLocator).waitForElementState(ElementState.VISIBLE);
         var panel = page.locator(panelLocator);
-        var metricValue = panel.locator(String.format(PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE, metricName)).textContent();
+        var metricValue = panel.locator(String.format(PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE, metricName))
+                .textContent();
         assertNotNull(metricValue);
     }
 

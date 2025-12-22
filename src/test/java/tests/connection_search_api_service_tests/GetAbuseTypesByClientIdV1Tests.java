@@ -1,28 +1,9 @@
 package tests.connection_search_api_service_tests;
 
-import business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesResponseV1;
-import business_objects.api.connection_search_api.ConnectionSearchResponseError;
-import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesRequestV1.getAbuseTypesByClientId;
 import static business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesResponseFactoryV1.*;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryLvl2;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
@@ -37,6 +18,24 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.api.connection_search_api.ConnectionSearchResponseError;
+import business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesResponseV1;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
+
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V1)
 @Tag(TEAM_CORE)
@@ -44,7 +43,7 @@ import static utils.Utils.*;
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
-    //Data 1
+    // Data 1
     private static final ClientHelper userFrom1 = getRandomVantageClient();
     private static final ClientHelper userTo1_1 = getRandomVantageClient();
     private static final ClientHelper userTo1_2 = getRandomVantageClient();
@@ -59,7 +58,7 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
     private static ClientFraudTypes fraud11;
     private static ClientFraudTypes fraud12;
 
-    //Data 2
+    // Data 2
     private static final ClientHelper userFrom2 = getRandomVantageClient();
     private static final ClientHelper userTo2_1 = getRandomVantageClient();
     private static final ClientHelper userTo2_2 = getRandomVantageClient();
@@ -73,30 +72,49 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
     private static ClientFraudTypes fraud2_2;
 
-    //Data 3
+    // Data 3
     private static final ClientHelper userFrom3 = getRandomVantageClient();
     private static final ClientHelper userTo3 = getRandomVantageClient();
-    private static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3, userTo3.getIpAddress());
+    private static ConnectionTableEntry connectionTableEntry3 =
+            getConnectionTableEntry(userFrom3, userTo3, userTo3.getIpAddress());
 
     private static ClientFraudTypes fraud3;
     private static ClientFraudTypes fraudPotential;
     private static ClientFraudTypes fraudConfirmed;
 
-    private static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userTo1_1, userTo1_2, userTo1_3, userTo2_1, userTo2_2, userTo2_3, userTo3, userConfirmed, userPotential));
+    private static List<ClientHelper> fraudsters = new ArrayList<>(List.of(
+            userTo1_1, userTo1_2, userTo1_3, userTo2_1, userTo2_2, userTo2_3, userTo3, userConfirmed, userPotential));
     private static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
-
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
         insertObjectsToDb(CRM_USER_TABLE_NAME, clientsDB);
-        connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
+        connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(new ConnectionTableEntry.ConnectionInfo(
+                CONNECTION_ATTRIBUTE_NAME_DIGITAL,
+                CONNECTION_SEARCH_DATA_CARD_NUMBER,
+                CONNECTION_SEARCH_DATA_CARD_NUMBER,
+                CONNECTION_TYPE_RELATION_TYPE_EXACT)));
 
-        fraud11 = new ClientFraudTypes(userTo1_1.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud12 = new ClientFraudTypes(userTo1_2.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud2_2 = new ClientFraudTypes(userTo2_3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud3 = new ClientFraudTypes(userTo3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraudPotential = new ClientFraudTypes(userPotential.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraudConfirmed = new ClientFraudTypes(userConfirmed.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud11 = new ClientFraudTypes(
+                userTo1_1.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud12 = new ClientFraudTypes(
+                userTo1_2.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud2_2 = new ClientFraudTypes(
+                userTo2_3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud3 = new ClientFraudTypes(
+                userTo3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraudPotential = new ClientFraudTypes(
+                userPotential.getUcid(),
+                CPA_ABUSE.getKey(),
+                FRAUD_TYPE_SOURCE_VINDEX,
+                0,
+                getCurrentTimestampDbFormat());
+        fraudConfirmed = new ClientFraudTypes(
+                userConfirmed.getUcid(),
+                CPA_ABUSE.getKey(),
+                FRAUD_TYPE_SOURCE_VINDEX,
+                0,
+                getCurrentTimestampDbFormat());
 
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
@@ -105,9 +123,19 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
         addFraudsForClient(fraud11, fraud12, fraud2_2, fraud3);
         addFraudForClient(fraudConfirmed, "CONFIRMED");
         addFraudForClient(fraudPotential, "POTENTIAL");
-        insertConnectionToDb(connectionTableEntry11, connectionTableEntry12, connectionTableEntry13, connectionTableEntry21, connectionTableEntry22, connectionTableEntry23, connectionTableEntry3, connectionTableEntryStatus1, connectionTableEntryStatus2);
+        insertConnectionToDb(
+                connectionTableEntry11,
+                connectionTableEntry12,
+                connectionTableEntry13,
+                connectionTableEntry21,
+                connectionTableEntry22,
+                connectionTableEntry23,
+                connectionTableEntry3,
+                connectionTableEntryStatus1,
+                connectionTableEntryStatus2);
         waitForConnectionSearchToUpdate();
-        Thread.sleep(5000);//pause for async services like CS and AR always set up connections last and use waitForConnectionSearchToUpdate() before this wait.
+        Thread.sleep(5000); // pause for async services like CS and AR always set up connections last and use
+        // waitForConnectionSearchToUpdate() before this wait.
     }
 
     @AfterAll
@@ -119,8 +147,10 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry22.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry23.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryStatus1.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryStatus2.userFrom));
+        deleteEntryFromDb(
+                CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryStatus1.userFrom));
+        deleteEntryFromDb(
+                CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryStatus2.userFrom));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud11.getUcid()));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.getUcid()));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.getUcid()));
@@ -143,14 +173,19 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
-        assertThat("Check the response body", responseBody, hasItemInArray(getAbuseTypesResponseByFraud(fraud11, "CONFIRMED")));
-        assertThat("Check the response body", responseBody, hasItemInArray(getAbuseTypesResponseByFraud(fraud12, "CONFIRMED")));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                hasItemInArray(getAbuseTypesResponseByFraud(fraud11, "CONFIRMED")));
+        assertThat(
+                "Check the response body",
+                responseBody,
+                hasItemInArray(getAbuseTypesResponseByFraud(fraud12, "CONFIRMED")));
     }
 
     @Test
@@ -162,9 +197,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(0));
@@ -176,9 +210,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
     void getAbuseTypesByClientTest3() throws IOException {
         Response response = getAbuseTypesByClientId(new HashMap<>());
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 400", response.code(), is(400));
         assertThat(responseBody, is(getAbuseTypesResponseErrorClientIdMissingBadRequest()));
@@ -194,9 +227,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
@@ -213,9 +245,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(0));
@@ -231,9 +262,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 200", response.code(), is(400));
         assertThat("Check the response body is empty", responseBody.error, equalTo("Depth must be positive"));
@@ -249,9 +279,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(1));
@@ -267,9 +296,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(2));
@@ -285,9 +313,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(0));
@@ -303,9 +330,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(0));
@@ -321,9 +347,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(2));
@@ -339,12 +364,14 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 400", response.code(), is(400));
-        assertThat("Check the response body is empty", responseBody, equalTo(getAbuseTypesResponseErrorUnknownAttributeBadRequest()));
+        assertThat(
+                "Check the response body is empty",
+                responseBody,
+                equalTo(getAbuseTypesResponseErrorUnknownAttributeBadRequest()));
     }
 
     @Test
@@ -357,9 +384,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is empty", responseBody.length, equalTo(1));
@@ -375,9 +401,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 200", response.code(), is(400));
         assertThat(responseBody, equalTo(getConnectionsResponseErrorConnectionScoreToBadRequest()));
@@ -393,9 +418,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 200", response.code(), is(400));
         assertThat(responseBody, equalTo(getConnectionsResponseErrorConnectionScoreFromBadRequest()));
@@ -410,9 +434,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
-                response.body().string(), ConnectionSearchResponseError.class
-        ));
+        ConnectionSearchResponseError responseBody =
+                (objectMapper.readValue(response.body().string(), ConnectionSearchResponseError.class));
 
         assertThat("Check the response code is 200", response.code(), is(400));
         assertThat(responseBody, equalTo(getConnectionsResponseErrorClientIdBadRequest()));
@@ -432,9 +455,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
@@ -449,9 +471,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(0));
@@ -466,9 +487,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assertThat(response.body(), is(notNullValue()));
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody =
+                (objectMapper.readValue(response.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
@@ -479,9 +499,8 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
         Response response2 = getAbuseTypesByClientId(queryParams2);
         assert response2.body() != null;
-        GetAbuseTypesResponseV1[] responseBody2 = (objectMapper.readValue(
-                response2.body().string(), GetAbuseTypesResponseV1[].class
-        ));
+        GetAbuseTypesResponseV1[] responseBody2 =
+                (objectMapper.readValue(response2.body().string(), GetAbuseTypesResponseV1[].class));
 
         assertThat("Check the response code is 200", response2.code(), is(200));
         assertThat("Check the response body is not empty", responseBody2.length, equalTo(1));

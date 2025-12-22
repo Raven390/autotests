@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.paymentProfile;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.ui.audit_trail.AuditTrailItemV2;
-import helpers.data.ClientHelper;
-import helpers.data.enums.VerificationStatus;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -29,6 +13,21 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.ui.audit_trail.AuditTrailItemV2;
+import helpers.data.ClientHelper;
+import helpers.data.enums.VerificationStatus;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.io.IOException;
+import java.math.BigDecimal;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -76,23 +75,39 @@ class PaymentProfilesVerificationAuditTest extends TestBaseWeb {
     @DisplayName("Payment profile verification audit test")
     void paymentProfileVerificationAuditTest() throws IOException {
         putProfileStatus(NOT_VERIFIED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
-        putProfileStatus(VerificationStatus.AWAITING_DOCUMENTS, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
+        putProfileStatus(
+                VerificationStatus.AWAITING_DOCUMENTS,
+                deposit.getPaymentProfileKey(),
+                deposit.getPaymentProfileMasked(),
+                client);
         putProfileStatus(VERIFIED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
-        putProfileStatus(VerificationStatus.REJECTED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
+        putProfileStatus(
+                VerificationStatus.REJECTED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
         auditTrailPage.openAuditTrailTab();
         AuditTrailItemV2 notVerifiedItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, NOT_VERIFIED.getDisplayName()));
+                AUDIT_ITEM_HEADER,
+                String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, NOT_VERIFIED.getDisplayName()));
         AuditTrailItemV2 awaitingItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, AWAITING_DOCUMENTS.getDisplayName()));
+                AUDIT_ITEM_HEADER,
+                String.format(
+                        AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, AWAITING_DOCUMENTS.getDisplayName()));
         AuditTrailItemV2 verifiedItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, VERIFIED.getDisplayName()));
+                AUDIT_ITEM_HEADER,
+                String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, VERIFIED.getDisplayName()));
         AuditTrailItemV2 rejectedItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, REJECTED.getDisplayName()));
-        assertThat("Verify payment profile verification audit items", auditTrailPage.getAuditTrailItemsV2(), contains(rejectedItem, verifiedItem, awaitingItem, notVerifiedItem));
+                AUDIT_ITEM_HEADER,
+                String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, REJECTED.getDisplayName()));
+        assertThat(
+                "Verify payment profile verification audit items",
+                auditTrailPage.getAuditTrailItemsV2(),
+                contains(rejectedItem, verifiedItem, awaitingItem, notVerifiedItem));
         auditTrailPage.clickPaymentProfileByName(PAYMENT_PROFILE_MASKED);
-        assertThat("Verify payment profile drawer is opened", paymentsPage.getPaymentProfileDrawerSubheader(), is(String.format("%s%n%s", PAYMENT_PROFILE, REJECTED.getDisplayName())));
+        assertThat(
+                "Verify payment profile drawer is opened",
+                paymentsPage.getPaymentProfileDrawerSubheader(),
+                is(String.format("%s%n%s", PAYMENT_PROFILE, REJECTED.getDisplayName())));
     }
 }

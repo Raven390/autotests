@@ -1,22 +1,5 @@
 package tests.payment_gate_service_tests;
 
-import business_objects.api.payment_gate.rule_executions.GetRuleExecutionsByUcidResponseBody;
-import business_objects.api.payment_gate.rule_executions.PostRuleExecutionsBody;
-import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
-import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.util.*;
-
 import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequestBodyFactory.generatePostRuleExecutionsBody;
 import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequests.getRuleExecutionsByUcidRequest;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
@@ -28,6 +11,22 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.api.payment_gate.rule_executions.GetRuleExecutionsByUcidResponseBody;
+import business_objects.api.payment_gate.rule_executions.PostRuleExecutionsBody;
+import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.util.*;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_GET_RULE_EXECUTIONS)
@@ -85,17 +84,42 @@ class GetRuleExecutionsByUCIDV1Tests extends TestBaseApi {
         postRuleExecutionsBody4 = generatePostRuleExecutionsBody(paymentEventsObject4, true);
         paymentRuleExecutionsObject4 = generatePaymentRuleExecutionsObject(paymentEventsObject4);
 
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, List.of(paymentRuleExecutionsObject1, paymentRuleExecutionsObject2, paymentRuleExecutionsObject3, paymentRuleExecutionsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE,
+                List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE,
+                List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE,
+                List.of(
+                        paymentRuleExecutionsObject1,
+                        paymentRuleExecutionsObject2,
+                        paymentRuleExecutionsObject3,
+                        paymentRuleExecutionsObject4));
     }
 
     @AfterAll
     static void deleteData() throws Exception {
-        cleanPaymentGateData(client1.getUcid(), client1.getUserId(), postRuleExecutionsBody1.getPaymentId().toString());
-        cleanPaymentGateData(client2.getUcid(), client2.getUserId(), postRuleExecutionsBody2.getPaymentId().toString());
-        cleanPaymentGateData(client3.getUcid(), client3.getUserId(), postRuleExecutionsBody3.getPaymentId().toString());
-        cleanPaymentGateData(client4.getUcid(), client4.getUserId(), postRuleExecutionsBody4.getPaymentId().toString());
+        cleanPaymentGateData(
+                client1.getUcid(),
+                client1.getUserId(),
+                postRuleExecutionsBody1.getPaymentId().toString());
+        cleanPaymentGateData(
+                client2.getUcid(),
+                client2.getUserId(),
+                postRuleExecutionsBody2.getPaymentId().toString());
+        cleanPaymentGateData(
+                client3.getUcid(),
+                client3.getUserId(),
+                postRuleExecutionsBody3.getPaymentId().toString());
+        cleanPaymentGateData(
+                client4.getUcid(),
+                client4.getUserId(),
+                postRuleExecutionsBody4.getPaymentId().toString());
     }
 
     @Test
@@ -116,20 +140,44 @@ class GetRuleExecutionsByUCIDV1Tests extends TestBaseApi {
         assertThat("Response body should not be an empty array", responseBodyString, not("[]"));
 
         Allure.step("Validate Data in response");
-        List<GetRuleExecutionsByUcidResponseBody> mappedResponse = Arrays.stream(objectMapper.readValue(responseBodyString, GetRuleExecutionsByUcidResponseBody[].class)).toList();
-        assertThat("Assert paymentId present", mappedResponse.get(0).getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId()));
+        List<GetRuleExecutionsByUcidResponseBody> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(responseBodyString, GetRuleExecutionsByUcidResponseBody[].class))
+                .toList();
+        assertThat(
+                "Assert paymentId present",
+                mappedResponse.get(0).getPaymentId(),
+                is(paymentRuleExecutionsObject1.getPaymentId()));
         // Additional asserts based on the sample response structure
         assertThat("Assert items list present", mappedResponse.get(0).getItems(), is(notNullValue()));
-        GetRuleExecutionsByUcidResponseBody.Item item = mappedResponse.get(0).getItems().get(0);
+        GetRuleExecutionsByUcidResponseBody.Item item =
+                mappedResponse.get(0).getItems().get(0);
         assertThat("Assert item.runId present", item.getRunId(), not(paymentRuleExecutionsObject1.getRunId()));
-        assertThat("Assert item.paymentId equals response paymentId", item.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId().toString()));
+        assertThat(
+                "Assert item.paymentId equals response paymentId",
+                item.getPaymentId(),
+                is(paymentRuleExecutionsObject1.getPaymentId().toString()));
         assertThat("Assert item.ruleId present", item.getRuleId(), is(paymentRuleExecutionsObject1.getRuleId()));
-        assertThat("Assert item.ruleVersion present", item.getRuleVersion(), is(paymentRuleExecutionsObject1.getRuleVersion()));
-        assertThat("Assert item.ruleEndId present", item.getRuleEndId(), is(paymentRuleExecutionsObject1.getRuleEndId()));
-        assertThat("Assert item.startedAt present", item.getStartedAt(), not(paymentRuleExecutionsObject1.getDateStarted()));
-        assertThat("Assert item.completedAt present", item.getCompletedAt(), not(paymentRuleExecutionsObject1.getDateCompleted()));
-        assertThat("Assert item.createdAt present", item.getCreatedAt(), not(paymentRuleExecutionsObject1.getDateCreated()));
-        assertThat("Assert item.updatedAt present", item.getUpdatedAt(), not(paymentRuleExecutionsObject1.getDateUpdated()));
+        assertThat(
+                "Assert item.ruleVersion present",
+                item.getRuleVersion(),
+                is(paymentRuleExecutionsObject1.getRuleVersion()));
+        assertThat(
+                "Assert item.ruleEndId present", item.getRuleEndId(), is(paymentRuleExecutionsObject1.getRuleEndId()));
+        assertThat(
+                "Assert item.startedAt present",
+                item.getStartedAt(),
+                not(paymentRuleExecutionsObject1.getDateStarted()));
+        assertThat(
+                "Assert item.completedAt present",
+                item.getCompletedAt(),
+                not(paymentRuleExecutionsObject1.getDateCompleted()));
+        assertThat(
+                "Assert item.createdAt present",
+                item.getCreatedAt(),
+                not(paymentRuleExecutionsObject1.getDateCreated()));
+        assertThat(
+                "Assert item.updatedAt present",
+                item.getUpdatedAt(),
+                not(paymentRuleExecutionsObject1.getDateUpdated()));
     }
-
 }

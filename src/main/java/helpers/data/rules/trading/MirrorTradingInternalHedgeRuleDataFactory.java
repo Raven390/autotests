@@ -1,22 +1,21 @@
 package helpers.data.rules.trading;
 
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Utils.convertTimestampToIsoFormat;
+import static utils.Utils.getCurrentTimestampMillis;
+
 import business_objects.kafka.InternalHedgeEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Step;
-import utils.Utils;
-
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Utils.convertTimestampToIsoFormat;
-import static utils.Utils.getCurrentTimestampMillis;
+import utils.Utils;
 
 @RuleTestData("mirror-trading")
 public class MirrorTradingInternalHedgeRuleDataFactory {
@@ -41,14 +40,18 @@ public class MirrorTradingInternalHedgeRuleDataFactory {
         data.internalHedgeEvent.getPositiveLeg().setTradingAccount(client.getTradingAccount());
         data.internalHedgeEvent.getPositiveLeg().setServerId(client.getServerId());
         data.internalHedgeEvent.getPositiveLeg().setCloseTime(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
-        data.internalHedgeEvent.getPositiveLeg().setCloseTimeUtc(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
+        data.internalHedgeEvent
+                .getPositiveLeg()
+                .setCloseTimeUtc(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
         data.internalHedgeEvent.getPositiveLeg().setShortProfitUsd(0d);
         data.internalHedgeEvent.setNegativeLeg(new InternalHedgeEvent.Leg());
         data.internalHedgeEvent.getNegativeLeg().setUcid(client.getUcid());
         data.internalHedgeEvent.getNegativeLeg().setTradingAccount(client.getTradingAccount());
         data.internalHedgeEvent.getNegativeLeg().setServerId(client.getServerId());
         data.internalHedgeEvent.getNegativeLeg().setCloseTime(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
-        data.internalHedgeEvent.getNegativeLeg().setCloseTimeUtc(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
+        data.internalHedgeEvent
+                .getNegativeLeg()
+                .setCloseTimeUtc(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
         data.internalHedgeEvent.getNegativeLeg().setShortProfitUsd(0d);
 
         return data;
@@ -69,7 +72,6 @@ public class MirrorTradingInternalHedgeRuleDataFactory {
         data.internalHedgeEvent.getNegativeLeg().setUcid(data2.clientHelper.getUcid());
         return data;
     }
-
 
     public static Map<String, DataHelper> setupMirrorTradingInternalHedgeRuleData() throws InterruptedException {
         startSshTunnel();

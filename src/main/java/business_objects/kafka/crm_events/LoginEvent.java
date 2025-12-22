@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class LoginEvent {
@@ -36,13 +35,19 @@ public class LoginEvent {
     @JsonProperty("type")
     private String type;
 
-    public LoginEvent() {
-    }
+    public LoginEvent() {}
 
     public LoginEvent(
-            String brand, Integer clientId, String eventDate, String id, String ipAddress, String loginId,
+            String brand,
+            Integer clientId,
+            String eventDate,
+            String id,
+            String ipAddress,
+            String loginId,
             String loginType,
-            String regulator, String schemaVersion, String type) {
+            String regulator,
+            String schemaVersion,
+            String type) {
         this.brand = brand;
         this.clientId = clientId;
         this.eventDate = eventDate;
@@ -58,20 +63,30 @@ public class LoginEvent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof LoginEvent that)) return false;
-        return Objects.equals(brand, that.brand) && Objects.equals(clientId, that.clientId) && Objects.equals(
-                eventDate, that.eventDate) && Objects.equals(id, that.id) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(
-                        loginId, that.loginId) && Objects.equals(loginType, that.loginType) && Objects.equals(
-                                regulator, that.regulator) && Objects.equals(schemaVersion, that.schemaVersion) && Objects.equals(type, that.type);
+        return Objects.equals(brand, that.brand)
+                && Objects.equals(clientId, that.clientId)
+                && Objects.equals(eventDate, that.eventDate)
+                && Objects.equals(id, that.id)
+                && Objects.equals(ipAddress, that.ipAddress)
+                && Objects.equals(loginId, that.loginId)
+                && Objects.equals(loginType, that.loginType)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(schemaVersion, that.schemaVersion)
+                && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, clientId, eventDate, id, ipAddress, loginId, loginType, regulator, schemaVersion, type);
+        return Objects.hash(
+                brand, clientId, eventDate, id, ipAddress, loginId, loginType, regulator, schemaVersion, type);
     }
 
     @Override
     public String toString() {
-        return "LoginEvent{" + "brand='" + brand + '\'' + ", clientId=" + clientId + ", eventDate='" + eventDate + '\'' + ", id='" + id + '\'' + ", ipAddress='" + ipAddress + '\'' + ", loginId='" + loginId + '\'' + ", loginType='" + loginType + '\'' + ", regulator='" + regulator + '\'' + ", schemaVersion='" + schemaVersion + '\'' + ", type='" + type + '\'' + '}';
+        return "LoginEvent{" + "brand='" + brand + '\'' + ", clientId=" + clientId + ", eventDate='" + eventDate + '\''
+                + ", id='" + id + '\'' + ", ipAddress='" + ipAddress + '\'' + ", loginId='" + loginId + '\''
+                + ", loginType='" + loginType + '\'' + ", regulator='" + regulator + '\'' + ", schemaVersion='"
+                + schemaVersion + '\'' + ", type='" + type + '\'' + '}';
     }
 
     public String getBrand() {

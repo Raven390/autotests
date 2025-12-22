@@ -1,17 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -23,6 +11,17 @@ import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 class TradingInfoOperationsAutoscrollTest extends TestBaseWeb {
 
@@ -77,13 +76,14 @@ class TradingInfoOperationsAutoscrollTest extends TestBaseWeb {
         tradingPage.clickScrollOperationsListUpButton();
         tradingPage.checkDealPresentedByDate(timeLast);
         tradingPage.checkDealHiddenByDate(timeFirst);
-
     }
 
     @AfterAll
     static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("account = %s OR account = %s", account1.account, account2.account));
+        deleteEntryFromDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);
     }
 }

@@ -1,5 +1,3 @@
 package helpers.asserts;
 
-public class FraudTypesAssertsHelper {
-
-}
+public class FraudTypesAssertsHelper {}

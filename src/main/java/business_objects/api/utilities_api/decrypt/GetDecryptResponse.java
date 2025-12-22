@@ -1,7 +1,6 @@
 package business_objects.api.utilities_api.decrypt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetDecryptResponse {
@@ -42,8 +41,9 @@ public class GetDecryptResponse {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof GetDecryptResponse that)) return false;
-        return Objects.equals(brand, that.brand) && Objects.equals(emailDecrypt, that.emailDecrypt) && Objects.equals(
-                phoneNumDecrypt, that.phoneNumDecrypt);
+        return Objects.equals(brand, that.brand)
+                && Objects.equals(emailDecrypt, that.emailDecrypt)
+                && Objects.equals(phoneNumDecrypt, that.phoneNumDecrypt);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class GetDecryptResponse {
 
     @Override
     public String toString() {
-        return "GetDecryptResponse{" + "brand='" + brand + '\'' + ", emailDecrypt='" + emailDecrypt + '\'' + ", phoneNumDecrypt='" + phoneNumDecrypt + '\'' + '}';
+        return "GetDecryptResponse{" + "brand='" + brand + '\'' + ", emailDecrypt='" + emailDecrypt + '\''
+                + ", phoneNumDecrypt='" + phoneNumDecrypt + '\'' + '}';
     }
 }

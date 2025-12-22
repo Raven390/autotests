@@ -1,7 +1,8 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionStatusEmail {
-    SENT("SENT"), NOT_SENT("NOT_SENT");
+    SENT("SENT"),
+    NOT_SENT("NOT_SENT");
 
     private final String displayName;
 
@@ -12,5 +13,4 @@ public enum DeductionStatusEmail {
     public String getDisplayName() {
         return displayName;
     }
-
 }

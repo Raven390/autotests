@@ -40,11 +40,15 @@ public class OpenTradeMtEvent {
     @JsonProperty("initialEventTime")
     public String initialEventTime;
 
-    public OpenTradeMtEvent() {
-    }
+    public OpenTradeMtEvent() {}
 
     public OpenTradeMtEvent(
-            String id, String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol,
+            String id,
+            String openTime,
+            Integer tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
             Integer serverId) {
         this.id = id;
         this.openTime = openTime;
@@ -56,7 +60,12 @@ public class OpenTradeMtEvent {
     }
 
     public OpenTradeMtEvent(
-            String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId,
+            String openTime,
+            Integer tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
+            Integer serverId,
             String type) {
         this.openTime = openTime;
         this.tradeId = tradeId;
@@ -72,7 +81,13 @@ public class OpenTradeMtEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OpenTradeMtEvent that = (OpenTradeMtEvent) o;
-        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(volume, that.volume) && Objects.equals(symbol, that.symbol) && Objects.equals(serverId, that.serverId) && Objects.equals(type, that.type);
+        return Objects.equals(openTime, that.openTime)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(type, that.type);
     }
 
     @Override
@@ -82,6 +97,8 @@ public class OpenTradeMtEvent {
 
     @Override
     public String toString() {
-        return "OpenTradeMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
+        return "OpenTradeMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId
+                + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\''
+                + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }

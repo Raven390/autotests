@@ -1,21 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
-import business_objects.api.clickhouse_api_service.get_lexis_nexis_data.GetLexisNexisDataResponse;
-import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_lexis_nexis_data.GetLexisNexisDataRequest.getLexisNexisData;
 import static business_objects.api.clickhouse_api_service.get_lexis_nexis_data.GetLexisNexisDataResponse.Items.getItem;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
@@ -26,6 +10,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
+
+import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.clickhouse_api_service.get_lexis_nexis_data.GetLexisNexisDataResponse;
+import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS_DATA)
@@ -62,12 +61,19 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+        GetLexisNexisDataResponse mappedResponse =
+                objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response id", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object1.getId().toString()));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object2.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object1.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object2.getId().toString()));
     }
 
     @Test
@@ -80,14 +86,21 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+        GetLexisNexisDataResponse mappedResponse =
+                objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
         writeLog(object1.getId());
         writeLog(mappedResponse.items);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response id", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object1.getId().toString()));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object2.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object1.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object2.getId().toString()));
     }
 
     @Test
@@ -101,7 +114,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
         assertThat("Check response error", mappedResponse.getError(), is("No such column: ucid123"));
@@ -118,10 +132,15 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.getError(), is("Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
+        assertThat(
+                "Check response error",
+                mappedResponse.getError(),
+                is(
+                        "Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
         assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
@@ -134,10 +153,14 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat(
+                "Check response error",
+                mappedResponse.getError(),
+                is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
@@ -151,10 +174,14 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat(
+                "Check response error",
+                mappedResponse.getError(),
+                is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
@@ -168,10 +195,14 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat(
+                "Check response error",
+                mappedResponse.getError(),
+                is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
@@ -183,10 +214,14 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat(
+                "Check response error",
+                mappedResponse.getError(),
+                is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
@@ -200,7 +235,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+        GetLexisNexisDataResponse mappedResponse =
+                objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response ucid", mappedResponse.totalCount, is(0));
@@ -218,12 +254,19 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+        GetLexisNexisDataResponse mappedResponse =
+                objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response id", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object1.getId().toString()));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object2.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object1.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object2.getId().toString()));
     }
 
     @Test
@@ -237,12 +280,17 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+        GetLexisNexisDataResponse mappedResponse =
+                objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(String.valueOf(
-                object1.getId()), 60, 123), getItem(String.valueOf(object2.getId()), 60, 123)));
+        assertThat(
+                "Check response item",
+                mappedResponse.items,
+                containsInAnyOrder(
+                        getItem(String.valueOf(object1.getId()), 60, 123),
+                        getItem(String.valueOf(object2.getId()), 60, 123)));
     }
 
     @Test
@@ -255,11 +303,18 @@ class GetLexisNexisDataTests extends TestBaseApi {
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
-        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+        GetLexisNexisDataResponse mappedResponse =
+                objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response id", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object1.getId().toString()));
-        assertThat("Check response item", mappedResponse.items.toString(), containsString(object2.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object1.getId().toString()));
+        assertThat(
+                "Check response item",
+                mappedResponse.items.toString(),
+                containsString(object2.getId().toString()));
     }
 }

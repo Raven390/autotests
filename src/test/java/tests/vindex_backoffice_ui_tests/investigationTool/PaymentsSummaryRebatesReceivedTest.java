@@ -1,19 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -27,6 +13,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
+import io.qameta.allure.AllureId;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
@@ -62,7 +61,9 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
 
     @AfterEach
     public void teardownEach() {
-        deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ib_rebate_account IN (%s, %s)", account.account, account2.account));
+        deleteEntryFromDb(
+                S3_FACT_IB_SALES_COMMISSIONS,
+                String.format("ib_rebate_account IN (%s, %s)", account.account, account2.account));
     }
 
     @Order(1)
@@ -97,7 +98,10 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
         paymentsPage.clickPaymentsTabButton();
         assertThat("Verify title", paymentsPage.getRebatesReceivedWidgetTitle(), is("Rebates receivedUSD"));
         assertThat("Verify value", paymentsPage.getRebatesReceivedWidgetValue(), is("0"));
-        assertThat("Verify counter", paymentsPage.getRebatesReceivedWidgetCounter(), is(String.format("on %s rebate account", "1")));
+        assertThat(
+                "Verify counter",
+                paymentsPage.getRebatesReceivedWidgetCounter(),
+                is(String.format("on %s rebate account", "1")));
     }
 
     @Order(3)
@@ -110,16 +114,19 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account2, account3));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount2, mtAccount3));
         insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(ibCommission1, ibCommission2, ibCommission3));
-        S3FactIbSalesCommissionsObject commission1 = generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());
+        S3FactIbSalesCommissionsObject commission1 =
+                generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());
         commission1.setIbRebateAccount(account.account);
         commission1.setSalesCommission(4214.12);
         commission1.setIbCommission(74.54);
-        S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());
+        S3FactIbSalesCommissionsObject commission2 =
+                generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());
         commission2.setIbRebateAccount(account2.account);
         commission2.setSalesCommission(8787.43);
         commission2.setIbCommission(9458.44);
         commission2.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 1, 0, 0));
-        S3FactIbSalesCommissionsObject commission3 = generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());
+        S3FactIbSalesCommissionsObject commission3 =
+                generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());
         commission3.setIbRebateAccount(account2.account);
         commission3.setSalesCommission(12_342.24);
         commission3.setIbCommission(0.56);
@@ -131,15 +138,21 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         paymentsPage.clickPaymentsTabButton();
         assertThat("Verify title", paymentsPage.getRebatesReceivedWidgetTitle(), is("Rebates receivedUSD"));
-        String value = formatter.format(commissionsList.stream().mapToDouble(obj -> obj.getSalesCommission() + obj.getIbCommission()).sum());
+        String value = formatter.format(commissionsList.stream()
+                .mapToDouble(obj -> obj.getSalesCommission() + obj.getIbCommission())
+                .sum());
         assertThat("Verify value", paymentsPage.getRebatesReceivedWidgetValue(), is(value));
-        assertThat("Verify counter", paymentsPage.getRebatesReceivedWidgetCounter(), is(String.format("on %s rebate accounts", "2")));
+        assertThat(
+                "Verify counter",
+                paymentsPage.getRebatesReceivedWidgetCounter(),
+                is(String.format("on %s rebate accounts", "2")));
     }
-
 
     @AfterAll
     static void teardown() throws Exception {
         cleanCrmUserTableByClient(client.getUcid());
-        deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ib_rebate_account IN (%s, %s)", account.account, account2.account));
+        deleteEntryFromDb(
+                S3_FACT_IB_SALES_COMMISSIONS,
+                String.format("ib_rebate_account IN (%s, %s)", account.account, account2.account));
     }
 }

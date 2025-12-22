@@ -1,25 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_extends.CrmTbUserExtendsObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.List;
-
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_extends.CrmTbUserExtendsObjectFactory.generateCrmTbUserExtendsByClient;
@@ -36,6 +16,25 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_extends.CrmTbUserExtendsObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.math.RoundingMode;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class CpaOverviewSummaryTest extends TestBaseWeb {
 
@@ -90,7 +89,8 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         factLoginMetrics.setDailyWithdraw(5646.999);
         insertObjectToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, factLoginMetrics);
         // Frauds
-        ClientFraudTypes fraud = new ClientFraudTypes(client.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud =
+                new ClientFraudTypes(client.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat());
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
         // CPA commissions
         cpaCommission = generates3FactCpaCommissionsObject(client);
@@ -117,15 +117,48 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         generalTab.clickCpaOverviewButton();
         ibCpaOverviewPage.waitForPageToLoad();
         assertThat("Verify CPA overview summary title", ibCpaOverviewPage.getOverviewTitle(), is("CPA overview"));
-        assertThat("Verify CPA overview summary subheader", ibCpaOverviewPage.getOverviewSubheaderText(), is(String.format("CPA %s, %s", client.getCpaId(), ibAccount.brand)));
-        assertThat("Verify CPA overview summary under this ib title", ibCpaOverviewPage.getUnderThisTitle(), is("Under this CPA"));
-        assertThat("Verify CPA overview summary under this ib items", ibCpaOverviewPage.getUnderThisItems(), contains(String.format("%sclient", 1), String.format("%sfraudster", 1)));
-        assertThat("Verify CPA overview summary clients performance title", ibCpaOverviewPage.getClientsPerformanceTitle(), is("Clients performance USD"));
-        assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(cpaCommission.getCommission())), String.format("%sNet PNL", formatter.format(factLoginMetrics.getDailyNetClosedPnl())), String.format("%sNet deposit", formatter.format(factLoginMetrics.getDailyNetDeposit()))));
-        assertThat("Verify CPA overview summary clients totals title", ibCpaOverviewPage.getClientsTotalsTitle(), is("Clients totals USD"));
-        assertThat("Verify CPA overview summary clients totals items", ibCpaOverviewPage.getClientsTotalsItems(), contains(String.format("%sVolume", formatter.format((factLoginMetrics.getDailyTradingVolIn() + factLoginMetrics.getDailyTradingVolOut()) / 1_000_000)), String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())), String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())), String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())), String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw())), String.format("%sIB rebates", formatter.format(commission.getIbCommission()))));
+        assertThat(
+                "Verify CPA overview summary subheader",
+                ibCpaOverviewPage.getOverviewSubheaderText(),
+                is(String.format("CPA %s, %s", client.getCpaId(), ibAccount.brand)));
+        assertThat(
+                "Verify CPA overview summary under this ib title",
+                ibCpaOverviewPage.getUnderThisTitle(),
+                is("Under this CPA"));
+        assertThat(
+                "Verify CPA overview summary under this ib items",
+                ibCpaOverviewPage.getUnderThisItems(),
+                contains(String.format("%sclient", 1), String.format("%sfraudster", 1)));
+        assertThat(
+                "Verify CPA overview summary clients performance title",
+                ibCpaOverviewPage.getClientsPerformanceTitle(),
+                is("Clients performance USD"));
+        assertThat(
+                "Verify CPA overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sCPA rebates", formatter.format(cpaCommission.getCommission())),
+                        String.format("%sNet PNL", formatter.format(factLoginMetrics.getDailyNetClosedPnl())),
+                        String.format("%sNet deposit", formatter.format(factLoginMetrics.getDailyNetDeposit()))));
+        assertThat(
+                "Verify CPA overview summary clients totals title",
+                ibCpaOverviewPage.getClientsTotalsTitle(),
+                is("Clients totals USD"));
+        assertThat(
+                "Verify CPA overview summary clients totals items",
+                ibCpaOverviewPage.getClientsTotalsItems(),
+                contains(
+                        String.format(
+                                "%sVolume",
+                                formatter.format((factLoginMetrics.getDailyTradingVolIn()
+                                                + factLoginMetrics.getDailyTradingVolOut())
+                                        / 1_000_000)),
+                        String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())),
+                        String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())),
+                        String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())),
+                        String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw())),
+                        String.format("%sIB rebates", formatter.format(commission.getIbCommission()))));
     }
-
 
     @AfterAll
     public static void teardown() throws Exception {

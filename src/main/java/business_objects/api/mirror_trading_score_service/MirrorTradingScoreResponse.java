@@ -1,7 +1,6 @@
 package business_objects.api.mirror_trading_score_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class MirrorTradingScoreResponse {
@@ -12,8 +11,7 @@ public class MirrorTradingScoreResponse {
     @JsonProperty("ucidScore")
     String ucidScore;
 
-    public MirrorTradingScoreResponse() {
-    }
+    public MirrorTradingScoreResponse() {}
 
     public MirrorTradingScoreResponse(String modelScore, String ucidScore) {
         this.modelScore = modelScore;
@@ -33,7 +31,8 @@ public class MirrorTradingScoreResponse {
 
     @Override
     public String toString() {
-        return "MirrorTradingScoreResponse{" + "modelScore='" + modelScore + '\'' + ", ucidScore='" + ucidScore + '\'' + '}';
+        return "MirrorTradingScoreResponse{" + "modelScore='" + modelScore + '\'' + ", ucidScore='" + ucidScore + '\''
+                + '}';
     }
 
     public String getModelScore() {

@@ -6,14 +6,14 @@ import static helpers.database.DbHelper.stopSshTunnel;
 import static utils.ConfigFactory.*;
 
 import com.microsoft.playwright.*;
+import helpers.kafka.KafkaHelper;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-
-import helpers.kafka.KafkaHelper;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import page_objects.StageRegistrationHelperPage;
 import page_objects.backoffice_pages.DutyTeamPortal.DutyTeamPage;
 import page_objects.backoffice_pages.abuseRegistry.DeductionPage;
 import page_objects.backoffice_pages.abuseRegistry.FraudstersPage;
@@ -21,7 +21,6 @@ import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.backoffice_pages.search.GeneralSearchElements;
 import page_objects.backoffice_pages.search.SearchPage;
-import page_objects.StageRegistrationHelperPage;
 import utils.TestResultWatcher;
 import utils.TestUtils;
 import utils.Utils;
@@ -66,14 +65,16 @@ public class TestBaseWeb {
     public static DecimalFormat dfWholed = new DecimalFormat("###,###,###");
     public static DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.##");
 
-
     public static Faker faker = new Faker();
 
     @BeforeAll
     static void setupBrowser() throws IOException {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(getHeadless()).setTimeout(
-                TIMEOUT));
+        browser = playwright
+                .chromium()
+                .launch(new BrowserType.LaunchOptions()
+                        .setHeadless(getHeadless())
+                        .setTimeout(TIMEOUT));
         startSshTunnel();
         enableCRMEmulator();
 
@@ -98,7 +99,11 @@ public class TestBaseWeb {
     @BeforeEach
     void setupContextAndPage() {
         context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO)));
-        context.tracing().start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true));
+        context.tracing()
+                .start(new Tracing.StartOptions()
+                        .setScreenshots(true)
+                        .setSnapshots(true)
+                        .setSources(true));
         page = context.newPage();
 
         // Core team pages

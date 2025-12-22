@@ -1,22 +1,21 @@
 package helpers.data.rules.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataSetupHelper.setupData;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
-import static utils.Utils.*;
 
 @RuleTestData("nbp-winning-leg")
 public class NbpWinningLegRuleDataFactory {

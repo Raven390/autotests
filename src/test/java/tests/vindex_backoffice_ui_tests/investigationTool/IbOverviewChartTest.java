@@ -1,25 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotObject;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotFactory.generateAccountIbRelationSnapshotObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
@@ -36,6 +16,25 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.matchesPattern;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotObject;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IbOverviewChartTest extends TestBaseWeb {
@@ -134,8 +133,11 @@ public class IbOverviewChartTest extends TestBaseWeb {
         factLoginMetrics5.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 4, 0, 0));
         factLoginMetrics5.setDailyGrossClientPnl(453.2 - 344.22);
         factLoginMetrics5.setDailyNetDeposit(35.45);
-        insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(commission1, commission2, commission3, commission4, commission5));
-        insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
+        insertObjectsToDb(
+                S3_FACT_IB_SALES_COMMISSIONS, List.of(commission1, commission2, commission3, commission4, commission5));
+        insertObjectsToDb(
+                S3_FACT_LOGIN_METRICS_TABLE_NAME,
+                List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
 
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
@@ -157,13 +159,23 @@ public class IbOverviewChartTest extends TestBaseWeb {
         generalTab.clickIbOverviewButton();
         ibCpaOverviewPage.waitForPageToLoad();
         commissionsList.addAll(List.of(commission1, commission2, commission3, commission4, commission5));
-        loginMetricsList.addAll(List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
+        loginMetricsList.addAll(
+                List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
         Double totalRebates = calculateTotalRebates(commissionsList);
         Double totalPnl = calculateTotalPnl(loginMetricsList, commissionsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
-        assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
+        assertThat(
+                "Verify IB overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sIB rebates", formatter.format(totalRebates)),
+                        String.format("%sNet PNL", formatter.format(totalPnl)),
+                        String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2.5K"));
-        assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify X axis labels",
+                ibCpaOverviewPage.getChartXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(2)
@@ -196,9 +208,18 @@ public class IbOverviewChartTest extends TestBaseWeb {
         Double totalRebates = calculateTotalRebates(commissionsList);
         Double totalPnl = calculateTotalPnl(loginMetricsList, commissionsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
-        assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
+        assertThat(
+                "Verify IB overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sIB rebates", formatter.format(totalRebates)),
+                        String.format("%sNet PNL", formatter.format(totalPnl)),
+                        String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7K"));
-        assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify X axis labels",
+                ibCpaOverviewPage.getChartXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(3)
@@ -231,22 +252,54 @@ public class IbOverviewChartTest extends TestBaseWeb {
         Double totalRebates = calculateTotalRebates(commissionsList);
         Double totalPnl = calculateTotalPnl(loginMetricsList, commissionsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
-        assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
+        assertThat(
+                "Verify IB overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sIB rebates", formatter.format(totalRebates)),
+                        String.format("%sNet PNL", formatter.format(totalPnl)),
+                        String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45K"));
-        assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+        assertThat(
+                "Verify X axis labels",
+                ibCpaOverviewPage.getChartXAxisLabels(),
+                everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     private static Double calculateTotalRebates(List<S3FactIbSalesCommissionsObject> commissionsList) {
-        return commissionsList.stream().map(S3FactIbSalesCommissionsObject::getIbCommission).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+        return commissionsList.stream()
+                .map(S3FactIbSalesCommissionsObject::getIbCommission)
+                .map(value ->
+                        BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue())
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
-    private static Double calculateTotalPnl(List<S3FactLoginMetricsObject> loginMetricsList,
-            List<S3FactIbSalesCommissionsObject> commissionsList) {
-        return loginMetricsList.stream().map(S3FactLoginMetricsObject::getDailyGrossClientPnl).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum() + commissionsList.stream().map(S3FactIbSalesCommissionsObject::getIbCommission).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+    private static Double calculateTotalPnl(
+            List<S3FactLoginMetricsObject> loginMetricsList, List<S3FactIbSalesCommissionsObject> commissionsList) {
+        return loginMetricsList.stream()
+                        .map(S3FactLoginMetricsObject::getDailyGrossClientPnl)
+                        .map(value -> BigDecimal.valueOf(value)
+                                .setScale(2, RoundingMode.DOWN)
+                                .doubleValue())
+                        .mapToDouble(Double::doubleValue)
+                        .sum()
+                + commissionsList.stream()
+                        .map(S3FactIbSalesCommissionsObject::getIbCommission)
+                        .map(value -> BigDecimal.valueOf(value)
+                                .setScale(2, RoundingMode.DOWN)
+                                .doubleValue())
+                        .mapToDouble(Double::doubleValue)
+                        .sum();
     }
 
     private static Double calculateTotalDeposit(List<S3FactLoginMetricsObject> loginMetricsList) {
-        return loginMetricsList.stream().map(S3FactLoginMetricsObject::getDailyNetDeposit).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+        return loginMetricsList.stream()
+                .map(S3FactLoginMetricsObject::getDailyNetDeposit)
+                .map(value ->
+                        BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue())
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
     @AfterAll
@@ -255,6 +308,8 @@ public class IbOverviewChartTest extends TestBaseWeb {
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, String.format("ucid IN ('%s', '%s')", relationSnapshot.getUcid(), relationSnapshot1.getUcid()));
+        deleteEntryFromDb(
+                ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME,
+                String.format("ucid IN ('%s', '%s')", relationSnapshot.getUcid(), relationSnapshot1.getUcid()));
     }
 }

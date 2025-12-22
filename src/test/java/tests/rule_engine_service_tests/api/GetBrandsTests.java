@@ -1,22 +1,21 @@
 package tests.rule_engine_service_tests.api;
 
-import business_objects.api.rule_engine_api.get_brands.GetBrandsResponse;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import okhttp3.Response;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.Arrays;
-
 import static business_objects.api.rule_engine_api.get_brands.GetBrandsRequest.getBrands;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static tests.TestBaseApi.objectMapper;
 import static utils.Constants.*;
 import static utils.Constants.SUITE_RULE_ENGINE_API_TESTS;
+
+import business_objects.api.rule_engine_api.get_brands.GetBrandsResponse;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.io.IOException;
+import java.util.Arrays;
+import okhttp3.Response;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Tag(TEAM_CORE)
@@ -72,9 +71,13 @@ class GetBrandsTests {
         Response response = getBrands();
 
         assertThat(response.body(), is(notNullValue()));
-        GetBrandsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBrandsResponse[].class);
+        GetBrandsResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetBrandsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Check the response body", Arrays.stream(mappedResponse).toList(), containsInAnyOrder(vantage, alphaTick, infinox, moneta, puPrime, rockglobal, startrader, ultimamarkets, vjp, vt));
-
+        assertThat(
+                "Check the response body",
+                Arrays.stream(mappedResponse).toList(),
+                containsInAnyOrder(
+                        vantage, alphaTick, infinox, moneta, puPrime, rockglobal, startrader, ultimamarkets, vjp, vt));
     }
 }

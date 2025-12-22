@@ -1,26 +1,5 @@
 package tests.payment_gate_service_tests;
 
-import business_objects.api.payment_gate.payments.GetPaymentsResponseBody;
-import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
-import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
-import business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObject;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.payment_gate.payments.PaymentsRequests.getPayments;
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
@@ -34,6 +13,25 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_PAYMENT_GATE_TESTS;
+
+import business_objects.api.payment_gate.payments.GetPaymentsResponseBody;
+import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
+import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObject;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_GET_PAYMENTS)
@@ -66,9 +64,11 @@ class GetPaymentsV1Tests extends TestBaseApi {
         client1 = getRandomVantageClientAllFields();
         paymentEventsObject1 = generatePaymentEventsObject(client1);
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
-        paymentDetailsObject1.setPayload("{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
+        paymentDetailsObject1.setPayload(
+                "{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
         paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
-        paymentRejectionAttributesObject1 = generatePaymentRejectionAttributesObject(paymentEventsObject1, paymentDecisionsObject1);
+        paymentRejectionAttributesObject1 =
+                generatePaymentRejectionAttributesObject(paymentEventsObject1, paymentDecisionsObject1);
 
         client2 = getRandomVantageClientAllFields();
         paymentEventsObject2 = generatePaymentEventsObject(client2);
@@ -85,18 +85,46 @@ class GetPaymentsV1Tests extends TestBaseApi {
         paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
         paymentDecisionsObject4 = generatePaymentDecisionObject(paymentEventsObject4);
 
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1, paymentDecisionsObject2, paymentDecisionsObject3, paymentDecisionsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, List.of(paymentRejectionAttributesObject1));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE,
+                List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE,
+                List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                List.of(
+                        paymentDecisionsObject1,
+                        paymentDecisionsObject2,
+                        paymentDecisionsObject3,
+                        paymentDecisionsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
+                List.of(paymentRejectionAttributesObject1));
     }
 
-    //@AfterAll
+    // @AfterAll
     static void deleteData() throws Exception {
-        cleanPaymentGateData(client1.getUcid(), client1.getUserId(), paymentEventsObject1.getPaymentId().toString());
-        cleanPaymentGateData(client2.getUcid(), client2.getUserId(), paymentEventsObject2.getPaymentId().toString());
-        cleanPaymentGateData(client3.getUcid(), client3.getUserId(), paymentEventsObject3.getPaymentId().toString());
-        cleanPaymentGateData(client4.getUcid(), client4.getUserId(), paymentEventsObject4.getPaymentId().toString());
+        cleanPaymentGateData(
+                client1.getUcid(),
+                client1.getUserId(),
+                paymentEventsObject1.getPaymentId().toString());
+        cleanPaymentGateData(
+                client2.getUcid(),
+                client2.getUserId(),
+                paymentEventsObject2.getPaymentId().toString());
+        cleanPaymentGateData(
+                client3.getUcid(),
+                client3.getUserId(),
+                paymentEventsObject3.getPaymentId().toString());
+        cleanPaymentGateData(
+                client4.getUcid(),
+                client4.getUserId(),
+                paymentEventsObject4.getPaymentId().toString());
     }
 
     @Test
@@ -111,7 +139,8 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat(response.code(), is(200));
 
         Allure.step("Validate Data in response");
-        GetPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
+        GetPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
         // top-level paging
         assertThat("Assert page is 1", mappedResponse.getPage(), is(1));
         assertThat("Assert pageSize is 50", mappedResponse.getPageSize(), is(50));
@@ -125,7 +154,10 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat("Assert items count >= 1", mappedResponse.getItems().size(), greaterThanOrEqualTo(1));
 
         GetPaymentsResponseBody.Item item = mappedResponse.getItems().getFirst();
-        assertThat("Assert item.paymentId equals inserted paymentId", item.getPaymentId(), is(paymentEventsObject1.getPaymentId()));
+        assertThat(
+                "Assert item.paymentId equals inserted paymentId",
+                item.getPaymentId(),
+                is(paymentEventsObject1.getPaymentId()));
         assertThat("Assert item.ucid equals client ucid", item.getUcid(), is(client1.getUcid()));
         assertThat("Assert item.type is withdrawal", item.getType(), equalToIgnoringCase("withdrawal"));
         assertThat("Assert item.storedAt present", item.getStoredAt(), not(isEmptyOrNullString()));
@@ -135,7 +167,10 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat("Assert event present", item.getEvent(), notNullValue());
         GetPaymentsResponseBody.Event event = item.getEvent();
         // match provided event sample
-        assertThat("Assert event.id matches", event.getId(), is(java.util.UUID.fromString("123e4567-e89b-12d3-a456-426614174000")));
+        assertThat(
+                "Assert event.id matches",
+                event.getId(),
+                is(java.util.UUID.fromString("123e4567-e89b-12d3-a456-426614174000")));
         assertThat("Assert event.ip matches", event.getIp(), is("121.233.122.82"));
         assertThat("Assert event.cost matches", event.getCost(), is(closeTo(0.56, 0.000_001)));
         assertThat("Assert event.type is withdrawal", event.getType(), is("withdrawal"));
@@ -155,13 +190,25 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat("Assert event.merchantOrderId set", event.getMerchantOrderId(), is("VTSG1115142220250202132259"));
         assertThat("Assert event.paymentTypeCode is 2", event.getPaymentTypeCode(), is(2));
         assertThat("Assert event.paymentTypeName is Credit card", event.getPaymentTypeName(), is("Credit card"));
-        assertThat("Assert event.withdrawalAmount is 1500.00", event.getWithdrawalAmount(), is(closeTo(1500.00, 0.000_001)));
-        assertThat("Assert event.paymentMethodCode is CREDIT_CARD", event.getPaymentMethodCode(), is("CREDIT_CARD"));
+        assertThat(
+                "Assert event.withdrawalAmount is 1500.00",
+                event.getWithdrawalAmount(),
+                is(closeTo(1500.00, 0.000_001)));
+        assertThat(
+                "Assert event.paymentMethodCode is CREDIT_CARD",
+                event.getPaymentMethodCode(),
+                is(PAYMENT_METHOD_CODE_CREDIT_CARD));
         assertThat("Assert event.paymentChannelCode is 1", event.getPaymentChannelCode(), is(1));
         assertThat("Assert event.paymentChannelName is Credit card", event.getPaymentChannelName(), is("Credit card"));
         assertThat("Assert event.withdrawalCurrency is USD", event.getWithdrawalCurrency(), is("USD"));
-        assertThat("Assert event.withdrawalAmountUSD is 1500.00", event.getWithdrawalAmountUSD(), is(closeTo(1500.00, 0.000_001)));
-        assertThat("Assert event.withdrawalApplicationTime present", event.getWithdrawalApplicationTime(), is("2025-07-15 07:38:05"));
+        assertThat(
+                "Assert event.withdrawalAmountUSD is 1500.00",
+                event.getWithdrawalAmountUSD(),
+                is(closeTo(1500.00, 0.000_001)));
+        assertThat(
+                "Assert event.withdrawalApplicationTime present",
+                event.getWithdrawalApplicationTime(),
+                is("2025-07-15 07:38:05"));
         // card assertions
         assertThat("Assert card present", event.getCard(), notNullValue());
         GetPaymentsResponseBody.Card card = event.getCard();
@@ -174,11 +221,23 @@ class GetPaymentsV1Tests extends TestBaseApi {
 
         GetPaymentsResponseBody.Decision decision = item.getDecisions().getFirst();
         assertThat("Assert decisions list present", decision, notNullValue());
-        assertThat("Assert decisions list present", decision.getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
-        assertThat("Assert decisions list present", decision.getDecisionCode(), is(paymentDecisionsObject1.getDecisionCode()));
+        assertThat(
+                "Assert decisions list present",
+                decision.getDecisionType(),
+                is(paymentDecisionsObject1.getDecisionType()));
+        assertThat(
+                "Assert decisions list present",
+                decision.getDecisionCode(),
+                is(paymentDecisionsObject1.getDecisionCode()));
         assertThat("Assert decisions list present", decision.getDecision(), is("Approve"));
-        assertThat("Assert decisions list present", decision.getAttributes().getFirst().getCode(), is("1"));
-        assertThat("Assert decisions list present", decision.getAttributes().getFirst().getValue(), is("Passport"));
+        assertThat(
+                "Assert decisions list present",
+                decision.getAttributes().getFirst().getCode(),
+                is("1"));
+        assertThat(
+                "Assert decisions list present",
+                decision.getAttributes().getFirst().getValue(),
+                is("Passport"));
         assertThat("Assert decisions list present", decision.getDecidedAt(), is(instanceOf(Timestamp.class)));
         assertThat("Assert decisions list present", decision.getActor(), is(paymentDecisionsObject1.getActor()));
     }
@@ -191,20 +250,21 @@ class GetPaymentsV1Tests extends TestBaseApi {
         Allure.step("send get payment request with valid data");
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("ucid", client1.getUcid());
-//        paramsMap.put("paymentId", "");
-//        paramsMap.put("merchantOrderId", "");
-//        paramsMap.put("withdrawalId", "");
-//        paramsMap.put("type", "");
-//        paramsMap.put("decisionType", "");
-//        paramsMap.put("decisionCode", "");
-//        paramsMap.put("finalDecisionCode", "");
-//        paramsMap.put("createdDateFrom", "");
-//        paramsMap.put("createdDateTo", "");
+        //        paramsMap.put("paymentId", "");
+        //        paramsMap.put("merchantOrderId", "");
+        //        paramsMap.put("withdrawalId", "");
+        //        paramsMap.put("type", "");
+        //        paramsMap.put("decisionType", "");
+        //        paramsMap.put("decisionCode", "");
+        //        paramsMap.put("finalDecisionCode", "");
+        //        paramsMap.put("createdDateFrom", "");
+        //        paramsMap.put("createdDateTo", "");
         Response response = getPayments(paramsMap);
         assertThat(response.code(), is(200));
 
         Allure.step("Validate Data in response");
-        GetPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
+        GetPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
         assertThat("Assert paymentId present", mappedResponse.getPage(), is(1));
         assertThat("Assert paymentId present", mappedResponse.getPageSize(), is(50));
         assertThat("Assert paymentId present", mappedResponse.getTotal(), greaterThanOrEqualTo(0));
@@ -223,9 +283,13 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");
-        GetPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
+        GetPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
         assertThat("Assert response", mappedResponse.getError(), is("bad_request"));
-        assertThat("Assert response", mappedResponse.getMessage(), containsString("Provide at least one of ucid, paymentId, merchantOrderId or withdrawalId."));
+        assertThat(
+                "Assert response",
+                mappedResponse.getMessage(),
+                containsString("Provide at least one of ucid, paymentId, merchantOrderId or withdrawalId."));
     }
 
     @Test
@@ -239,9 +303,12 @@ class GetPaymentsV1Tests extends TestBaseApi {
         paramsMap.put("ucid", "vantage-123");
         assertThat(response.code(), is(400));
         Allure.step("Validate Data in response");
-        GetPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
+        GetPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), GetPaymentsResponseBody.class);
         assertThat("Assert response", mappedResponse.getError(), is("bad_request"));
-        assertThat("Assert response", mappedResponse.getMessage(), containsString("Provide at least one of ucid, paymentId, merchantOrderId or withdrawalId."));
+        assertThat(
+                "Assert response",
+                mappedResponse.getMessage(),
+                containsString("Provide at least one of ucid, paymentId, merchantOrderId or withdrawalId."));
     }
-
 }

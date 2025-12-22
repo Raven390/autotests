@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -31,11 +30,16 @@ public class PostRestrictionRequestBody {
     @JsonProperty("additionalParams")
     public AdditionalParam[] additionalParams;
 
-    public PostRestrictionRequestBody() {
-    }
+    public PostRestrictionRequestBody() {}
 
-    public PostRestrictionRequestBody(String ucid, String code, String type, Integer accountId, Integer serverId,
-            String comment, UpdatedBy updatedBy) {
+    public PostRestrictionRequestBody(
+            String ucid,
+            String code,
+            String type,
+            Integer accountId,
+            Integer serverId,
+            String comment,
+            UpdatedBy updatedBy) {
         this.ucid = ucid;
         this.code = code;
         this.type = type;
@@ -45,8 +49,15 @@ public class PostRestrictionRequestBody {
         this.updatedBy = updatedBy;
     }
 
-    public PostRestrictionRequestBody(String ucid, String code, String type, Integer accountId, Integer serverId,
-            String comment, UpdatedBy updatedBy, AdditionalParam[] additionalParams) {
+    public PostRestrictionRequestBody(
+            String ucid,
+            String code,
+            String type,
+            Integer accountId,
+            Integer serverId,
+            String comment,
+            UpdatedBy updatedBy,
+            AdditionalParam[] additionalParams) {
         this.ucid = ucid;
         this.code = code;
         this.type = type;
@@ -61,17 +72,27 @@ public class PostRestrictionRequestBody {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PostRestrictionRequestBody that = (PostRestrictionRequestBody) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(accountId, that.accountId) && Objects.equals(serverId, that.serverId) && Objects.equals(comment, that.comment) && Objects.equals(updatedBy, that.updatedBy) && Objects.deepEquals(additionalParams, that.additionalParams);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(code, that.code)
+                && Objects.equals(type, that.type)
+                && Objects.equals(accountId, that.accountId)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(updatedBy, that.updatedBy)
+                && Objects.deepEquals(additionalParams, that.additionalParams);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, code, type, accountId, serverId, comment, updatedBy, Arrays.hashCode(additionalParams));
+        return Objects.hash(
+                ucid, code, type, accountId, serverId, comment, updatedBy, Arrays.hashCode(additionalParams));
     }
 
     @Override
     public String toString() {
-        return "PostRestrictionRequestBody{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", type='" + type + '\'' + ", accountId=" + accountId + ", serverId=" + serverId + ", comment='" + comment + '\'' + ", updatedBy=" + updatedBy + ", additionalParams=" + Arrays.toString(additionalParams) + '}';
+        return "PostRestrictionRequestBody{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", type='" + type
+                + '\'' + ", accountId=" + accountId + ", serverId=" + serverId + ", comment='" + comment + '\''
+                + ", updatedBy=" + updatedBy + ", additionalParams=" + Arrays.toString(additionalParams) + '}';
     }
 
     public static class UpdatedBy {
@@ -82,8 +103,7 @@ public class PostRestrictionRequestBody {
         @JsonProperty("user")
         String user;
 
-        public UpdatedBy() {
-        }
+        public UpdatedBy() {}
 
         public UpdatedBy(String system, String user) {
             this.system = system;
@@ -120,8 +140,7 @@ public class PostRestrictionRequestBody {
         @JsonProperty("value")
         Object value;
 
-        public AdditionalParam() {
-        }
+        public AdditionalParam() {}
 
         public AdditionalParam(String name, String type, Object value) {
             this.name = name;
@@ -133,7 +152,9 @@ public class PostRestrictionRequestBody {
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
             AdditionalParam that = (AdditionalParam) o;
-            return Objects.equals(name, that.name) && Objects.equals(type, that.type) && Objects.equals(value, that.value);
+            return Objects.equals(name, that.name)
+                    && Objects.equals(type, that.type)
+                    && Objects.equals(value, that.value);
         }
 
         @Override
@@ -143,7 +164,8 @@ public class PostRestrictionRequestBody {
 
         @Override
         public String toString() {
-            return "AdditionalProperty{" + "name='" + name + '\'' + ", type='" + type + '\'' + ", value='" + value + '\'' + '}';
+            return "AdditionalProperty{" + "name='" + name + '\'' + ", type='" + type + '\'' + ", value='" + value
+                    + '\'' + '}';
         }
     }
 }

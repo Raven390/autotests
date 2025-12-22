@@ -1,11 +1,29 @@
 package utils.demo_helpers;
 
+import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
+import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryLvl2;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateBunchMt4TradesCoerced;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
+import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
@@ -16,27 +34,8 @@ import helpers.data.enums.Brand;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
-import net.datafaker.Faker;
-
 import java.util.List;
-
-import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
-import static business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesFactory.generateKycFilesObjectByClient;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryLvl2;
-import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObjectByClient;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateBunchMt4TradesCoerced;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
-import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
-import static helpers.database.DbHelper.*;
-import static utils.Constants.*;
-import static utils.Utils.*;
+import net.datafaker.Faker;
 
 public class DemoClientCreator {
 
@@ -78,7 +77,6 @@ public class DemoClientCreator {
 
         insertObjectsToDbSlow(MT4_TRADES_COERCED_TABLE_NAME, trades);
 
-
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(clientCrm1, clientCrm2, clientCrm3));
 
         CrmTbAccountObject account = generateStaticCrmTbAccountActive(client1);
@@ -97,7 +95,15 @@ public class DemoClientCreator {
         idProofObject.setStatus("SUBMITTED");
         insertObjectToDb(CRM_TB_KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(CRM_TB_ID_PROOF_TABLE_NAME, idProofObject);
-        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
+        ClientHelper referral = ClientHelper.builder()
+                .userId(232_303)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff997c7")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(232_303_001)
+                .tradingAccount2(232_303_002)
+                .serverId(42)
+                .build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";
@@ -111,7 +117,6 @@ public class DemoClientCreator {
         MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount2);
-
 
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client1.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client1.getUcid() + "'");
@@ -131,7 +136,6 @@ public class DemoClientCreator {
         commission2.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
         commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
         insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission2);
-
 
         S3FactLoginMetricsObject historyMetrics1 = generateS3FactLoginMetricsClient(client1);
         historyMetrics1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
@@ -156,9 +160,8 @@ public class DemoClientCreator {
         writeLog("Client " + client1.getUcid() + " created");
     }
 
-//    @Test
+    //    @Test
     public void generateDemoClient() {
         createDemoClient(Brand.VANTAGE, 44_440_302, Regulator.VFSC2, 115);
     }
-
 }

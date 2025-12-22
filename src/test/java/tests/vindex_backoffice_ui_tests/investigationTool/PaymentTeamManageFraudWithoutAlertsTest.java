@@ -1,21 +1,4 @@
-
 package tests.vindex_backoffice_ui_tests.investigationTool;
-
-import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.backoffice_db.client.Client;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
 
 import static business_objects.db.backoffice_db.client.ClientFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
@@ -32,10 +15,25 @@ import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
+
+import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.backoffice_db.client.Client;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Feature("Payment Team manage fraud types without active payment alerts")
 class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
@@ -112,7 +110,10 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
 
         // Verify that "Detected fraud" section is visible (selected fraud should be displayed)
         String selectedFraud = resolvePage.getSelectedFraud();
-        assertThat("Verify that detected fraud section shows selected fraud", selectedFraud.contains("Chargeback"), is(true));
+        assertThat(
+                "Verify that detected fraud section shows selected fraud",
+                selectedFraud.contains("Chargeback"),
+                is(true));
 
         // Verify that "Restrictions" section is visible1
         List<String> restrictionsList = resolvePage.getRestrictionsList();
@@ -127,7 +128,11 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
 
         // Verify that comment input is visible
         resolvePage.fillCommentAndApply("Payment fraud management test");
-        List<AbuserFraudType> abuserFraudTypes = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid = '%s'".formatted(client.getUcid()), AbuserFraudType.class);
+        List<AbuserFraudType> abuserFraudTypes = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid = '%s'".formatted(client.getUcid()),
+                AbuserFraudType.class);
         assertThat(abuserFraudTypes.size(), is(1));
         AbuserFraudType abuserFraudType = abuserFraudTypes.getFirst();
         assertThat("Fraud type inserted into AR DB", abuserFraudType.getFraudTypeCode(), is(CHARGEBACK.getCode()));

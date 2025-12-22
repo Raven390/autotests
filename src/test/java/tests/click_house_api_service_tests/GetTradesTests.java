@@ -1,25 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
-import business_objects.api.clickhouse_api_service.get_trades.GetTradesResponse;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import static business_objects.api.clickhouse_api_service.get_trades.GetTradesRequest.getTrades;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -31,6 +11,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.clickhouse_api_service.get_trades.GetTradesResponse;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_TRADES)
@@ -96,7 +95,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.getDeal()));
@@ -129,7 +129,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
     }
@@ -145,7 +146,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
     }
@@ -164,7 +166,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade2.getDeal()));
@@ -190,7 +193,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.getDeal()));
@@ -217,7 +221,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(trade2.getProfitUsd()));
@@ -232,9 +237,13 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.getError(), is("Either clientId or tradingAccount and serverId must be provided."));
+        assertThat(
+                "Assert error message",
+                mappedResponse.getError(),
+                is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
@@ -255,9 +264,13 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.getError(), is("Either clientId or tradingAccount and serverId must be provided."));
+        assertThat(
+                "Assert error message",
+                mappedResponse.getError(),
+                is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
@@ -278,9 +291,14 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: tradeDate, symbol, profit, profitUSD"));
+        assertThat(
+                "Assert error message",
+                mappedResponse.getError(),
+                is(
+                        "Invalid &quot;orderBy&quot; property format. The property may include only: tradeDate, symbol, profit, profitUSD"));
         assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
@@ -296,7 +314,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
         assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateFrom' with value: 'test'"));
@@ -316,7 +335,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
         assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: 'test'"));
@@ -336,9 +356,14 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: tradeDate, symbol, profit, profitUSD"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                is(
+                        "Invalid &quot;orderBy&quot; property format. The property may include only: tradeDate, symbol, profit, profitUSD"));
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
     }
 
@@ -354,9 +379,13 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
     }
 
@@ -372,7 +401,8 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
         assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'limit' with value: 'test'"));
@@ -392,18 +422,24 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
 
         // Convert to a list of trade IDs
-        List<Long> actualTradeIds = Arrays.stream(mappedResponse).map(r -> r.tradeId).collect(Collectors.toList()).reversed();
+        List<Long> actualTradeIds = Arrays.stream(mappedResponse)
+                .map(r -> r.tradeId)
+                .collect(Collectors.toList())
+                .reversed();
 
         // Expected trade IDs
         List<Long> expectedTradeIds = Arrays.asList(trade4.getDeal(), trade5.getDeal());
 
         // Assertions
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert all expected tradeIds are present", actualTradeIds, containsInAnyOrder(expectedTradeIds.toArray()));
-
+        assertThat(
+                "Assert all expected tradeIds are present",
+                actualTradeIds,
+                containsInAnyOrder(expectedTradeIds.toArray()));
     }
 
     @Test
@@ -418,16 +454,23 @@ class GetTradesTests extends TestBaseApi {
         Response response = getTrades(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
+        GetTradesResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
 
         // Convert to a list of trade IDs
-        List<Long> actualTradeIds = Arrays.stream(mappedResponse).map(r -> r.tradeId).collect(Collectors.toList()).reversed();
+        List<Long> actualTradeIds = Arrays.stream(mappedResponse)
+                .map(r -> r.tradeId)
+                .collect(Collectors.toList())
+                .reversed();
 
         // Expected trade IDs
         List<Long> expectedTradeIds = Arrays.asList(trade4.getDeal(), trade5.getDeal());
 
         // Assertions
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert all expected tradeIds are present", actualTradeIds, containsInAnyOrder(expectedTradeIds.toArray()));
+        assertThat(
+                "Assert all expected tradeIds are present",
+                actualTradeIds,
+                containsInAnyOrder(expectedTradeIds.toArray()));
     }
 }

@@ -14,8 +14,13 @@ public class ConnectionTableEntry {
     public String status;
     public Integer ver;
 
-    public ConnectionTableEntry(String userFrom, String userTo, String degreeConnection, Double connectionScore,
-            List<ConnectionInfo> connectionInfo, String datetime) {
+    public ConnectionTableEntry(
+            String userFrom,
+            String userTo,
+            String degreeConnection,
+            Double connectionScore,
+            List<ConnectionInfo> connectionInfo,
+            String datetime) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.degreeConnection = degreeConnection;
@@ -25,9 +30,14 @@ public class ConnectionTableEntry {
     }
 
     public ConnectionTableEntry(
-            String userFrom, String userTo, String degreeConnection, Double connectionScore,
+            String userFrom,
+            String userTo,
+            String degreeConnection,
+            Double connectionScore,
             List<ConnectionInfo> connectionInfo,
-            String datetime, String status, Integer ver) {
+            String datetime,
+            String status,
+            Integer ver) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.degreeConnection = degreeConnection;
@@ -42,7 +52,14 @@ public class ConnectionTableEntry {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ConnectionTableEntry that = (ConnectionTableEntry) o;
-        return Objects.equals(userFrom, that.userFrom) && Objects.equals(userTo, that.userTo) && Objects.equals(degreeConnection, that.degreeConnection) && Objects.equals(connectionScore, that.connectionScore) && Objects.equals(connectionInfo, that.connectionInfo) && Objects.equals(datetime, that.datetime) && Objects.equals(status, that.status) && Objects.equals(ver, that.ver);
+        return Objects.equals(userFrom, that.userFrom)
+                && Objects.equals(userTo, that.userTo)
+                && Objects.equals(degreeConnection, that.degreeConnection)
+                && Objects.equals(connectionScore, that.connectionScore)
+                && Objects.equals(connectionInfo, that.connectionInfo)
+                && Objects.equals(datetime, that.datetime)
+                && Objects.equals(status, that.status)
+                && Objects.equals(ver, that.ver);
     }
 
     @Override
@@ -52,7 +69,10 @@ public class ConnectionTableEntry {
 
     @Override
     public String toString() {
-        return "ConnectionTableEntry{" + "userFrom='" + userFrom + '\'' + ", userTo='" + userTo + '\'' + ", degreeConnection='" + degreeConnection + '\'' + ", connectionScore=" + connectionScore + ", connectionInfo='" + connectionInfo + '\'' + ", datetime='" + datetime + '\'' + ", status='" + status + '\'' + ", ver=" + ver + '}';
+        return "ConnectionTableEntry{" + "userFrom='" + userFrom + '\'' + ", userTo='" + userTo + '\''
+                + ", degreeConnection='" + degreeConnection + '\'' + ", connectionScore=" + connectionScore
+                + ", connectionInfo='" + connectionInfo + '\'' + ", datetime='" + datetime + '\'' + ", status='"
+                + status + '\'' + ", ver=" + ver + '}';
     }
 
     public static class ConnectionInfo {
@@ -62,7 +82,9 @@ public class ConnectionTableEntry {
         public String relationType;
 
         public ConnectionInfo(
-                String connectionAttributeName, String connectionAttributeValue, String sourceAttributeValue,
+                String connectionAttributeName,
+                String connectionAttributeValue,
+                String sourceAttributeValue,
                 String relationType) {
             this.connectionAttributeName = connectionAttributeName;
             this.connectionAttributeValue = connectionAttributeValue;
@@ -70,11 +92,10 @@ public class ConnectionTableEntry {
             this.relationType = relationType;
         }
 
-        public ConnectionInfo() {
-        }
+        public ConnectionInfo() {}
 
         public static String connectionInfoToString(List<ConnectionInfo> connectionInfos) {
-//
+            //
             StringBuilder bld = new StringBuilder();
             bld.append("[");
             int counter = connectionInfos.size();
@@ -92,9 +113,10 @@ public class ConnectionTableEntry {
 
         @Override
         public String toString() {
-            return "{" + "\"connectionAttributeName\":\"" + connectionAttributeName + '\"' + ", \"connectionAttributeValue\":\"" + connectionAttributeValue + '\"' + ", \"sourceAttributeValue\":\"" + sourceAttributeValue + '\"' + ", \"relationType\":\"" + relationType + '\"' + '}';
+            return "{" + "\"connectionAttributeName\":\"" + connectionAttributeName + '\"'
+                    + ", \"connectionAttributeValue\":\"" + connectionAttributeValue + '\"'
+                    + ", \"sourceAttributeValue\":\"" + sourceAttributeValue + '\"' + ", \"relationType\":\""
+                    + relationType + '\"' + '}';
         }
     }
-
-
 }

@@ -1,16 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -24,6 +13,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
 
@@ -78,13 +77,31 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @AllureId("575")
     @DisplayName("Verify sorting by open column in trading - operations tab")
     public void verifyTradingInfoDealsOpenSortingTest() {
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Newest → Oldest"));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert sort by open popup text",
+                tradingPage.getSortByOpenPopupText(),
+                equalTo("Change sorting to:Newest → Oldest"));
         tradingPage.sortByOpen();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Oldest → Newest"));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert sort by open popup text",
+                tradingPage.getSortByOpenPopupText(),
+                equalTo("Change sorting to:Oldest → Newest"));
     }
 
     @Test
@@ -93,18 +110,43 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @AllureId("1058")
     @DisplayName("Verify sorting by profit column in trading - operations tab")
     public void verifyTradingInfoDealsProfitSortingTest() {
-        assertThat("Assert sort by profit popup text", tradingPage.getSortByProfitPopupText(), equalTo("Sort by profit:Descending"));
+        assertThat(
+                "Assert sort by profit popup text",
+                tradingPage.getSortByProfitPopupText(),
+                equalTo("Sort by profit:Descending"));
         tradingPage.sortByProfit();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert sort by profit popup text", tradingPage.getSortByProfitPopupText(), equalTo("Change sorting to:Ascending"));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert sort by profit popup text",
+                tradingPage.getSortByProfitPopupText(),
+                equalTo("Change sorting to:Ascending"));
         tradingPage.sortByProfit();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert sort by profit popup text", tradingPage.getSortByProfitPopupText(), equalTo("Remove sorting"));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert sort by profit popup text", tradingPage.getSortByProfitPopupText(), equalTo("Remove sorting"));
         tradingPage.sortByProfit();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
     }
 
     @Test
@@ -113,18 +155,42 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @AllureId("1059")
     @DisplayName("Verify sorting by close column in trading - operations tab")
     public void verifyTradingInfoDealsCloseSortingTest() {
-        assertThat("Assert sort by close popup text", tradingPage.getSortByClosePopupText(), equalTo("Sort by close time:Newest → Oldest"));
+        assertThat(
+                "Assert sort by close popup text",
+                tradingPage.getSortByClosePopupText(),
+                equalTo("Sort by close time:Newest → Oldest"));
         tradingPage.sortByClose();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert sort by close popup text", tradingPage.getSortByClosePopupText(), equalTo("Change sorting to:Oldest → Newest"));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert sort by close popup text",
+                tradingPage.getSortByClosePopupText(),
+                equalTo("Change sorting to:Oldest → Newest"));
         tradingPage.sortByClose();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
         assertThat("Assert sort by close popup text", tradingPage.getSortByClosePopupText(), equalTo("Remove sorting"));
         tradingPage.sortByClose();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
     }
 
     @Test
@@ -137,7 +203,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.getTicketType());
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -150,7 +219,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.getAccount().toString());
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -163,7 +235,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.getOpenTime()));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -176,7 +251,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.getCloseTime()));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -189,7 +267,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.fillDurationValues("1", "");
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -202,7 +283,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.getSymbol());
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -215,7 +299,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.fillProfitValues(trade2.getProfitUsd().toString(), "200");
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -228,7 +315,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.fillVolumeAmountValues(trade2.getNotionalValueUsd().toString(), "200");
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -241,7 +331,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.getReasonName());
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
-        assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert only the expected operation is present in the table",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
     }
 
     @Test
@@ -315,7 +408,9 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("account = %s OR account = %s", account1.account, account2.account));
+        deleteEntryFromDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);
     }
 }

@@ -1,25 +1,57 @@
 package business_objects.db.clickhouse.mt_tb_credits;
 
+import static helpers.data.enums.NbdComment.getRandomNbdComment;
+import static utils.Utils.*;
 
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
-import utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static helpers.data.enums.NbdComment.getRandomNbdComment;
-import static utils.Utils.*;
+import utils.Utils;
 
 public class MtTbCreditsObjectFactory {
     @Step("Generate credit object by client object")
     public static MtTbCreditsObject generateCreditsByClient(ClientHelper client) {
-        return new MtTbCreditsObject(client.getTradingAccount(), 1.0, 1.0, client.getBrand(), Utils.getRandomUuidString(), getCurrentTimestampDbFormat(), "USD", "VFSC", client.getServerId(), "server1", getRandomIntPositive(), client.getUcid(), Utils.getRandomUuidString(), client.getUserId(), Utils.getRandomUuidString(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat());
+        return new MtTbCreditsObject(
+                client.getTradingAccount(),
+                1.0,
+                1.0,
+                client.getBrand(),
+                Utils.getRandomUuidString(),
+                getCurrentTimestampDbFormat(),
+                "USD",
+                "VFSC",
+                client.getServerId(),
+                "server1",
+                getRandomIntPositive(),
+                client.getUcid(),
+                Utils.getRandomUuidString(),
+                client.getUserId(),
+                Utils.getRandomUuidString(),
+                getCurrentTimestampDbFormat(),
+                getCurrentTimestampDbFormat());
     }
 
     @Step("Generate credit object by client object")
     public static MtTbCreditsObject generateCreditsByClient(ClientHelper client, Double amount) {
-        return new MtTbCreditsObject(client.getTradingAccount(), amount, amount, client.getBrand(), Utils.getRandomUuidString(), getCurrentTimestampDbFormat(), "USD", "VFSC", client.getServerId(), "server1", getRandomIntPositive(), client.getUcid(), Utils.getRandomUuidString(), client.getUserId(), Utils.getRandomUuidString(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat());
+        return new MtTbCreditsObject(
+                client.getTradingAccount(),
+                amount,
+                amount,
+                client.getBrand(),
+                Utils.getRandomUuidString(),
+                getCurrentTimestampDbFormat(),
+                "USD",
+                "VFSC",
+                client.getServerId(),
+                "server1",
+                getRandomIntPositive(),
+                client.getUcid(),
+                Utils.getRandomUuidString(),
+                client.getUserId(),
+                Utils.getRandomUuidString(),
+                getCurrentTimestampDbFormat(),
+                getCurrentTimestampDbFormat());
     }
 
     @Step("Generate credit object by client object")

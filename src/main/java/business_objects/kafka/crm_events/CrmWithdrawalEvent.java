@@ -1,13 +1,13 @@
 package business_objects.kafka.crm_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Objects;
-
 @Getter
 @Setter
+@Deprecated
 public class CrmWithdrawalEvent {
     @JsonProperty("accountType")
     private String accountType;
@@ -87,8 +87,7 @@ public class CrmWithdrawalEvent {
     @JsonProperty("withdrawalId")
     private Long withdrawalId;
 
-    public CrmWithdrawalEvent() {
-    }
+    public CrmWithdrawalEvent() {}
 
     public Double getWithdrawalAmountUSD() {
         return withdrawalAmountUSD;
@@ -99,11 +98,30 @@ public class CrmWithdrawalEvent {
     }
 
     public CrmWithdrawalEvent(
-            String accountType, String binNumber, String brand, String checkName, long clientId, String eventDate,
-            String expMonth, String expYear, String fullName, String id, String merchantOrderId, Integer mt4Account,
-            String paymentChannelCode, String paymentChannelName, String paymentMethodCode, String platform,
-            String regulator, String schemaVersion, String type, Double withdrawalAmount, Double withdrawalAmountUSD,
-            String withdrawalApplicationTime, String withdrawalCurrency, Long withdrawalId) {
+            String accountType,
+            String binNumber,
+            String brand,
+            String checkName,
+            long clientId,
+            String eventDate,
+            String expMonth,
+            String expYear,
+            String fullName,
+            String id,
+            String merchantOrderId,
+            Integer mt4Account,
+            String paymentChannelCode,
+            String paymentChannelName,
+            String paymentMethodCode,
+            String platform,
+            String regulator,
+            String schemaVersion,
+            String type,
+            Double withdrawalAmount,
+            Double withdrawalAmountUSD,
+            String withdrawalApplicationTime,
+            String withdrawalCurrency,
+            Long withdrawalId) {
         this.accountType = accountType;
         this.binNumber = binNumber;
         this.brand = brand;
@@ -131,12 +149,29 @@ public class CrmWithdrawalEvent {
     }
 
     public CrmWithdrawalEvent(
-            String accountType, String binNumber, String brand, String checkName, long clientId, String eventDate,
-            String expMonth, String expYear, String fullName, String id, String merchantOrderId, Integer mt4Account,
-            String paymentChannelCode, String paymentChannelName, String paymentMethodCode, String platform,
-            String regulator, String schemaVersion, String type, double withdrawalAmount,
+            String accountType,
+            String binNumber,
+            String brand,
+            String checkName,
+            long clientId,
+            String eventDate,
+            String expMonth,
+            String expYear,
+            String fullName,
+            String id,
+            String merchantOrderId,
+            Integer mt4Account,
+            String paymentChannelCode,
+            String paymentChannelName,
+            String paymentMethodCode,
+            String platform,
+            String regulator,
+            String schemaVersion,
+            String type,
+            double withdrawalAmount,
             String withdrawalApplicationTime,
-            String withdrawalCurrency, long withdrawalId) {
+            String withdrawalCurrency,
+            long withdrawalId) {
         this.accountType = accountType;
         this.binNumber = binNumber;
         this.brand = brand;
@@ -165,25 +200,70 @@ public class CrmWithdrawalEvent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof CrmWithdrawalEvent that)) return false;
-        return clientId == that.clientId && mt4Account == that.mt4Account && Double.compare(withdrawalAmount, that.withdrawalAmount) == 0 && withdrawalId == that.withdrawalId && Objects.equals(
-                accountType, that.accountType) && Objects.equals(binNumber, that.binNumber) && Objects.equals(
-                        brand, that.brand) && Objects.equals(checkName, that.checkName) && Objects.equals(
-                                eventDate, that.eventDate) && Objects.equals(expMonth, that.expMonth) && Objects.equals(
-                                        expYear, that.expYear) && Objects.equals(fullName, that.fullName) && Objects.equals(id, that.id) && Objects.equals(
-                                                merchantOrderId, that.merchantOrderId) && Objects.equals(paymentChannelCode, that.paymentChannelCode) && Objects.equals(
-                                                        paymentChannelName, that.paymentChannelName) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(
-                                                                platform, that.platform) && Objects.equals(regulator, that.regulator) && Objects.equals(
-                                                                        schemaVersion, that.schemaVersion) && Objects.equals(type, that.type) && Objects.equals(
-                                                                                withdrawalApplicationTime, that.withdrawalApplicationTime) && Objects.equals(withdrawalCurrency, that.withdrawalCurrency);
+        return clientId == that.clientId
+                && mt4Account == that.mt4Account
+                && Double.compare(withdrawalAmount, that.withdrawalAmount) == 0
+                && withdrawalId == that.withdrawalId
+                && Objects.equals(accountType, that.accountType)
+                && Objects.equals(binNumber, that.binNumber)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(checkName, that.checkName)
+                && Objects.equals(eventDate, that.eventDate)
+                && Objects.equals(expMonth, that.expMonth)
+                && Objects.equals(expYear, that.expYear)
+                && Objects.equals(fullName, that.fullName)
+                && Objects.equals(id, that.id)
+                && Objects.equals(merchantOrderId, that.merchantOrderId)
+                && Objects.equals(paymentChannelCode, that.paymentChannelCode)
+                && Objects.equals(paymentChannelName, that.paymentChannelName)
+                && Objects.equals(paymentMethodCode, that.paymentMethodCode)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(schemaVersion, that.schemaVersion)
+                && Objects.equals(type, that.type)
+                && Objects.equals(withdrawalApplicationTime, that.withdrawalApplicationTime)
+                && Objects.equals(withdrawalCurrency, that.withdrawalCurrency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountType, binNumber, brand, checkName, clientId, eventDate, expMonth, expYear, fullName, id, merchantOrderId, mt4Account, paymentChannelCode, paymentChannelName, paymentMethodCode, platform, regulator, schemaVersion, type, withdrawalAmount, withdrawalApplicationTime, withdrawalCurrency, withdrawalId);
+        return Objects.hash(
+                accountType,
+                binNumber,
+                brand,
+                checkName,
+                clientId,
+                eventDate,
+                expMonth,
+                expYear,
+                fullName,
+                id,
+                merchantOrderId,
+                mt4Account,
+                paymentChannelCode,
+                paymentChannelName,
+                paymentMethodCode,
+                platform,
+                regulator,
+                schemaVersion,
+                type,
+                withdrawalAmount,
+                withdrawalApplicationTime,
+                withdrawalCurrency,
+                withdrawalId);
     }
 
     @Override
     public String toString() {
-        return "CrmWithdrawalEvent{" + "accountType='" + accountType + '\'' + ", binNumber='" + binNumber + '\'' + ", brand='" + brand + '\'' + ", checkName='" + checkName + '\'' + ", clientId=" + clientId + ", eventDate='" + eventDate + '\'' + ", expMonth='" + expMonth + '\'' + ", expYear='" + expYear + '\'' + ", fullName='" + fullName + '\'' + ", id='" + id + '\'' + ", merchantOrderId='" + merchantOrderId + '\'' + ", mt4Account=" + mt4Account + ", paymentChannelCode='" + paymentChannelCode + '\'' + ", paymentChannelName='" + paymentChannelName + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", platform='" + platform + '\'' + ", regulator='" + regulator + '\'' + ", schemaVersion='" + schemaVersion + '\'' + ", type='" + type + '\'' + ", withdrawalAmount=" + withdrawalAmount + ", withdrawalApplicationTime='" + withdrawalApplicationTime + '\'' + ", withdrawalCurrency='" + withdrawalCurrency + '\'' + ", withdrawalId=" + withdrawalId + '}';
+        return "CrmWithdrawalEvent{" + "accountType='" + accountType + '\'' + ", binNumber='" + binNumber + '\''
+                + ", brand='" + brand + '\'' + ", checkName='" + checkName + '\'' + ", clientId=" + clientId
+                + ", eventDate='" + eventDate + '\'' + ", expMonth='" + expMonth + '\'' + ", expYear='" + expYear + '\''
+                + ", fullName='" + fullName + '\'' + ", id='" + id + '\'' + ", merchantOrderId='" + merchantOrderId
+                + '\'' + ", mt4Account=" + mt4Account + ", paymentChannelCode='" + paymentChannelCode + '\''
+                + ", paymentChannelName='" + paymentChannelName + '\'' + ", paymentMethodCode='" + paymentMethodCode
+                + '\'' + ", platform='" + platform + '\'' + ", regulator='" + regulator + '\'' + ", schemaVersion='"
+                + schemaVersion + '\'' + ", type='" + type + '\'' + ", withdrawalAmount=" + withdrawalAmount
+                + ", withdrawalApplicationTime='" + withdrawalApplicationTime + '\'' + ", withdrawalCurrency='"
+                + withdrawalCurrency + '\'' + ", withdrawalId=" + withdrawalId + '}';
     }
 }

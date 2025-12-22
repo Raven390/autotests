@@ -1,19 +1,18 @@
 package helpers.database;
 
-import business_objects.db.audit_service_db.AuditEvent;
-import io.qameta.allure.Allure;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.audit_service_db.AuditEvent;
+import io.qameta.allure.Allure;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AuHelper {
     public static void cleanClientAudit(String... ucid) throws Exception {
@@ -26,7 +25,8 @@ public class AuHelper {
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<AuditEvent> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
+            events = getObjectsFromDB(
+                    POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
@@ -37,15 +37,22 @@ public class AuHelper {
         AuditEvent event1 = events.getFirst();
         AuditEvent event2 = events.get(1);
         AuditEvent event3 = events.getLast();
-        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
-        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
-        assertThat(event3.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(
+                event1.getType(),
+                is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(
+                event2.getType(),
+                is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(
+                event3.getType(),
+                is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
     }
 
     public static void checkRestrictionCancelAudit(String ucid) throws Exception {
         List<AuditEvent> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
+            events = getObjectsFromDB(
+                    POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
@@ -56,8 +63,14 @@ public class AuHelper {
         AuditEvent event1 = events.getFirst();
         AuditEvent event2 = events.get(1);
         AuditEvent event3 = events.getLast();
-        assertThat(event1.getType(), is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));
-        assertThat(event2.getType(), is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));
-        assertThat(event3.getType(), is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(
+                event1.getType(),
+                is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(
+                event2.getType(),
+                is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(
+                event3.getType(),
+                is(oneOf(CANCELLATION_REQUESTED_STATUS, RESTRICTION_CANCELLED_STATUS, COMMENT_ADDED_TYPE)));
     }
 }

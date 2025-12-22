@@ -1,9 +1,7 @@
 package business_objects.api.clickhouse_api_service.get_credit_risk_free_revenue_ratio;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
-
 
 public class GetCreditRiskFreeRevenueRatioResponse {
 
@@ -29,6 +27,5 @@ public class GetCreditRiskFreeRevenueRatioResponse {
 
         @JsonProperty("creditRiskFreeRevenueRatio")
         public String creditRiskFreeRevenueRatio;
-
     }
 }

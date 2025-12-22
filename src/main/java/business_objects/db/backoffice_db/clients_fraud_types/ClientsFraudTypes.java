@@ -9,8 +9,7 @@ public class ClientsFraudTypes {
     public Boolean isDeleted;
     public Timestamp updatedAt;
 
-    public ClientsFraudTypes() {
-    }
+    public ClientsFraudTypes() {}
 
     public ClientsFraudTypes(Long fraudTypeId, String clientUcid) {
         this.fraudTypeId = fraudTypeId;
@@ -60,7 +59,9 @@ public class ClientsFraudTypes {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ClientsFraudTypes that = (ClientsFraudTypes) o;
-        return Objects.equals(clientUcid, that.clientUcid) && Objects.equals(fraudTypeId, that.fraudTypeId) && Objects.equals(isDeleted, that.isDeleted);
+        return Objects.equals(clientUcid, that.clientUcid)
+                && Objects.equals(fraudTypeId, that.fraudTypeId)
+                && Objects.equals(isDeleted, that.isDeleted);
     }
 
     @Override
@@ -70,6 +71,7 @@ public class ClientsFraudTypes {
 
     @Override
     public String toString() {
-        return "ClientFraudTypes{" + "clientUcid='" + clientUcid + '\'' + ", fraudTypeId=" + fraudTypeId + ", isDeleted=" + isDeleted + ", updatedAt='" + updatedAt + '\'' + '}';
+        return "ClientFraudTypes{" + "clientUcid='" + clientUcid + '\'' + ", fraudTypeId=" + fraudTypeId
+                + ", isDeleted=" + isDeleted + ", updatedAt='" + updatedAt + '\'' + '}';
     }
 }

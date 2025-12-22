@@ -1,5 +1,19 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Currency.USD;
+import static helpers.database.BoHelper.*;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.writeLog;
+
 import business_objects.db.abuse_registry_db.FraudTypeCategory;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -14,29 +28,14 @@ import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.Currency.USD;
-import static helpers.database.BoHelper.*;
-import static helpers.database.DbHelper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
-import static utils.Utils.writeLog;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Slf4j
 @Feature("Display fraud types for managing based on role")
@@ -80,7 +79,8 @@ class FraudTypeCategoryTest extends TestBaseWeb {
     static void setupData() throws Exception {
         objectMapper.findAndRegisterModules();
 
-        List<FraudTypeCategory> fraudTypeCategories = getObjectsFromDB(DbName.POSTGRES, AR_FRAUD_TYPE_CATEGORY_TABLE_NAME, null, FraudTypeCategory.class);
+        List<FraudTypeCategory> fraudTypeCategories =
+                getObjectsFromDB(DbName.POSTGRES, AR_FRAUD_TYPE_CATEGORY_TABLE_NAME, null, FraudTypeCategory.class);
 
         for (FraudTypeCategory category : fraudTypeCategories) {
             FraudType fraudType = FraudType.valueOfCode(category.getFraudTypeCode());
@@ -95,7 +95,6 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         Set<String> paymentSet = new HashSet<>(paymentFraudTypes);
         tradingFraudTypes.stream().filter(paymentSet::contains).forEach(dualCategoryFraudTypes::add);
-
 
         // Setup Trading client
         tradingAccount = generateCrmTbAccountDataForUi(tradingClient);
@@ -150,13 +149,19 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Check that all visible fraud types are trading fraud types
         for (String fraudType : availableFraudTypes) {
-            assertThat("Fraud type %s should be a TRADING fraud type".formatted(fraudType), tradingFraudTypes, hasItem(fraudType));
+            assertThat(
+                    "Fraud type %s should be a TRADING fraud type".formatted(fraudType),
+                    tradingFraudTypes,
+                    hasItem(fraudType));
         }
 
         // Check that payment-only fraud types are NOT present
         for (String paymentFraud : paymentFraudTypes) {
             if (dualCategoryFraudTypes.contains(paymentFraud)) continue;
-            assertThat("Payment-only fraud type %s should NOT be visible".formatted(paymentFraud), availableFraudTypes, not(hasItem(paymentFraud)));
+            assertThat(
+                    "Payment-only fraud type %s should NOT be visible".formatted(paymentFraud),
+                    availableFraudTypes,
+                    not(hasItem(paymentFraud)));
         }
     }
 
@@ -166,7 +171,8 @@ class FraudTypeCategoryTest extends TestBaseWeb {
     void testPaymentTeamSeesOnlyPaymentFraudTypes() throws Exception {
         // Send payment alert
         PaymentAlertMessage paymentAlert = generatePaymentAlertByUcid(paymentCrmUser.ucid);
-        kafka.produceMessage(paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
         Thread.sleep(2000);
 
         // Login and navigate
@@ -186,13 +192,19 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Check that all visible fraud types are payment fraud types
         for (String fraudType : availableFraudTypes) {
-            assertThat("Fraud type %s should be a PAYMENT fraud type".formatted(fraudType), paymentFraudTypes, hasItem(fraudType));
+            assertThat(
+                    "Fraud type %s should be a PAYMENT fraud type".formatted(fraudType),
+                    paymentFraudTypes,
+                    hasItem(fraudType));
         }
 
         // Check that trading-only fraud types are NOT present
         for (String tradingFraud : tradingFraudTypes) {
             if (dualCategoryFraudTypes.contains(tradingFraud)) continue;
-            assertThat("Trading-only fraud type %s should NOT be visible".formatted(tradingFraud), availableFraudTypes, not(hasItem(tradingFraud)));
+            assertThat(
+                    "Trading-only fraud type %s should NOT be visible".formatted(tradingFraud),
+                    availableFraudTypes,
+                    not(hasItem(tradingFraud)));
         }
     }
 
@@ -206,7 +218,8 @@ class FraudTypeCategoryTest extends TestBaseWeb {
         kafka.produceMessage(tradingAlert.alertId, objectMapper.writeValueAsString(tradingAlert), KAFKA_TOPIC_ALERTS);
 
         PaymentAlertMessage paymentAlert = generatePaymentAlertByUcid(dualCrmUser.ucid);
-        kafka.produceMessage(paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
         Thread.sleep(2000);
 
         investigationPage.navigateEnterPage();
@@ -218,8 +231,8 @@ class FraudTypeCategoryTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
 
         List<String> tradingFraudTypes = resolvePage.getFraudTypesList();
-        List<String> allFraudNames = Stream.concat(tradingFraudTypes.stream(), paymentFraudTypes.stream()).toList();
-
+        List<String> allFraudNames = Stream.concat(tradingFraudTypes.stream(), paymentFraudTypes.stream())
+                .toList();
 
         for (String fraudType : tradingFraudTypes) {
             assertThat("All fraud types should be visible for dual client", allFraudNames, hasItem(fraudType));
@@ -248,7 +261,10 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         List<String> tradingFraudTypes = resolvePage.getFraudTypesList();
         for (String dualFraudType : dualCategoryFraudTypes) {
-            assertThat("Dual category fraud types should be available in PAYMENT investigation", tradingFraudTypes, hasItem(dualFraudType));
+            assertThat(
+                    "Dual category fraud types should be available in PAYMENT investigation",
+                    tradingFraudTypes,
+                    hasItem(dualFraudType));
         }
     }
 
@@ -258,7 +274,8 @@ class FraudTypeCategoryTest extends TestBaseWeb {
     void testDualCategoryFraudTypesForPaymentRole() throws Exception {
         // Send trading alert
         PaymentAlertMessage paymentAlert = generatePaymentAlertByUcid(paymentCrmUser.ucid);
-        kafka.produceMessage(paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
@@ -272,7 +289,10 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         List<String> paymentFraudTypes = resolvePage.getFraudTypesList();
         for (String dualFraudType : dualCategoryFraudTypes) {
-            assertThat("Dual category fraud types should be available in PAYMENT investigation", paymentFraudTypes, hasItem(dualFraudType));
+            assertThat(
+                    "Dual category fraud types should be available in PAYMENT investigation",
+                    paymentFraudTypes,
+                    hasItem(dualFraudType));
         }
     }
 

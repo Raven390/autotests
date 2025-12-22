@@ -1,17 +1,21 @@
 package business_objects.kafka.mt_db_events.open_trade;
 
-import io.qameta.allure.Step;
-import utils.Utils;
-
 import static utils.Utils.*;
 
+import io.qameta.allure.Step;
+import utils.Utils;
 
 public class OpenTradeMtDbEventFactory {
 
     @Step("Generate open trade db event metadata")
     private static OpenTradeMtDbEventMetadata generateOpenTradeMtDbEventMetadata() {
         return new OpenTradeMtDbEventMetadata(
-                Utils.getCurrentTimestampDbFormat(), "test_record_type", "insert", "test_partition_key_type", "test_schema_name", null);
+                Utils.getCurrentTimestampDbFormat(),
+                "test_record_type",
+                "insert",
+                "test_partition_key_type",
+                "test_schema_name",
+                null);
     }
 
     @Step("Generate open trade db event metadata mt4")
@@ -31,13 +35,27 @@ public class OpenTradeMtDbEventFactory {
     @Step("Generate open trade db event data mt4")
     private static OpenTradeMtDbEventMt4Data generateOpenTradeMtDbEventDataMT4() {
         return new OpenTradeMtDbEventMt4Data(
-                Utils.getCurrentTimestampDbFormat(), getRandomIntPositive(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "test_symbol", 0, null, 9);
+                Utils.getCurrentTimestampDbFormat(),
+                getRandomIntPositive(),
+                getRandomIntNotInRange(741_000, 749_999),
+                3.45d,
+                "test_symbol",
+                0,
+                null,
+                9);
     }
 
     @Step("Generate open trade db event data mt5")
     private static OpenTradeMtDbEventMt5Data generateOpenTradeMtDbEventDataMT5() {
         return new OpenTradeMtDbEventMt5Data(
-                Utils.getCurrentTimestampDbFormat(), getRandomIntPositive(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "test_symbol", 0, 0, 9);
+                Utils.getCurrentTimestampDbFormat(),
+                getRandomIntPositive(),
+                getRandomIntNotInRange(741_000, 749_999),
+                3.45d,
+                "test_symbol",
+                0,
+                0,
+                9);
     }
 
     @Step("Generate open trade db event mt4")

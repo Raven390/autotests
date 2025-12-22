@@ -1,6 +1,5 @@
 package business_objects.db.clickhouse.s3_fact_login_metrics;
 
-
 import java.util.Objects;
 
 public class S3FactLoginMetricsObject {
@@ -96,7 +95,36 @@ public class S3FactLoginMetricsObject {
 
     @Override
     public String toString() {
-        return "s3FactLoginMetricsObject{" + "date='" + date + '\'' + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverId=" + serverId + ", server='" + server + '\'' + ", accountGroup='" + accountGroup + '\'' + ", platform='" + platform + '\'' + ", currency='" + currency + '\'' + ", dailyDeposit=" + dailyDeposit + ", dailyWithdrawal=" + dailyWithdraw + ", dailyNetDeposit=" + dailyNetDeposit + ", balance=" + balance + ", credit=" + credit + ", equity=" + equity + ", floatingPnl=" + floatingPnl + ", dailyNetClosedPnl=" + dailyNetClosedPnl + ", dailyTradingVolumeIn=" + dailyTradingVolIn + ", dailyTradingVolumeOut=" + dailyTradingVolOut + ", dailyDividend=" + dailyDividend + ", dailyCommissionRevenue=" + dailyCommissionRevenue + ", dailyCashAdjDebtWo=" + dailyCashAdjDebtWo + ", dailyNegativeAdj=" + dailyNegativeAdj + ", dailyAdminFee=" + dailyAdminFee + ", dailyRollover=" + dailyRollover + ", dailyPnlAdj=" + dailyPnlAdj + ", dailySwapsRevenue=" + dailySwapsRevenue + ", dailyGrossClientPnl=" + dailyGrossClientPnl + ", dailyRebateToTrade=" + dailyRebateToTrade + ", dailySwapsCalc=" + dailySwapsCalc + ", dailyProfitsCalc=" + dailyProfitsCalc + ", balanceLocal=" + balanceLocal + ", creditLocal=" + creditLocal + ", equityLocal=" + equityLocal + ", deltaPnl=" + deltaPnl + ", deltaSwaps=" + deltaSwaps + ", dailyCoreSpreadRevenueOz=" + dailyCoreSpreadRevenueOz + ", dailyTakerSpreadRevenueOz=" + dailyTakerSpreadRevenueOz + ", dailyClientSlippageRevenueOz=" + dailyClientSlippageRevenueOz + ", dailyLpSpreadRevenueOz=" + dailyLpSpreadRevenueOz + ", dailyCoreSpreadRevenuePe=" + dailyCoreSpreadRevenuePe + ", dailyTakerSpreadRevenuePe=" + dailyTakerSpreadRevenuePe + ", dailyLpSpreadRevenuePe=" + dailyLpSpreadRevenuePe + ", dailyClientSlippageRevenuePe=" + dailyClientSlippageRevenuePe + ", dailyTotalSpreadRevenue=" + dailyTotalSpreadRevenue + ", dailyDepositCount=" + dailyDepositCount + ", dailyDepositReversalCount=" + dailyDepositReversalCount + ", dailyWithdrawCount=" + dailyWithdrawCount + ", dailyWithdrawReversalCount=" + dailyWithdrawReversalCount + ", dailyVbSpreadRevenueOz=" + dailyVbSpreadRevenueOz + ", dailyAppliedMinSpreadRevenueOz=" + dailyAppliedMinSpreadRevenueOz + ", dailyAppliedMaxSpreadRevenueOz=" + dailyAppliedMaxSpreadRevenueOz + ", dailyStpOz=" + dailyStpOz + ", dailySlpOz=" + dailySlpOz + ", dailyVbSpreadRevenuePe=" + dailyVbSpreadRevenuePe + ", dailyAppliedMinSpreadRevenuePe=" + dailyAppliedMinSpreadRevenuePe + ", dailyAppliedMaxSpreadRevenuePe=" + dailyAppliedMaxSpreadRevenuePe + ", dlInsertTs='" + dlInsertTs + '\'' + ", dlUpdateTs='" + dlUpdateTs + '\'' + '}';
+        return "s3FactLoginMetricsObject{" + "date='" + date + '\'' + ", brandUid=" + brandUid + ", brand='" + brand
+                + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\''
+                + ", account=" + account + ", serverId=" + serverId + ", server='" + server + '\'' + ", accountGroup='"
+                + accountGroup + '\'' + ", platform='" + platform + '\'' + ", currency='" + currency + '\''
+                + ", dailyDeposit=" + dailyDeposit + ", dailyWithdrawal=" + dailyWithdraw + ", dailyNetDeposit="
+                + dailyNetDeposit + ", balance=" + balance + ", credit=" + credit + ", equity=" + equity
+                + ", floatingPnl=" + floatingPnl + ", dailyNetClosedPnl=" + dailyNetClosedPnl
+                + ", dailyTradingVolumeIn=" + dailyTradingVolIn + ", dailyTradingVolumeOut=" + dailyTradingVolOut
+                + ", dailyDividend=" + dailyDividend + ", dailyCommissionRevenue=" + dailyCommissionRevenue
+                + ", dailyCashAdjDebtWo=" + dailyCashAdjDebtWo + ", dailyNegativeAdj=" + dailyNegativeAdj
+                + ", dailyAdminFee=" + dailyAdminFee + ", dailyRollover=" + dailyRollover + ", dailyPnlAdj="
+                + dailyPnlAdj + ", dailySwapsRevenue=" + dailySwapsRevenue + ", dailyGrossClientPnl="
+                + dailyGrossClientPnl + ", dailyRebateToTrade=" + dailyRebateToTrade + ", dailySwapsCalc="
+                + dailySwapsCalc + ", dailyProfitsCalc=" + dailyProfitsCalc + ", balanceLocal=" + balanceLocal
+                + ", creditLocal=" + creditLocal + ", equityLocal=" + equityLocal + ", deltaPnl=" + deltaPnl
+                + ", deltaSwaps=" + deltaSwaps + ", dailyCoreSpreadRevenueOz=" + dailyCoreSpreadRevenueOz
+                + ", dailyTakerSpreadRevenueOz=" + dailyTakerSpreadRevenueOz + ", dailyClientSlippageRevenueOz="
+                + dailyClientSlippageRevenueOz + ", dailyLpSpreadRevenueOz=" + dailyLpSpreadRevenueOz
+                + ", dailyCoreSpreadRevenuePe=" + dailyCoreSpreadRevenuePe + ", dailyTakerSpreadRevenuePe="
+                + dailyTakerSpreadRevenuePe + ", dailyLpSpreadRevenuePe=" + dailyLpSpreadRevenuePe
+                + ", dailyClientSlippageRevenuePe=" + dailyClientSlippageRevenuePe + ", dailyTotalSpreadRevenue="
+                + dailyTotalSpreadRevenue + ", dailyDepositCount=" + dailyDepositCount + ", dailyDepositReversalCount="
+                + dailyDepositReversalCount + ", dailyWithdrawCount=" + dailyWithdrawCount
+                + ", dailyWithdrawReversalCount=" + dailyWithdrawReversalCount + ", dailyVbSpreadRevenueOz="
+                + dailyVbSpreadRevenueOz + ", dailyAppliedMinSpreadRevenueOz=" + dailyAppliedMinSpreadRevenueOz
+                + ", dailyAppliedMaxSpreadRevenueOz=" + dailyAppliedMaxSpreadRevenueOz + ", dailyStpOz=" + dailyStpOz
+                + ", dailySlpOz=" + dailySlpOz + ", dailyVbSpreadRevenuePe=" + dailyVbSpreadRevenuePe
+                + ", dailyAppliedMinSpreadRevenuePe=" + dailyAppliedMinSpreadRevenuePe
+                + ", dailyAppliedMaxSpreadRevenuePe=" + dailyAppliedMaxSpreadRevenuePe + ", dlInsertTs='" + dlInsertTs
+                + '\'' + ", dlUpdateTs='" + dlUpdateTs + '\'' + '}';
     }
 
     @Override
@@ -104,12 +132,135 @@ public class S3FactLoginMetricsObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         S3FactLoginMetricsObject that = (S3FactLoginMetricsObject) o;
-        return Objects.equals(date, that.date) && Objects.equals(brandUid, that.brandUid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverId, that.serverId) && Objects.equals(server, that.server) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(platform, that.platform) && Objects.equals(currency, that.currency) && Objects.equals(dailyDeposit, that.dailyDeposit) && Objects.equals(dailyWithdraw, that.dailyWithdraw) && Objects.equals(dailyNetDeposit, that.dailyNetDeposit) && Objects.equals(balance, that.balance) && Objects.equals(credit, that.credit) && Objects.equals(equity, that.equity) && Objects.equals(floatingPnl, that.floatingPnl) && Objects.equals(dailyNetClosedPnl, that.dailyNetClosedPnl) && Objects.equals(dailyTradingVolIn, that.dailyTradingVolIn) && Objects.equals(dailyTradingVolOut, that.dailyTradingVolOut) && Objects.equals(dailyDividend, that.dailyDividend) && Objects.equals(dailyCommissionRevenue, that.dailyCommissionRevenue) && Objects.equals(dailyCashAdjDebtWo, that.dailyCashAdjDebtWo) && Objects.equals(dailyNegativeAdj, that.dailyNegativeAdj) && Objects.equals(dailyAdminFee, that.dailyAdminFee) && Objects.equals(dailyRollover, that.dailyRollover) && Objects.equals(dailyPnlAdj, that.dailyPnlAdj) && Objects.equals(dailySwapsRevenue, that.dailySwapsRevenue) && Objects.equals(dailyGrossClientPnl, that.dailyGrossClientPnl) && Objects.equals(dailyRebateToTrade, that.dailyRebateToTrade) && Objects.equals(dailySwapsCalc, that.dailySwapsCalc) && Objects.equals(dailyProfitsCalc, that.dailyProfitsCalc) && Objects.equals(balanceLocal, that.balanceLocal) && Objects.equals(creditLocal, that.creditLocal) && Objects.equals(equityLocal, that.equityLocal) && Objects.equals(deltaPnl, that.deltaPnl) && Objects.equals(deltaSwaps, that.deltaSwaps) && Objects.equals(dailyCoreSpreadRevenueOz, that.dailyCoreSpreadRevenueOz) && Objects.equals(dailyTakerSpreadRevenueOz, that.dailyTakerSpreadRevenueOz) && Objects.equals(dailyClientSlippageRevenueOz, that.dailyClientSlippageRevenueOz) && Objects.equals(dailyLpSpreadRevenueOz, that.dailyLpSpreadRevenueOz) && Objects.equals(dailyCoreSpreadRevenuePe, that.dailyCoreSpreadRevenuePe) && Objects.equals(dailyTakerSpreadRevenuePe, that.dailyTakerSpreadRevenuePe) && Objects.equals(dailyLpSpreadRevenuePe, that.dailyLpSpreadRevenuePe) && Objects.equals(dailyClientSlippageRevenuePe, that.dailyClientSlippageRevenuePe) && Objects.equals(dailyTotalSpreadRevenue, that.dailyTotalSpreadRevenue) && Objects.equals(dailyDepositCount, that.dailyDepositCount) && Objects.equals(dailyDepositReversalCount, that.dailyDepositReversalCount) && Objects.equals(dailyWithdrawCount, that.dailyWithdrawCount) && Objects.equals(dailyWithdrawReversalCount, that.dailyWithdrawReversalCount) && Objects.equals(dailyVbSpreadRevenueOz, that.dailyVbSpreadRevenueOz) && Objects.equals(dailyAppliedMinSpreadRevenueOz, that.dailyAppliedMinSpreadRevenueOz) && Objects.equals(dailyAppliedMaxSpreadRevenueOz, that.dailyAppliedMaxSpreadRevenueOz) && Objects.equals(dailyStpOz, that.dailyStpOz) && Objects.equals(dailySlpOz, that.dailySlpOz) && Objects.equals(dailyVbSpreadRevenuePe, that.dailyVbSpreadRevenuePe) && Objects.equals(dailyAppliedMinSpreadRevenuePe, that.dailyAppliedMinSpreadRevenuePe) && Objects.equals(dailyAppliedMaxSpreadRevenuePe, that.dailyAppliedMaxSpreadRevenuePe) && Objects.equals(dlInsertTs, that.dlInsertTs) && Objects.equals(dlUpdateTs, that.dlUpdateTs);
+        return Objects.equals(date, that.date)
+                && Objects.equals(brandUid, that.brandUid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(server, that.server)
+                && Objects.equals(accountGroup, that.accountGroup)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(currency, that.currency)
+                && Objects.equals(dailyDeposit, that.dailyDeposit)
+                && Objects.equals(dailyWithdraw, that.dailyWithdraw)
+                && Objects.equals(dailyNetDeposit, that.dailyNetDeposit)
+                && Objects.equals(balance, that.balance)
+                && Objects.equals(credit, that.credit)
+                && Objects.equals(equity, that.equity)
+                && Objects.equals(floatingPnl, that.floatingPnl)
+                && Objects.equals(dailyNetClosedPnl, that.dailyNetClosedPnl)
+                && Objects.equals(dailyTradingVolIn, that.dailyTradingVolIn)
+                && Objects.equals(dailyTradingVolOut, that.dailyTradingVolOut)
+                && Objects.equals(dailyDividend, that.dailyDividend)
+                && Objects.equals(dailyCommissionRevenue, that.dailyCommissionRevenue)
+                && Objects.equals(dailyCashAdjDebtWo, that.dailyCashAdjDebtWo)
+                && Objects.equals(dailyNegativeAdj, that.dailyNegativeAdj)
+                && Objects.equals(dailyAdminFee, that.dailyAdminFee)
+                && Objects.equals(dailyRollover, that.dailyRollover)
+                && Objects.equals(dailyPnlAdj, that.dailyPnlAdj)
+                && Objects.equals(dailySwapsRevenue, that.dailySwapsRevenue)
+                && Objects.equals(dailyGrossClientPnl, that.dailyGrossClientPnl)
+                && Objects.equals(dailyRebateToTrade, that.dailyRebateToTrade)
+                && Objects.equals(dailySwapsCalc, that.dailySwapsCalc)
+                && Objects.equals(dailyProfitsCalc, that.dailyProfitsCalc)
+                && Objects.equals(balanceLocal, that.balanceLocal)
+                && Objects.equals(creditLocal, that.creditLocal)
+                && Objects.equals(equityLocal, that.equityLocal)
+                && Objects.equals(deltaPnl, that.deltaPnl)
+                && Objects.equals(deltaSwaps, that.deltaSwaps)
+                && Objects.equals(dailyCoreSpreadRevenueOz, that.dailyCoreSpreadRevenueOz)
+                && Objects.equals(dailyTakerSpreadRevenueOz, that.dailyTakerSpreadRevenueOz)
+                && Objects.equals(dailyClientSlippageRevenueOz, that.dailyClientSlippageRevenueOz)
+                && Objects.equals(dailyLpSpreadRevenueOz, that.dailyLpSpreadRevenueOz)
+                && Objects.equals(dailyCoreSpreadRevenuePe, that.dailyCoreSpreadRevenuePe)
+                && Objects.equals(dailyTakerSpreadRevenuePe, that.dailyTakerSpreadRevenuePe)
+                && Objects.equals(dailyLpSpreadRevenuePe, that.dailyLpSpreadRevenuePe)
+                && Objects.equals(dailyClientSlippageRevenuePe, that.dailyClientSlippageRevenuePe)
+                && Objects.equals(dailyTotalSpreadRevenue, that.dailyTotalSpreadRevenue)
+                && Objects.equals(dailyDepositCount, that.dailyDepositCount)
+                && Objects.equals(dailyDepositReversalCount, that.dailyDepositReversalCount)
+                && Objects.equals(dailyWithdrawCount, that.dailyWithdrawCount)
+                && Objects.equals(dailyWithdrawReversalCount, that.dailyWithdrawReversalCount)
+                && Objects.equals(dailyVbSpreadRevenueOz, that.dailyVbSpreadRevenueOz)
+                && Objects.equals(dailyAppliedMinSpreadRevenueOz, that.dailyAppliedMinSpreadRevenueOz)
+                && Objects.equals(dailyAppliedMaxSpreadRevenueOz, that.dailyAppliedMaxSpreadRevenueOz)
+                && Objects.equals(dailyStpOz, that.dailyStpOz)
+                && Objects.equals(dailySlpOz, that.dailySlpOz)
+                && Objects.equals(dailyVbSpreadRevenuePe, that.dailyVbSpreadRevenuePe)
+                && Objects.equals(dailyAppliedMinSpreadRevenuePe, that.dailyAppliedMinSpreadRevenuePe)
+                && Objects.equals(dailyAppliedMaxSpreadRevenuePe, that.dailyAppliedMaxSpreadRevenuePe)
+                && Objects.equals(dlInsertTs, that.dlInsertTs)
+                && Objects.equals(dlUpdateTs, that.dlUpdateTs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, brandUid, brand, regulator, userId, ucid, account, serverId, server, accountGroup, platform, currency, dailyDeposit, dailyWithdraw, dailyNetDeposit, balance, credit, equity, floatingPnl, dailyNetClosedPnl, dailyTradingVolIn, dailyTradingVolOut, dailyDividend, dailyCommissionRevenue, dailyCashAdjDebtWo, dailyNegativeAdj, dailyAdminFee, dailyRollover, dailyPnlAdj, dailySwapsRevenue, dailyGrossClientPnl, dailyRebateToTrade, dailySwapsCalc, dailyProfitsCalc, balanceLocal, creditLocal, equityLocal, deltaPnl, deltaSwaps, dailyCoreSpreadRevenueOz, dailyTakerSpreadRevenueOz, dailyClientSlippageRevenueOz, dailyLpSpreadRevenueOz, dailyCoreSpreadRevenuePe, dailyTakerSpreadRevenuePe, dailyLpSpreadRevenuePe, dailyClientSlippageRevenuePe, dailyTotalSpreadRevenue, dailyDepositCount, dailyDepositReversalCount, dailyWithdrawCount, dailyWithdrawReversalCount, dailyVbSpreadRevenueOz, dailyAppliedMinSpreadRevenueOz, dailyAppliedMaxSpreadRevenueOz, dailyStpOz, dailySlpOz, dailyVbSpreadRevenuePe, dailyAppliedMinSpreadRevenuePe, dailyAppliedMaxSpreadRevenuePe, dlInsertTs, dlUpdateTs);
+        return Objects.hash(
+                date,
+                brandUid,
+                brand,
+                regulator,
+                userId,
+                ucid,
+                account,
+                serverId,
+                server,
+                accountGroup,
+                platform,
+                currency,
+                dailyDeposit,
+                dailyWithdraw,
+                dailyNetDeposit,
+                balance,
+                credit,
+                equity,
+                floatingPnl,
+                dailyNetClosedPnl,
+                dailyTradingVolIn,
+                dailyTradingVolOut,
+                dailyDividend,
+                dailyCommissionRevenue,
+                dailyCashAdjDebtWo,
+                dailyNegativeAdj,
+                dailyAdminFee,
+                dailyRollover,
+                dailyPnlAdj,
+                dailySwapsRevenue,
+                dailyGrossClientPnl,
+                dailyRebateToTrade,
+                dailySwapsCalc,
+                dailyProfitsCalc,
+                balanceLocal,
+                creditLocal,
+                equityLocal,
+                deltaPnl,
+                deltaSwaps,
+                dailyCoreSpreadRevenueOz,
+                dailyTakerSpreadRevenueOz,
+                dailyClientSlippageRevenueOz,
+                dailyLpSpreadRevenueOz,
+                dailyCoreSpreadRevenuePe,
+                dailyTakerSpreadRevenuePe,
+                dailyLpSpreadRevenuePe,
+                dailyClientSlippageRevenuePe,
+                dailyTotalSpreadRevenue,
+                dailyDepositCount,
+                dailyDepositReversalCount,
+                dailyWithdrawCount,
+                dailyWithdrawReversalCount,
+                dailyVbSpreadRevenueOz,
+                dailyAppliedMinSpreadRevenueOz,
+                dailyAppliedMaxSpreadRevenueOz,
+                dailyStpOz,
+                dailySlpOz,
+                dailyVbSpreadRevenuePe,
+                dailyAppliedMinSpreadRevenuePe,
+                dailyAppliedMaxSpreadRevenuePe,
+                dlInsertTs,
+                dlUpdateTs);
     }
 
     public String getDate() {
@@ -608,4 +759,3 @@ public class S3FactLoginMetricsObject {
         this.dlUpdateTs = dlUpdateTs;
     }
 }
-

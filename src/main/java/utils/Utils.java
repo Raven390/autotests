@@ -1,5 +1,27 @@
 package utils;
 
+import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static business_objects.ui.user.UserFactory.autotestUserOne;
+import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.BoHelper.getUserIdByUser;
+import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.CLICKHOUSE;
+import static helpers.database.DbName.POSTGRES;
+import static org.junit.jupiter.api.Assertions.fail;
+import static utils.Constants.*;
+
+import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.mt_account.MtAccountObjectFactory;
+import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.DateTimeFormat;
+import helpers.database.DbName;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
@@ -13,35 +35,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
-
-import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.mt_account.MtAccountObjectFactory;
-import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.DateTimeFormat;
-import helpers.database.DbName;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
-import static business_objects.ui.user.UserFactory.autotestUserOne;
-import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.BoHelper.getUserIdByUser;
-import static helpers.database.DbHelper.*;
-import static helpers.database.DbName.CLICKHOUSE;
-import static helpers.database.DbName.POSTGRES;
-import static org.junit.jupiter.api.Assertions.fail;
-import static utils.Constants.*;
 
 public class Utils {
 
@@ -154,33 +152,48 @@ public class Utils {
         long now = Instant.now().toEpochMilli();
         long yearAgo = Instant.now().minus(365, ChronoUnit.DAYS).toEpochMilli();
         long randomMillis = ThreadLocalRandom.current().nextLong(yearAgo, now);
-        return Instant.ofEpochMilli(randomMillis).truncatedTo(ChronoUnit.SECONDS).toString();
+        return Instant.ofEpochMilli(randomMillis)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .toString();
     }
 
-    public static String getCurrentTimestampMinusOffsetFormatted(String format, int years, int months, int days,
-            int hours, int minutes) {
+    public static String getCurrentTimestampMinusOffsetFormatted(
+            String format, int years, int months, int days, int hours, int minutes) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, Locale.US);
-        return LocalDateTime.now(ZoneOffset.UTC).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes).format(formatter);
+        return LocalDateTime.now(ZoneOffset.UTC)
+                .minusYears(years)
+                .minusMonths(months)
+                .minusDays(days)
+                .minusHours(hours)
+                .minusMinutes(minutes)
+                .format(formatter);
     }
 
-    public static String getCurrentTimestampMinusOffsetFormatted(String format, int years, int months, int days,
-            int hours, int minutes, int seconds) {
+    public static String getCurrentTimestampMinusOffsetFormatted(
+            String format, int years, int months, int days, int hours, int minutes, int seconds) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, Locale.US);
-        return LocalDateTime.now(ZoneOffset.UTC).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes).minusSeconds(seconds).format(formatter);
+        return LocalDateTime.now(ZoneOffset.UTC)
+                .minusYears(years)
+                .minusMonths(months)
+                .minusDays(days)
+                .minusHours(hours)
+                .minusMinutes(minutes)
+                .minusSeconds(seconds)
+                .format(formatter);
     }
 
-    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
-            int hours, int minutes) {
+    public static String getCurrentTimestampMinusOffsetFormatted(
+            DateTimeFormat format, int years, int months, int days, int hours, int minutes) {
         return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes, 0);
     }
 
-    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
-            int hours) {
+    public static String getCurrentTimestampMinusOffsetFormatted(
+            DateTimeFormat format, int years, int months, int days, int hours) {
         return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, 0, 0);
     }
 
-    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months,
-            int days) {
+    public static String getCurrentTimestampMinusOffsetFormatted(
+            DateTimeFormat format, int years, int months, int days) {
         return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, 0, 0, 0);
     }
 
@@ -192,9 +205,10 @@ public class Utils {
         return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, 0, 0, 0, 0, 0);
     }
 
-    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
-            int hours, int minutes, int seconds) {
-        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes, seconds);
+    public static String getCurrentTimestampMinusOffsetFormatted(
+            DateTimeFormat format, int years, int months, int days, int hours, int minutes, int seconds) {
+        return getCurrentTimestampMinusOffsetFormatted(
+                format.getDisplayName(), years, months, days, hours, minutes, seconds);
     }
 
     public static String getCurrentTimestampDbFormat() {
@@ -393,7 +407,10 @@ public class Utils {
     public static boolean compareDoubles(Double a, Double b) {
         if (a == null && b == null) return true;
         if (a == null || b == null) return false;
-        return BigDecimal.valueOf(a).setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.valueOf(b).setScale(2, RoundingMode.HALF_UP)) == 0;
+        return BigDecimal.valueOf(a)
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .compareTo(BigDecimal.valueOf(b).setScale(2, RoundingMode.HALF_UP))
+                == 0;
     }
 
     public static String timestampFromDbToIso(String timestampDb) {
@@ -452,7 +469,10 @@ public class Utils {
             DateTimeFormatter sourceFormatter = DateTimeFormatter.ofPattern(formatFrom.getDisplayName(), Locale.US);
             DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern(formatTo.getDisplayName(), Locale.US);
             // Determine if the input format is for a date or date-time
-            if (DateTimeFormat.DATE.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_DAY.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_YEAR.equals(formatFrom) || DateTimeFormat.YEAR.equals(formatFrom)) {
+            if (DateTimeFormat.DATE.equals(formatFrom)
+                    || DateTimeFormat.MONTH_TEXT_AND_DAY.equals(formatFrom)
+                    || DateTimeFormat.MONTH_TEXT_AND_YEAR.equals(formatFrom)
+                    || DateTimeFormat.YEAR.equals(formatFrom)) {
                 // Parse as LocalDate if only a date is present
                 LocalDate date = LocalDate.parse(dateTimeString, sourceFormatter);
                 return date.format(targetFormatter);
@@ -488,9 +508,8 @@ public class Utils {
         boolean updated = false;
         for (int i = 0; i < 90; i++) {
             Response response = getConnectionsByClientId(queryParams);
-            GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                    response.body().string(), GetConnectionsResponse[].class
-            );
+            GetConnectionsResponse[] responseBody =
+                    objectMapper.readValue(response.body().string(), GetConnectionsResponse[].class);
             if (responseBody.length > 0) {
                 updated = true;
                 break;
@@ -499,9 +518,12 @@ public class Utils {
         }
         if (!updated) {
             try {
-                throw new TimeoutException("Connection search did not provide a non empty response while requesting connection for " + ucid + " !");
+                throw new TimeoutException(
+                        "Connection search did not provide a non empty response while requesting connection for " + ucid
+                                + " !");
             } catch (TimeoutException e) {
-                fail("Connection search did not provide a non empty response while requesting connection for " + ucid + " !");//fail test if there no response
+                fail("Connection search did not provide a non empty response while requesting connection for " + ucid
+                        + " !"); // fail test if there no response
             }
         }
     }
@@ -516,16 +538,27 @@ public class Utils {
     }
 
     public static void closeAllAlertsBo() throws Exception {
-        executeQueryToDb(POSTGRES, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
+        executeQueryToDb(
+                POSTGRES,
+                String.format(
+                        "UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';",
+                        BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
         String userId = getUserIdByUser(autotestUserOne());
         executeQueryToDb(
-                DbName.POSTGRES, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat()
-                )
-        );
+                DbName.POSTGRES,
+                String.format(
+                        "UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')",
+                        BO_INVESTIGATION_TABLE_NAME,
+                        userId,
+                        userId,
+                        getCurrentTimestampDbFormat(),
+                        getCurrentTimestampDbFormat()));
     }
 
     public static double convertToUsd(double amount, String symbol) {
-        RatesUsdCurrentObject rate = getObjectsFromDBFinal(CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class).getFirst();
+        RatesUsdCurrentObject rate = getObjectsFromDBFinal(
+                        CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class)
+                .getFirst();
         writeLog("rate is " + rate.getRate());
         return amount * rate.getRate();
     }
@@ -535,9 +568,18 @@ public class Utils {
     }
 
     public static void insertCrmAccountsToDb(CrmTbAccountObject... crmTbAccounts) {
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, Arrays.stream(crmTbAccounts).toList());
-        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, Arrays.stream(crmTbAccounts).map(CrmTbAccountForMtObjectFactory::generateAccountForMtByAccount).toList());
-        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, Arrays.stream(crmTbAccounts).map(MtAccountObjectFactory::generateMtAccountByCrmTbAccount).toList());
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_TABLE_NAME, Arrays.stream(crmTbAccounts).toList());
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
+                Arrays.stream(crmTbAccounts)
+                        .map(CrmTbAccountForMtObjectFactory::generateAccountForMtByAccount)
+                        .toList());
+        insertObjectsToDb(
+                MT_ACCOUNT_TABLE_NAME,
+                Arrays.stream(crmTbAccounts)
+                        .map(MtAccountObjectFactory::generateMtAccountByCrmTbAccount)
+                        .toList());
     }
 
     public static String getRandomCardMaskedNumber() {

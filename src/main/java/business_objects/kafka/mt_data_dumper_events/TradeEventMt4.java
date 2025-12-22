@@ -1,7 +1,6 @@
 package business_objects.kafka.mt_data_dumper_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -85,8 +84,11 @@ public class TradeEventMt4 {
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof Header header)) return false;
-            return operation == header.operation && serverId == header.serverId && timestamp == header.timestamp && Objects.equals(
-                    msgId, header.msgId) && Objects.equals(msgType, header.msgType);
+            return operation == header.operation
+                    && serverId == header.serverId
+                    && timestamp == header.timestamp
+                    && Objects.equals(msgId, header.msgId)
+                    && Objects.equals(msgType, header.msgType);
         }
 
         @Override
@@ -96,7 +98,8 @@ public class TradeEventMt4 {
 
         @Override
         public String toString() {
-            return "Header{" + "msgId='" + msgId + '\'' + ", msgType='" + msgType + '\'' + ", operation=" + operation + ", serverId=" + serverId + ", timestamp=" + timestamp + '}';
+            return "Header{" + "msgId='" + msgId + '\'' + ", msgType='" + msgType + '\'' + ", operation=" + operation
+                    + ", serverId=" + serverId + ", timestamp=" + timestamp + '}';
         }
     }
 
@@ -235,18 +238,50 @@ public class TradeEventMt4 {
         public Double volume;
 
         public Payload(
-                Double accountRate, List<Integer> apiData, Double balance, Double closePrice, Long closeTime,
+                Double accountRate,
+                List<Integer> apiData,
+                Double balance,
+                Double closePrice,
+                Long closeTime,
                 Long closeTimeUtc,
-                Integer cmd, String comment, Double commission, Double commissionAgent, List<Double> convRates,
-                List<Integer> convReserv, Double currentAsk, Double currentBid, Integer digits, Double equity,
+                Integer cmd,
+                String comment,
+                Double commission,
+                Double commissionAgent,
+                List<Double> convRates,
+                List<Integer> convReserv,
+                Double currentAsk,
+                Double currentBid,
+                Integer digits,
+                Double equity,
                 Long expiration,
-                Long expirationUtc, Double freeMargin, Double gwClosePrice, Double gwOpenPrice, Long gwOrder,
+                Long expirationUtc,
+                Double freeMargin,
+                Double gwClosePrice,
+                Double gwOpenPrice,
+                Long gwOrder,
                 Double gwVolume,
-                Double leverage, Long login, Long magic, Double margin, Double marginRate, Integer mode,
+                Double leverage,
+                Long login,
+                Long magic,
+                Double margin,
+                Double marginRate,
+                Integer mode,
                 Double openPrice,
-                Long openTime, Long openTimeUtc, Long order, Double profit, Integer reason, Double sl, Integer state,
+                Long openTime,
+                Long openTimeUtc,
+                Long order,
+                Double profit,
+                Integer reason,
+                Double sl,
+                Integer state,
                 Double storage,
-                String symbol, Double taxes, Long timestamp, Long timestampUtc, Double tp, Double volume) {
+                String symbol,
+                Double taxes,
+                Long timestamp,
+                Long timestampUtc,
+                Double tp,
+                Double volume) {
             this.accountRate = accountRate;
             this.apiData = apiData;
             this.balance = balance;
@@ -648,33 +683,117 @@ public class TradeEventMt4 {
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof Payload payload)) return false;
-            return Double.compare(accountRate, payload.accountRate) == 0 && Double.compare(balance, payload.balance) == 0 && Double.compare(
-                    closePrice, payload.closePrice) == 0 && closeTime == payload.closeTime && closeTimeUtc == payload.closeTimeUtc && cmd == payload.cmd && Double.compare(
-                            commission, payload.commission) == 0 && Double.compare(commissionAgent, payload.commissionAgent) == 0 && Double.compare(
-                                    currentAsk, payload.currentAsk) == 0 && Double.compare(currentBid, payload.currentBid) == 0 && digits == payload.digits && Double.compare(
-                                            equity, payload.equity) == 0 && expiration == payload.expiration && expirationUtc == payload.expirationUtc && Double.compare(
-                                                    freeMargin, payload.freeMargin) == 0 && Double.compare(gwClosePrice, payload.gwClosePrice) == 0 && Double.compare(
-                                                            gwOpenPrice, payload.gwOpenPrice) == 0 && gwOrder == payload.gwOrder && Double.compare(gwVolume, payload.gwVolume) == 0 && leverage == payload.leverage && login == payload.login && magic == payload.magic && Double.compare(
-                                                                    margin, payload.margin) == 0 && Double.compare(marginRate, payload.marginRate) == 0 && mode == payload.mode && Double.compare(
-                                                                            openPrice, payload.openPrice) == 0 && openTime == payload.openTime && openTimeUtc == payload.openTimeUtc && order == payload.order && Double.compare(
-                                                                                    profit, payload.profit) == 0 && reason == payload.reason && Double.compare(sl, payload.sl) == 0 && state == payload.state && Double.compare(
-                                                                                            storage, payload.storage) == 0 && Double.compare(taxes, payload.taxes) == 0 && timestamp == payload.timestamp && timestampUtc == payload.timestampUtc && Double.compare(
-                                                                                                    tp, payload.tp) == 0 && Double.compare(volume, payload.volume) == 0 && Objects.equals(
-                                                                                                            apiData, payload.apiData) && Objects.equals(comment, payload.comment) && Objects.equals(
-                                                                                                                    convRates, payload.convRates) && Objects.equals(convReserv, payload.convReserv) && Objects.equals(
-                                                                                                                            symbol, payload.symbol);
+            return Double.compare(accountRate, payload.accountRate) == 0
+                    && Double.compare(balance, payload.balance) == 0
+                    && Double.compare(closePrice, payload.closePrice) == 0
+                    && closeTime == payload.closeTime
+                    && closeTimeUtc == payload.closeTimeUtc
+                    && cmd == payload.cmd
+                    && Double.compare(commission, payload.commission) == 0
+                    && Double.compare(commissionAgent, payload.commissionAgent) == 0
+                    && Double.compare(currentAsk, payload.currentAsk) == 0
+                    && Double.compare(currentBid, payload.currentBid) == 0
+                    && digits == payload.digits
+                    && Double.compare(equity, payload.equity) == 0
+                    && expiration == payload.expiration
+                    && expirationUtc == payload.expirationUtc
+                    && Double.compare(freeMargin, payload.freeMargin) == 0
+                    && Double.compare(gwClosePrice, payload.gwClosePrice) == 0
+                    && Double.compare(gwOpenPrice, payload.gwOpenPrice) == 0
+                    && gwOrder == payload.gwOrder
+                    && Double.compare(gwVolume, payload.gwVolume) == 0
+                    && leverage == payload.leverage
+                    && login == payload.login
+                    && magic == payload.magic
+                    && Double.compare(margin, payload.margin) == 0
+                    && Double.compare(marginRate, payload.marginRate) == 0
+                    && mode == payload.mode
+                    && Double.compare(openPrice, payload.openPrice) == 0
+                    && openTime == payload.openTime
+                    && openTimeUtc == payload.openTimeUtc
+                    && order == payload.order
+                    && Double.compare(profit, payload.profit) == 0
+                    && reason == payload.reason
+                    && Double.compare(sl, payload.sl) == 0
+                    && state == payload.state
+                    && Double.compare(storage, payload.storage) == 0
+                    && Double.compare(taxes, payload.taxes) == 0
+                    && timestamp == payload.timestamp
+                    && timestampUtc == payload.timestampUtc
+                    && Double.compare(tp, payload.tp) == 0
+                    && Double.compare(volume, payload.volume) == 0
+                    && Objects.equals(apiData, payload.apiData)
+                    && Objects.equals(comment, payload.comment)
+                    && Objects.equals(convRates, payload.convRates)
+                    && Objects.equals(convReserv, payload.convReserv)
+                    && Objects.equals(symbol, payload.symbol);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(accountRate, apiData, balance, closePrice, closeTime, closeTimeUtc, cmd, comment, commission, commissionAgent, convRates, convReserv, currentAsk, currentBid, digits, equity, expiration, expirationUtc, freeMargin, gwClosePrice, gwOpenPrice, gwOrder, gwVolume, leverage, login, magic, margin, marginRate, mode, openPrice, openTime, openTimeUtc, order, profit, reason, sl, state, storage, symbol, taxes, timestamp, timestampUtc, tp, volume);
+            return Objects.hash(
+                    accountRate,
+                    apiData,
+                    balance,
+                    closePrice,
+                    closeTime,
+                    closeTimeUtc,
+                    cmd,
+                    comment,
+                    commission,
+                    commissionAgent,
+                    convRates,
+                    convReserv,
+                    currentAsk,
+                    currentBid,
+                    digits,
+                    equity,
+                    expiration,
+                    expirationUtc,
+                    freeMargin,
+                    gwClosePrice,
+                    gwOpenPrice,
+                    gwOrder,
+                    gwVolume,
+                    leverage,
+                    login,
+                    magic,
+                    margin,
+                    marginRate,
+                    mode,
+                    openPrice,
+                    openTime,
+                    openTimeUtc,
+                    order,
+                    profit,
+                    reason,
+                    sl,
+                    state,
+                    storage,
+                    symbol,
+                    taxes,
+                    timestamp,
+                    timestampUtc,
+                    tp,
+                    volume);
         }
 
         @Override
         public String toString() {
-            return "Payload{" + "accountRate=" + accountRate + ", apiData=" + apiData + ", balance=" + balance + ", closePrice=" + closePrice + ", closeTime=" + closeTime + ", closeTimeUtc=" + closeTimeUtc + ", cmd=" + cmd + ", comment='" + comment + '\'' + ", commission=" + commission + ", commissionAgent=" + commissionAgent + ", convRates=" + convRates + ", convReserv=" + convReserv + ", currentAsk=" + currentAsk + ", currentBid=" + currentBid + ", digits=" + digits + ", equity=" + equity + ", expiration=" + expiration + ", expirationUtc=" + expirationUtc + ", freeMargin=" + freeMargin + ", gwClosePrice=" + gwClosePrice + ", gwOpenPrice=" + gwOpenPrice + ", gwOrder=" + gwOrder + ", gwVolume=" + gwVolume + ", leverage=" + leverage + ", login=" + login + ", magic=" + magic + ", margin=" + margin + ", marginRate=" + marginRate + ", mode=" + mode + ", openPrice=" + openPrice + ", openTime=" + openTime + ", openTimeUtc=" + openTimeUtc + ", order=" + order + ", profit=" + profit + ", reason=" + reason + ", sl=" + sl + ", state=" + state + ", storage=" + storage + ", symbol='" + symbol + '\'' + ", taxes=" + taxes + ", timestamp=" + timestamp + ", timestampUtc=" + timestampUtc + ", tp=" + tp + ", volume=" + volume + '}';
+            return "Payload{" + "accountRate=" + accountRate + ", apiData=" + apiData + ", balance=" + balance
+                    + ", closePrice=" + closePrice + ", closeTime=" + closeTime + ", closeTimeUtc=" + closeTimeUtc
+                    + ", cmd=" + cmd + ", comment='" + comment + '\'' + ", commission=" + commission
+                    + ", commissionAgent=" + commissionAgent + ", convRates=" + convRates + ", convReserv=" + convReserv
+                    + ", currentAsk=" + currentAsk + ", currentBid=" + currentBid + ", digits=" + digits + ", equity="
+                    + equity + ", expiration=" + expiration + ", expirationUtc=" + expirationUtc + ", freeMargin="
+                    + freeMargin + ", gwClosePrice=" + gwClosePrice + ", gwOpenPrice=" + gwOpenPrice + ", gwOrder="
+                    + gwOrder + ", gwVolume=" + gwVolume + ", leverage=" + leverage + ", login=" + login + ", magic="
+                    + magic + ", margin=" + margin + ", marginRate=" + marginRate + ", mode=" + mode + ", openPrice="
+                    + openPrice + ", openTime=" + openTime + ", openTimeUtc=" + openTimeUtc + ", order=" + order
+                    + ", profit=" + profit + ", reason=" + reason + ", sl=" + sl + ", state=" + state + ", storage="
+                    + storage + ", symbol='" + symbol + '\'' + ", taxes=" + taxes + ", timestamp=" + timestamp
+                    + ", timestampUtc=" + timestampUtc + ", tp=" + tp + ", volume=" + volume + '}';
         }
-
     }
 
     public Header getHeader() {
@@ -689,8 +808,7 @@ public class TradeEventMt4 {
         return payload;
     }
 
-    public void setPayload(
-            Payload payload) {
+    public void setPayload(Payload payload) {
         this.payload = payload;
     }
 

@@ -1,5 +1,12 @@
 package tests.click_house_api_service_tests;
 
+import static business_objects.api.clickhouse_api_service.get_floating_trades_group_by.GetFloatingTradesGroupByRequest.getFloatingTradesGroupBy;
+import static helpers.data.ClientFactory.getRandomClient;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static utils.Constants.*;
+
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_floating_trades_group_by.GetFloatingTradesGroupByResponse;
 import helpers.data.ClientHelper;
@@ -7,23 +14,15 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static business_objects.api.clickhouse_api_service.get_floating_trades_group_by.GetFloatingTradesGroupByRequest.getFloatingTradesGroupBy;
-import static helpers.data.ClientFactory.getRandomClient;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static utils.Constants.*;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY)
@@ -42,7 +41,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -56,12 +55,17 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert listSize", mappedResponse.floatingTradesItems.size(), is(2));
         assertThat("Assert symbol", mappedResponse.floatingTradesItems.getFirst().symbol, is("EURUSD"));
-        assertThat("Assert floatingProfit", mappedResponse.floatingTradesItems.getFirst().floatingProfit, is(1500.500_00));
-        assertThat("Assert floatingProfitUSD", mappedResponse.floatingTradesItems.getFirst().floatingProfitUSD, is(1600.500_00));
+        assertThat(
+                "Assert floatingProfit", mappedResponse.floatingTradesItems.getFirst().floatingProfit, is(1500.500_00));
+        assertThat(
+                "Assert floatingProfitUSD",
+                mappedResponse.floatingTradesItems.getFirst().floatingProfitUSD,
+                is(1600.500_00));
         assertThat("Assert totalMargin", mappedResponse.floatingTradesItems.getFirst().totalMargin, is(12_432.500_00));
     }
 
@@ -69,12 +73,13 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get floating trades group by with no params (400)")
     @AllureId("")
     void getMirrorTradeAccountsByTradesTest2() throws IOException {
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
 
@@ -84,14 +89,15 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
     void getMirrorTradeAccountsByTradesTest3() throws IOException {
         ClientHelper client = getRandomClient();
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -102,13 +108,14 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
 
@@ -119,13 +126,14 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
 
@@ -136,7 +144,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -144,7 +152,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -155,7 +164,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -163,7 +172,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -174,7 +184,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -183,7 +193,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -194,7 +205,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -202,7 +213,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -213,7 +225,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -221,7 +233,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -232,7 +245,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -240,7 +253,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -251,7 +265,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -259,7 +273,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -270,7 +285,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -278,7 +293,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -289,7 +305,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -298,7 +314,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -309,7 +326,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -318,7 +335,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -329,7 +347,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -338,7 +356,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -349,7 +368,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -358,7 +377,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -369,7 +389,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -378,7 +398,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -389,7 +410,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -398,7 +419,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -409,7 +431,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
-        //Send request
+        // Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", "");
@@ -417,8 +439,8 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
+        GetFloatingTradesGroupByResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
-
 }

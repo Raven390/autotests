@@ -1,26 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotObject;
-import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Stream;
-
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotFactory.generateAccountIbRelationSnapshotObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
@@ -35,6 +14,26 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
+import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.math.RoundingMode;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class IbOverviewSummaryTest extends TestBaseWeb {
 
@@ -100,7 +99,8 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         factLoginMetrics3.setDailyGrossClientPnl(10_553.87);
         insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(factLoginMetrics, factLoginMetrics3));
         // Frauds
-        ClientFraudTypes fraud = new ClientFraudTypes(client.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud =
+                new ClientFraudTypes(client.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat());
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
         // Relation snapshots
         relationSnapshot1 = generateAccountIbRelationSnapshotObjectByClient(client);
@@ -121,7 +121,9 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         relationSnapshot4.setDirectIbRebateAccount(account.account);
         relationSnapshot4.setDirectIbLevel(2);
         relationSnapshot4.setIsRebateAccount(0);
-        insertObjectsToDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, List.of(relationSnapshot1, relationSnapshot2, relationSnapshot3, relationSnapshot4));
+        insertObjectsToDb(
+                ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME,
+                List.of(relationSnapshot1, relationSnapshot2, relationSnapshot3, relationSnapshot4));
 
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
@@ -142,13 +144,52 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         generalTab.clickIbOverviewButton();
         ibCpaOverviewPage.waitForPageToLoad();
         assertThat("Verify IB overview summary title", ibCpaOverviewPage.getOverviewTitle(), is("IB overview"));
-        assertThat("Verify IB overview summary subheader", ibCpaOverviewPage.getOverviewSubheaderText(), is(String.format("IB %s, %s, %s level", ibAccount.account, ibAccount.brand, 1)));
-        assertThat("Verify IB overview summary under this ib title", ibCpaOverviewPage.getUnderThisTitle(), is("Under this IB"));
-        assertThat("Verify IB overview summary under this ib items", ibCpaOverviewPage.getUnderThisItems(), contains(String.format("%sclient", 1), String.format("%sfraudster", 1), String.format("%slower-level IB", 1)));
-        assertThat("Verify IB overview summary clients performance title", ibCpaOverviewPage.getClientsPerformanceTitle(), is("Clients performance USD"));
-        assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(commission.getIbCommission())), String.format("%sNet PNL", formatter.format(factLoginMetrics.getDailyGrossClientPnl() + commission.getIbCommission())), String.format("%sNet deposit", formatter.format(factLoginMetrics.getDailyNetDeposit()))));
-        assertThat("Verify IB overview summary clients totals title", ibCpaOverviewPage.getClientsTotalsTitle(), is("Clients totals USD"));
-        assertThat("Verify IB overview summary clients totals items", ibCpaOverviewPage.getClientsTotalsItems(), contains(String.format("%sVolume", formatter.format((factLoginMetrics.getDailyTradingVolIn() + factLoginMetrics.getDailyTradingVolOut()) / 1_000_000)), String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())), String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())), String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())), String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw()))));
+        assertThat(
+                "Verify IB overview summary subheader",
+                ibCpaOverviewPage.getOverviewSubheaderText(),
+                is(String.format("IB %s, %s, %s level", ibAccount.account, ibAccount.brand, 1)));
+        assertThat(
+                "Verify IB overview summary under this ib title",
+                ibCpaOverviewPage.getUnderThisTitle(),
+                is("Under this IB"));
+        assertThat(
+                "Verify IB overview summary under this ib items",
+                ibCpaOverviewPage.getUnderThisItems(),
+                contains(
+                        String.format("%sclient", 1),
+                        String.format("%sfraudster", 1),
+                        String.format("%slower-level IB", 1)));
+        assertThat(
+                "Verify IB overview summary clients performance title",
+                ibCpaOverviewPage.getClientsPerformanceTitle(),
+                is("Clients performance USD"));
+        assertThat(
+                "Verify IB overview summary clients performance items",
+                ibCpaOverviewPage.getClientsPerformanceItems(),
+                contains(
+                        String.format("%sIB rebates", formatter.format(commission.getIbCommission())),
+                        String.format(
+                                "%sNet PNL",
+                                formatter.format(
+                                        factLoginMetrics.getDailyGrossClientPnl() + commission.getIbCommission())),
+                        String.format("%sNet deposit", formatter.format(factLoginMetrics.getDailyNetDeposit()))));
+        assertThat(
+                "Verify IB overview summary clients totals title",
+                ibCpaOverviewPage.getClientsTotalsTitle(),
+                is("Clients totals USD"));
+        assertThat(
+                "Verify IB overview summary clients totals items",
+                ibCpaOverviewPage.getClientsTotalsItems(),
+                contains(
+                        String.format(
+                                "%sVolume",
+                                formatter.format((factLoginMetrics.getDailyTradingVolIn()
+                                                + factLoginMetrics.getDailyTradingVolOut())
+                                        / 1_000_000)),
+                        String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())),
+                        String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())),
+                        String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())),
+                        String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw()))));
     }
 
     @Feature("BMS-830 Lower-level IB")
@@ -167,10 +208,31 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         ibCpaOverviewPage.waitForPageToLoad();
         ibCpaOverviewPage.clickLowerLevelIbTab();
         ibCpaOverviewPage.waitForPageToLoad();
-        assertThat("Verify table headers", ibCpaOverviewPage.getLowerLevelIbTableHeaders(), containsInAnyOrder("LVL", "IB", "REBATES", "CLIENTS", "NET PNL", "NET DEPOSIT"));
-        List<String> row1Data = List.of("1", ibAccount.account.toString(), formatterTable.format(commission.getIbCommission()), "1", formatterTable.format(factLoginMetrics.getDailyGrossClientPnl() + commission.getIbCommission()), formatterTable.format(factLoginMetrics.getDailyNetDeposit()));
-        List<String> row2Data = List.of("2", account.account.toString(), formatterTable.format(commission3.getIbCommission()), "2", formatterTable.format(factLoginMetrics3.getDailyGrossClientPnl() + commission3.getIbCommission()), formatterTable.format(factLoginMetrics3.getDailyNetDeposit()));
-        assertThat("Verify table 1st row", ibCpaOverviewPage.getLowerLevelIbAllRowsData(), containsInAnyOrder(Stream.of(row1Data, row2Data).flatMap(List::stream).toList().toArray()));
+        assertThat(
+                "Verify table headers",
+                ibCpaOverviewPage.getLowerLevelIbTableHeaders(),
+                containsInAnyOrder("LVL", "IB", "REBATES", "CLIENTS", "NET PNL", "NET DEPOSIT"));
+        List<String> row1Data = List.of(
+                "1",
+                ibAccount.account.toString(),
+                formatterTable.format(commission.getIbCommission()),
+                "1",
+                formatterTable.format(factLoginMetrics.getDailyGrossClientPnl() + commission.getIbCommission()),
+                formatterTable.format(factLoginMetrics.getDailyNetDeposit()));
+        List<String> row2Data = List.of(
+                "2",
+                account.account.toString(),
+                formatterTable.format(commission3.getIbCommission()),
+                "2",
+                formatterTable.format(factLoginMetrics3.getDailyGrossClientPnl() + commission3.getIbCommission()),
+                formatterTable.format(factLoginMetrics3.getDailyNetDeposit()));
+        assertThat(
+                "Verify table 1st row",
+                ibCpaOverviewPage.getLowerLevelIbAllRowsData(),
+                containsInAnyOrder(Stream.of(row1Data, row2Data)
+                        .flatMap(List::stream)
+                        .toList()
+                        .toArray()));
     }
 
     @AfterAll
@@ -180,6 +242,13 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s')", relationSnapshot1.getUcid(), relationSnapshot2.getUcid(), relationSnapshot3.getUcid(), relationSnapshot4.getUcid()));
+        deleteEntryFromDb(
+                ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME,
+                String.format(
+                        "ucid IN ('%s', '%s', '%s', '%s')",
+                        relationSnapshot1.getUcid(),
+                        relationSnapshot2.getUcid(),
+                        relationSnapshot3.getUcid(),
+                        relationSnapshot4.getUcid()));
     }
 }

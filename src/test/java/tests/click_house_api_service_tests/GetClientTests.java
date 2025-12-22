@@ -15,7 +15,6 @@ import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import java.io.IOException;
-
 import okhttp3.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -48,7 +47,8 @@ class GetClientTests extends TestBaseApi {
 
         // Assert response
         assertThat(response.body(), is(notNullValue()));
-        GetClientResponse getClientResponse = objectMapper.readValue(response.body().string(), GetClientResponse.class);
+        GetClientResponse getClientResponse =
+                objectMapper.readValue(response.body().string(), GetClientResponse.class);
         assertThat("Check response code", 200, is(response.code()));
         assertThat("Check clientId", client.getUcid(), is(getClientResponse.getClientId()));
         assertThat("Check userId", client.getUserId().toString(), is(getClientResponse.getUserId()));
@@ -78,8 +78,14 @@ class GetClientTests extends TestBaseApi {
         assertThat("Check cpaId", "4", is(getClientResponse.getCpaId()));
         assertThat("Check rafReferrerId", "5", is(getClientResponse.getRafReferrerId()));
         assertThat("Check kycStatus", "PARTIAL_KYC_ID_PASS", is(getClientResponse.getKycStatus()));
-        assertThat("Check lastUpdated", userObject.lastUpdated, is(timestampFromIsoToDb(getClientResponse.getLastUpdated())));
-        assertThat("Check poi completion time", userObject.poiCompleteTs, is(timestampFromIsoToDb(getClientResponse.getPoiCompletionTime())));
+        assertThat(
+                "Check lastUpdated",
+                userObject.lastUpdated,
+                is(timestampFromIsoToDb(getClientResponse.getLastUpdated())));
+        assertThat(
+                "Check poi completion time",
+                userObject.poiCompleteTs,
+                is(timestampFromIsoToDb(getClientResponse.getPoiCompletionTime())));
     }
 
     @Test
@@ -88,10 +94,14 @@ class GetClientTests extends TestBaseApi {
     void getClientNotFoundTest() throws IOException {
         Response response = getClient("AlphaTick-999");
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 404", response.code(), is(404));
         assertThat("Assert that code is 404", mappedResponse.getStatus(), is(404));
-        assertThat("Assert error text", mappedResponse.getError(), is("Client data is not found for the request with parameters: {clientId=AlphaTick-999}."));
+        assertThat(
+                "Assert error text",
+                mappedResponse.getError(),
+                is("Client data is not found for the request with parameters: {clientId=AlphaTick-999}."));
     }
 
     @Test
@@ -100,7 +110,8 @@ class GetClientTests extends TestBaseApi {
     void getClientBadRequestTest() throws IOException {
         Response response = getClient(1);
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));

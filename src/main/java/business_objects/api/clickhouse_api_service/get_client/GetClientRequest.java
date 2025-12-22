@@ -1,12 +1,11 @@
 package business_objects.api.clickhouse_api_service.get_client;
 
-import java.io.IOException;
+import static utils.ConfigFactory.*;
 
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.Step;
+import java.io.IOException;
 import okhttp3.Response;
-
-import static utils.ConfigFactory.*;
 
 public class GetClientRequest {
 

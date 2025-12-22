@@ -1,7 +1,10 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionStatusApproval {
-    AWAITING_APPROVAL("AWAITING_APPROVAL"), NOT_REQUIRED("NOT_REQUIRED"), APPROVED("APPROVED"), REJECTED("REJECTED");
+    AWAITING_APPROVAL("AWAITING_APPROVAL"),
+    NOT_REQUIRED("NOT_REQUIRED"),
+    APPROVED("APPROVED"),
+    REJECTED("REJECTED");
 
     private final String displayName;
 
@@ -12,5 +15,4 @@ public enum DeductionStatusApproval {
     public String getDisplayName() {
         return displayName;
     }
-
 }

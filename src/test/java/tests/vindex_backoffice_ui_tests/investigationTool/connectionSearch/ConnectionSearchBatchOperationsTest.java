@@ -1,25 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
-import business_objects.db.abuse_registry_db.AbuserDeduction;
-import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.audit_service_db.EventOld;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import helpers.data.ClientHelper;
-import helpers.data.enums.FraudType;
-import helpers.data.enums.FraudTypeStatus;
-import helpers.database.ArHelper;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUiFiltration1;
@@ -37,6 +17,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.abuse_registry_db.AbuserDeduction;
+import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.audit_service_db.EventOld;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import helpers.data.ClientHelper;
+import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeStatus;
+import helpers.database.ArHelper;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -47,7 +44,6 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
     private static final ClientHelper connectedClient2 = getRandomVantageClientAllFields();
     private static final CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(connectedClient1);
     private static final CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(connectedClient2);
-
 
     @BeforeAll
     static void setup() throws Exception {
@@ -84,19 +80,27 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         String comment = "Connection batch comment";
         connectionPage.fillMultiselectComment(comment);
         connectionPage.clickMultiselectAddCommentButton();
-        List<EventOld> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_OLD, String.format("ucid IN ('%s', '%s') AND type = '%s' ORDER BY created_at ASC", connectedClient1.getUcid(), connectedClient2.getUcid(), COMMENT_ADDED_TYPE), EventOld.class);
+        List<EventOld> events = getObjectsFromDB(
+                DbName.POSTGRES,
+                AUDIT_EVENT_OLD,
+                String.format(
+                        "ucid IN ('%s', '%s') AND type = '%s' ORDER BY created_at ASC",
+                        connectedClient1.getUcid(), connectedClient2.getUcid(), COMMENT_ADDED_TYPE),
+                EventOld.class);
         assertThat("Verify comments amount", events.size(), is(2));
         EventOld commentEvent1 = new EventOld();
         commentEvent1.setUcid(connectedClient1.getUcid());
         commentEvent1.setType(COMMENT_ADDED_TYPE);
         commentEvent1.setInitiatedBySystem(VINDEX_BO_SYSTEM);
-        commentEvent1.setInitiatedByUser(String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()));
+        commentEvent1.setInitiatedByUser(String.format(
+                "%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()));
         commentEvent1.setComment(comment);
         EventOld commentEvent2 = new EventOld();
         commentEvent2.setUcid(connectedClient2.getUcid());
         commentEvent2.setType(COMMENT_ADDED_TYPE);
         commentEvent2.setInitiatedBySystem(VINDEX_BO_SYSTEM);
-        commentEvent2.setInitiatedByUser(String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()));
+        commentEvent2.setInitiatedByUser(String.format(
+                "%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()));
         commentEvent2.setComment(comment);
         assertThat("Verify audit events", events, containsInAnyOrder(commentEvent1, commentEvent2));
     }
@@ -117,7 +121,11 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + connectedClient1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + connectedClient1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -146,20 +154,30 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         connectionPage.verifySuccessMessageUpload(2);
         page.waitForTimeout(1000);
 
-        List<AbuserDeduction> deductionList = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", connectedClient1.getUcid()), AbuserDeduction.class);
+        List<AbuserDeduction> deductionList = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_DEDUCTION_TABLE_NAME,
+                String.format("ucid = '%s'", connectedClient1.getUcid()),
+                AbuserDeduction.class);
         assertThat(deductionList.size(), is(1));
     }
 
-
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from IN ('%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
+        deleteEntryFromDb(
+                CRM_USER_TABLE_NAME,
+                String.format(
+                        "ucid IN ('%s', '%s', '%s')",
+                        client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
+        deleteEntryFromDb(
+                CONNECTIONS_TABLE_NAME,
+                String.format(
+                        "user_from IN ('%s', '%s', '%s')",
+                        client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
         cleanClientAudit(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
         deleteUserBO(client.getUcid());
         deleteUserBO(connectedClient1.getUcid());
         deleteUserBO(connectedClient2.getUcid());
         ArHelper.deleteUserFromAbuseRegistry(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
-
     }
 }

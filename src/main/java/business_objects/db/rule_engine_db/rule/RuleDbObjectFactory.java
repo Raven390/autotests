@@ -1,20 +1,21 @@
 package business_objects.db.rule_engine_db.rule;
 
-import business_objects.api.rule_engine_api.post_rules.RuleObject;
-import org.postgresql.jdbc.PgArray;
+import static helpers.database.DbHelper.createPostgresConnection;
 
+import business_objects.api.rule_engine_api.post_rules.RuleObject;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
-import static helpers.database.DbHelper.createPostgresConnection;
+import org.postgresql.jdbc.PgArray;
 
 public class RuleDbObjectFactory {
     public static RuleDbObjectPgArray generateRuleDbObjectByRulePgArray(RuleObject rule) throws SQLException {
         Connection connection = createPostgresConnection();
         // Convert Java List to SQL Array
-        List<String> brands = List.of(rule.getValue().getBrands().getFirst(), rule.getValue().getBrands().getLast());
+        List<String> brands = List.of(
+                rule.getValue().getBrands().getFirst(),
+                rule.getValue().getBrands().getLast());
         Array sqlArray = connection.createArrayOf("text", brands.toArray());
         RuleDbObjectPgArray ruleFinal = new RuleDbObjectPgArray();
         ruleFinal.setId(rule.getId());

@@ -1,19 +1,5 @@
 package tests.rule_engine_service_tests.rules.general;
 
-import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
-import business_objects.kafka.alerts.RuleAlertV2;
-import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesRequest.getAbuseTypes;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
@@ -24,6 +10,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
+
+import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
+import business_objects.kafka.alerts.RuleAlertV2;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_CUSTOM_RULE)
@@ -43,7 +43,7 @@ class CustomRuleTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -64,13 +64,23 @@ class CustomRuleTests extends TestBaseRule {
         // Verify restriction
         checkManualWithdrawalRestrictionApplied(data.clientHelper, data.customEvent.getMessage());
 
-        //Verify alert
+        // Verify alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, data.customEvent.getSource());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().getReason(), is("Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order')."));
-        assertThat("Verify alert", alerts.getFirst().getTimestamp(), matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().getReason(),
+                is(
+                        "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order')."));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().getTimestamp(),
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().getAlertId(), is(data.customEvent.getId()));
-        assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().getTriggerCreatedTime(),
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().getFraudType(), is(data.customEvent.getFraudType()));
         assertThat("Verify alert", alerts.getFirst().getTrigger(), is(data.customEvent.getType()));
         assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
@@ -79,10 +89,12 @@ class CustomRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().getRule().getVer(), notNullValue());
         assertThat("Verify alert", alerts.getFirst().getAttributes().getDetails(), is(""));
 
-        GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(getAbuseTypes(List.of(data.clientHelper.getUcid())).body().string(), GetAbuseTypesResponse[].class);
+        GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(
+                getAbuseTypes(List.of(data.clientHelper.getUcid())).body().string(), GetAbuseTypesResponse[].class);
         assertThat("Assert array size", mappedResponse.length, is(1));
         assertThat("Assert clientId", mappedResponse[0].getClientId(), is(data.clientHelper.getUcid()));
-        assertThat("Assert fraudType", mappedResponse[0].getFraudType(), hasItemInArray(data.customEvent.getFraudType()));
+        assertThat(
+                "Assert fraudType", mappedResponse[0].getFraudType(), hasItemInArray(data.customEvent.getFraudType()));
     }
 
     @Test
@@ -147,6 +159,4 @@ class CustomRuleTests extends TestBaseRule {
         checkElementIdNotPresent("setFraudType", data.customEvent.getId(), "custom_rule");
         checkElementIdNotPresent("setRestriction", data.customEvent.getId(), "custom_rule");
     }
-
-
 }

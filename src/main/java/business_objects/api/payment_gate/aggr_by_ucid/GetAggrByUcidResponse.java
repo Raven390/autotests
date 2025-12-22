@@ -19,8 +19,7 @@ public class GetAggrByUcidResponse {
     @JsonProperty("lastWithdrawalAmountUSD")
     private Integer lastWithdrawalAmountUSD;
 
-    public GetAggrByUcidResponse() {
-    }
+    public GetAggrByUcidResponse() {}
 
     public Integer getCount() {
         return count;

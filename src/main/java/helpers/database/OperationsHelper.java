@@ -1,10 +1,10 @@
 package helpers.database;
 
-import io.qameta.allure.Allure;
-
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
+
+import io.qameta.allure.Allure;
 
 public class OperationsHelper {
 
@@ -19,7 +19,9 @@ public class OperationsHelper {
         writeLog("transfers deleted");
         deleteEntryFromDb(MT_CREDITS_TABLE_NAME, "ucid = '" + ucid + "'");
         writeLog("credits deleted");
-        executeQueryToDb(DbName.CLICKHOUSE, "ALTER TABLE consolidated.dp_and_wd_by_channel\n" + "DELETE WHERE ucid='" + ucid + "'");
+        executeQueryToDb(
+                DbName.CLICKHOUSE,
+                "ALTER TABLE consolidated.dp_and_wd_by_channel\n" + "DELETE WHERE ucid='" + ucid + "'");
         writeLog("aggregation table cleared");
     }
 
@@ -31,7 +33,8 @@ public class OperationsHelper {
     public static void cleanUserCashflowDbDeposit(String ucid) {
         Allure.step("delete user's cashflow Deposit  transactions from DB");
         try {
-            deleteEntryFromDb("consolidated.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Deposit'");
+            deleteEntryFromDb(
+                    "consolidated.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Deposit'");
         } catch (Exception NoSuchElementException) {
             writeLog("No such Deposit records with provided ucid");
         }
@@ -40,7 +43,10 @@ public class OperationsHelper {
     public static void cleanUserCashflowDbWithdrawal(String ucid) {
         Allure.step("delete user's cashflow Withdrawal  transactions from DB");
         try {
-            deleteEntryFromDb(DbName.POSTGRES, "consolidated.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Withdrawal'");
+            deleteEntryFromDb(
+                    DbName.POSTGRES,
+                    "consolidated.dp_and_wd_by_channel",
+                    "ucid = '" + ucid + "' AND transfer_type = 'Withdrawal'");
         } catch (Exception NoSuchElementException) {
             writeLog("No such Withdrawal records with provided ucid");
         }

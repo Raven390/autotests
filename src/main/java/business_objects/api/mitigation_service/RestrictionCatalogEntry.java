@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class RestrictionCatalogEntry {
@@ -21,8 +20,7 @@ public class RestrictionCatalogEntry {
     @JsonProperty("boVisibility")
     public String boVisibility;
 
-    public RestrictionCatalogEntry() {
-    }
+    public RestrictionCatalogEntry() {}
 
     public RestrictionCatalogEntry(String code, String name, String type, String description, String boVisibility) {
         this.code = code;
@@ -36,7 +34,11 @@ public class RestrictionCatalogEntry {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RestrictionCatalogEntry that = (RestrictionCatalogEntry) o;
-        return Objects.equals(code, that.code) && Objects.equals(name, that.name) && Objects.equals(type, that.type) && Objects.equals(description, that.description) && Objects.equals(boVisibility, that.boVisibility);
+        return Objects.equals(code, that.code)
+                && Objects.equals(name, that.name)
+                && Objects.equals(type, that.type)
+                && Objects.equals(description, that.description)
+                && Objects.equals(boVisibility, that.boVisibility);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class RestrictionCatalogEntry {
 
     @Override
     public String toString() {
-        return "RestrictionCatalogEntry{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='" + description + '\'' + ", boVisibility='" + boVisibility + '\'' + '}';
+        return "RestrictionCatalogEntry{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", type='" + type + '\''
+                + ", description='" + description + '\'' + ", boVisibility='" + boVisibility + '\'' + '}';
     }
 }

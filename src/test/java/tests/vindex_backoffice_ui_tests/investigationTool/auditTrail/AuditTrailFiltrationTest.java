@@ -1,23 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.auditTrail;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
-import business_objects.kafka.alerts.RuleAlert;
-import business_objects.ui.audit_trail.AuditTrailItemV2;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generateRiskPaymentDecisionObject;
@@ -37,6 +19,23 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.kafka.alerts.RuleAlert;
+import business_objects.ui.audit_trail.AuditTrailItemV2;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuditTrailFiltrationTest extends TestBaseWeb {
 
@@ -47,11 +46,11 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
     private static PaymentEventsObject paymentEventsObject1;
     private static ClientHelper client = getRandomVantageClientAllFields();
 
-
     static PaymentEventsObject setupDataPGS() {
         paymentEventsObject1 = generatePaymentEventsObject(client);
         var paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client);
-        paymentDetailsObject1.setPayload("{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
+        paymentDetailsObject1.setPayload(
+                "{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
         var paymentDecisionsObject1 = generateRiskPaymentDecisionObject(paymentEventsObject1);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
@@ -68,8 +67,10 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         account = generateCrmTbAccountDataForUi(client);
         insertCrmAccountsToDb(account);
         paymentEventsObject1 = setupDataPGS();
-        RuleAlert withdrawalAlert = generateWithdrawalNotificationAlertWithPaymentId(client, paymentEventsObject1.getPaymentId());
-        kafka.produceMessage(withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
+        RuleAlert withdrawalAlert =
+                generateWithdrawalNotificationAlertWithPaymentId(client, paymentEventsObject1.getPaymentId());
+        kafka.produceMessage(
+                withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         setRestrictionAPIGeneral(crmTbUser.ucid, LOGIN_CRM.getCode());
     }
 
@@ -112,7 +113,10 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.clickAuditTrailActiveFilter();
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there is one audit trail item", auditTrailItems.size(), is(1));
-        assertThat("Assert audit trail item contains active alert", auditTrailItems.getFirst().getHeader(), containsString("Registration"));
+        assertThat(
+                "Assert audit trail item contains active alert",
+                auditTrailItems.getFirst().getHeader(),
+                containsString("Registration"));
     }
 
     @Test
@@ -133,7 +137,10 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         String[] alertHeaders = {"Investigation completed", "Restriction management", "Comment added"};
         for (int i = 0; i < auditTrailItems.size(); i++) {
             AuditTrailItemV2 item = auditTrailItems.get(i);
-            assertThat(String.format("Assert audit trail item header contains %s", alertHeaders[i]), item.getHeader(), containsString(alertHeaders[i]));
+            assertThat(
+                    String.format("Assert audit trail item header contains %s", alertHeaders[i]),
+                    item.getHeader(),
+                    containsString(alertHeaders[i]));
         }
     }
 
@@ -154,19 +161,29 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.selectAuditTrailTeamFilter("Payment");
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there is 1 audit trail item", auditTrailItems.size(), is(1));
-        assertThat("Assert audit trail item contains payment alert", auditTrailItems.getFirst().getHeader(), containsString("Payment"));
+        assertThat(
+                "Assert audit trail item contains payment alert",
+                auditTrailItems.getFirst().getHeader(),
+                containsString("Payment"));
         auditTrailPage.clickAuditTrailTeamFilter();
         auditTrailPage.selectAuditTrailTeamFilter("Trading");
         auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
-        String[] alertHeaders = {"Registration", "Investigation completed", "Investigation started", "Withdrawal Review"};
+        String[] alertHeaders = {"Registration", "Investigation completed", "Investigation started", "Withdrawal Review"
+        };
         for (int i = 0; i < auditTrailItems.size(); i++) {
             AuditTrailItemV2 item = auditTrailItems.get(i);
-            assertThat(String.format("Assert audit trail item header contains %s", alertHeaders[i]), item.getHeader(), containsString(alertHeaders[i]));
+            assertThat(
+                    String.format("Assert audit trail item header contains %s", alertHeaders[i]),
+                    item.getHeader(),
+                    containsString(alertHeaders[i]));
         }
         auditTrailPage.clickAuditTrailActiveFilter();
         auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there is 1 audit trail item", auditTrailItems.size(), is(1));
-        assertThat("Assert audit trail item contains active alert", auditTrailItems.getFirst().getHeader(), containsString("Registration"));
+        assertThat(
+                "Assert audit trail item contains active alert",
+                auditTrailItems.getFirst().getHeader(),
+                containsString("Registration"));
     }
 
     @AfterAll
@@ -174,6 +191,9 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
-        cleanPaymentGateData(client.getUcid(), client.getUserId(), paymentEventsObject1.getPaymentId().toString());
+        cleanPaymentGateData(
+                client.getUcid(),
+                client.getUserId(),
+                paymentEventsObject1.getPaymentId().toString());
     }
 }

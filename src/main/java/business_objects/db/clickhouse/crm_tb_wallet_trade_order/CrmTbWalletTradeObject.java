@@ -1,11 +1,10 @@
 package business_objects.db.clickhouse.crm_tb_wallet_trade_order;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @Builder

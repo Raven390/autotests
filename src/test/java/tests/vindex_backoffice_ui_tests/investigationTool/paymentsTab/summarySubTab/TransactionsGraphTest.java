@@ -1,23 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.paymentsTab.summarySubTab;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.math.BigDecimal;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
@@ -31,11 +13,38 @@ import static utils.Constants.*;
 import static utils.Utils.getCurrentDateMonthDay;
 import static utils.Utils.insertCrmAccountsToDb;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.AllureId;
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 public class TransactionsGraphTest extends TestBaseWeb {
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(63_350_541).uid("e5880ca5-8578-4a1e-969d-7a64716ca411").brand(Brand.VANTAGE).regulator(Regulator.FCA).tradingAccount(322_322_322).tradingAccount2(322_322_321).serverId(228).build();
+        client = ClientHelper.builder()
+                .userId(63_350_541)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca411")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.FCA)
+                .tradingAccount(322_322_322)
+                .tradingAccount2(322_322_321)
+                .serverId(228)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);
@@ -112,13 +121,24 @@ public class TransactionsGraphTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigatePaymentsTab(client.getUcid());
 
-        double totalDeposits = deposit1.getAmountUsd().add(deposit2.getAmountUsd()).doubleValue();
-        double totalWithdrawals = withdrawal1.getAmountUsd().add(withdrawal2.getAmountUsd()).add(withdrawal3.getAmountUsd()).doubleValue();
+        double totalDeposits =
+                deposit1.getAmountUsd().add(deposit2.getAmountUsd()).doubleValue();
+        double totalWithdrawals = withdrawal1
+                .getAmountUsd()
+                .add(withdrawal2.getAmountUsd())
+                .add(withdrawal3.getAmountUsd())
+                .doubleValue();
         double totalCredits = credit1.amountUsd + credit2.amountUsd + credit3.amountUsd + credit4.amountUsd;
         paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
-        checkValue("//div[@data-qa='payments__transactions_chart__features__0']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_brand']", dfWholed.format(totalDeposits));
-        checkValue("//div[@data-qa='payments__transactions_chart__features__1']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_danger']", dfWholed.format(totalWithdrawals));
-        checkValue("//div[@data-qa='payments__transactions_chart__features__2']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_misc']", dfWholed.format(totalCredits));
+        checkValue(
+                "//div[@data-qa='payments__transactions_chart__features__0']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_brand']",
+                dfWholed.format(totalDeposits));
+        checkValue(
+                "//div[@data-qa='payments__transactions_chart__features__1']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_danger']",
+                dfWholed.format(totalWithdrawals));
+        checkValue(
+                "//div[@data-qa='payments__transactions_chart__features__2']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_misc']",
+                dfWholed.format(totalCredits));
     }
 
     private void checkValue(String selector, String expectedValue) {
@@ -126,6 +146,4 @@ public class TransactionsGraphTest extends TestBaseWeb {
         String actualValue = page.locator(selector).textContent();
         assertEquals(expectedValue, actualValue);
     }
-
-
 }

@@ -7,8 +7,7 @@ public class PayoutTableEntry {
     public String ucid;
     public String payout;
 
-    public PayoutTableEntry() {
-    }
+    public PayoutTableEntry() {}
 
     public PayoutTableEntry(String ucid, String payout) {
         this.ucid = ucid;

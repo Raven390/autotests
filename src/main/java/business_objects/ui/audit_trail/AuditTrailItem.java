@@ -9,8 +9,7 @@ public class AuditTrailItem {
     private String details;
     private String time;
 
-    public AuditTrailItem() {
-    }
+    public AuditTrailItem() {}
 
     public AuditTrailItem(String header, String comment, String details, String time) {
         this.header = header;
@@ -56,7 +55,9 @@ public class AuditTrailItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AuditTrailItem that = (AuditTrailItem) o;
-        return Objects.equals(header, that.header) && Objects.equals(comment, that.comment) && Objects.equals(details, that.details);
+        return Objects.equals(header, that.header)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(details, that.details);
     }
 
     @Override
@@ -66,6 +67,7 @@ public class AuditTrailItem {
 
     @Override
     public String toString() {
-        return "AuditTrailItem{" + "header='" + header + '\'' + ", comment='" + comment + '\'' + ", details='" + details + '\'' + ", time='" + time + '\'' + '}';
+        return "AuditTrailItem{" + "header='" + header + '\'' + ", comment='" + comment + '\'' + ", details='" + details
+                + '\'' + ", time='" + time + '\'' + '}';
     }
 }

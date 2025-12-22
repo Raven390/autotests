@@ -1,14 +1,15 @@
 package helpers.data.rules;
 
-import helpers.data.ClientHelper;
-import helpers.database.DbName;
-
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
 
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+
 public class MaxUsedLeverageInserter {
     public static void insertMaxUsedLeverageData(ClientHelper client) {
-        String rawQuerry = """
+        String rawQuerry =
+                """
                 INSERT INTO consolidated.mt___mt5_deals_coerced_dd (
                     brand, regulator, user_id, ucid, account, platform, server_id, server_name, account_type, account_group, account_currency,
                     deal, `order`, action, entry, reason, contract_size, time, time_utc, symbol, symbol_underlying, base_currency, quote_currency,
@@ -50,11 +51,15 @@ public class MaxUsedLeverageInserter {
                             0.0000, 8000.0000, 0.0000, 1.0000);
                 """;
         executeQueryToDb(DbName.CLICKHOUSE, trasformQuerry(rawQuerry, client));
-
     }
 
     protected static String trasformQuerry(String rawQuerry, ClientHelper client) {
-        return rawQuerry.replace("clientBrand", client.getBrand()).replace("clientRegulator", client.getRegulator()).replace("clientId", client.getUserId().toString()).replace("clientAccount", client.getTradingAccount().toString()).replace("clientServerId", client.getServerId().toString()).replace("clientUcid", client.getUcid());
+        return rawQuerry
+                .replace("clientBrand", client.getBrand())
+                .replace("clientRegulator", client.getRegulator())
+                .replace("clientId", client.getUserId().toString())
+                .replace("clientAccount", client.getTradingAccount().toString())
+                .replace("clientServerId", client.getServerId().toString())
+                .replace("clientUcid", client.getUcid());
     }
-
 }

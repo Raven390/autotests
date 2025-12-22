@@ -1,25 +1,25 @@
 package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingWebHedgeDataFactory.setupMirrorTradingWebHedgeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_RULE)
@@ -39,7 +39,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
     }
 
     @Test
@@ -55,7 +55,8 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Test
     @AllureId("1525")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
+    @DisplayName(
+            "Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
     void mirrorTradeRuleTest19() throws Exception {
         DataHelper data = dbDataMap.get("19");
 
@@ -66,7 +67,8 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Test
     @AllureId("1526")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_1ya7o9a")
+    @DisplayName(
+            "Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_1ya7o9a")
     void mirrorTradeRuleTest20() throws Exception {
         DataHelper data = dbDataMap.get("20");
 
@@ -77,7 +79,8 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Test
     @AllureId("1527")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_1q3hzii")
+    @DisplayName(
+            "Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_1q3hzii")
     void mirrorTradeRuleTest21() throws Exception {
         DataHelper data = dbDataMap.get("21");
 
@@ -99,7 +102,8 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Test
     @AllureId("1529")
-    @DisplayName("Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_1ss67m1")
+    @DisplayName(
+            "Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest23() throws Exception {
         DataHelper data = dbDataMap.get("23");
 
@@ -107,7 +111,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
         checkElementId("Event_1ss67m1", data.closeTradeMtEvent.id, "mirror_trade");
 
-        //Verify alerts
+        // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 

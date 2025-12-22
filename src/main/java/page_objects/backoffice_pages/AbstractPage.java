@@ -1,5 +1,11 @@
 package page_objects.backoffice_pages;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.ConfigFactory.ENTER_PAGE_E2E;
+
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -7,18 +13,11 @@ import com.microsoft.playwright.Route;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.ConfigFactory.ENTER_PAGE_E2E;
 
 public abstract class AbstractPage {
 
@@ -32,7 +31,8 @@ public abstract class AbstractPage {
     protected static final String LOADING_ANIMATION_SELECTOR = ".v-loader";
     protected static final String LOADER_SPIN_LOCATOR = ".g-spin";
     protected static final String CALENDAR_XPATH = "//div[contains(@class,'v-date-picker__calendar')]";
-    protected static final String CALENDAR_BUTTON_WITH_TEXT_PATTERN = "//div[contains(@class,'g-date-calendar__button') and not(contains(@class,'g-date-calendar__button_out-of-boundary')) and text()='%s']";
+    protected static final String CALENDAR_BUTTON_WITH_TEXT_PATTERN =
+            "//div[contains(@class,'g-date-calendar__button') and not(contains(@class,'g-date-calendar__button_out-of-boundary')) and text()='%s']";
     protected static final String LOADING_SKELETON = "//div[contains(@class, '_skeleton-container')]";
     protected static final String DANGER_HEAVY_TEXT = "*[contains(@class,'g-color-text_color_danger-heavy')]";
     protected static final String PRIMARY_TEXT = "*[contains(@class,'g-color-text_color_primary')]";
@@ -51,12 +51,16 @@ public abstract class AbstractPage {
         this.calendarMode = page.locator("//span[@class='g-date-calendar__mode-label']");
     }
 
-
     public void waitForPageToLoad() {
         page.waitForTimeout(100);
-        while (page.locator(LOADING_ANIMATION_SELECTOR).first().isVisible() || page.locator(LOADER_SPIN_LOCATOR).isVisible() || page.locator(LOADING_SKELETON).isVisible()) {
-            page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
-            page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        while (page.locator(LOADING_ANIMATION_SELECTOR).first().isVisible()
+                || page.locator(LOADER_SPIN_LOCATOR).isVisible()
+                || page.locator(LOADING_SKELETON).isVisible()) {
+            page.waitForSelector(
+                    LOADING_ANIMATION_SELECTOR,
+                    new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+            page.waitForSelector(
+                    LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
             page.waitForTimeout(100);
         }
     }
@@ -72,7 +76,6 @@ public abstract class AbstractPage {
         String currentUrl = page.url();
         assertTrue(currentUrl.contains(expectedUrl));
     }
-
 
     @Step("Open the autotest login page main page")
     public void navigateEnterPage() {
@@ -102,10 +105,11 @@ public abstract class AbstractPage {
         String monthTo = dateToLocal.format(monthFormatter);
         String dayTo = String.valueOf(dateToLocal.getDayOfMonth());
         page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, yearFrom)).click();
-        page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, monthFrom)).click();
+        page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, monthFrom))
+                .click();
         page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, dayFrom)).click();
         calendarMode.click();
-        page.waitForTimeout(100);//for stability . possibly playwright try to work with not finished animation
+        page.waitForTimeout(100); // for stability . possibly playwright try to work with not finished animation
         calendarMode.click();
         page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, yearTo)).click();
         page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, monthTo)).click();
@@ -157,7 +161,11 @@ public abstract class AbstractPage {
         page.route("**/api/clients/**/" + engOfPath, route -> {
             APIResponse response = route.fetch();
             Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+            route.fulfill(new Route.FulfillOptions()
+                    .setResponse(response)
+                    .setBody("500")
+                    .setHeaders(headers)
+                    .setStatus(500));
         });
     }
 }

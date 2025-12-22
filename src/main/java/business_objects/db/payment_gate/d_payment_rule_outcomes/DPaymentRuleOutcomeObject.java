@@ -1,10 +1,9 @@
 package business_objects.db.payment_gate.d_payment_rule_outcomes;
 
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Objects;
 
 @Builder
 @Setter
@@ -19,11 +18,15 @@ public class DPaymentRuleOutcomeObject {
     private String dateCreated;
     private String dateUpdated;
 
-    public DPaymentRuleOutcomeObject() {
-    }
+    public DPaymentRuleOutcomeObject() {}
 
     public DPaymentRuleOutcomeObject(
-            Integer id, Integer ruleId, Integer endId, String endName, String endDescription, String dateCreated,
+            Integer id,
+            Integer ruleId,
+            Integer endId,
+            String endName,
+            String endDescription,
+            String dateCreated,
             String dateUpdated) {
         this.id = id;
         this.ruleId = ruleId;
@@ -37,10 +40,13 @@ public class DPaymentRuleOutcomeObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DPaymentRuleOutcomeObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(ruleId, that.ruleId) && Objects.equals(
-                endId, that.endId) && Objects.equals(endName, that.endName) && Objects.equals(
-                        endDescription, that.endDescription) && Objects.equals(dateCreated, that.dateCreated) && Objects.equals(
-                                dateUpdated, that.dateUpdated);
+        return Objects.equals(id, that.id)
+                && Objects.equals(ruleId, that.ruleId)
+                && Objects.equals(endId, that.endId)
+                && Objects.equals(endName, that.endName)
+                && Objects.equals(endDescription, that.endDescription)
+                && Objects.equals(dateCreated, that.dateCreated)
+                && Objects.equals(dateUpdated, that.dateUpdated);
     }
 
     @Override
@@ -50,6 +56,8 @@ public class DPaymentRuleOutcomeObject {
 
     @Override
     public String toString() {
-        return "DPaymentRuleOutcomeObject{" + "id=" + id + ", ruleId=" + ruleId + ", endId=" + endId + ", endName='" + endName + '\'' + ", endDescription='" + endDescription + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + '}';
+        return "DPaymentRuleOutcomeObject{" + "id=" + id + ", ruleId=" + ruleId + ", endId=" + endId + ", endName='"
+                + endName + '\'' + ", endDescription='" + endDescription + '\'' + ", dateCreated='" + dateCreated + '\''
+                + ", dateUpdated='" + dateUpdated + '\'' + '}';
     }
 }

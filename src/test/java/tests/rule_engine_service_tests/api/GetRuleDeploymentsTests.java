@@ -1,20 +1,5 @@
 package tests.rule_engine_service_tests.api;
 
-import business_objects.api.rule_engine_api.rule_deployments.GetRuleDeploymentResponse;
-import business_objects.db.rule_engine_db.rule_deployment.RuleDeploymentObject;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
 import static business_objects.api.rule_engine_api.rule_deployments.RuleDeploymentsRequests.getRuleDeploymentsByProcessId;
 import static business_objects.api.rule_engine_api.rule_deployments.RuleDeploymentsRequests.getRuleDeploymentsNoParams;
 import static business_objects.db.rule_engine_db.rule_deployment.RuleDeploymentObjectFactory.generateRuleDeploymentObject;
@@ -26,6 +11,20 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Constants.SUITE_RULE_ENGINE_API_TESTS;
 import static utils.Utils.getRandomUuid;
+
+import business_objects.api.rule_engine_api.rule_deployments.GetRuleDeploymentResponse;
+import business_objects.db.rule_engine_db.rule_deployment.RuleDeploymentObject;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Tag(TEAM_CORE)
@@ -54,7 +53,9 @@ class GetRuleDeploymentsTests extends TestBaseApi {
     void getRuleDeploymentTest1() throws IOException {
         Response response = getRuleDeploymentsNoParams();
         assertThat(response.body(), is(notNullValue()));
-        List<GetRuleDeploymentResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetRuleDeploymentResponse[].class)).toList();
+        List<GetRuleDeploymentResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetRuleDeploymentResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert rule uuid", mappedResponse.size(), greaterThanOrEqualTo(1));
     }
@@ -65,17 +66,31 @@ class GetRuleDeploymentsTests extends TestBaseApi {
     void getRuleDeploymentTest2() throws IOException {
         Response response = getRuleDeploymentsByProcessId(rule.getProcessId());
         assertThat(response.body(), is(notNullValue()));
-        List<GetRuleDeploymentResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetRuleDeploymentResponse[].class)).toList();
+        List<GetRuleDeploymentResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetRuleDeploymentResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
 
         assertThat("Assert rule Version", mappedResponse.getFirst().getVersion(), equalTo(rule.getVersion()));
-        assertThat("Assert rule uuid", mappedResponse.getFirst().getUuid(), equalTo(rule.getUuid().toString()));
+        assertThat(
+                "Assert rule uuid",
+                mappedResponse.getFirst().getUuid(),
+                equalTo(rule.getUuid().toString()));
         assertThat("Assert rule AuthorName", mappedResponse.getFirst().getAuthorName(), equalTo(rule.getAuthorName()));
         assertThat("Assert rule Rule name", mappedResponse.getFirst().getRuleName(), equalTo(rule.getRuleName()));
         assertThat("Assert rule ProcessId", mappedResponse.getFirst().getProcessId(), equalTo(rule.getProcessId()));
-        assertThat("Assert rule ZeebeRevision", mappedResponse.getFirst().getZeebeRevision(), equalTo(rule.getZeebeRevision()));
-        assertThat("Assert rule LastUpdate", mappedResponse.getFirst().getLastUpdate(), equalTo(rule.getLastUpdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        assertThat("Assert rule Status", mappedResponse.getFirst().getStatus(), equalTo(rule.getStatus().toString()));
+        assertThat(
+                "Assert rule ZeebeRevision",
+                mappedResponse.getFirst().getZeebeRevision(),
+                equalTo(rule.getZeebeRevision()));
+        assertThat(
+                "Assert rule LastUpdate",
+                mappedResponse.getFirst().getLastUpdate(),
+                equalTo(rule.getLastUpdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        assertThat(
+                "Assert rule Status",
+                mappedResponse.getFirst().getStatus(),
+                equalTo(rule.getStatus().toString()));
         assertThat("Assert rule Comment", mappedResponse.getFirst().getComment(), equalTo(rule.getComment()));
     }
 }

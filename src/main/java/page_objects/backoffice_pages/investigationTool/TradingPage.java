@@ -1,5 +1,15 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import com.microsoft.playwright.APIResponse;
@@ -11,23 +21,12 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import org.hamcrest.MatcherAssert;
-import page_objects.backoffice_pages.AbstractPage;
-import utils.Utils;
-
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.*;
-
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
-import static utils.Utils.*;
+import org.hamcrest.MatcherAssert;
+import page_objects.backoffice_pages.AbstractPage;
+import utils.Utils;
 
 public class TradingPage extends AbstractPage {
 
@@ -205,52 +204,86 @@ public class TradingPage extends AbstractPage {
     private final Locator selectedIllegalProfitAccountCount;
     private final Locator illegalProfitSelectAllCheckBox;
 
-    private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
+    private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN =
+            "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
-    private static final String ACCOUNT_TABLE_COLUMN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_account')]%s";
+    private static final String ACCOUNT_TABLE_COLUMN =
+            "//td[contains(@class,'v-trading-tab-accounts-table__column_type_account')]%s";
     private static final String ACCOUNT_DATES_ELEMENT = "//div[@class='v-trading-tab-accounts-card__dates']%s";
-    private static final String ACCOUNT_TABLE_HEADER_PATTERN = "//th[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]";
-    private static final String ACCOUNT_TABLE_CELL_PATTERN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]/div";
-    private static final String FILTER_CONTAINER = "//div[text()='%s']/ancestor::div[@class='v-trading-tab-deals-filter__filter-container']";
+    private static final String ACCOUNT_TABLE_HEADER_PATTERN =
+            "//th[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]";
+    private static final String ACCOUNT_TABLE_CELL_PATTERN =
+            "//td[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]/div";
+    private static final String FILTER_CONTAINER =
+            "//div[text()='%s']/ancestor::div[@class='v-trading-tab-deals-filter__filter-container']";
     private static final String DATE_PICKER_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input";
     private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='%s']";
     private static final String CHECKBOXES_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input[@type='checkbox']";
     private static final String RESET_BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='Reset']";
     private static final String TOOLTIP_BY_LABEL_PATTERN = "//div[text()='%s']/following-sibling::div";
     private static final String ACCOUNT_CARD_XPATH = "//div[@class='v-trading-tab-accounts-card']";
-    private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
-    private static final String WIDGET_CONTAINER_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[contains(@class,'v-trading-summary__chart') and not(contains(@class,'v-trading-summary__charts'))]";
-    private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Realized PNL", "USD");
-    private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
-    private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOTAL_PNL_CHART_CONTAINER);
-    private static final String TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN = TOTAL_PNL_CHART + "/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text') and text()='%s']";
-    private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER = String.format(WIDGET_CONTAINER_PATTERN, "Performance overview");
+    private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN =
+            "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
+    private static final String WIDGET_CONTAINER_PATTERN =
+            "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String CHART_CONTAINER_PATTERN =
+            "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[contains(@class,'v-trading-summary__chart') and not(contains(@class,'v-trading-summary__charts'))]";
+    private static final String TOTAL_PNL_CHART_CONTAINER =
+            String.format(CHART_CONTAINER_PATTERN, "Realized PNL", "USD");
+    private static final String TOTAL_PNL_CHART_FEATURES =
+            String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
+    private static final String TOTAL_PNL_CHART =
+            String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOTAL_PNL_CHART_CONTAINER);
+    private static final String TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN = TOTAL_PNL_CHART
+            + "/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text') and text()='%s']";
+    private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER =
+            String.format(WIDGET_CONTAINER_PATTERN, "Performance overview");
     private static final String CHART_TITLE = "//div[@class='v-chart-wrapper__title']";
-    private static final String PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_CHART_CONTAINER + "/descendant::td[text()='%s']/parent::tr";
-    private static final String PERFORMANCE_OVERVIEW_TICKETS_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_tickets')]";
-    private static final String PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_winrate')]";
-    private static final String PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_os')]";
-    private static final String PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_risk')]";
-    private static final String WIDGET_BY_TITLE_PATTERN = "//div[contains(@class,'v-number-widget__title') and text()='%s']/..";
+    private static final String PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN =
+            PERFORMANCE_OVERVIEW_CHART_CONTAINER + "/descendant::td[text()='%s']/parent::tr";
+    private static final String PERFORMANCE_OVERVIEW_TICKETS_BY_SYMBOL_PATTERN =
+            PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN
+                    + "/td[contains(@class,'v-trading-summary-performance__column_type_tickets')]";
+    private static final String PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN =
+            PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN
+                    + "/td[contains(@class,'v-trading-summary-performance__column_type_winrate')]";
+    private static final String PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN
+            + "/td[contains(@class,'v-trading-summary-performance__column_type_os')]";
+    private static final String PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN
+            + "/td[contains(@class,'v-trading-summary-performance__column_type_risk')]";
+    private static final String WIDGET_BY_TITLE_PATTERN =
+            "//div[contains(@class,'v-number-widget__title') and text()='%s']/..";
     private static final String VOLUME_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Volume", "USD");
-    private static final String VOLUME_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", VOLUME_CHART_CONTAINER);
-    private static final String VOLUME_CHART = String.format("%s/descendant::div[@class='v-trading-summary-volume__chart-container']", VOLUME_CHART_CONTAINER);
-    private static final String PNL_BY_DURATION = "//div[text()='Realized PNL']/following-sibling::span[text()='by trade duration, USD']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String PNL_BY_DURATION_0_10_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 94.9px), 196px);']";
-    private static final String PNL_BY_DURATION_10_30_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 284.7px), 196px);']";
-    private static final String PNL_BY_DURATION_05_6_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 474.5px), 196px);']";
-    private static final String PNL_BY_DURATION_6_24_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 664.3px), 196px);']";
-    private static final String PNL_BY_DURATION_MORE24_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 854.1px), 196px);']";
-    private static final String PNL_BY_DURATION_ANNOTATION = "//div[@class='v-trading-summary-pnl-by-duration__ticks-container']/div/div";
+    private static final String VOLUME_CHART_FEATURES =
+            String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", VOLUME_CHART_CONTAINER);
+    private static final String VOLUME_CHART = String.format(
+            "%s/descendant::div[@class='v-trading-summary-volume__chart-container']", VOLUME_CHART_CONTAINER);
+    private static final String PNL_BY_DURATION =
+            "//div[text()='Realized PNL']/following-sibling::span[text()='by trade duration, USD']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String PNL_BY_DURATION_0_10_ANNOTATION =
+            "//*[@style='position: absolute; transform: translate(calc(-50% + 94.9px), 196px);']";
+    private static final String PNL_BY_DURATION_10_30_ANNOTATION =
+            "//*[@style='position: absolute; transform: translate(calc(-50% + 284.7px), 196px);']";
+    private static final String PNL_BY_DURATION_05_6_ANNOTATION =
+            "//*[@style='position: absolute; transform: translate(calc(-50% + 474.5px), 196px);']";
+    private static final String PNL_BY_DURATION_6_24_ANNOTATION =
+            "//*[@style='position: absolute; transform: translate(calc(-50% + 664.3px), 196px);']";
+    private static final String PNL_BY_DURATION_MORE24_ANNOTATION =
+            "//*[@style='position: absolute; transform: translate(calc(-50% + 854.1px), 196px);']";
+    private static final String PNL_BY_DURATION_ANNOTATION =
+            "//div[@class='v-trading-summary-pnl-by-duration__ticks-container']/div/div";
     private static final String PNL_BY_DURATION_TOOLTIP = "//div[@class='v-trading-summary-pnl-by-duration__tooltip']";
     private static final String GREEN_TEXT = "//*[contains(@class, 'g-color-text_color_brand')]";
     private static final String RED_TEXT = "//*[contains(@class, 'g-color-text_color_danger')]";
     private static final String PNL_DURATION_GRAPH = "//*[contains(@class, 'v-trading-summary-pnl-by-duration')]";
-    private static final String PNL_SYMBOL_SECTION = "//span[text() = 'per symbol, USD']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String SYMBOL_TRADED_SECTION = "//div[text() = 'Symbol traded']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String PNL_SYMBOL_BAR_DESCRIPTION = "//div[(@class='v-pnl-symbol-bar__bar-description') and not (contains(@class,'v-pnl-symbol-bar__bar-description_right'))]";
-    private static final String PNL_SYMBOL_BAR_DESCRIPTION_RIGHT = "//div[contains(@class,'v-pnl-symbol-bar__bar-description_right')]";
+    private static final String PNL_SYMBOL_SECTION =
+            "//span[text() = 'per symbol, USD']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String SYMBOL_TRADED_SECTION =
+            "//div[text() = 'Symbol traded']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String PNL_SYMBOL_BAR_DESCRIPTION =
+            "//div[(@class='v-pnl-symbol-bar__bar-description') and not (contains(@class,'v-pnl-symbol-bar__bar-description_right'))]";
+    private static final String PNL_SYMBOL_BAR_DESCRIPTION_RIGHT =
+            "//div[contains(@class,'v-pnl-symbol-bar__bar-description_right')]";
     private static final String PNL_SYMBOL_BAR_EMPTY = "//div[@class='v-pnl-symbol-bar__no-data']";
     private static final String SYMBOL_TRADED_EMPTY = "//div[@class='v-symbol-traded-bar__no-data']";
     private static final String PNL_SYMBOL_BAR = "//div[@class='v-pnl-symbol-bar__bar']";
@@ -259,32 +292,44 @@ public class TradingPage extends AbstractPage {
     private static final String SECONDARY_TEXT = "//*[contains(@class,'g-color-text_color_secondary')]";
     private static final String SUBHEADER_2_TEXT = "//*[contains(@class,'g-text_variant_subheader-2')]";
     private static final String PNL_SYMBOL_BAR_NEGATIVE = "//*[contains(@class,'v-pnl-symbol-bar__bar_negative')]";
-    private static final String PNL_SYMBOL_BAR_POSITIVE = "//div[(@class='v-pnl-symbol-bar__bar') or (contains(@class,'v-pnl-symbol-bar__bar') and contains(@class,'v-pnl-symbol-bar__bar_begin'))]";
+    private static final String PNL_SYMBOL_BAR_POSITIVE =
+            "//div[(@class='v-pnl-symbol-bar__bar') or (contains(@class,'v-pnl-symbol-bar__bar') and contains(@class,'v-pnl-symbol-bar__bar_begin'))]";
     private static final String PNL_SYMBOL_BAR_POSITIVE_BEGIN = "//div[contains(@class,'v-pnl-symbol-bar__bar_begin')]";
-    private static final String SYMBOL_TRADED_BAR = "//div[@class='v-symbol-traded-bar__bar' or @class='v-symbol-traded-bar__bar v-symbol-traded-bar__bar_isFirst' ]";
-    private static final String VOLUME_TRADED_BAR_ANNOTATION = "//div[@class='v-trading-summary-volume__chart-container']/div[contains(@class, 'g-text_variant_body-short')]";
+    private static final String SYMBOL_TRADED_BAR =
+            "//div[@class='v-symbol-traded-bar__bar' or @class='v-symbol-traded-bar__bar v-symbol-traded-bar__bar_isFirst' ]";
+    private static final String VOLUME_TRADED_BAR_ANNOTATION =
+            "//div[@class='v-trading-summary-volume__chart-container']/div[contains(@class, 'g-text_variant_body-short')]";
     private static final String SYMBOL_TRADED_BAR_FIRST = "//div[contains(@class,'v-symbol-traded-bar__bar_isFirst')]";
     private static final String PNL_SYMBOL_TOOLTIP_LINE = "//div[(@class='v-pnl-symbol-tooltip__symbol')]";
     private static final String SYMBOL_TRADED_TOOLTIP = "//div[(@class='v-symbol-traded-tooltip')]";
     private static final String VOLUME_TOOLTIP = "//div[(@class='v-trading-summary-volume__tooltip')]";
     private static final String SYMBOL_TRADED_TOOLTIP_LINE = "//div[(@class='v-symbol-traded-tooltip__symbol')]";
-    private static final String SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE = "//div[(@class='v-symbol-traded-tooltip__other-title')]";
-    private static final String SYMBOL_TRADED_BAR_DESCRIPTION = "//div[(@class='v-symbol-traded-bar__bar-description')]";
+    private static final String SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE =
+            "//div[(@class='v-symbol-traded-tooltip__other-title')]";
+    private static final String SYMBOL_TRADED_BAR_DESCRIPTION =
+            "//div[(@class='v-symbol-traded-bar__bar-description')]";
     private static final String TRADING_CHART_FEATURE = "//div[@class='v-chart-wrapper__feature']";
     private static final String TRADING_CHART_FEATURE_VALUE = "//div[contains(@class,'g-text_variant_header-1')]";
-    private static final String HOLDING_TIME_SECTION = "//*[text()='Holding time']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String HOLDING_TIME_BAR_ANNOTATION = "//div[@class='v-trading-summary-holding-time__ticks-container']/div/div";
+    private static final String HOLDING_TIME_SECTION =
+            "//*[text()='Holding time']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String HOLDING_TIME_BAR_ANNOTATION =
+            "//div[@class='v-trading-summary-holding-time__ticks-container']/div/div";
     private static final String HOLDING_TIME_TOOLTIP = "//div[@class='v-trading-summary-holding-time__tooltip']";
     private static final String ERROR_CONTAINER = "//div[@class='v-error-view__container']";
     private static final String RETRY_BUTTON = "//button/span[text()='Retry']";
-    private static final String TOXICITY_AND_PROFIT_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Toxicity and profit", "USD");
-    private static final String TOXICITY_AND_PROFIT_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
-    private static final String TOXICITY_AND_PROFIT_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
+    private static final String TOXICITY_AND_PROFIT_CHART_CONTAINER =
+            String.format(CHART_CONTAINER_PATTERN, "Toxicity and profit", "USD");
+    private static final String TOXICITY_AND_PROFIT_CHART_FEATURES =
+            String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
+    private static final String TOXICITY_AND_PROFIT_CHART =
+            String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-number-widget__title')]";
     private static final String ACCOUNT_CARD = "//div[@class='v-trading-tab-accounts-card']";
     private static final String ACCOUNT_CARD_IB_ACCOUNT = "//div[@class='v-ib-accounts__ib-accounts']";
-    private static final String IB_ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_ib')]";
-    private static final String IB_ACCOUNT_REBATES_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_rebates')]";
+    private static final String IB_ACCOUNT_ROW_CELL =
+            "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_ib')]";
+    private static final String IB_ACCOUNT_REBATES_ROW_CELL =
+            "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_rebates')]";
     private static final String ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column')]";
     private static final String ACCOUNT_ROW = "//tr[@class = 'g-table__row g-table__row_vertical-align_top']";
     private static final String TABLE_HEADER = "*[contains(@class,'header-cell')";
@@ -292,7 +337,6 @@ public class TradingPage extends AbstractPage {
     private static final String OPERATIONS_ROW_BY_TICKET_PATTERN = "//div[@data-qa='trading_deals__table__rows__%s']";
     private final Locator scrollOperationsListDownButton;
     private final Locator scrollOperationsListUpButton;
-
 
     public TradingPage(Page page) {
         super(page);
@@ -314,14 +358,19 @@ public class TradingPage extends AbstractPage {
         this.methodColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='METHOD')]");
         this.commentColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='COMMENT')]");
         this.accountColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__account')]");
-        this.typeValue = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__type')]//*[contains(@class,'v-trading-tab-deals__deal-type')]");
+        this.typeValue = page.locator(
+                "//*[@class='v-body-cell'][contains(@data-qa, '__type')]//*[contains(@class,'v-trading-tab-deals__deal-type')]");
         this.typeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__type')]");
         this.profitColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__profit')]");
         this.volumeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]");
-        this.volumeLotsValue = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]//%s", PRIMARY_TEXT));
-        this.volumeUsdValue = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]%s", SECONDARY_TEXT));
-        this.openColumnCellDate = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__open')]//%s", PRIMARY_TEXT));
-        this.closeColumnCellDate = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__close')]//%s", PRIMARY_TEXT));
+        this.volumeLotsValue = page.locator(
+                String.format("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]//%s", PRIMARY_TEXT));
+        this.volumeUsdValue = page.locator(
+                String.format("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]%s", SECONDARY_TEXT));
+        this.openColumnCellDate = page.locator(
+                String.format("//*[@class='v-body-cell'][contains(@data-qa, '__open')]//%s", PRIMARY_TEXT));
+        this.closeColumnCellDate = page.locator(
+                String.format("//*[@class='v-body-cell'][contains(@data-qa, '__close')]//%s", PRIMARY_TEXT));
         this.openColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__open')]");
         this.closeColumnCell = page.locator("//*[@class='v-body-cell'][5]");
         this.tpslColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__tp/sl')]");
@@ -333,31 +382,47 @@ public class TradingPage extends AbstractPage {
         this.filterButton = page.locator("//button//*[text()=' Filter']");
         this.filterMenu = page.locator("[data-qa=\"drawer_body\"] .v-trading-tab-deals-filter__content");
         this.checkboxItem = page.locator(".v-trading-tab-deals-filter__filter-container  .g-checkbox");
-        this.typeShowMoreButton = page.locator(".v-trading-tab-deals-filter__filter-container button").getByText("Show more");
+        this.typeShowMoreButton = page.locator(".v-trading-tab-deals-filter__filter-container button")
+                .getByText("Show more");
         this.applyFiltersButton = page.locator("button").getByText("Apply");
         this.filterContainer = page.locator("v-trading-tab-deals-filter__filter-container");
-        this.volumeAmountFromInput = page.locator("//div[text()=\"Volume in USD\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
-        this.volumeAmountToInput = page.locator("//div[text()=\"Volume in USD\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
-        this.volumeLotFromInput = page.locator("//div[text()=\"Volume in lots\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
-        this.volumeLotToInput = page.locator("//div[text()=\"Volume in lots\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
-        this.durationFromInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
-        this.durationToInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
-        this.profitFromInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
-        this.profitToInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.volumeAmountFromInput = page.locator(
+                "//div[text()=\"Volume in USD\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
+        this.volumeAmountToInput = page.locator(
+                "//div[text()=\"Volume in USD\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.volumeLotFromInput = page.locator(
+                "//div[text()=\"Volume in lots\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
+        this.volumeLotToInput = page.locator(
+                "//div[text()=\"Volume in lots\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.durationFromInput = page.locator(
+                "//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
+        this.durationToInput = page.locator(
+                "//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.profitFromInput = page.locator(
+                "//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
+        this.profitToInput = page.locator(
+                "//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
         this.accountCard = page.locator(ACCOUNT_CARD_XPATH);
         this.accountId = page.locator("//span[contains(@class,'g-text_variant_subheader-2')]");
         this.balanceElement = page.locator("//div[@class='v-trading-tab-accounts-card__balance']");
-        this.statusElement = page.locator("//div[contains(@class,'v-trading-account-status-label')]/div[@class='v-text-with-icon__text']");
-        this.platformElement = page.locator("//div[@class='v-trading-tab-accounts-card__left-col-footer']/div[@class='v-trading-tab-accounts-card__tooltip-wrap'][2]/descendant::div[@class='v-text-with-icon__text']");
-        this.accountTypeElement = page.locator("//div[contains(@class,'v-trading-tab-accounts-card__account-type')]/descendant::div[@class='v-text-with-icon__text']");
-        this.createdTimeElement = page.locator(String.format(ACCOUNT_DATES_ELEMENT, "/div[1]/descendant::div[@class='v-text-with-icon__text']"));
-        this.updatedTimeElement = page.locator(String.format(ACCOUNT_DATES_ELEMENT, "/div[2]/descendant::div[@class='v-text-with-icon__text']"));
+        this.statusElement = page.locator(
+                "//div[contains(@class,'v-trading-account-status-label')]/div[@class='v-text-with-icon__text']");
+        this.platformElement = page.locator(
+                "//div[@class='v-trading-tab-accounts-card__left-col-footer']/div[@class='v-trading-tab-accounts-card__tooltip-wrap'][2]/descendant::div[@class='v-text-with-icon__text']");
+        this.accountTypeElement = page.locator(
+                "//div[contains(@class,'v-trading-tab-accounts-card__account-type')]/descendant::div[@class='v-text-with-icon__text']");
+        this.createdTimeElement = page.locator(
+                String.format(ACCOUNT_DATES_ELEMENT, "/div[1]/descendant::div[@class='v-text-with-icon__text']"));
+        this.updatedTimeElement = page.locator(
+                String.format(ACCOUNT_DATES_ELEMENT, "/div[2]/descendant::div[@class='v-text-with-icon__text']"));
         this.popupElement = page.locator(POPUP_ELEMENT_XPATH);
         this.filterPopupElement = page.locator("//div[contains(@class,'g-popup__content')]");
         this.tableViewButton = page.locator("//input[@value='TABLE']");
         this.accountRow = page.locator("//tr[contains(@class,'g-table__row_vertical-align_top')]");
-        this.accountTableId = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_primary')]"));
-        this.accountTablePlatform = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
+        this.accountTableId = page.locator(
+                String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_primary')]"));
+        this.accountTablePlatform = page.locator(String.format(
+                ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
         this.accountTableType = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "type"));
         this.accountTableStatus = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "status"));
         this.accountTableCreated = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "created"));
@@ -404,45 +469,100 @@ public class TradingPage extends AbstractPage {
         this.typeCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Type"));
         this.methodCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Method"));
         this.summaryTab = page.locator(".g-radio-button__option-control[value=\"Summary\"]");
-        this.totalPnlMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES)).last();
-        this.totalPnlMaxLossValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES)).last();
-        this.totalPnlMaxProfitLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES)).first();
-        this.totalPnlMaxLossLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES)).first();
-        this.totalPnlMaxProfitDate = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary v-chart-wrapper__feature-description')]", TOTAL_PNL_CHART_FEATURES)).first();
-        this.totalPnlMaxLossDate = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary v-chart-wrapper__feature-description')]", TOTAL_PNL_CHART_FEATURES)).last();
-        this.totalPnlMaxProfitGraphDot = page.locator(String.format("%s/descendant::div[@style='color: rgb(77, 215, 175);']", TOTAL_PNL_CHART));
-        this.totalPnlMaxLossGraphDot = page.locator(String.format("%s/descendant::div[@style='color: rgb(249, 116, 144);']", TOTAL_PNL_CHART));
-        this.totalPnlYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
+        this.totalPnlMaxProfitValue = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES))
+                .last();
+        this.totalPnlMaxLossValue = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]",
+                        TOTAL_PNL_CHART_FEATURES))
+                .last();
+        this.totalPnlMaxProfitLabel = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES))
+                .first();
+        this.totalPnlMaxLossLabel = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]",
+                        TOTAL_PNL_CHART_FEATURES))
+                .first();
+        this.totalPnlMaxProfitDate = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_secondary v-chart-wrapper__feature-description')]",
+                        TOTAL_PNL_CHART_FEATURES))
+                .first();
+        this.totalPnlMaxLossDate = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_secondary v-chart-wrapper__feature-description')]",
+                        TOTAL_PNL_CHART_FEATURES))
+                .last();
+        this.totalPnlMaxProfitGraphDot =
+                page.locator(String.format("%s/descendant::div[@style='color: rgb(77, 215, 175);']", TOTAL_PNL_CHART));
+        this.totalPnlMaxLossGraphDot =
+                page.locator(String.format("%s/descendant::div[@style='color: rgb(249, 116, 144);']", TOTAL_PNL_CHART));
+        this.totalPnlYAxisLabel = page.locator(String.format(
+                "%s/descendant::div[@class='v-line-chart__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
         this.totalPnlTooltip = page.locator(".v-trading-summary-total-pnl__tooltip");
         this.totalPnlChartTitle = page.locator(TOTAL_PNL_CHART_CONTAINER).locator(CHART_TITLE);
-        this.totalPnlXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]", TOTAL_PNL_CHART));
-        this.performanceOverviewTableTitle = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator(CHART_TITLE);
-        this.performanceOverviewTableHeaders = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//th");
-        this.performanceOverviewSymbols = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//td[contains(@class,'v-trading-summary-performance__column_type_date')]");
+        this.totalPnlXAxisLabels = page.locator(String.format(
+                "%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]",
+                TOTAL_PNL_CHART));
+        this.performanceOverviewTableTitle =
+                page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator(CHART_TITLE);
+        this.performanceOverviewTableHeaders =
+                page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//th");
+        this.performanceOverviewSymbols = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER)
+                .locator("//td[contains(@class,'v-trading-summary-performance__column_type_date')]");
         this.winrateWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "Win rate"));
         this.winrateWidgetValue = winrateWidget.locator(".v-number-widget__value");
         this.winrateWidgetInfo = winrateWidget.locator(".v-number-widget__info");
         this.volumeChartTitle = page.locator(VOLUME_CHART_CONTAINER).locator(CHART_TITLE);
-        this.volumeYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-trading-summary-volume__padded-value']/div", VOLUME_CHART_CONTAINER));
-        this.volumeMaxValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES)).last();
-        this.volumeTotalValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES)).last();
-        this.volumeMaxLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES)).first();
-        this.volumeMaxDate = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", VOLUME_CHART_FEATURES)).first();
-        this.volumeTotalLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES)).first();
-        this.volumeMaxGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART));
+        this.volumeYAxisLabel = page.locator(String.format(
+                "%s/descendant::div[@class='v-trading-summary-volume__padded-value']/div", VOLUME_CHART_CONTAINER));
+        this.volumeMaxValue = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES))
+                .last();
+        this.volumeTotalValue = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES))
+                .last();
+        this.volumeMaxLabel = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES))
+                .first();
+        this.volumeMaxDate = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", VOLUME_CHART_FEATURES))
+                .first();
+        this.volumeTotalLabel = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES))
+                .first();
+        this.volumeMaxGraphDot = page.locator(
+                String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART));
         this.pnlByDurationGraphSection = page.locator(PNL_BY_DURATION);
         this.pnlByDurationTooltip = page.locator(PNL_BY_DURATION_TOOLTIP);
-        this.volumeXAxisLabels = page.locator("//div[@class='v-trading-summary-volume__ticks-container']/descendant::div[contains(@class,'g-text')]");
+        this.volumeXAxisLabels = page.locator(
+                "//div[@class='v-trading-summary-volume__ticks-container']/descendant::div[contains(@class,'g-text')]");
         this.holdingTimeTooltip = page.locator(HOLDING_TIME_TOOLTIP);
-        this.toxicityAndProfitChartTitle = page.locator(TOXICITY_AND_PROFIT_CHART_CONTAINER).locator(CHART_TITLE);
-        this.toxicityAndProfitYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", TOXICITY_AND_PROFIT_CHART_CONTAINER));
-        this.toxicityAndProfitMaxToxicityValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_warning')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).last();
-        this.toxicityAndProfitMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_utility')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).last();
-        this.toxicityAndProfitMaxToxicityLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_warning')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).first();
-        this.toxicityAndProfitMaxProfitLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_utility')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).first();
-        this.toxicityAndProfitMaxToxicityGraphDot = page.locator(String.format("%s/descendant::div[@class='v-peak-point__point-label']", TOXICITY_AND_PROFIT_CHART));
-        this.toxicityAndProfitXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]", TOXICITY_AND_PROFIT_CHART));
-        this.toxicityAndProfitTooltipIcon = page.locator(String.format("%s/descendant::div[@class='v-chart-wrapper__info-hint']", TOXICITY_AND_PROFIT_CHART_CONTAINER));
+        this.toxicityAndProfitChartTitle =
+                page.locator(TOXICITY_AND_PROFIT_CHART_CONTAINER).locator(CHART_TITLE);
+        this.toxicityAndProfitYAxisLabel = page.locator(String.format(
+                "%s/descendant::div[@class='v-line-chart__padded-value']/div", TOXICITY_AND_PROFIT_CHART_CONTAINER));
+        this.toxicityAndProfitMaxToxicityValue = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_warning')]",
+                        TOXICITY_AND_PROFIT_CHART_FEATURES))
+                .last();
+        this.toxicityAndProfitMaxProfitValue = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_utility')]",
+                        TOXICITY_AND_PROFIT_CHART_FEATURES))
+                .last();
+        this.toxicityAndProfitMaxToxicityLabel = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_warning')]",
+                        TOXICITY_AND_PROFIT_CHART_FEATURES))
+                .first();
+        this.toxicityAndProfitMaxProfitLabel = page.locator(String.format(
+                        "%s/descendant::div[contains(@class,'g-color-text_color_utility')]",
+                        TOXICITY_AND_PROFIT_CHART_FEATURES))
+                .first();
+        this.toxicityAndProfitMaxToxicityGraphDot = page.locator(
+                String.format("%s/descendant::div[@class='v-peak-point__point-label']", TOXICITY_AND_PROFIT_CHART));
+        this.toxicityAndProfitXAxisLabels = page.locator(String.format(
+                "%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]",
+                TOXICITY_AND_PROFIT_CHART));
+        this.toxicityAndProfitTooltipIcon = page.locator(String.format(
+                "%s/descendant::div[@class='v-chart-wrapper__info-hint']", TOXICITY_AND_PROFIT_CHART_CONTAINER));
         this.tooltip = page.locator("//div[contains(@class,'g-tooltip__content')]");
         this.absoluteToxicityWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "Absolute toxicity"));
         this.absoluteToxicityWidgetTitle = absoluteToxicityWidget.locator(WIDGET_TITLE);
@@ -454,23 +574,34 @@ public class TradingPage extends AbstractPage {
         this.ibRebatesWidgetInfo = ibRebatesWidget.locator(".v-number-widget__info");
         this.ibRebatesWidgetText = ibRebatesWidget.locator(".v-number-widget__empty");
         this.operationsTableTooltip = page.locator("//div[@class='v-tooltip-content']");
-        this.enabledHftButton = page.locator("//*[text()=' HFT']/ancestor::button[contains(@class, 'g-button_view_toned-action')]");
-        this.disabledHftButton = page.locator("//*[text()=' HFT']/ancestor::button[not (contains(@class, 'g-button_view_toned-action'))]");
-        this.highlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row_highlighted')]");
-        this.notHighlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row') and not (contains(@class, 'v-body-row_highlighted'))]");
+        this.enabledHftButton =
+                page.locator("//*[text()=' HFT']/ancestor::button[contains(@class, 'g-button_view_toned-action')]");
+        this.disabledHftButton = page.locator(
+                "//*[text()=' HFT']/ancestor::button[not (contains(@class, 'g-button_view_toned-action'))]");
+        this.highlightedRow = page.locator(
+                "//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row_highlighted')]");
+        this.notHighlightedRow = page.locator(
+                "//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row') and not (contains(@class, 'v-body-row_highlighted'))]");
         this.lotsAmountSwitch = page.locator(LOTS_AMOUNT_SWITCH);
-        this.errorMessage = page.locator("//*[@data-qa='trading_deals__table']//div[@class='v-error-view__error-text']");
+        this.errorMessage =
+                page.locator("//*[@data-qa='trading_deals__table']//div[@class='v-error-view__error-text']");
         this.illegalProfitButton = page.locator("//button[@data-qa='trading_deals__controls__illegal_profit_button']");
         this.checkboxIllegalProfit = page.locator("//input[@type='checkbox']");
-        this.illegalProfitAmountLoaded = page.locator("//div[@class='v-trading-tab-deals-multiselect-panel__illegal-profit']");
-        this.saveIllegalProfitButton = page.locator("//button[@data-qa='trading_deals__multiselect_panel__save_illegal_profit']");
+        this.illegalProfitAmountLoaded =
+                page.locator("//div[@class='v-trading-tab-deals-multiselect-panel__illegal-profit']");
+        this.saveIllegalProfitButton =
+                page.locator("//button[@data-qa='trading_deals__multiselect_panel__save_illegal_profit']");
         this.toastMessage = page.locator("//div[contains(@class,'g-toast__container')]");
         this.selectedTradesCounter = page.locator("//div[@data-qa='trading_deals__multiselect_panel__counter']");
-        this.scrollOperationsListUpButton = page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[1]");
-        this.scrollOperationsListDownButton = page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[2]");
+        this.scrollOperationsListUpButton =
+                page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[1]");
+        this.scrollOperationsListDownButton =
+                page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[2]");
         this.illegalProfitSelectAllCheckBox = page.locator("//div[@data-qa='trading_deals__table__header__checkbox']");
-        this.selectedIllegalProfitAmout = page.locator("//span[@data-qa='trading_deals__multiselect_panel__illegal_profit_amount']");
-        this.selectedIllegalProfitAccountCount = page.locator("//span[@data-qa='trading_deals__multiselect_panel__account_count_string']");
+        this.selectedIllegalProfitAmout =
+                page.locator("//span[@data-qa='trading_deals__multiselect_panel__illegal_profit_amount']");
+        this.selectedIllegalProfitAccountCount =
+                page.locator("//span[@data-qa='trading_deals__multiselect_panel__account_count_string']");
     }
 
     public void navigate(String ucid) {
@@ -524,7 +655,6 @@ public class TradingPage extends AbstractPage {
         page.waitForTimeout(500);
     }
 
-
     @Step("Check if the trading/operations tab renders all basic elements")
     public void operationsRendersTest() {
         Allure.step("Check if the trading/operations tab renders all basic elements");
@@ -546,8 +676,10 @@ public class TradingPage extends AbstractPage {
         tpslColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        //deprecated column srColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        //deprecated column srColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        // deprecated column srColumnHeader.waitFor(new
+        // Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        // deprecated column srColumnCell.first().waitFor(new
+        // Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         methodColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -555,18 +687,35 @@ public class TradingPage extends AbstractPage {
         commentColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         filterButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        accountColumnHeader.getByText("ACCOUNT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        accountColumnHeader
+                .getByText("ACCOUNT")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         typeColumnHeader.getByText("TYPE").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        volumeColumnHeader.getByText("VOLUME").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        profitColumnHeader.getByText("PROFIT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        volumeColumnHeader
+                .getByText("VOLUME")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        profitColumnHeader
+                .getByText("PROFIT")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         openColumnHeader.getByText("OPEN").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        closeColumnHeader.getByText("CLOSE").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        tpslColumnHeader.getByText("TP/SL").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closeColumnHeader
+                .getByText("CLOSE")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        tpslColumnHeader
+                .getByText("TP/SL")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnHeader.getByText("SWAP").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        //deprecated column srColumnHeader.getByText("SR").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        commissionColumnHeader.getByText("COMMISSION").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        methodColumnHeader.getByText("METHOD").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        commentColumnHeader.getByText("COMMENT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        // deprecated column srColumnHeader.getByText("SR").waitFor(new
+        // Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commissionColumnHeader
+                .getByText("COMMISSION")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        methodColumnHeader
+                .getByText("METHOD")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commentColumnHeader
+                .getByText("COMMENT")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Verify that all expected headers are present")
@@ -593,7 +742,10 @@ public class TradingPage extends AbstractPage {
         for (int i = 0; i < typeCheckboxLabels.count(); i++) {
             actualTypesList.add(typeCheckboxLabels.nth(i).textContent());
         }
-        MatcherAssert.assertThat("Verify that Type filter contains all expected options", actualTypesList, contains("Buy", "Sell", "Balance", "Credit", "Buy Limit", "Sell Limit", "Buy Stop", "Sell Stop"));
+        MatcherAssert.assertThat(
+                "Verify that Type filter contains all expected options",
+                actualTypesList,
+                contains("Buy", "Sell", "Balance", "Credit", "Buy Limit", "Sell Limit", "Buy Stop", "Sell Stop"));
     }
 
     @Step("Check list of Method filter options")
@@ -603,7 +755,10 @@ public class TradingPage extends AbstractPage {
         for (int i = 0; i < methodCheckboxLabels.count(); i++) {
             actualMethodsList.add(methodCheckboxLabels.nth(i).textContent());
         }
-        MatcherAssert.assertThat("Verify that Type filter contains all expected options", actualMethodsList, contains("API", "Client", "Dealer", "Expert", "Gateway", "Mobile", "Signal", "Web"));
+        MatcherAssert.assertThat(
+                "Verify that Type filter contains all expected options",
+                actualMethodsList,
+                contains("API", "Client", "Dealer", "Expert", "Gateway", "Mobile", "Signal", "Web"));
     }
 
     @Step("Open filter")
@@ -615,7 +770,9 @@ public class TradingPage extends AbstractPage {
     @Step("Click filter")
     public void clickFilterCheckbox(String typeName) {
         Allure.step("Click filter type " + typeName);
-        checkboxItem.getByText(typeName, new Locator.GetByTextOptions().setExact(true)).click();
+        checkboxItem
+                .getByText(typeName, new Locator.GetByTextOptions().setExact(true))
+                .click();
     }
 
     @Step("Check text content of first and last method cells on page")
@@ -624,7 +781,6 @@ public class TradingPage extends AbstractPage {
         assertEquals(methodName, methodColumnCell.first().textContent());
         assertEquals(methodName, methodColumnCell.last().textContent());
     }
-
 
     @Step("Check text content of first and last method cells on page")
     public void checkTypeCellsContent(String typeName) {
@@ -754,7 +910,8 @@ public class TradingPage extends AbstractPage {
 
     @Step("Wait for page to load")
     public void waitForPageToLoadTrading() {
-        page.waitForSelector(TOTAL_PNL_CHART_CONTAINER, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
+        page.waitForSelector(
+                TOTAL_PNL_CHART_CONTAINER, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     private int getAccountIndex(int accId) {
@@ -769,72 +926,116 @@ public class TradingPage extends AbstractPage {
 
     @Step("Get account balance in card view")
     public String getAccountBalance(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_header-2')]").textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(balanceElement)
+                .locator("//span[contains(@class,'g-text_variant_header-2')]")
+                .textContent();
     }
 
     @Step("Get account balance usd in card view")
     public String getAccountBalanceUsd(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_subheader-2')]").textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(balanceElement)
+                .locator("//span[contains(@class,'g-text_variant_subheader-2')]")
+                .textContent();
     }
 
     @Step("Get account status in card view")
     public String getAccountStatus(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(statusElement).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(statusElement)
+                .textContent();
     }
 
     @Step("Get account platform in card view")
     public String getAccountPlatform(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(platformElement).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(platformElement)
+                .textContent();
     }
 
     @Step("Get account type in card view")
     public String getAccountType(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(accountTypeElement).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(accountTypeElement)
+                .textContent();
     }
 
     @Step("Get account total pnl in card view")
     public String getAccountTradingPnl(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Trading PNL")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Trading PNL"))
+                .textContent();
     }
 
     @Step("Get account equity in card view")
     public String getAccountEquity(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Equity")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Equity"))
+                .textContent();
     }
 
     @Step("Get account credit in card view")
     public String getAccountCredit(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Credit")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Credit"))
+                .textContent();
     }
 
     @Step("Get account leverage in card view")
     public String getAccountLeverage(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Leverage")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Leverage"))
+                .textContent();
     }
 
     @Step("Get account margin free in card view")
     public String getAccountMarginFree(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Margin free")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Margin free"))
+                .textContent();
     }
 
     @Step("Get account server in card view")
     public String getAccountServer(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Server")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Server"))
+                .textContent();
     }
 
     @Step("Get account group in card view")
     public String getAccountGroup(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Group")).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Group"))
+                .textContent();
     }
 
     @Step("Get account created time in card view")
     public String getAccountCreatedTime(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(createdTimeElement).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(createdTimeElement)
+                .textContent();
     }
 
     @Step("Get account updated time in card view")
     public String getAccountUpdatedTime(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(updatedTimeElement).textContent();
+        return accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(updatedTimeElement)
+                .textContent();
     }
 
     @Step("Verify account id popup in card view is as expected")
@@ -845,13 +1046,21 @@ public class TradingPage extends AbstractPage {
 
     @Step("Verify account balance popup in card view is as expected")
     public void verifyBalancePopup(int accountId) {
-        accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_header-2')]").hover();
+        accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(balanceElement)
+                .locator("//span[contains(@class,'g-text_variant_header-2')]")
+                .hover();
         assertThat(popupElement.last()).containsText("Balance");
     }
 
     @Step("Verify account balance usd popup in card view is as expected")
     public void verifyBalanceUsdPopup(int accountId) {
-        accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_subheader-2')]").hover();
+        accountCard
+                .nth(getAccountIndex(accountId))
+                .locator(balanceElement)
+                .locator("//span[contains(@class,'g-text_variant_subheader-2')]")
+                .hover();
         assertThat(popupElement.last()).containsText("Balance in USD");
     }
 
@@ -902,67 +1111,106 @@ public class TradingPage extends AbstractPage {
 
     @Step("Get account platform in table view")
     public String getAccountTablePlatform(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTablePlatform).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTablePlatform)
+                .textContent();
     }
 
     @Step("Get account type in table view")
     public String getAccountTableType(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableType).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableType)
+                .textContent();
     }
 
     @Step("Get account status in table view")
     public String getAccountTableStatus(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableStatus).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableStatus)
+                .textContent();
     }
 
     @Step("Get account created time in table view")
     public String getAccountTableCreated(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableCreated).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableCreated)
+                .textContent();
     }
 
     @Step("Get account updated time in table view")
     public String getAccountTableUpdated(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableUpdated).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableUpdated)
+                .textContent();
     }
 
     @Step("Get account balance in table view")
     public String getAccountTableBalance(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableBalance).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableBalance)
+                .textContent();
     }
 
     @Step("Get account total pnl in table view")
     public String getAccountTableTotalPnl(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableTotalPnl).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableTotalPnl)
+                .textContent();
     }
 
     @Step("Get account equity in table view")
     public String getAccountTableEquity(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableEquity).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableEquity)
+                .textContent();
     }
 
     @Step("Get account credit in table view")
     public String getAccountTableCredit(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableCredit).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableCredit)
+                .textContent();
     }
 
     @Step("Get account leverage in table view")
     public String getAccountTableLeverage(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableLeverage).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableLeverage)
+                .textContent();
     }
 
     @Step("Get account margin free in table view")
     public String getAccountTableMarginFree(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableMarginFree).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableMarginFree)
+                .textContent();
     }
 
     @Step("Get account server in table view")
     public String getAccountTableServer(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableServer).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableServer)
+                .textContent();
     }
 
     @Step("Get account group in table view")
     public String getAccountTableGroup(int accountId) {
-        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableGroup).textContent();
+        return accountRow
+                .nth(getAccountIndexTableView(accountId))
+                .locator(accountTableGroup)
+                .textContent();
     }
 
     @Step("Verify account table headers visibility and text")
@@ -1115,47 +1363,66 @@ public class TradingPage extends AbstractPage {
         String profit = "Profit";
         String volume = "Volume in USD";
         // Open date
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Today")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Today"))
+                .click();
         assertThat(openDatePicker).hasValue(Utils.getCurrentDate());
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Yesterday")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Yesterday"))
+                .click();
         assertThat(openDatePicker).hasValue(Utils.getYesterdayDate());
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 7 days")).click();
-        assertThat(openDatePicker).hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 30 days")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 7 days"))
+                .click();
+        assertThat(openDatePicker)
+                .hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 30 days"))
+                .click();
         assertThat(openDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         // Close date
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Today")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Today"))
+                .click();
         assertThat(closeDatePicker).hasValue(Utils.getCurrentDate());
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Yesterday")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Yesterday"))
+                .click();
         assertThat(closeDatePicker).hasValue(Utils.getYesterdayDate());
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 7 days")).click();
-        assertThat(closeDatePicker).hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 30 days")).click();
-        assertThat(closeDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 7 days"))
+                .click();
+        assertThat(closeDatePicker)
+                .hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 30 days"))
+                .click();
+        assertThat(closeDatePicker)
+                .hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         // Profit
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "0-50")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "0-50"))
+                .click();
         assertThat(profitFromInput).hasValue("0 USD");
         assertThat(profitToInput).hasValue("50 USD");
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "50-200")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "50-200"))
+                .click();
         assertThat(profitFromInput).hasValue("50 USD");
         assertThat(profitToInput).hasValue("200 USD");
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "200-500")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "200-500"))
+                .click();
         assertThat(profitFromInput).hasValue("200 USD");
         assertThat(profitToInput).hasValue("500 USD");
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, ">500")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, ">500"))
+                .click();
         assertThat(profitFromInput).hasValue("500 USD");
         assertThat(profitToInput).hasValue("");
         // Volume
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "0-50")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "0-50"))
+                .click();
         assertThat(volumeAmountFromInput).hasValue("0 USD");
         assertThat(volumeAmountToInput).hasValue("50 USD");
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "50-200")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "50-200"))
+                .click();
         assertThat(volumeAmountFromInput).hasValue("50 USD");
         assertThat(volumeAmountToInput).hasValue("200 USD");
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "200-500")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "200-500"))
+                .click();
         assertThat(volumeAmountFromInput).hasValue("200 USD");
         assertThat(volumeAmountToInput).hasValue("500 USD");
-        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, ">500")).click();
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, ">500"))
+                .click();
         assertThat(volumeAmountFromInput).hasValue("500 USD");
         assertThat(volumeAmountToInput).hasValue("");
     }
@@ -1163,7 +1430,8 @@ public class TradingPage extends AbstractPage {
     public void verifyNoTypeIsSelected() {
         for (int i = 0; i < typeCheckboxes.count(); i++) {
             Locator checkbox = typeCheckboxes.nth(i);
-            MatcherAssert.assertThat("Assert that each type checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+            MatcherAssert.assertThat(
+                    "Assert that each type checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
         }
     }
 
@@ -1176,7 +1444,8 @@ public class TradingPage extends AbstractPage {
     public void verifyNoAccountIsSelected() {
         for (int i = 0; i < accountsCheckboxes.count(); i++) {
             Locator checkbox = accountsCheckboxes.nth(i);
-            MatcherAssert.assertThat("Assert that each account checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+            MatcherAssert.assertThat(
+                    "Assert that each account checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
         }
     }
 
@@ -1189,7 +1458,8 @@ public class TradingPage extends AbstractPage {
     public void verifyNoSymbolIsSelected() {
         for (int i = 0; i < symbolCheckboxes.count(); i++) {
             Locator checkbox = symbolCheckboxes.nth(i);
-            MatcherAssert.assertThat("Assert that each symbol checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+            MatcherAssert.assertThat(
+                    "Assert that each symbol checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
         }
     }
 
@@ -1202,7 +1472,8 @@ public class TradingPage extends AbstractPage {
     public void verifyNoMethodIsSelected() {
         for (int i = 0; i < methodCheckboxes.count(); i++) {
             Locator checkbox = methodCheckboxes.nth(i);
-            MatcherAssert.assertThat("Assert that each method checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+            MatcherAssert.assertThat(
+                    "Assert that each method checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
         }
     }
 
@@ -1288,7 +1559,8 @@ public class TradingPage extends AbstractPage {
     @Step("Verify profit tooltip is as expected")
     public void verifyProfitTooltip() {
         profitTooltip.hover();
-        assertThat(filterPopupElement).containsText("Profit date for trading operations/ Amount for payments operations");
+        assertThat(filterPopupElement)
+                .containsText("Profit date for trading operations/ Amount for payments operations");
     }
 
     @Step("Open users trading-summary tab")
@@ -1432,22 +1704,26 @@ public class TradingPage extends AbstractPage {
 
     @Step("Get Performance overview tickets by symbol {symbol}")
     public String getPerformanceOverviewTicketsBySymbol(String symbol) {
-        return page.locator(String.format(PERFORMANCE_OVERVIEW_TICKETS_BY_SYMBOL_PATTERN, symbol)).textContent();
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_TICKETS_BY_SYMBOL_PATTERN, symbol))
+                .textContent();
     }
 
     @Step("Get Performance overview winrate by symbol {symbol}")
     public String getPerformanceOverviewWinrateBySymbol(String symbol) {
-        return page.locator(String.format(PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN, symbol)).textContent();
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN, symbol))
+                .textContent();
     }
 
     @Step("Get Performance overview HFT by symbol {symbol}")
     public String getPerformanceOverviewHftBySymbol(String symbol) {
-        return page.locator(String.format(PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN, symbol)).textContent();
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN, symbol))
+                .textContent();
     }
 
     @Step("Get Performance overview PNL by symbol {symbol}")
     public String getPerformanceOverviewPnlBySymbol(String symbol) {
-        return page.locator(String.format(PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN, symbol)).textContent();
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN, symbol))
+                .textContent();
     }
 
     @Step("Get Winrate widget value")
@@ -1543,12 +1819,20 @@ public class TradingPage extends AbstractPage {
 
     public void checkTopProfitCategory(String expectedValue) {
         Allure.step("Check category in top profit header");
-        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max profitable']/following-sibling::div").nth(0).textContent());
+        assertEquals(
+                expectedValue,
+                page.locator(PNL_BY_DURATION + "//div[text() = 'Max profitable']/following-sibling::div")
+                        .nth(0)
+                        .textContent());
     }
 
     public void checkTopLossCategory(String expectedValue) {
         Allure.step("Check category in top loss header");
-        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max losing']/following-sibling::div").nth(0).textContent());
+        assertEquals(
+                expectedValue,
+                page.locator(PNL_BY_DURATION + "//div[text() = 'Max losing']/following-sibling::div")
+                        .nth(0)
+                        .textContent());
     }
 
     public double calculatePnlByDeal(MtMt4TradesCoercedObject deal) {
@@ -1598,27 +1882,36 @@ public class TradingPage extends AbstractPage {
     public void checkPnlBySymbolBarDescriptionProfits(String expectedText) {
         Allure.step("Check description near profits bar");
         page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION_RIGHT).isVisible();
-        assertEquals(expectedText, page.locator(PNL_SYMBOL_BAR_DESCRIPTION_RIGHT).textContent());
+        assertEquals(
+                expectedText, page.locator(PNL_SYMBOL_BAR_DESCRIPTION_RIGHT).textContent());
     }
 
     public void checkPnlBySymbolBarDescriptionProfits(String amount, String symbol) {
         Allure.step("Check description near profits bar");
         page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION).isVisible();
-        assertEquals(amount, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + GREEN_TEXT).textContent());
-        assertEquals(symbol, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + SECONDARY_TEXT).nth(1).textContent());
+        assertEquals(
+                amount, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + GREEN_TEXT).textContent());
+        assertEquals(
+                symbol,
+                page.locator(PNL_SYMBOL_BAR_DESCRIPTION + SECONDARY_TEXT).nth(1).textContent());
     }
 
     public void checkPnlBySymbolBarDescriptionLoses(String expectedText) {
         Allure.step("Check description near loses bar");
         page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION).isVisible();
-        assertEquals(expectedText, page.locator(PNL_SYMBOL_BAR_DESCRIPTION).nth(0).textContent());
+        assertEquals(
+                expectedText, page.locator(PNL_SYMBOL_BAR_DESCRIPTION).nth(0).textContent());
     }
 
     public void checkPnlBySymbolBarDescriptionLoses(String amount, String symbol) {
         Allure.step("Check description near loses bar");
         page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION).isVisible();
-        assertEquals(amount, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + DANGER_HEAVY_TEXT).textContent());
-        assertEquals(symbol, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + SECONDARY_TEXT).nth(0).textContent());
+        assertEquals(
+                amount,
+                page.locator(PNL_SYMBOL_BAR_DESCRIPTION + DANGER_HEAVY_TEXT).textContent());
+        assertEquals(
+                symbol,
+                page.locator(PNL_SYMBOL_BAR_DESCRIPTION + SECONDARY_TEXT).nth(0).textContent());
     }
 
     public void checkPnlBySymbolBarPositiveCount(int expectedCount) {
@@ -1644,8 +1937,14 @@ public class TradingPage extends AbstractPage {
     public void checkPnlBySymbolTooltipValue(int numberOfLine, String expectedSymbol, String expectedAmount) {
         Allure.step("Check the symbol and PNL amount in the tooltip");
         page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(1).textContent();
+        String actualSymbol = page.locator(
+                        PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT)
+                .nth(0)
+                .textContent();
+        String actualAmount = page.locator(
+                        PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT)
+                .nth(1)
+                .textContent();
         assertEquals(expectedSymbol, actualSymbol);
         assertEquals(expectedAmount + " USD", actualAmount);
     }
@@ -1667,8 +1966,10 @@ public class TradingPage extends AbstractPage {
     public void checkPnlBySymbolOtherTooltipHeaderValue(String expectedSymbols, String expectedAmount) {
         Allure.step("Check the symbol and PNL amount in the tooltip");
         page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(PNL_SYMBOL_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(PNL_SYMBOL_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(1).textContent();
+        String actualSymbol =
+                page.locator(PNL_SYMBOL_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(0).textContent();
+        String actualAmount =
+                page.locator(PNL_SYMBOL_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(1).textContent();
         assertEquals(expectedSymbols + " symbols", actualSymbol);
         assertEquals(expectedAmount + " USD", actualAmount);
     }
@@ -1727,8 +2028,12 @@ public class TradingPage extends AbstractPage {
     public void checkSymbolTradedOtherTooltipHeaderValue(String expectedSymbols, String expectedAmount) {
         Allure.step("Check the symbol and amount in the tooltip");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(1).textContent();
+        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + SUBHEADER_2_TEXT)
+                .nth(0)
+                .textContent();
+        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + SUBHEADER_2_TEXT)
+                .nth(1)
+                .textContent();
         assertEquals(expectedSymbols + " symbols", actualSymbol);
         assertEquals(expectedAmount + " USD", actualAmount);
     }
@@ -1778,29 +2083,66 @@ public class TradingPage extends AbstractPage {
     public void checkSymbolTradedOtherTooltipFooter(int expectedCount, int expectedAmount) {
         Allure.step("Check the count inside the tooltip including header and footer");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE).waitForElementState(ElementState.VISIBLE);
-        assertEquals("Others", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "//" + PRIMARY_TEXT).textContent());
-        assertEquals(decimalFormat.format(expectedCount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + SECONDARY_TEXT).textContent());
-        assertEquals(decimalFormat.format(expectedAmount) + " USD", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "/following-sibling::div").textContent());
+        assertEquals(
+                "Others",
+                page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "//" + PRIMARY_TEXT)
+                        .textContent());
+        assertEquals(
+                decimalFormat.format(expectedCount),
+                page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + SECONDARY_TEXT)
+                        .textContent());
+        assertEquals(
+                decimalFormat.format(expectedAmount) + " USD",
+                page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "/following-sibling::div")
+                        .textContent());
     }
 
     public void checkSymbolTradedHeaderMostTraded(String expectedSymbol) {
         Allure.step("Check the most traded symbol info above the graph");
         page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
-        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(0).textContent());
-        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + SYMBOL_TRADED_BAR_DESCRIPTION + SECONDARY_TEXT).nth(0).textContent());
-        assertEquals("Most tradeable", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(0).textContent());
+        assertEquals(
+                expectedSymbol,
+                page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE)
+                        .nth(0)
+                        .textContent());
+        assertEquals(
+                expectedSymbol,
+                page.locator(SYMBOL_TRADED_SECTION + SYMBOL_TRADED_BAR_DESCRIPTION + SECONDARY_TEXT)
+                        .nth(0)
+                        .textContent());
+        assertEquals(
+                "Most tradeable",
+                page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR)
+                        .nth(0)
+                        .textContent());
     }
 
     public void checkSymbolTradedHeader(int position, String expectedSymbol) {
         Allure.step("Check the most traded symbol info above the graph");
         page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
         if (position == 2) {
-            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(1).textContent());
+            assertEquals(
+                    expectedSymbol,
+                    page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE)
+                            .nth(1)
+                            .textContent());
             writeLog(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR);
-            assertEquals("2nd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(2).textContent());
+            assertEquals(
+                    "2nd",
+                    page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR)
+                            .nth(2)
+                            .textContent());
         } else if (position == 3) {
-            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(2).textContent());
-            assertEquals("3rd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(4).textContent());
+            assertEquals(
+                    expectedSymbol,
+                    page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE)
+                            .nth(2)
+                            .textContent());
+            assertEquals(
+                    "3rd",
+                    page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR)
+                            .nth(4)
+                            .textContent());
         } else {
             writeLog("unexpected position " + position);
             assertTrue(false);
@@ -1810,26 +2152,40 @@ public class TradingPage extends AbstractPage {
     public void checkSymbolTradedGraphDescription(int expectedAmountInt, String expectedSymbol) {
         Allure.step("Check the most traded symbol info above the bar in graph");
         String expectedAmount = decimalFormat.format(expectedAmountInt);
-        assertEquals(expectedAmount, page.locator(SYMBOL_TRADED_BAR_DESCRIPTION + GREEN_TEXT).textContent());
-        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_BAR_DESCRIPTION + SECONDARY_TEXT).textContent());
+        assertEquals(
+                expectedAmount,
+                page.locator(SYMBOL_TRADED_BAR_DESCRIPTION + GREEN_TEXT).textContent());
+        assertEquals(
+                expectedSymbol,
+                page.locator(SYMBOL_TRADED_BAR_DESCRIPTION + SECONDARY_TEXT).textContent());
     }
-
 
     public void checkSymbolTradedTooltipValue(int numberOfLine, String expectedSymbol, String expectedAmount) {
         Allure.step("Check the symbol and PNL amount in the tooltip");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(1).textContent();
+        String actualSymbol = page.locator(
+                        SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT)
+                .nth(0)
+                .textContent();
+        String actualAmount = page.locator(
+                        SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT)
+                .nth(1)
+                .textContent();
         assertEquals(expectedSymbol, actualSymbol);
         assertEquals(expectedAmount + " USD", actualAmount);
     }
 
-
     public void checkSymbolTradedTooltipValueLots(int numberOfLine, String expectedSymbol, String expectedLots) {
         Allure.step("Check the symbol and PNL amount in the tooltip");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(1).textContent();
+        String actualSymbol = page.locator(
+                        SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT)
+                .nth(0)
+                .textContent();
+        String actualAmount = page.locator(
+                        SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT)
+                .nth(1)
+                .textContent();
         assertEquals(expectedSymbol, actualSymbol);
         assertEquals(expectedLots + " lots", actualAmount);
     }
@@ -1879,29 +2235,61 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check that tooltip show data from DB");
         assertThat(holdingTimeTooltip).isVisible();
         if (numberOfDeals == 1) {
-            assertEquals(String.valueOf(numberOfDeals) + " deal", page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[1]").textContent());
+            assertEquals(
+                    String.valueOf(numberOfDeals) + " deal",
+                    page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[1]")
+                            .textContent());
         } else {
-            assertEquals(String.valueOf(numberOfDeals) + " deals", page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[1]").textContent());
+            assertEquals(
+                    String.valueOf(numberOfDeals) + " deals",
+                    page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[1]")
+                            .textContent());
         }
-        assertEquals(String.valueOf(percentageOfDeals) + "% of all deals", page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[2]").textContent());
+        assertEquals(
+                String.valueOf(percentageOfDeals) + "% of all deals",
+                page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[2]").textContent());
     }
 
     public void checkHoldingTimeEmpty() {
         Allure.step("Check that Holding Time annotations show empty state");
-        assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT).textContent());
-        assertEquals("Most often", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT).textContent());
+        assertEquals(
+                "-",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT)
+                        .textContent());
+        assertEquals(
+                "Most often",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT)
+                        .textContent());
 
-        assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + "//" + PRIMARY_TEXT).textContent());
-        assertEquals("Of all deals", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT).textContent());
+        assertEquals(
+                "-",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + "//" + PRIMARY_TEXT)
+                        .textContent());
+        assertEquals(
+                "Of all deals",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT)
+                        .textContent());
     }
 
     public void checkHoldingTimeHeader(String expectedInterval, String percentageOfDeals) {
         Allure.step("Check that Holding Time annotations show data from DB");
-        assertEquals(expectedInterval, page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT).textContent());
-        assertEquals("Most often", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT).textContent());
+        assertEquals(
+                expectedInterval,
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT)
+                        .textContent());
+        assertEquals(
+                "Most often",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT)
+                        .textContent());
 
-        assertEquals(percentageOfDeals + "%", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + "//" + PRIMARY_TEXT).textContent());
-        assertEquals("Of all deals", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT).textContent());
+        assertEquals(
+                percentageOfDeals + "%",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + "//" + PRIMARY_TEXT)
+                        .textContent());
+        assertEquals(
+                "Of all deals",
+                page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT)
+                        .textContent());
     }
 
     public void checkHoldingTimeHeader(String expectedInterval, int percentageOfDeals) {
@@ -1913,7 +2301,11 @@ public class TradingPage extends AbstractPage {
         page.route("**/api/clients/" + ucid + "/trading/summaryDuration", route -> {
             APIResponse response = route.fetch();
             Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+            route.fulfill(new Route.FulfillOptions()
+                    .setResponse(response)
+                    .setBody("500")
+                    .setHeaders(headers)
+                    .setStatus(500));
         });
     }
 
@@ -1922,7 +2314,11 @@ public class TradingPage extends AbstractPage {
         page.route("**/api/clients/**/trading/summaryDuration", route -> {
             APIResponse response = route.fetch();
             Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+            route.fulfill(new Route.FulfillOptions()
+                    .setResponse(response)
+                    .setBody("500")
+                    .setHeaders(headers)
+                    .setStatus(500));
         });
     }
 
@@ -1932,9 +2328,10 @@ public class TradingPage extends AbstractPage {
         super.waitForPageToLoad();
         String errorLocator = HOLDING_TIME_SECTION + ERROR_CONTAINER;
         page.waitForSelector(errorLocator).waitForElementState(ElementState.VISIBLE);
-        assertEquals("An error occurred. Please try visualizing the data again.Retry", page.locator(errorLocator).textContent());
+        assertEquals(
+                "An error occurred. Please try visualizing the data again.Retry",
+                page.locator(errorLocator).textContent());
         page.waitForSelector(errorLocator + RETRY_BUTTON).waitForElementState(ElementState.VISIBLE);
-
     }
 
     @Step("Get Toxicity & Profit chart title")
@@ -2013,7 +2410,8 @@ public class TradingPage extends AbstractPage {
 
     public void checkIbAccountValueCard(int account, int expectedValue, int number) {
         Allure.step("Check that Ib account value is shown and match expected");
-        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + ACCOUNT_CARD_IB_ACCOUNT + SECONDARY_TEXT + "[" + number + "]";
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + ACCOUNT_CARD_IB_ACCOUNT
+                + SECONDARY_TEXT + "[" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         String result = page.locator(locator).textContent().replace(",", "").trim();
         assertEquals(String.valueOf(expectedValue), result);
@@ -2035,7 +2433,8 @@ public class TradingPage extends AbstractPage {
 
     public void checkIbAccountValueTable(int account, int expectedValue, int number) {
         Allure.step("Check that Ib account value is shown and match expected in table view");
-        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_ROW_CELL + "//" + PRIMARY_TEXT + "[" + number + "]";
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_ROW_CELL + "//"
+                + PRIMARY_TEXT + "[" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
     }
@@ -2044,28 +2443,39 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check that Ib account value is shown and match expected in table view");
         String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(
+                String.valueOf(decimalFormat.format(expectedValue)) + " USD",
+                page.locator(locator).textContent());
     }
 
     public void checkIbRebatesValueTable(int account, double expectedValue, int number) {
         Allure.step("Check that Ib account value is shown and match expected in table view");
-        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL + "//" + PRIMARY_TEXT + "[" + number + "]";
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL
+                + "//" + PRIMARY_TEXT + "[" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(
+                String.valueOf(decimalFormat.format(expectedValue)) + " USD",
+                page.locator(locator).textContent());
     }
 
     public void checkIbRebatesValueCard(int account, double expectedValue) {
         Allure.step("Check that Ib rebate value is shown and match expected");
-        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + "//div[text()='IB rebates']/following-sibling::div";
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD
+                + "//div[text()='IB rebates']/following-sibling::div";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(
+                String.valueOf(decimalFormat.format(expectedValue)) + " USD",
+                page.locator(locator).textContent());
     }
 
     public void checkIbRebatesValueCard(int account, double expectedValue, int number) {
         Allure.step("Check that Ib rebate value is shown and match expected");
-        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + "//div[text()='IB rebates']/following-sibling::div[contains(@class, 'g-text')][" + number + "]";
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD
+                + "//div[text()='IB rebates']/following-sibling::div[contains(@class, 'g-text')][" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(
+                String.valueOf(decimalFormat.format(expectedValue)) + " USD",
+                page.locator(locator).textContent());
     }
 
     @Step("Get IB rebates widget title")
@@ -2088,7 +2498,6 @@ public class TradingPage extends AbstractPage {
         return ibRebatesWidgetInfo.textContent();
     }
 
-
     public void generateDifferentTicketTypes(ClientHelper client) {
         Allure.step("Prepare client test data");
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
@@ -2107,10 +2516,10 @@ public class TradingPage extends AbstractPage {
         trade7.setTicketType("Credit");
         MtMt4TradesCoercedObject trade8 = generateMt4TradesCoercedRandomized(client);
         trade8.setTicketType("Buy Stop");
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
         page.waitForTimeout(1000);
     }
-
 
     public void generateDifferentReason(ClientHelper client) {
         Allure.step("Prepare client test data");
@@ -2142,7 +2551,11 @@ public class TradingPage extends AbstractPage {
         trade13.setReasonName("Gateway");
         MtMt4TradesCoercedObject trade14 = generateMt4TradesCoercedRandomized(client);
         trade14.setReasonName("Migration");
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(
+                        trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11,
+                        trade12, trade13, trade14));
         page.waitForTimeout(1000);
     }
 
@@ -2252,8 +2665,9 @@ public class TradingPage extends AbstractPage {
     public void enableViewAmount() {
         super.waitForPageToLoad();
         if ("false".equals(lotsAmountSwitch.getAttribute("aria-checked"))) {
-//            lotsAmountSwitch.click();
-            page.locator(LOTS_AMOUNT_SWITCH + "/following-sibling::span[@class='g-switch__slider']").click();
+            //            lotsAmountSwitch.click();
+            page.locator(LOTS_AMOUNT_SWITCH + "/following-sibling::span[@class='g-switch__slider']")
+                    .click();
             assertEquals("true", lotsAmountSwitch.getAttribute("aria-checked"));
             page.waitForTimeout(300);
         }
@@ -2262,8 +2676,9 @@ public class TradingPage extends AbstractPage {
     public void enableViewLots() {
         super.waitForPageToLoad();
         if ("true".equals(lotsAmountSwitch.getAttribute("aria-checked"))) {
-//            lotsAmountSwitch.click();
-            page.locator(LOTS_AMOUNT_SWITCH + "/following-sibling::span[@class='g-switch__slider']").click();
+            //            lotsAmountSwitch.click();
+            page.locator(LOTS_AMOUNT_SWITCH + "/following-sibling::span[@class='g-switch__slider']")
+                    .click();
             assertEquals("false", lotsAmountSwitch.getAttribute("aria-checked"));
             page.waitForTimeout(300);
         }
@@ -2293,7 +2708,9 @@ public class TradingPage extends AbstractPage {
 
     @Step("Select trade for illegal profit by ticket")
     public void selectIllegalTradeByTicket(Long ticket) {
-        page.locator(String.format(OPERATIONS_ROW_BY_TICKET_PATTERN, ticket)).locator(checkboxIllegalProfit).click();
+        page.locator(String.format(OPERATIONS_ROW_BY_TICKET_PATTERN, ticket))
+                .locator(checkboxIllegalProfit)
+                .click();
     }
 
     @Step("Get illegal profit amount")
@@ -2314,7 +2731,11 @@ public class TradingPage extends AbstractPage {
     @Step("Select trade for illegal profit by ticket")
     public void clickSaveAsIllegalProfit() {
         saveIllegalProfitButton.click();
-        MatcherAssert.assertThat("Verify success popup", getToastMessageText(), is("Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
+        MatcherAssert.assertThat(
+                "Verify success popup",
+                getToastMessageText(),
+                is(
+                        "Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
     }
 
     @Step("Get toast message text")
@@ -2351,4 +2772,3 @@ public class TradingPage extends AbstractPage {
         return selectedIllegalProfitAccountCount.textContent();
     }
 }
-

@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.Objects;
 
 /**
  * AdditionalParamEntry
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
-@JsonSubTypes({@JsonSubTypes.Type(value = AdditionalParamArray.class, name = "array"), @JsonSubTypes.Type(value = AdditionalParamString.class, name = "string"),
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = AdditionalParamArray.class, name = "array"),
+    @JsonSubTypes.Type(value = AdditionalParamString.class, name = "string"),
 })
 public class AdditionalParamEntry {
     @JsonProperty("name")
@@ -65,7 +66,8 @@ public class AdditionalParamEntry {
             return false;
         }
         AdditionalParamEntry additionalParamEntry = (AdditionalParamEntry) o;
-        return Objects.equals(this.name, additionalParamEntry.name) && Objects.equals(this.type, additionalParamEntry.type);
+        return Objects.equals(this.name, additionalParamEntry.name)
+                && Objects.equals(this.type, additionalParamEntry.type);
     }
 
     @Override

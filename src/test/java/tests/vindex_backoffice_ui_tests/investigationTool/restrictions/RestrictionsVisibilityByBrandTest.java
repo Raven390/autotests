@@ -1,5 +1,18 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.restrictions;
 
+import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.data.ClientFactory.getRandomInfinoxClientAllFields;
+import static helpers.data.enums.Restriction.CLOSE_ONLY_MODE;
+import static helpers.database.CleanTableHelper.*;
+import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
+
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.api.mitigation_service.PostRestrictionResponse;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
@@ -8,25 +21,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
+import java.io.IOException;
+import java.sql.SQLException;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.sql.SQLException;
-
-import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static helpers.data.ClientFactory.getRandomInfinoxClientAllFields;
-import static helpers.data.enums.Restriction.CLOSE_ONLY_MODE;
-import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
-import static helpers.database.DbHelper.*;
-import static helpers.database.CleanTableHelper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
-import static utils.Utils.insertCrmAccountsToDb;
 
 public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
 
@@ -54,7 +53,10 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
-        assertThat("Verify restriction with visibility by brand = false is not displayed", restrictionPage.getDisplayedRestrictionsList(), not(contains(CLOSE_ONLY_MODE.getName())));
+        assertThat(
+                "Verify restriction with visibility by brand = false is not displayed",
+                restrictionPage.getDisplayedRestrictionsList(),
+                not(contains(CLOSE_ONLY_MODE.getName())));
     }
 
     @Test
@@ -64,13 +66,17 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
     @DisplayName("Verify disabled restriction can not be applied with POST")
     public void verifyDisabledRestrictionIsNotApplied1Test() throws IOException {
         Response response = postRestriction(new PostRestrictionRequestBody(
-                client.getUcid(), CLOSE_ONLY_MODE.getCode(), CLOSE_ONLY_MODE.getType(), account.account, account.serverIdSt, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
+                client.getUcid(),
+                CLOSE_ONLY_MODE.getCode(),
+                CLOSE_ONLY_MODE.getType(),
+                account.account,
+                account.serverIdSt,
+                "Automation test",
+                new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")));
         assertThat("Assert response code is 400", response.code(), equalTo(400));
         assertThat(response.body(), is(notNullValue()));
-        PostRestrictionResponse responseBody = objectMapper.readValue(
-                response.body().string(), PostRestrictionResponse.class
-        );
+        PostRestrictionResponse responseBody =
+                objectMapper.readValue(response.body().string(), PostRestrictionResponse.class);
         assertThat("Assert response body", responseBody.code, equalTo(RESTRICTION_NOT_AVAILABLE_FOR_BRAND));
     }
 
@@ -81,16 +87,19 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
     @DisplayName("Verify disabled restriction can not be applied with PUT")
     public void verifyDisabledRestrictionIsNotApplied2Test() throws IOException {
         Response response = putRestriction(new PostRestrictionRequestBody(
-                client.getUcid(), CLOSE_ONLY_MODE.getCode(), CLOSE_ONLY_MODE.getType(), account.account, account.serverIdSt, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
+                client.getUcid(),
+                CLOSE_ONLY_MODE.getCode(),
+                CLOSE_ONLY_MODE.getType(),
+                account.account,
+                account.serverIdSt,
+                "Automation test",
+                new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")));
         assertThat("Assert response code is 400", response.code(), equalTo(400));
         assertThat(response.body(), is(notNullValue()));
-        PostRestrictionResponse responseBody = objectMapper.readValue(
-                response.body().string(), PostRestrictionResponse.class
-        );
+        PostRestrictionResponse responseBody =
+                objectMapper.readValue(response.body().string(), PostRestrictionResponse.class);
         assertThat("Assert response body", responseBody.code, equalTo(RESTRICTION_NOT_AVAILABLE_FOR_BRAND));
     }
-
 
     @AfterAll
     public static void teardown() throws Exception {

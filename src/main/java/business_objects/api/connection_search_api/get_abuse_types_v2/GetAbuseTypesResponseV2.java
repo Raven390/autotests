@@ -1,7 +1,6 @@
 package business_objects.api.connection_search_api.get_abuse_types_v2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetAbuseTypesResponseV2 {
@@ -21,8 +20,10 @@ public class GetAbuseTypesResponseV2 {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof GetAbuseTypesResponseV2 that)) return false;
-        return Objects.equals(abuseType, that.abuseType) && Objects.equals(abuseTypeStatus, that.abuseTypeStatus) && Objects.equals(
-                maxScoreToInitial, that.maxScoreToInitial) && Objects.equals(maxScoreClientId, that.maxScoreClientId);
+        return Objects.equals(abuseType, that.abuseType)
+                && Objects.equals(abuseTypeStatus, that.abuseTypeStatus)
+                && Objects.equals(maxScoreToInitial, that.maxScoreToInitial)
+                && Objects.equals(maxScoreClientId, that.maxScoreClientId);
     }
 
     @Override
@@ -32,6 +33,8 @@ public class GetAbuseTypesResponseV2 {
 
     @Override
     public String toString() {
-        return "GetAbuseTypesResponseV2{" + "abuseType='" + abuseType + '\'' + ", abuseTypeStatus='" + abuseTypeStatus + '\'' + ", maxScoreToInitial=" + maxScoreToInitial + ", maxScoreClientId='" + maxScoreClientId + '\'' + '}';
+        return "GetAbuseTypesResponseV2{" + "abuseType='" + abuseType + '\'' + ", abuseTypeStatus='" + abuseTypeStatus
+                + '\'' + ", maxScoreToInitial=" + maxScoreToInitial + ", maxScoreClientId='" + maxScoreClientId + '\''
+                + '}';
     }
 }

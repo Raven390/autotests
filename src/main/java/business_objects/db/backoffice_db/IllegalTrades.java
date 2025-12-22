@@ -1,6 +1,5 @@
 package business_objects.db.backoffice_db;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

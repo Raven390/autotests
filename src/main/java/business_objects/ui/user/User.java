@@ -11,11 +11,10 @@ public class User {
     private String email;
     private String role;
 
-    public User() {
-    }
+    public User() {}
 
-    public User(String id, String username, String password, String firstName, String lastName, String email,
-            String role) {
+    public User(
+            String id, String username, String password, String firstName, String lastName, String email, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -86,7 +85,13 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(role, user.role);
+        return Objects.equals(id, user.id)
+                && Objects.equals(username, user.username)
+                && Objects.equals(password, user.password)
+                && Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email)
+                && Objects.equals(role, user.role);
     }
 
     @Override
@@ -96,6 +101,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "id='" + id + '\'' + ", username='" + username + '\'' + ", password='" + password + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='" + email + '\'' + ", role='" + role + '\'' + '}';
+        return "User{" + "id='" + id + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
+                + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='" + email + '\''
+                + ", role='" + role + '\'' + '}';
     }
 }

@@ -7,8 +7,7 @@ public class PhoneTableEntry {
     public String ucid;
     public String phoneNum;
 
-    public PhoneTableEntry() {
-    }
+    public PhoneTableEntry() {}
 
     public PhoneTableEntry(String ucid, String phoneNum) {
         this.ucid = ucid;

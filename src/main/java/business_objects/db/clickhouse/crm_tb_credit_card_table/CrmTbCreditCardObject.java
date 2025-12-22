@@ -1,6 +1,5 @@
 package business_objects.db.clickhouse.crm_tb_credit_card_table;
 
-
 import java.util.Objects;
 
 public class CrmTbCreditCardObject {
@@ -21,14 +20,24 @@ public class CrmTbCreditCardObject {
     public Integer status;
     public String lastUpdated;
 
-    public CrmTbCreditCardObject() {
-    }
+    public CrmTbCreditCardObject() {}
 
     public CrmTbCreditCardObject(
-            Integer sourceIdSt, Integer id, Integer userId, String createTime, String updateTime,
-            Integer isDel, String cardBeginSixDigits, String cardLastFourDigits, String cardHolderName,
-            String expiryMonth, String expiryYear, Integer threeDomainSecure, Integer paymentType,
-            Integer status, String lastUpdated) {
+            Integer sourceIdSt,
+            Integer id,
+            Integer userId,
+            String createTime,
+            String updateTime,
+            Integer isDel,
+            String cardBeginSixDigits,
+            String cardLastFourDigits,
+            String cardHolderName,
+            String expiryMonth,
+            String expiryYear,
+            Integer threeDomainSecure,
+            Integer paymentType,
+            Integer status,
+            String lastUpdated) {
         this.sourceIdSt = sourceIdSt;
         this.id = id;
         this.userId = userId;
@@ -51,17 +60,48 @@ public class CrmTbCreditCardObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbCreditCardObject that = (CrmTbCreditCardObject) o;
-        return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(userId, that.userId) && Objects.equals(isDel, that.isDel) && Objects.equals(cardBeginSixDigits, that.cardBeginSixDigits) && Objects.equals(cardLastFourDigits, that.cardLastFourDigits) && Objects.equals(cardHolderName, that.cardHolderName) && Objects.equals(expiryMonth, that.expiryMonth) && Objects.equals(expiryYear, that.expiryYear) && Objects.equals(threeDomainSecure, that.threeDomainSecure) && Objects.equals(paymentType, that.paymentType) && Objects.equals(status, that.status);
+        return Objects.equals(sourceIdSt, that.sourceIdSt)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(isDel, that.isDel)
+                && Objects.equals(cardBeginSixDigits, that.cardBeginSixDigits)
+                && Objects.equals(cardLastFourDigits, that.cardLastFourDigits)
+                && Objects.equals(cardHolderName, that.cardHolderName)
+                && Objects.equals(expiryMonth, that.expiryMonth)
+                && Objects.equals(expiryYear, that.expiryYear)
+                && Objects.equals(threeDomainSecure, that.threeDomainSecure)
+                && Objects.equals(paymentType, that.paymentType)
+                && Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceIdSt, id, userId, createTime, updateTime, isDel, cardBeginSixDigits, cardLastFourDigits, cardHolderName, expiryMonth, expiryYear, threeDomainSecure, paymentType, status, lastUpdated);
+        return Objects.hash(
+                sourceIdSt,
+                id,
+                userId,
+                createTime,
+                updateTime,
+                isDel,
+                cardBeginSixDigits,
+                cardLastFourDigits,
+                cardHolderName,
+                expiryMonth,
+                expiryYear,
+                threeDomainSecure,
+                paymentType,
+                status,
+                lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "CrmTbCreditCardObject{" + "sourceIdSt=" + sourceIdSt + ", id=" + id + ", userId=" + userId + ", createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", isDel=" + isDel + ", cardBeginSixDigits='" + cardBeginSixDigits + '\'' + ", cardLastFourDigits='" + cardLastFourDigits + '\'' + ", cardHolderName='" + cardHolderName + '\'' + ", expiryMonth='" + expiryMonth + '\'' + ", expiryYear='" + expiryYear + '\'' + ", threeDomainSecure='" + threeDomainSecure + '\'' + ", paymentType='" + paymentType + '\'' + ", status='" + status + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "CrmTbCreditCardObject{" + "sourceIdSt=" + sourceIdSt + ", id=" + id + ", userId=" + userId
+                + ", createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", isDel=" + isDel
+                + ", cardBeginSixDigits='" + cardBeginSixDigits + '\'' + ", cardLastFourDigits='" + cardLastFourDigits
+                + '\'' + ", cardHolderName='" + cardHolderName + '\'' + ", expiryMonth='" + expiryMonth + '\''
+                + ", expiryYear='" + expiryYear + '\'' + ", threeDomainSecure='" + threeDomainSecure + '\''
+                + ", paymentType='" + paymentType + '\'' + ", status='" + status + '\'' + ", lastUpdated='"
+                + lastUpdated + '\'' + '}';
     }
 
     public Integer getSourceIdSt() {

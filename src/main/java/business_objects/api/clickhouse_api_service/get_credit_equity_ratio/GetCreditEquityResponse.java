@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_credit_equity_ratio;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public class GetCreditEquityResponse {
@@ -28,6 +27,5 @@ public class GetCreditEquityResponse {
 
         @JsonProperty("creditEquityRatio")
         public String creditEquityRatio;
-
     }
 }

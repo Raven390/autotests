@@ -4,23 +4,22 @@ import java.util.Objects;
 
 public class AppTbFinindexData {
 
-    private int brandUid;             // UInt8
-    private String brand;             // LowCardinality(String)
-    private long id;                  // UInt64
-    private long dataId;              // UInt64
-    private String dataName;          // String
-    private String language;          // LowCardinality(String)
-    private String title;             // LowCardinality(String)
-    private String countryCode;       // LowCardinality(String)
-    private String importance;        // LowCardinality(String)
+    private int brandUid; // UInt8
+    private String brand; // LowCardinality(String)
+    private long id; // UInt64
+    private long dataId; // UInt64
+    private String dataName; // String
+    private String language; // LowCardinality(String)
+    private String title; // LowCardinality(String)
+    private String countryCode; // LowCardinality(String)
+    private String importance; // LowCardinality(String)
     private String publishTime; // DateTime64(3)
-    private String description;       // String
+    private String description; // String
     private String createTime; // DateTime64(3)
     private String updateTime; // DateTime64(3)
     private String lastUpdated; // DateTime64(3)
 
-    protected AppTbFinindexData() {
-    }
+    protected AppTbFinindexData() {}
 
     public int getBrandUid() {
         return brandUid;
@@ -138,16 +137,48 @@ public class AppTbFinindexData {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AppTbFinindexData that = (AppTbFinindexData) o;
-        return brandUid == that.brandUid && id == that.id && dataId == that.dataId && Objects.equals(brand, that.brand) && Objects.equals(dataName, that.dataName) && Objects.equals(language, that.language) && Objects.equals(title, that.title) && Objects.equals(countryCode, that.countryCode) && Objects.equals(importance, that.importance) && Objects.equals(publishTime, that.publishTime) && Objects.equals(description, that.description) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime) && Objects.equals(lastUpdated, that.lastUpdated);
+        return brandUid == that.brandUid
+                && id == that.id
+                && dataId == that.dataId
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(dataName, that.dataName)
+                && Objects.equals(language, that.language)
+                && Objects.equals(title, that.title)
+                && Objects.equals(countryCode, that.countryCode)
+                && Objects.equals(importance, that.importance)
+                && Objects.equals(publishTime, that.publishTime)
+                && Objects.equals(description, that.description)
+                && Objects.equals(createTime, that.createTime)
+                && Objects.equals(updateTime, that.updateTime)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brandUid, brand, id, dataId, dataName, language, title, countryCode, importance, publishTime, description, createTime, updateTime, lastUpdated);
+        return Objects.hash(
+                brandUid,
+                brand,
+                id,
+                dataId,
+                dataName,
+                language,
+                title,
+                countryCode,
+                importance,
+                publishTime,
+                description,
+                createTime,
+                updateTime,
+                lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "AppTbFinindexData{" + "brandUid=" + brandUid + ", brand='" + brand + '\'' + ", id=" + id + ", dataId=" + dataId + ", dataName='" + dataName + '\'' + ", language='" + language + '\'' + ", title='" + title + '\'' + ", countryCode='" + countryCode + '\'' + ", importance='" + importance + '\'' + ", publishTime='" + publishTime + '\'' + ", description='" + description + '\'' + ", createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "AppTbFinindexData{" + "brandUid=" + brandUid + ", brand='" + brand + '\'' + ", id=" + id + ", dataId="
+                + dataId + ", dataName='" + dataName + '\'' + ", language='" + language + '\'' + ", title='" + title
+                + '\'' + ", countryCode='" + countryCode + '\'' + ", importance='" + importance + '\''
+                + ", publishTime='" + publishTime + '\'' + ", description='" + description + '\'' + ", createTime='"
+                + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", lastUpdated='" + lastUpdated + '\''
+                + '}';
     }
 }

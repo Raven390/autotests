@@ -1,16 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataBybit;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
@@ -22,14 +11,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 class ByBitUiDifferencesTest extends TestBaseWeb {
     static ClientHelper client = getRandomBybitClient();
     static CrmTbUserObject user = generateUserByClient(client);
     static CrmTbAccountObject account = generateCrmTbAccountDataBybit(client);
-    static MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
-    static MtBalanceOrdersObject withdrawal1 = generateMtBalanceOrder(client, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
-    static MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
-    static MtBalanceOrdersObject withdrawal2 = generateMtBalanceOrder(client, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(
+            client,
+            getRandomRoundedDouble(0.01, 99_999.99),
+            getRandomRoundedDouble(0.01, 99_999.99),
+            getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject withdrawal1 = generateMtBalanceOrder(
+            client,
+            getRandomRoundedDouble(-99_999.99, -0.01),
+            getRandomRoundedDouble(-99_999.99, -0.01),
+            getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(
+            client,
+            getRandomRoundedDouble(0.01, 99_999.99),
+            getRandomRoundedDouble(0.01, 99_999.99),
+            getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject withdrawal2 = generateMtBalanceOrder(
+            client,
+            getRandomRoundedDouble(-99_999.99, -0.01),
+            getRandomRoundedDouble(-99_999.99, -0.01),
+            getCurrentTimestampDbFormat());
 
     @BeforeAll
     static void setup() {

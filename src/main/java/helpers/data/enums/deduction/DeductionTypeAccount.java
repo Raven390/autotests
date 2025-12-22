@@ -1,7 +1,8 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionTypeAccount {
-    ILLEGAL_PROFIT("ILLEGAL_PROFIT"), NO_ILLEGAL_PROFIT("NO_ILLEGAL_PROFIT");
+    ILLEGAL_PROFIT("ILLEGAL_PROFIT"),
+    NO_ILLEGAL_PROFIT("NO_ILLEGAL_PROFIT");
 
     private final String displayName;
 
@@ -12,5 +13,4 @@ public enum DeductionTypeAccount {
     public String getDisplayName() {
         return displayName;
     }
-
 }

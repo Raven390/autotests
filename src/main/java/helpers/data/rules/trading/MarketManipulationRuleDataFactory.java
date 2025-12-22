@@ -1,17 +1,5 @@
 package helpers.data.rules.trading;
 
-
-import business_objects.kafka.mt_events.CloseTradeMtEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.DataHelper;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -20,9 +8,19 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RuleTestData("market-manipulation")
 public class MarketManipulationRuleDataFactory {
@@ -41,10 +39,19 @@ public class MarketManipulationRuleDataFactory {
         data.mt5DealsCoercedObjects = new java.util.ArrayList<>(List.of(generateMt5DealsCoercedObject(client)));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         data.closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), data.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), data.mt5DealsCoercedObjects.getFirst().getVolumeLots(), data.mt5DealsCoercedObjects.getFirst().getSymbol(), data.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+                getRandomUuidString(),
+                Instant.now().toString(),
+                data.mt5DealsCoercedObjects.getFirst().getPositionId(),
+                client.getTradingAccount(),
+                data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
+                data.mt5DealsCoercedObjects.getFirst().getSymbol(),
+                data.clientHelper.getServerId(),
+                MT_CLOSE_TRADE_EVENT,
+                Instant.now().toString(),
+                metadata,
+                Instant.now().toString());
         return data;
     }
-
 
     private static DataHelper getMarketManipulationRuleTest1Data() {
         DataHelper data = getMarketManipulatorRuleData(marketManipulationTest1Client);
@@ -59,7 +66,6 @@ public class MarketManipulationRuleDataFactory {
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
-
 
     public static Map<String, DataHelper> setupMarketManipulationRuleData() {
         Map<String, DataHelper> map = new HashMap<>();

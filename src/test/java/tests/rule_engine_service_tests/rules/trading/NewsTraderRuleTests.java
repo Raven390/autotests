@@ -1,20 +1,5 @@
 package tests.rule_engine_service_tests.rules.trading;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.trading.NewsTraderRuleDataFactory.setupNewsTraderCloseTradeRuleData;
@@ -23,6 +8,21 @@ import static helpers.database.DbHelper.stopSshTunnel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE)
@@ -42,7 +42,7 @@ class NewsTraderRuleTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -81,7 +81,6 @@ class NewsTraderRuleTests extends TestBaseRule {
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
         checkElementId("Event_end_3", data.closeTradeMtEvent.id, "news_trade");
-
     }
 
     @Test
@@ -95,7 +94,6 @@ class NewsTraderRuleTests extends TestBaseRule {
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
         checkElementId("Event_end_4", data.closeTradeMtEvent.id, "news_trade");
-
     }
 
     @Test
@@ -113,7 +111,10 @@ class NewsTraderRuleTests extends TestBaseRule {
         Allure.step("Verify there is alert in kafka");
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "News Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().timestamp,
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
         assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
@@ -127,8 +128,14 @@ class NewsTraderRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("News trading pattern"));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.ticketId,
+                is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.account,
+                is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));

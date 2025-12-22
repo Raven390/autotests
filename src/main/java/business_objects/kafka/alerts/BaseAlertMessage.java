@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-
 @JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true, defaultImpl = TradingAlertMessage.class)
-@JsonSubTypes({@JsonSubTypes.Type(value = TradingAlertMessage.class, name = "TRADING"), @JsonSubTypes.Type(value = PaymentAlertMessage.class, name = "PAYMENT"),
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        visible = true,
+        defaultImpl = TradingAlertMessage.class)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = TradingAlertMessage.class, name = "TRADING"),
+    @JsonSubTypes.Type(value = PaymentAlertMessage.class, name = "PAYMENT"),
 })
 public class BaseAlertMessage {
     @JsonProperty(value = "alertId", required = true)
@@ -34,8 +38,13 @@ public class BaseAlertMessage {
     @JsonProperty(value = "rule", required = true)
     private Rule rule;
 
-    public BaseAlertMessage(UUID id, AlertMessageType type, OffsetDateTime dateTime, OffsetDateTime triggerCreatedTime,
-            String ucid, Rule rule) {
+    public BaseAlertMessage(
+            UUID id,
+            AlertMessageType type,
+            OffsetDateTime dateTime,
+            OffsetDateTime triggerCreatedTime,
+            String ucid,
+            Rule rule) {
         this.id = id;
         this.type = type;
         this.dateTime = dateTime;

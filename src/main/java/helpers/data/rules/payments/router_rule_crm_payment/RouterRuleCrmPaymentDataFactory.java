@@ -1,28 +1,26 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Constants.*;
+import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.getRandomUuidString;
+
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Description;
-import utils.Utils;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
-import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
-import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.CRM_WITHDRAWAL_EVENT;
-import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
-import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getRandomUuidString;
+import utils.Utils;
 
 public class RouterRuleCrmPaymentDataFactory {
     private static final ClientHelper routerRuleClient1 = getRandomVantageClientAllFields();
@@ -50,30 +48,31 @@ public class RouterRuleCrmPaymentDataFactory {
         createClient(data, client);
 
         data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4",                            // accountType
-                Utils.getRandomIntPositive().toString(),      // binNumber
-                data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // checkName
-                data.clientHelper.getUserId(),                // clientId
-                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
-                "4",                                          // expMonth
-                "2030",                                       // expYear
-                data.clientHelper.getFirstName(),             // fullName
-                getRandomUuidString(),                        // id
-                "VTSG" + getRandomIntPositive(),              // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(),        // mt4Account
-                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
-                "-",                                 // paymentChannelName
-                "CREDIT_CARD",                       // paymentMethodCode
-                "MT4",                               // platform
-                data.clientHelper.getRegulator(),    // regulator
-                "2.0",                               // schemaVersion
-                CRM_WITHDRAWAL_EVENT,                // type
-                1.1,                                   // withdrawalAmount
-                1.2, Instant.now().toString(),               // withdrawalApplicationTime
-                "EUR",                               // withdrawalCurrency
-                getRandomIntPositive().longValue()               // withdrawalId
-        );
+                "MT4", // accountType
+                Utils.getRandomIntPositive().toString(), // binNumber
+                data.clientHelper.getBrand().toLowerCase(), // brand
+                "", // checkName
+                data.clientHelper.getUserId(), // clientId
+                Instant.now().toString(), // eventDate (you can format if you need +03:00)
+                "4", // expMonth
+                "2030", // expYear
+                data.clientHelper.getFirstName(), // fullName
+                getRandomUuidString(), // id
+                "VTSG" + getRandomIntPositive(), // merchantOrderId (example)
+                data.clientHelper.getTradingAccount(), // mt4Account
+                PAYMENT_PROVIDER_FASAPAY, // paymentChannelCode
+                "-", // paymentChannelName
+                PAYMENT_METHOD_CODE_CREDIT_CARD, // paymentMethodCode
+                "MT4", // platform
+                data.clientHelper.getRegulator(), // regulator
+                "2.0", // schemaVersion
+                CRM_WITHDRAWAL_EVENT, // type
+                1.1, // withdrawalAmount
+                1.2,
+                Instant.now().toString(), // withdrawalApplicationTime
+                "EUR", // withdrawalCurrency
+                getRandomIntPositive().longValue() // withdrawalId
+                );
         return data;
     }
 
@@ -126,7 +125,7 @@ public class RouterRuleCrmPaymentDataFactory {
         insertMirrorFlagData(data.clientHelper);
         data.crmWithdrawalEvent.setPaymentMethodCode("CRYPTO");
 
-        //add deposit
+        // add deposit
         data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
@@ -136,7 +135,7 @@ public class RouterRuleCrmPaymentDataFactory {
         data.crmTbDepositObjects.getFirst().setBrandUid(3);
         data.crmTbDepositObjects.getFirst().setStatusId(5);
 
-        //add CRYPTO withdrawal
+        // add CRYPTO withdrawal
         data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
         data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
         data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001));
@@ -168,7 +167,7 @@ public class RouterRuleCrmPaymentDataFactory {
         insertMirrorFlagData(data.clientHelper);
         data.crmWithdrawalEvent.setPaymentMethodCode("CRYPTO");
 
-        //add deposit
+        // add deposit
         data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
@@ -178,7 +177,7 @@ public class RouterRuleCrmPaymentDataFactory {
         data.crmTbDepositObjects.getFirst().setBrandUid(3);
         data.crmTbDepositObjects.getFirst().setStatusId(5);
 
-        //add CRYPTO withdrawal
+        // add CRYPTO withdrawal
         data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
         data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
         data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001));
@@ -195,7 +194,7 @@ public class RouterRuleCrmPaymentDataFactory {
         insertMirrorFlagData(data.clientHelper);
         data.crmWithdrawalEvent.setPaymentMethodCode("CRYPTO");
 
-        //add deposit
+        // add deposit
         data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
@@ -205,7 +204,7 @@ public class RouterRuleCrmPaymentDataFactory {
         data.crmTbDepositObjects.getFirst().setBrandUid(3);
         data.crmTbDepositObjects.getFirst().setStatusId(5);
 
-        //add CRYPTO withdrawal
+        // add CRYPTO withdrawal
         data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
         data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
         data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001));
@@ -222,7 +221,7 @@ public class RouterRuleCrmPaymentDataFactory {
         insertMirrorFlagData(data.clientHelper);
         data.crmWithdrawalEvent.setPaymentMethodCode("CRYPTO");
 
-        //add deposit
+        // add deposit
         data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
@@ -232,7 +231,7 @@ public class RouterRuleCrmPaymentDataFactory {
         data.crmTbDepositObjects.getFirst().setBrandUid(3);
         data.crmTbDepositObjects.getFirst().setStatusId(5);
 
-        //add CRYPTO withdrawal
+        // add CRYPTO withdrawal
         data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
         data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
         data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001));
@@ -249,7 +248,7 @@ public class RouterRuleCrmPaymentDataFactory {
         insertMirrorFlagData(data.clientHelper);
         data.crmWithdrawalEvent.setPaymentMethodCode("CRYPTO");
 
-        //add deposit
+        // add deposit
         data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
@@ -259,7 +258,7 @@ public class RouterRuleCrmPaymentDataFactory {
         data.crmTbDepositObjects.getFirst().setBrandUid(3);
         data.crmTbDepositObjects.getFirst().setStatusId(5);
 
-        //add CRYPTO withdrawal
+        // add CRYPTO withdrawal
         data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
         data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
         data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001));
@@ -295,21 +294,21 @@ public class RouterRuleCrmPaymentDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-//        map.put("1", getRouterRuleTest1Data());
-//        map.put("2", getRouterRuleTest2Data());
-//        map.put("3", getRouterRuleTest3Data());
-//        map.put("4", getRouterRuleTest4Data());
-//        map.put("5", getRouterRuleTest5Data());
-//        map.put("6", getRouterRuleTest6Data());
-//        map.put("7", getRouterRuleTest7Data());
-//        map.put("8", getRouterRuleTest8Data());
-//        map.put("9", getRouterRuleTest9Data());
-//        map.put("10", getRouterRuleTest10Data());
-//        map.put("11", getRouterRuleTest11Data());
-//        map.put("12", getRouterRuleTest12Data());
-//        map.put("13", getRouterRuleTest13Data());
-//        map.put("14", getRouterRuleTest14Data());
-//        map.put("15", getRouterRuleTest15Data());
+        //        map.put("1", getRouterRuleTest1Data());
+        //        map.put("2", getRouterRuleTest2Data());
+        //        map.put("3", getRouterRuleTest3Data());
+        //        map.put("4", getRouterRuleTest4Data());
+        //        map.put("5", getRouterRuleTest5Data());
+        //        map.put("6", getRouterRuleTest6Data());
+        //        map.put("7", getRouterRuleTest7Data());
+        //        map.put("8", getRouterRuleTest8Data());
+        //        map.put("9", getRouterRuleTest9Data());
+        //        map.put("10", getRouterRuleTest10Data());
+        //        map.put("11", getRouterRuleTest11Data());
+        //        map.put("12", getRouterRuleTest12Data());
+        //        map.put("13", getRouterRuleTest13Data());
+        //        map.put("14", getRouterRuleTest14Data());
+        //        map.put("15", getRouterRuleTest15Data());
         map.put("16", getRouterRuleTest16Data());
         map.put("17", getRouterRuleTest17Data());
         map.put("18", getRouterRuleTest18Data());

@@ -95,7 +95,5 @@ public class ClientBybitRestriction {
         this.updatedAt = updatedAt;
     }
 
-    public ClientBybitRestriction() {
-    }
-
+    public ClientBybitRestriction() {}
 }

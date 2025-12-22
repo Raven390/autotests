@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_floating_trades_group_by;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public class GetFloatingTradesGroupByResponse {
@@ -22,5 +21,4 @@ public class GetFloatingTradesGroupByResponse {
         @JsonProperty("totalMargin")
         public Integer totalMargin;
     }
-
 }

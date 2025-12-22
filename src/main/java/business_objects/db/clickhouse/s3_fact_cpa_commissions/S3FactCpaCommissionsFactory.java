@@ -1,9 +1,8 @@
 package business_objects.db.clickhouse.s3_fact_cpa_commissions;
 
-import helpers.data.ClientHelper;
-
-
 import static utils.Utils.*;
+
+import helpers.data.ClientHelper;
 
 public class S3FactCpaCommissionsFactory {
     public static S3FactCpaCommissionsObject generates3FactCpaCommissionsObject(ClientHelper client) {

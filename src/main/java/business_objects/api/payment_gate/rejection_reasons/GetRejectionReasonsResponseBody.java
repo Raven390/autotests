@@ -3,7 +3,6 @@ package business_objects.api.payment_gate.rejection_reasons;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -51,16 +50,17 @@ public class GetRejectionReasonsResponseBody {
         return attributes;
     }
 
-    public void setAttributes(
-            List<Attributes> attributes) {
+    public void setAttributes(List<Attributes> attributes) {
         this.attributes = attributes;
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof GetRejectionReasonsResponseBody that)) return false;
-        return Objects.equals(code, that.code) && Objects.equals(name, that.name) && Objects.equals(
-                description, that.description) && Objects.equals(attributes, that.attributes);
+        return Objects.equals(code, that.code)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(attributes, that.attributes);
     }
 
     @Override
@@ -70,14 +70,17 @@ public class GetRejectionReasonsResponseBody {
 
     @Override
     public String toString() {
-        return "GetRejectionReasonsResponseBody{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", description='" + description + '\'' + ", attributes=" + attributes + '}';
+        return "GetRejectionReasonsResponseBody{" + "code='" + code + '\'' + ", name='" + name + '\''
+                + ", description='" + description + '\'' + ", attributes=" + attributes + '}';
     }
 
     public static class Attributes {
         @JsonProperty("code")
         private String code;
+
         @JsonProperty("name")
         private String name;
+
         @JsonProperty("description")
         private String description;
 
@@ -108,7 +111,9 @@ public class GetRejectionReasonsResponseBody {
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof Attributes decisions)) return false;
-            return Objects.equals(code, decisions.code) && Objects.equals(name, decisions.name) && Objects.equals(description, decisions.description);
+            return Objects.equals(code, decisions.code)
+                    && Objects.equals(name, decisions.name)
+                    && Objects.equals(description, decisions.description);
         }
 
         @Override
@@ -118,7 +123,8 @@ public class GetRejectionReasonsResponseBody {
 
         @Override
         public String toString() {
-            return "Decisions{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", description='" + description + '\'' + '}';
+            return "Decisions{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", description='" + description
+                    + '\'' + '}';
         }
     }
 }

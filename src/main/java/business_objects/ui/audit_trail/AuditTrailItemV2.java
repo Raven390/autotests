@@ -7,8 +7,7 @@ public class AuditTrailItemV2 {
     private String header;
     private String details;
 
-    public AuditTrailItemV2() {
-    }
+    public AuditTrailItemV2() {}
 
     public AuditTrailItemV2(String header, String details) {
         this.header = header;

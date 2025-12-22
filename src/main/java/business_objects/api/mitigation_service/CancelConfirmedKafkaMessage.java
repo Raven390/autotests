@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -9,11 +8,11 @@ public class CancelConfirmedKafkaMessage {
 
     @JsonProperty("cancelAt")
     public String cancelAt;
+
     @JsonProperty("restrictions")
     public Restriction[] restrictions;
 
-    public CancelConfirmedKafkaMessage() {
-    }
+    public CancelConfirmedKafkaMessage() {}
 
     public CancelConfirmedKafkaMessage(String cancelAt, Restriction[] restrictions) {
         this.cancelAt = cancelAt;
@@ -35,18 +34,19 @@ public class CancelConfirmedKafkaMessage {
 
     @Override
     public String toString() {
-        return "CancelConfirmedKafkaMessage{" + "cancelAt='" + cancelAt + '\'' + ", restrictions=" + Arrays.toString(restrictions) + '}';
+        return "CancelConfirmedKafkaMessage{" + "cancelAt='" + cancelAt + '\'' + ", restrictions="
+                + Arrays.toString(restrictions) + '}';
     }
 
     public static class Restriction {
 
         @JsonProperty("restrictionId")
         public Integer restrictionId;
+
         @JsonProperty("restrictionStatus")
         public String restrictionStatus;
 
-        public Restriction() {
-        }
+        public Restriction() {}
 
         public Restriction(Integer restrictionId, String restrictionStatus) {
             this.restrictionId = restrictionId;
@@ -58,7 +58,8 @@ public class CancelConfirmedKafkaMessage {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Restriction that = (Restriction) o;
-            return Objects.equals(restrictionId, that.restrictionId) && Objects.equals(restrictionStatus, that.restrictionStatus);
+            return Objects.equals(restrictionId, that.restrictionId)
+                    && Objects.equals(restrictionStatus, that.restrictionStatus);
         }
 
         @Override
@@ -68,7 +69,8 @@ public class CancelConfirmedKafkaMessage {
 
         @Override
         public String toString() {
-            return "Restriction{" + "restrictionId=" + restrictionId + ", restrictionStatus='" + restrictionStatus + '\'' + '}';
+            return "Restriction{" + "restrictionId=" + restrictionId + ", restrictionStatus='" + restrictionStatus
+                    + '\'' + '}';
         }
     }
 }

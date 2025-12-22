@@ -1,22 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.paymentProfile;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.investigationTool.PaymentsPage;
-import tests.TestBaseWeb;
-
-import java.math.BigDecimal;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -28,6 +11,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.investigationTool.PaymentsPage;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -98,15 +97,49 @@ class PaymentProfilesListTest extends TestBaseWeb {
         paymentsPage.clickPaymentProfilesTabButton();
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
         assertThat("Verify payment profiles is not empty", paymentProfilesList.size(), equalTo(2));
-        PaymentsPage.PaymentFamilyBlock lbtPaymentFamily = paymentProfilesList.stream().filter(x -> x.header().contains("LBT")).findFirst().get();
-        assertThat("Verify LBT payment family header ", lbtPaymentFamily.header(), equalTo(String.format("LBT%d profile %d USD %.2f USD No connections", 1, 0, withdrawal1.getAmountUsd())));
-        assertThat("Verify LBT payment profiles", lbtPaymentFamily.rowDataList().getFirst(), equalTo(String.format("%sNot verified%d USDNo deposits%.2f USD1 withdrawal0 clientsConnected", withdrawal1.getPaymentProfile(), 0, withdrawal1.getAmountUsd())));
+        PaymentsPage.PaymentFamilyBlock lbtPaymentFamily = paymentProfilesList.stream()
+                .filter(x -> x.header().contains("LBT"))
+                .findFirst()
+                .get();
+        assertThat(
+                "Verify LBT payment family header ",
+                lbtPaymentFamily.header(),
+                equalTo(String.format(
+                        "LBT%d profile %d USD %.2f USD No connections", 1, 0, withdrawal1.getAmountUsd())));
+        assertThat(
+                "Verify LBT payment profiles",
+                lbtPaymentFamily.rowDataList().getFirst(),
+                equalTo(String.format(
+                        "%sNot verified%d USDNo deposits%.2f USD1 withdrawal0 clientsConnected",
+                        withdrawal1.getPaymentProfile(), 0, withdrawal1.getAmountUsd())));
 
-        PaymentsPage.PaymentFamilyBlock cryptoPaymentFamily = paymentProfilesList.stream().filter(x -> x.header().contains("Crypto")).findFirst().get();
-        assertThat("Verify Crypto payment family header ", cryptoPaymentFamily.header(), equalTo(String.format("Crypto%d profiles %.2f USD 0 USD No connections", 2, deposit.getAmountUsd().add(deposit2.getAmountUsd()))));
-        assertThat("Verify Crypto payment profiles 1", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit.getPaymentProfile())).findFirst().get(), equalTo(String.format("%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected", deposit.getPaymentProfile(), deposit.getAmountUsd(), 1, 0)));
-        assertThat("Verify Crypto payment profiles 2", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit2.getPaymentProfile())).findFirst().get(), equalTo(String.format("%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected", deposit2.getPaymentProfile(), deposit2.getAmountUsd(), 1, 0)));
+        PaymentsPage.PaymentFamilyBlock cryptoPaymentFamily = paymentProfilesList.stream()
+                .filter(x -> x.header().contains("Crypto"))
+                .findFirst()
+                .get();
+        assertThat(
+                "Verify Crypto payment family header ",
+                cryptoPaymentFamily.header(),
+                equalTo(String.format(
+                        "Crypto%d profiles %.2f USD 0 USD No connections",
+                        2, deposit.getAmountUsd().add(deposit2.getAmountUsd()))));
+        assertThat(
+                "Verify Crypto payment profiles 1",
+                cryptoPaymentFamily.rowDataList().stream()
+                        .filter(x -> x.contains(deposit.getPaymentProfile()))
+                        .findFirst()
+                        .get(),
+                equalTo(String.format(
+                        "%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected",
+                        deposit.getPaymentProfile(), deposit.getAmountUsd(), 1, 0)));
+        assertThat(
+                "Verify Crypto payment profiles 2",
+                cryptoPaymentFamily.rowDataList().stream()
+                        .filter(x -> x.contains(deposit2.getPaymentProfile()))
+                        .findFirst()
+                        .get(),
+                equalTo(String.format(
+                        "%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected",
+                        deposit2.getPaymentProfile(), deposit2.getAmountUsd(), 1, 0)));
     }
-
-
 }

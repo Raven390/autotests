@@ -9,29 +9,29 @@ import lombok.Setter;
 public class InternalHedgeEvent {
 
     // JSON example for reference:
-/// {
-///   "type": "internalHedge",
-///   "id": "b47a1d6c-6f12-4f91-8e94-6a3c43f9ef8b",
-///   "schemaVersion": "1.0",
-///   "timestamp": 1734973200,
-///   "symbolUnderlying": "XAUUSD",
-///   "positiveLeg": {
-///     "ucid": "vantage-8045634",
-///     "tradingAccount": 7738339,
-///     "serverId": 128,
-///     "closeTime": "2025-11-17T10:21:32",
-///     "closeTimeUtc": "2025-11-17T08:21:32Z",
-///     "shortProfitUsd": 1523.45
-///   },
-///   "negativeLeg": {
-///     "ucid": "vantage-8045510",
-///     "tradingAccount": 8113568,
-///     "serverId": 128,
-///     "closeTime": "2025-11-17T10:21:33",
-///     "closeTimeUtc": "2025-11-17T08:21:33Z",
-///     "shortProfitUsd": -1498.62
-///   }
-/// }
+    /// {
+    ///   "type": "internalHedge",
+    ///   "id": "b47a1d6c-6f12-4f91-8e94-6a3c43f9ef8b",
+    ///   "schemaVersion": "1.0",
+    ///   "timestamp": 1734973200,
+    ///   "symbolUnderlying": "XAUUSD",
+    ///   "positiveLeg": {
+    ///     "ucid": "vantage-8045634",
+    ///     "tradingAccount": 7738339,
+    ///     "serverId": 128,
+    ///     "closeTime": "2025-11-17T10:21:32",
+    ///     "closeTimeUtc": "2025-11-17T08:21:32Z",
+    ///     "shortProfitUsd": 1523.45
+    ///   },
+    ///   "negativeLeg": {
+    ///     "ucid": "vantage-8045510",
+    ///     "tradingAccount": 8113568,
+    ///     "serverId": 128,
+    ///     "closeTime": "2025-11-17T10:21:33",
+    ///     "closeTimeUtc": "2025-11-17T08:21:33Z",
+    ///     "shortProfitUsd": -1498.62
+    ///   }
+    /// }
     @JsonProperty("type")
     private String type;
 
@@ -53,10 +53,10 @@ public class InternalHedgeEvent {
     @JsonProperty("negativeLeg")
     private Leg negativeLeg;
 
-    public InternalHedgeEvent() {
-    }
+    public InternalHedgeEvent() {}
 
-    public InternalHedgeEvent(String type,
+    public InternalHedgeEvent(
+            String type,
             String id,
             String schemaVersion,
             Integer timestamp,
@@ -93,8 +93,6 @@ public class InternalHedgeEvent {
         @JsonProperty("shortProfitUsd")
         private Double shortProfitUsd;
 
-        public Leg() {
-        }
-
+        public Leg() {}
     }
 }

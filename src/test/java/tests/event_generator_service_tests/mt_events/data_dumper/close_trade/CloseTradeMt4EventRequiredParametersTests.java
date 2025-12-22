@@ -1,5 +1,10 @@
 package tests.event_generator_service_tests.mt_events.data_dumper.close_trade;
 
+import static business_objects.kafka.mt_data_dumper_events.CloseTradeFactory.generateCloseTradeDataDumperMt4;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static utils.Constants.*;
+
 import business_objects.kafka.mt_data_dumper_events.TradeEventMt4;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.kafka.MatchResultWithMessage;
@@ -11,11 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
-
-import static business_objects.kafka.mt_data_dumper_events.CloseTradeFactory.generateCloseTradeDataDumperMt4;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static utils.Constants.*;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_CLOSE_TRADE_EVENT)
@@ -34,7 +34,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.setHeader(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -42,7 +43,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -56,15 +59,18 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.setPayload(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, login);
+        MatchResultWithMessage isAnyMatchPresentInMessages =
+                kafka.isAnyMatchPresentInMessages(KAFKA_TOPIC_MT_EVENTS, login);
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -77,7 +83,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getHeader().setMsgId(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -85,7 +92,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -98,7 +107,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getHeader().setOperation(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -106,7 +116,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -119,7 +131,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getHeader().setMsgType(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -127,7 +140,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -140,7 +155,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getHeader().setServerId(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -148,7 +164,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -161,7 +179,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setCloseTime(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -169,7 +188,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -182,7 +203,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setCloseTimeUtc(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -190,7 +212,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -203,7 +227,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setOrder(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -211,7 +236,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -224,7 +251,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setLogin(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -232,7 +260,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -245,7 +275,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setVolume(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -253,7 +284,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -266,7 +299,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setSymbol(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -274,7 +308,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -287,7 +323,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setCmd(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -295,7 +332,9 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -308,7 +347,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setMode(null);
 
         Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -316,6 +356,8 @@ class CloseTradeMt4EventRequiredParametersTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 }

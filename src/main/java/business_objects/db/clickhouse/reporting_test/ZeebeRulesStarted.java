@@ -16,12 +16,20 @@ public class ZeebeRulesStarted {
     private String mtEventDate;
     private String timestampCreate;
 
-    public ZeebeRulesStarted() {
-    }
+    public ZeebeRulesStarted() {}
 
     public ZeebeRulesStarted(
-            String timestampStart, String ruleName, String runId, String eventId, String tradeId, String serverId,
-            String tradingAccount, String ucid, String ruleVersion, String mtEventDate, String timestampCreate) {
+            String timestampStart,
+            String ruleName,
+            String runId,
+            String eventId,
+            String tradeId,
+            String serverId,
+            String tradingAccount,
+            String ucid,
+            String ruleVersion,
+            String mtEventDate,
+            String timestampCreate) {
         this.timestampStart = timestampStart;
         this.ruleName = ruleName;
         this.runId = runId;
@@ -126,20 +134,41 @@ public class ZeebeRulesStarted {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ZeebeRulesStarted that)) return false;
-        return Objects.equals(timestampStart, that.timestampStart) && Objects.equals(ruleName, that.ruleName) && Objects.equals(
-                runId, that.runId) && Objects.equals(eventId, that.eventId) && Objects.equals(tradeId, that.tradeId) && Objects.equals(
-                        serverId, that.serverId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(ucid, that.ucid) && Objects.equals(
-                                ruleVersion, that.ruleVersion) && Objects.equals(mtEventDate, that.mtEventDate) && Objects.equals(
-                                        timestampCreate, that.timestampCreate);
+        return Objects.equals(timestampStart, that.timestampStart)
+                && Objects.equals(ruleName, that.ruleName)
+                && Objects.equals(runId, that.runId)
+                && Objects.equals(eventId, that.eventId)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(ruleVersion, that.ruleVersion)
+                && Objects.equals(mtEventDate, that.mtEventDate)
+                && Objects.equals(timestampCreate, that.timestampCreate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestampStart, ruleName, runId, eventId, tradeId, serverId, tradingAccount, ucid, ruleVersion, mtEventDate, timestampCreate);
+        return Objects.hash(
+                timestampStart,
+                ruleName,
+                runId,
+                eventId,
+                tradeId,
+                serverId,
+                tradingAccount,
+                ucid,
+                ruleVersion,
+                mtEventDate,
+                timestampCreate);
     }
 
     @Override
     public String toString() {
-        return "ZeebeRulesStarted{" + "timestampStart='" + timestampStart + '\'' + ", ruleName='" + ruleName + '\'' + ", runId='" + runId + '\'' + ", eventId='" + eventId + '\'' + ", tradeId='" + tradeId + '\'' + ", serverId='" + serverId + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", ucid='" + ucid + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", mtEventDate='" + mtEventDate + '\'' + ", timestampCreate='" + timestampCreate + '\'' + '}';
+        return "ZeebeRulesStarted{" + "timestampStart='" + timestampStart + '\'' + ", ruleName='" + ruleName + '\''
+                + ", runId='" + runId + '\'' + ", eventId='" + eventId + '\'' + ", tradeId='" + tradeId + '\''
+                + ", serverId='" + serverId + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", ucid='" + ucid
+                + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", mtEventDate='" + mtEventDate + '\''
+                + ", timestampCreate='" + timestampCreate + '\'' + '}';
     }
 }

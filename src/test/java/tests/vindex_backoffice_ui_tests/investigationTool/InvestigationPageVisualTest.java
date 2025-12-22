@@ -13,7 +13,7 @@ import tests.TestBaseWeb;
 public class InvestigationPageVisualTest extends TestBaseWeb {
 
     @Test
-    @Disabled//need to update mocking
+    @Disabled // need to update mocking
     @Muted
     @Tag(TAG_MANUAL)
     @Tag(TEAM_BACKOFFICE)
@@ -32,7 +32,7 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
     }
 
     @Test
-    @Disabled//need to update mocking
+    @Disabled // need to update mocking
     @Muted
     @Tag(TAG_MANUAL)
     @Tag(TEAM_BACKOFFICE)

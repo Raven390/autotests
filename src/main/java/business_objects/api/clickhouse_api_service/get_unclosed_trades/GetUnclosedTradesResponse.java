@@ -2,7 +2,6 @@ package business_objects.api.clickhouse_api_service.get_unclosed_trades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class GetUnclosedTradesResponse {
 
     @JsonProperty("openTime")
@@ -25,5 +24,4 @@ public class GetUnclosedTradesResponse {
 
     @JsonProperty("comment")
     public String comment;
-
 }

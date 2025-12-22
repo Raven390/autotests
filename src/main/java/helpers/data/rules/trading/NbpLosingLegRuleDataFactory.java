@@ -1,5 +1,15 @@
 package helpers.data.rules.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
+import static business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObjectFactory.generateBonusByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClients;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
@@ -8,21 +18,10 @@ import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
-import static business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObjectFactory.generateBonusByClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClients;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
-import static helpers.data.DataHelper.setupData;
-import static utils.Utils.*;
 
 @RuleTestData("nbp-losing-leg")
 public class NbpLosingLegRuleDataFactory {
@@ -39,8 +38,14 @@ public class NbpLosingLegRuleDataFactory {
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
         data.closeTradeEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), client.getTradingAccount(), 100d, "USDCZK", client.getServerId(), "closeTrade"
-        );
+                getRandomUuidString(),
+                Instant.now().toString(),
+                getRandomIntPositive().longValue(),
+                client.getTradingAccount(),
+                100d,
+                "USDCZK",
+                client.getServerId(),
+                "closeTrade");
         data.crmTbAccountObject = generateCrmTbAccountData(client);
         CrmTbBonusObject bonus = generateBonusByClient(client);
         bonus.type = "NEGATIVE_BALANCE_ADJUSTMENT";

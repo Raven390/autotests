@@ -1,25 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.paymentProfile;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
-
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.VerificationStatus;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.investigationTool.PaymentsPage;
-import tests.TestBaseWeb;
-
-import java.math.BigDecimal;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -33,6 +13,23 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.VerificationStatus;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.investigationTool.PaymentsPage;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -93,14 +90,22 @@ class PaymentProfilesVerificationTest extends TestBaseWeb {
         paymentsPage.clickPaymentProfilesTabButton();
         paymentsPage.openPaymentProfileDetails(withdrawal1.getPaymentProfile());
         paymentsPage.openPaymentProfileVerificationDrawer();
-        assertThat("Verify payment profile name", paymentsPage.getPaymentProfileVerificationDrawerName(), equalTo(withdrawal1.getPaymentProfile()));
+        assertThat(
+                "Verify payment profile name",
+                paymentsPage.getPaymentProfileVerificationDrawerName(),
+                equalTo(withdrawal1.getPaymentProfile()));
         paymentsPage.selectVerificationStatus(VerificationStatus.VERIFIED);
         paymentsPage.commentAndSendVerificationStatus("test");
 
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
-        PaymentsPage.PaymentFamilyBlock block = paymentProfilesList.stream().filter(x -> x.header().contains("LBT")).findFirst().get();
-        assertThat("Verify status in payment profiles", block.rowDataList().getFirst(), containsString(VerificationStatus.VERIFIED.getDisplayName()));
-
+        PaymentsPage.PaymentFamilyBlock block = paymentProfilesList.stream()
+                .filter(x -> x.header().contains("LBT"))
+                .findFirst()
+                .get();
+        assertThat(
+                "Verify status in payment profiles",
+                block.rowDataList().getFirst(),
+                containsString(VerificationStatus.VERIFIED.getDisplayName()));
     }
 
     @Test
@@ -115,12 +120,20 @@ class PaymentProfilesVerificationTest extends TestBaseWeb {
         paymentsPage.clickPaymentProfilesTabButton();
         paymentsPage.openPaymentProfileDetails(deposit.getPaymentProfile());
         paymentsPage.openPaymentProfileVerificationDrawer();
-        assertThat("Verify payment profile name", paymentsPage.getPaymentProfileVerificationDrawerName(), equalTo(deposit.getPaymentProfile()));
+        assertThat(
+                "Verify payment profile name",
+                paymentsPage.getPaymentProfileVerificationDrawerName(),
+                equalTo(deposit.getPaymentProfile()));
         paymentsPage.commentAndSendVerificationStatus("test");
 
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
-        PaymentsPage.PaymentFamilyBlock block = paymentProfilesList.stream().filter(x -> x.header().contains("Crypto")).findFirst().get();
-        assertThat("Verify status in payment profiles", block.rowDataList().getFirst(), containsString(VerificationStatus.NOT_VERIFIED.getDisplayName()));
-
+        PaymentsPage.PaymentFamilyBlock block = paymentProfilesList.stream()
+                .filter(x -> x.header().contains("Crypto"))
+                .findFirst()
+                .get();
+        assertThat(
+                "Verify status in payment profiles",
+                block.rowDataList().getFirst(),
+                containsString(VerificationStatus.NOT_VERIFIED.getDisplayName()));
     }
 }

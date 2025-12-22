@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_abuse_types;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -13,8 +12,7 @@ public class GetAbuseTypesResponse {
     @JsonProperty("fraudType")
     String[] fraudType;
 
-    public GetAbuseTypesResponse() {
-    }
+    public GetAbuseTypesResponse() {}
 
     public GetAbuseTypesResponse(String clientId, String[] fraudType) {
         this.clientId = clientId;
@@ -36,7 +34,8 @@ public class GetAbuseTypesResponse {
 
     @Override
     public String toString() {
-        return "GetAbuseTypesResponse{" + "clientId='" + clientId + '\'' + ", fraudType=" + Arrays.toString(fraudType) + '}';
+        return "GetAbuseTypesResponse{" + "clientId='" + clientId + '\'' + ", fraudType=" + Arrays.toString(fraudType)
+                + '}';
     }
 
     public String getClientId() {

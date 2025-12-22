@@ -1,7 +1,6 @@
 package business_objects.kafka.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.OffsetDateTime;
 import java.util.UUID;
 

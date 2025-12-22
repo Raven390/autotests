@@ -1,19 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.FraudType;
-import helpers.database.ArHelper;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -34,13 +20,25 @@ import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cl
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampSeconds;
 
+import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.FraudType;
+import helpers.database.ArHelper;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import java.io.IOException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 class FraudManagingTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
-
 
     @BeforeAll
     static void setup() throws IOException {
@@ -56,7 +54,8 @@ class FraudManagingTest extends TestBaseWeb {
     }
 
     @AllureId("1504")
-    @DisplayName("Fraud types that was separately added as potential and confirmed must be shown only as confirmed on FE")
+    @DisplayName(
+            "Fraud types that was separately added as potential and confirmed must be shown only as confirmed on FE")
     @Test
     void overridedPotentialNotShown() throws IOException {
 
@@ -103,7 +102,11 @@ class FraudManagingTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -136,7 +139,11 @@ class FraudManagingTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -169,7 +176,11 @@ class FraudManagingTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -202,7 +213,11 @@ class FraudManagingTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -235,7 +250,11 @@ class FraudManagingTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -267,7 +286,10 @@ class FraudManagingTest extends TestBaseWeb {
 
         Allure.step("Verify that \"Detected fraud\" section is visible (selected fraud should be displayed)");
         String selectedFraud = resolvePage.getSelectedFraud();
-        assertThat("Verify that detected fraud section shows selected fraud", selectedFraud.contains("Chargeback"), is(true));
+        assertThat(
+                "Verify that detected fraud section shows selected fraud",
+                selectedFraud.contains("Chargeback"),
+                is(true));
 
         Allure.step("Verify that 'Restrictions' section is visible1");
         List<String> restrictionsList = resolvePage.getRestrictionsList();
@@ -282,7 +304,11 @@ class FraudManagingTest extends TestBaseWeb {
 
         Allure.step("Verify that comment input is visible");
         resolvePage.fillCommentAndApply("Payment fraud management test");
-        List<AbuserFraudType> abuserFraudTypes = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid = '%s'".formatted(client.getUcid()), AbuserFraudType.class);
+        List<AbuserFraudType> abuserFraudTypes = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid = '%s'".formatted(client.getUcid()),
+                AbuserFraudType.class);
         assertThat(abuserFraudTypes.size(), is(1));
         AbuserFraudType abuserFraudType = abuserFraudTypes.getFirst();
         assertThat("Fraud type inserted into AR DB", abuserFraudType.getFraudTypeCode(), is(CHARGEBACK.getCode()));

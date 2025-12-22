@@ -1,16 +1,15 @@
 package business_objects.kafka.alerts;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudType;
 import io.qameta.allure.Step;
-
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
-
-import static utils.Utils.*;
 
 public class RuleAlertFactory {
     @Step("Generate rule alert for client with ucid '{ucid}'")
@@ -154,8 +153,24 @@ public class RuleAlertFactory {
 
     @Step("Generate payment alert for client with ucid '{ucid}'")
     public static PaymentAlertMessage generatePaymentAlertByUcid(String ucid) {
-        return new PaymentAlertMessage(UUID.randomUUID(), AlertMessageType.PAYMENT, OffsetDateTime.now(), OffsetDateTime.now(), ucid, new PaymentAlertMessage.Rule(
-                "Payment Fraud Detection", "MARKET_MANIPULATION", "1.0", "Payment Initiated", Collections.emptyMap()), "123456", "server1", "CRYPTO", "1000.00", "USD", UUID.randomUUID().toString());
+        return new PaymentAlertMessage(
+                UUID.randomUUID(),
+                AlertMessageType.PAYMENT,
+                OffsetDateTime.now(),
+                OffsetDateTime.now(),
+                ucid,
+                new PaymentAlertMessage.Rule(
+                        "Payment Fraud Detection",
+                        "MARKET_MANIPULATION",
+                        "1.0",
+                        "Payment Initiated",
+                        Collections.emptyMap()),
+                "123456",
+                "server1",
+                "CRYPTO",
+                "1000.00",
+                "USD",
+                UUID.randomUUID().toString());
     }
 
     @Step("Generate payment alert for client with ucid '{ucid}' and trigger '{trigger}'")
@@ -164,7 +179,23 @@ public class RuleAlertFactory {
         paymentRule.name = "fraud_detection";
         paymentRule.ver = "1.0.0";
         return new PaymentAlertMessageV2(
-                UUID.randomUUID(), AlertMessageType.PAYMENT, OffsetDateTime.now(), OffsetDateTime.now().minusMinutes(2), ucid, "POTENTIAL_ABUSE", trigger, "Suspicious payment", paymentRule, new HashMap<>(), "12345", "srv-45", "CRYPTO", "500.00", "500.00", "USD", "D987654321", "evt-" + UUID.randomUUID()
-        );
+                UUID.randomUUID(),
+                AlertMessageType.PAYMENT,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(2),
+                ucid,
+                "POTENTIAL_ABUSE",
+                trigger,
+                "Suspicious payment",
+                paymentRule,
+                new HashMap<>(),
+                "12345",
+                "srv-45",
+                "CRYPTO",
+                "500.00",
+                "500.00",
+                "USD",
+                "D987654321",
+                "evt-" + UUID.randomUUID());
     }
 }

@@ -1,10 +1,9 @@
 package business_objects.db.payment_gate.d_decisions;
 
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Objects;
 
 @Builder
 @Getter
@@ -20,7 +19,12 @@ public class DDecisionObject {
     private String dateUpdated;
 
     public DDecisionObject(
-            Integer id, String type, Integer code, String name, String description, String dateCreated,
+            Integer id,
+            String type,
+            Integer code,
+            String name,
+            String description,
+            String dateCreated,
             String dateUpdated) {
         this.id = id;
         this.type = type;
@@ -31,15 +35,18 @@ public class DDecisionObject {
         this.dateUpdated = dateUpdated;
     }
 
-    public DDecisionObject() {
-    }
+    public DDecisionObject() {}
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DDecisionObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(type, that.type) && Objects.equals(
-                code, that.code) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(
-                        dateCreated, that.dateCreated) && Objects.equals(dateUpdated, that.dateUpdated);
+        return Objects.equals(id, that.id)
+                && Objects.equals(type, that.type)
+                && Objects.equals(code, that.code)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(dateCreated, that.dateCreated)
+                && Objects.equals(dateUpdated, that.dateUpdated);
     }
 
     @Override
@@ -49,6 +56,8 @@ public class DDecisionObject {
 
     @Override
     public String toString() {
-        return "DDecisionObject{" + "id=" + id + ", type='" + type + '\'' + ", code=" + code + ", name='" + name + '\'' + ", description='" + description + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + '}';
+        return "DDecisionObject{" + "id=" + id + ", type='" + type + '\'' + ", code=" + code + ", name='" + name + '\''
+                + ", description='" + description + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='"
+                + dateUpdated + '\'' + '}';
     }
 }

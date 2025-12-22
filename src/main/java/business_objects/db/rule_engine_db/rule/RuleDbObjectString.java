@@ -1,6 +1,5 @@
 package business_objects.db.rule_engine_db.rule;
 
-
 import java.util.Objects;
 
 public class RuleDbObjectString {
@@ -9,8 +8,7 @@ public class RuleDbObjectString {
     private String ruleName;
     private String brands;
 
-    public RuleDbObjectString() {
-    }
+    public RuleDbObjectString() {}
 
     public RuleDbObjectString(String id, String eventType, String ruleName, String brands) {
         this.id = id;
@@ -23,8 +21,10 @@ public class RuleDbObjectString {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RuleDbObjectString that = (RuleDbObjectString) o;
-        return Objects.equals(id, that.id) && Objects.equals(eventType, that.eventType) && Objects.equals(
-                ruleName, that.ruleName) && Objects.equals(brands, that.brands);
+        return Objects.equals(id, that.id)
+                && Objects.equals(eventType, that.eventType)
+                && Objects.equals(ruleName, that.ruleName)
+                && Objects.equals(brands, that.brands);
     }
 
     @Override
@@ -34,7 +34,8 @@ public class RuleDbObjectString {
 
     @Override
     public String toString() {
-        return "RuleDbObject{" + "id='" + id + '\'' + ", eventType='" + eventType + '\'' + ", ruleName='" + ruleName + '\'' + ", brands='" + brands + '\'' + '}';
+        return "RuleDbObject{" + "id='" + id + '\'' + ", eventType='" + eventType + '\'' + ", ruleName='" + ruleName
+                + '\'' + ", brands='" + brands + '\'' + '}';
     }
 
     public String getId() {

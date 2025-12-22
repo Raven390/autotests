@@ -1,31 +1,124 @@
 package business_objects.db.clickhouse.mt_mt5_deals_coerced;
 
+import static utils.Constants.*;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Symbol;
 import io.qameta.allure.Step;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static utils.Constants.*;
-import static utils.Utils.*;
 
 public class Mt5DealsCoercedFactory {
 
     @Step("Generate mt5 deals by client")
     public static Mt5DealsCoercedObject generateTradeByClient(ClientHelper client) {
-        return new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), PLATFORM_MT_5, client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0), getCurrentTimestampDbFormat(), EURUSD, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1.25d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+        return new Mt5DealsCoercedObject(
+                client.getBrand(),
+                client.getRegulator(),
+                client.getUserId(),
+                client.getUcid(),
+                client.getTradingAccount(),
+                PLATFORM_MT_5,
+                client.getServerId(),
+                "MT5",
+                "accountType",
+                "accountGroup",
+                "USD",
+                getRandomLongPositive(),
+                getRandomLongPositive(),
+                0,
+                0,
+                1,
+                1d,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0),
+                getCurrentTimestampDbFormat(),
+                EURUSD,
+                EURUSD,
+                "EUR",
+                "USD",
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1.25d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1L,
+                getRandomLongPositive(),
+                COMMENT_AUTOMATION_TESTS,
+                1d,
+                2d,
+                1d,
+                1d,
+                1d,
+                1d,
+                0,
+                getCurrentTimestampDbFormat(),
+                COMMENT_AUTOMATION_TESTS);
     }
 
     @Step("Generate mt5 deals by client")
-    public static Mt5DealsCoercedObject generateTradeByClient(ClientHelper client, Integer action, Integer entry,
-            Integer days, Long order) {
-        return new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), PLATFORM_MT_5, client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), order, action, entry, 1, 1d, getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, days, 0, 0), getCurrentTimestampDbFormat(), EURUSD, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+    public static Mt5DealsCoercedObject generateTradeByClient(
+            ClientHelper client, Integer action, Integer entry, Integer days, Long order) {
+        return new Mt5DealsCoercedObject(
+                client.getBrand(),
+                client.getRegulator(),
+                client.getUserId(),
+                client.getUcid(),
+                client.getTradingAccount(),
+                PLATFORM_MT_5,
+                client.getServerId(),
+                "MT5",
+                "accountType",
+                "accountGroup",
+                "USD",
+                getRandomLongPositive(),
+                order,
+                action,
+                entry,
+                1,
+                1d,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, days, 0, 0),
+                getCurrentTimestampDbFormat(),
+                EURUSD,
+                EURUSD,
+                "EUR",
+                "USD",
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1d,
+                1L,
+                getRandomLongPositive(),
+                COMMENT_AUTOMATION_TESTS,
+                1d,
+                2d,
+                1d,
+                1d,
+                1d,
+                1d,
+                0,
+                getCurrentTimestampDbFormat(),
+                COMMENT_AUTOMATION_TESTS);
     }
 
     @Step("Generate mt5 deals by MT5 position")
@@ -136,8 +229,8 @@ public class Mt5DealsCoercedFactory {
         return deal;
     }
 
-    public static List<Mt5DealsCoercedObject> generateMt5DealsCoercedObject(ClientHelper client, int numberOfDeals,
-            String date) {
+    public static List<Mt5DealsCoercedObject> generateMt5DealsCoercedObject(
+            ClientHelper client, int numberOfDeals, String date) {
         List<Mt5DealsCoercedObject> deals = new ArrayList<>();
         for (int i = 1; i <= numberOfDeals; i++) {
             Mt5DealsCoercedObject trade = generateTradeByClient(client);

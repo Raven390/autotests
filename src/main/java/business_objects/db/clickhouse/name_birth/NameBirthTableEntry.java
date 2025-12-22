@@ -9,8 +9,7 @@ public class NameBirthTableEntry {
     public String lastName;
     public String dateOfBirth;
 
-    public NameBirthTableEntry() {
-    }
+    public NameBirthTableEntry() {}
 
     public NameBirthTableEntry(String ucid, String firstName, String lastName, String dateOfBirth) {
         this.ucid = ucid;
@@ -23,8 +22,10 @@ public class NameBirthTableEntry {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         NameBirthTableEntry that = (NameBirthTableEntry) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(firstName, that.firstName) && Objects.equals(
-                lastName, that.lastName) && Objects.equals(dateOfBirth, that.dateOfBirth);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(firstName, that.firstName)
+                && Objects.equals(lastName, that.lastName)
+                && Objects.equals(dateOfBirth, that.dateOfBirth);
     }
 
     @Override
@@ -34,6 +35,7 @@ public class NameBirthTableEntry {
 
     @Override
     public String toString() {
-        return "NameBirthTableEntry{" + "ucid='" + ucid + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", dateOfBirth='" + dateOfBirth + '\'' + '}';
+        return "NameBirthTableEntry{" + "ucid='" + ucid + '\'' + ", firstName='" + firstName + '\'' + ", lastName='"
+                + lastName + '\'' + ", dateOfBirth='" + dateOfBirth + '\'' + '}';
     }
 }

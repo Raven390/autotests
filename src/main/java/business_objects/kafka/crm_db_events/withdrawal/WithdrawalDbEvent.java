@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_db_events.withdrawal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class WithdrawalDbEvent {
@@ -11,8 +10,7 @@ public class WithdrawalDbEvent {
     @JsonProperty(value = "metadata")
     public WithdrawalDbEventMetadata metadata;
 
-    public WithdrawalDbEvent() {
-    }
+    public WithdrawalDbEvent() {}
 
     public WithdrawalDbEvent(WithdrawalDbEventData data, WithdrawalDbEventMetadata metadata) {
         this.data = data;

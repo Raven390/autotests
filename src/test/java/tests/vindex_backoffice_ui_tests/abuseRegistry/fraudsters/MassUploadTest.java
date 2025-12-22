@@ -1,20 +1,5 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
-import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.audit_service_db.EventOld;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.*;
-import helpers.database.ArHelper;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.data.enums.FraudSource.*;
 import static helpers.database.AuHelper.cleanClientAudit;
@@ -27,6 +12,20 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 import static utils.Utils.getCurrentTimestampSeconds;
 
+import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.audit_service_db.EventOld;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.*;
+import helpers.database.ArHelper;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 @Tag(ABUSE_REGISTRY)
@@ -35,12 +34,34 @@ class MassUploadTest extends TestBaseWeb {
     static ClientHelper client1;
     static ClientHelper client2;
     static ClientHelper client3;
+
     static {
-        client1 = ClientHelper.builder().userId(313_101).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(313_101_001).serverId(42).build();
+        client1 = ClientHelper.builder()
+                .userId(313_101)
+                .uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(313_101_001)
+                .serverId(42)
+                .build();
 
-        client2 = ClientHelper.builder().userId(313_102).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(313_102_001).serverId(42).build();
+        client2 = ClientHelper.builder()
+                .userId(313_102)
+                .uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(313_102_001)
+                .serverId(42)
+                .build();
 
-        client3 = ClientHelper.builder().userId(313_103).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(313_103_001).serverId(42).build();
+        client3 = ClientHelper.builder()
+                .userId(313_103)
+                .uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(313_103_001)
+                .serverId(42)
+                .build();
     }
 
     @BeforeAll
@@ -72,7 +93,10 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
-        fraudstersPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
+        fraudstersPage.typeClientsID(
+                client1.getUserId().toString(),
+                client2.getUserId().toString(),
+                client3.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
         fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
@@ -89,7 +113,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -102,14 +130,16 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
         assertEquals(source, fraud.getFraudSource());
 
-
-        List<EventOld> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_OLD, "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'", EventOld.class);
+        List<EventOld> events = getObjectsFromDB(
+                DbName.POSTGRES,
+                AUDIT_EVENT_OLD,
+                "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'",
+                EventOld.class);
 
         EventOld event = events.getFirst();
         assertEquals("Batch operation. " + commentary, event.getComment());
 
         checkUserHaveRestrictionGeneral(client1.getUcid(), restriction.getId(), "APPLIED");
-
     }
 
     @Test
@@ -143,7 +173,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -191,7 +225,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -239,7 +277,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -287,7 +329,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -335,7 +381,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -349,9 +399,8 @@ class MassUploadTest extends TestBaseWeb {
         assertEquals(source, fraud.getFraudSource());
     }
 
-
     @Disabled("Deprecated. source now is mandatory")
-    @Deprecated//source now is mandatory
+    @Deprecated // source now is mandatory
     @Test
     @AllureId("1499")
     @Feature("BMS-1499 Add source to bulk uploading of fraudsters")
@@ -386,7 +435,11 @@ class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client1.getUcid() + "'",
+                AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
@@ -399,6 +452,4 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
         assertEquals(source, fraud.getFraudSource());
     }
-
-
 }

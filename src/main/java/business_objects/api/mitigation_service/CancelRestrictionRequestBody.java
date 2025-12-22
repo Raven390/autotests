@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class CancelRestrictionRequestBody {
@@ -12,8 +11,7 @@ public class CancelRestrictionRequestBody {
     @JsonProperty("updatedBy")
     public UpdatedBy updatedBy;
 
-    public CancelRestrictionRequestBody() {
-    }
+    public CancelRestrictionRequestBody() {}
 
     public CancelRestrictionRequestBody(String cancelReason, UpdatedBy updatedBy) {
         this.cancelReason = cancelReason;
@@ -35,7 +33,8 @@ public class CancelRestrictionRequestBody {
 
     @Override
     public String toString() {
-        return "CancelRestrictionRequestBody{" + "cancelReason='" + cancelReason + '\'' + ", updatedBy=" + updatedBy + '}';
+        return "CancelRestrictionRequestBody{" + "cancelReason='" + cancelReason + '\'' + ", updatedBy=" + updatedBy
+                + '}';
     }
 
     public static class UpdatedBy {
@@ -46,8 +45,7 @@ public class CancelRestrictionRequestBody {
         @JsonProperty("user")
         String user;
 
-        public UpdatedBy() {
-        }
+        public UpdatedBy() {}
 
         public UpdatedBy(String system, String user) {
             this.system = system;

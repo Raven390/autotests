@@ -1,17 +1,5 @@
 package helpers.data.rules.trading;
 
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.kafka.mt_events.CloseTradeMtEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
-import helpers.data.DataHelper;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
@@ -23,12 +11,23 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.oz_trades.OzTradesTableEntryFactory.generateOzTradesTableEntryByClient;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.EURUSD;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.getRandomUuidString;
+
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import helpers.data.enums.DateTimeFormat;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NoSlippageRuleDataFactory {
 
@@ -55,7 +54,17 @@ public class NoSlippageRuleDataFactory {
         ruleData.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(client));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         ruleData.closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), ruleData.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), ruleData.mt5DealsCoercedObjects.getFirst().getVolumeLots(), ruleData.mt5DealsCoercedObjects.getFirst().getSymbol(), ruleData.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+                getRandomUuidString(),
+                Instant.now().toString(),
+                ruleData.mt5DealsCoercedObjects.getFirst().getPositionId(),
+                client.getTradingAccount(),
+                ruleData.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
+                ruleData.mt5DealsCoercedObjects.getFirst().getSymbol(),
+                ruleData.clientHelper.getServerId(),
+                MT_CLOSE_TRADE_EVENT,
+                Instant.now().toString(),
+                metadata,
+                Instant.now().toString());
         return ruleData;
     }
 
@@ -127,12 +136,10 @@ public class NoSlippageRuleDataFactory {
         // Deal 1
         Mt5DealsCoercedObject deal1Open = generateTradeByClient(data.clientHelper);
         deal1Open.setEntry(0);
-        deal1Open.setTime(getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0));
+        deal1Open.setTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0));
         Mt5DealsCoercedObject deal1Close = generateTradeByClient(data.clientHelper);
         deal1Close.setEntry(1);
-        deal1Close.setTime(getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 1));
+        deal1Close.setTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 1));
         return data;
     }
 
@@ -142,7 +149,8 @@ public class NoSlippageRuleDataFactory {
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
         data.ozTradesTableObjects.getFirst().setSlippage(395d);
-        data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
+        data.mt5DealsCoercedObjects = List.of(
+                generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
         return data;
@@ -154,7 +162,8 @@ public class NoSlippageRuleDataFactory {
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
         data.ozTradesTableObjects.getFirst().setSlippage(395d);
-        data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
+        data.mt5DealsCoercedObjects = List.of(
+                generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
         data.mt5DealsCoercedObjects.get(1).setNotionalValueUsd(3_000_002d);

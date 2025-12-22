@@ -1,5 +1,16 @@
 package helpers.data.rules.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
+import static business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObjectFactory.generateBonusByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
@@ -8,20 +19,8 @@ import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
-import static business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObjectFactory.generateBonusByClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Utils.*;
 
 @RuleTestData("loss-voucher")
 public class LossVoucherRuleDataFactory {
@@ -50,7 +49,8 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd1_2Client);
-        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrder(lossVoucherRuleExitEventEnd1_2Client, 100d, 100d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder =
+                generateMtBalanceOrder(lossVoucherRuleExitEventEnd1_2Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
         data.mtBalanceOrdersObjects.add(balanceOrder);
 
@@ -82,7 +82,8 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd2Client);
-        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrder(lossVoucherRuleExitEventEnd2Client, 100d, 100d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder =
+                generateMtBalanceOrder(lossVoucherRuleExitEventEnd2Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
         data.mtBalanceOrdersObjects.add(balanceOrder);
         bonus.type = "Cash Adjustment - Debt W/O";
@@ -113,7 +114,8 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd3Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd3Client);
-        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrder(lossVoucherRuleExitEventEnd3Client, 100d, 100d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder =
+                generateMtBalanceOrder(lossVoucherRuleExitEventEnd3Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
         data.mtBalanceOrdersObjects.add(balanceOrder);
         bonus.type = "Cash Adjustment - Debt W/O";

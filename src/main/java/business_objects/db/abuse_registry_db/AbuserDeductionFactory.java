@@ -1,10 +1,5 @@
 package business_objects.db.abuse_registry_db;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-
 import static helpers.data.enums.deduction.DeductionStatusApproval.APPROVED;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.FAILED;
 import static helpers.data.enums.deduction.DeductionStatusEmail.SENT;
@@ -15,13 +10,16 @@ import static utils.ConfigFactory.FIRST_NAME_AUTOTEST_ONE;
 import static utils.ConfigFactory.LAST_NAME_AUTOTEST_ONE;
 import static utils.Constants.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class AbuserDeductionFactory {
 
-    private AbuserDeductionFactory() {
-    }
+    private AbuserDeductionFactory() {}
 
-    public static AbuserDeduction generateAbuserDeductionByAccount(CrmTbAccountObject account,
-            Integer abuserHistoryId) {
+    public static AbuserDeduction generateAbuserDeductionByAccount(
+            CrmTbAccountObject account, Integer abuserHistoryId) {
         AbuserDeduction deduction = new AbuserDeduction();
         deduction.setUcid(account.ucid);
         deduction.setAbuserHistoryId(abuserHistoryId);

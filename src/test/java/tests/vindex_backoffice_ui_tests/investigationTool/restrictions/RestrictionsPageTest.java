@@ -1,19 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.restrictions;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.ui.user.User;
-import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
-import helpers.database.AuHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.*;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -23,14 +9,27 @@ import static helpers.api.RestrictionHelper.setRestrictionAPITrade;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.AuHelper.cleanClientAudit;
-import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.CleanTableHelper.*;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.ui.user.User;
+import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
+import helpers.database.AuHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -53,7 +52,8 @@ class RestrictionsPageTest extends TestBaseWeb {
         inactiveAccount.accountStatus = ACCOUNT_STATUS_INACTIVE;
         MtAccountObject mtAccountActive2 = generateMtAccountByCrmTbAccount(activeAccount2);
         MtAccountObject mtAccountInactive = generateMtAccountByCrmTbAccount(inactiveAccount);
-        mtAccountInactive.lastLogin = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0);
+        mtAccountInactive.lastLogin =
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0);
 
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccountActive, mtAccountActive2, mtAccountInactive));
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, labelClientDB));
@@ -303,7 +303,11 @@ class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("340")
     @DisplayName("Restriction tab remove Close only mode restriction UI")
     void cancelCloseOnlyModeRestrictionUITest() throws Exception {
-        setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), CLOSE_ONLY_MODE.getCode());
+        setRestrictionAPITrade(
+                restrictionClient.getUcid(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                CLOSE_ONLY_MODE.getCode());
         cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -331,7 +335,11 @@ class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("342")
     @DisplayName("Restriction tab remove Off quotes restriction UI")
     void cancelOffQuotesRestrictionUITest() throws Exception {
-        setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), OFF_QUOTES.getCode());
+        setRestrictionAPITrade(
+                restrictionClient.getUcid(),
+                restrictionClient.getTradingAccount(),
+                restrictionClient.getServerId(),
+                OFF_QUOTES.getCode());
         cleanClientAudit(restrictionClient.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -344,7 +352,8 @@ class RestrictionsPageTest extends TestBaseWeb {
 
     @Test
     @AllureId("739")
-    @DisplayName("Restriction tab. indicator 'inactive' must be present on row with account with 'inactive' status in trade restriction applyment/removal menu")
+    @DisplayName(
+            "Restriction tab. indicator 'inactive' must be present on row with account with 'inactive' status in trade restriction applyment/removal menu")
     void inactiveAccountIndicatorTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -354,12 +363,16 @@ class RestrictionsPageTest extends TestBaseWeb {
 
     @Test
     @AllureId("738")
-    @DisplayName("Restriction tab. Popup with tip about last active date must appear on hover to last activity date in trade restriction applyment/removal menu")
+    @DisplayName(
+            "Restriction tab. Popup with tip about last active date must appear on hover to last activity date in trade restriction applyment/removal menu")
     void activityTooltipTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
-        assertThat("Verify popup text for last activity of an account", restrictionPage.getLastActivityTooltip(CLOSE_ONLY_MODE), is("Last activity"));
+        assertThat(
+                "Verify popup text for last activity of an account",
+                restrictionPage.getLastActivityTooltip(CLOSE_ONLY_MODE),
+                is("Last activity"));
     }
 
     @Test
@@ -370,6 +383,9 @@ class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
-        assertThat("Verify only restrictions with bo_visibility = true are displayed", restrictionPage.getDisplayedRestrictionsList(), containsInAnyOrder(getVisibleRestrictionsList().toArray()));
+        assertThat(
+                "Verify only restrictions with bo_visibility = true are displayed",
+                restrictionPage.getDisplayedRestrictionsList(),
+                containsInAnyOrder(getVisibleRestrictionsList().toArray()));
     }
 }

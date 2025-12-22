@@ -1,5 +1,15 @@
 package tests.vindex_backoffice_ui_tests.alertHistory;
 
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.ui.user.UserFactory.autotestUserOne;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.ui.user.User;
@@ -11,16 +21,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static business_objects.ui.user.UserFactory.autotestUserOne;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag(TEAM_BACKOFFICE)
@@ -72,7 +72,10 @@ class AlertHistoryQaQcFiltersTest extends TestBaseWeb {
         alertHistoryPage.clickFilterButton();
         alertHistoryPage.selectQcCheckResultFilter("Correct");
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected QC result is displayed", alertHistoryPage.getQcResultValues(), everyItem(is("Correct")));
+        assertThat(
+                "Verify only selected QC result is displayed",
+                alertHistoryPage.getQcResultValues(),
+                everyItem(is("Correct")));
     }
 
     @Test
@@ -86,7 +89,10 @@ class AlertHistoryQaQcFiltersTest extends TestBaseWeb {
         String fullName = String.format("%s %s", user.getFirstName(), user.getLastName());
         alertHistoryPage.selectReviewerFilter(fullName);
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected reviewer is displayed", alertHistoryPage.getReviewerValues(), everyItem(is(fullName)));
+        assertThat(
+                "Verify only selected reviewer is displayed",
+                alertHistoryPage.getReviewerValues(),
+                everyItem(is(fullName)));
     }
 
     @AfterAll

@@ -1,5 +1,16 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static com.microsoft.playwright.options.WaitForSelectorState.*;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.getObjectsFromDB;
+import static helpers.database.DbName.POSTGRES;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Constants.*;
+import static utils.Utils.writeLog;
+
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.mitigation_service_db.ClientTradingRestriction;
 import business_objects.kafka.restriction_events.*;
@@ -12,23 +23,9 @@ import helpers.data.enums.Restriction;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.microsoft.playwright.options.WaitForSelectorState.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.getObjectsFromDB;
-import static helpers.database.DbName.POSTGRES;
-import static org.hamcrest.Matchers.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.Constants.*;
-import static utils.Utils.writeLog;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class RestrictionPage extends AbstractPage {
 
@@ -52,16 +49,23 @@ public class RestrictionPage extends AbstractPage {
     private final Locator restrictionOption;
     private final Locator restrictionOptionsContainer;
 
-    private static final String RESTRICTION_ITEM_BY_NAME_PATTERN = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
+    private static final String RESTRICTION_ITEM_BY_NAME_PATTERN =
+            "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
     private static final String RESTRICTIONS_TAB_ITEM_NAME = ".v-restrictions-tab-item__name";
     private static final String RESTRICTIONS_TAB_ITEM_CHECKED = ".v-restrictions-tab-item_checked";
     private static final String RESTRICTIONS_TAB_ITEM_HEADER = ".v-restrictions-tab-item__header";
-    private static final String CHECKED_RESTRICTION = String.format("%s %s", RESTRICTIONS_TAB_ITEM_CHECKED, RESTRICTIONS_TAB_ITEM_HEADER);
-    private static final String RESTRICTION_OPTION_PATTERN = "//span[@class='g-select-list__option-default-label' and text()='%s']";
-    private static final String RESTRICTION_TAB_ITEM_BY_NAME = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']/ancestor::div[@class='v-restrictions-tab-item']";
-    private static final String ACTIVE_RESTRICTION_BY_NAME = "//div[text()='%s']/ancestor::div[@class='v-client-restrictions-list-item']";
-    private static final String CLEAR_RESTRICTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::button[contains(@data-qa,'control__remove')]";
-    private static final String RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::span[contains(text(),'account')]/ancestor::button";
+    private static final String CHECKED_RESTRICTION =
+            String.format("%s %s", RESTRICTIONS_TAB_ITEM_CHECKED, RESTRICTIONS_TAB_ITEM_HEADER);
+    private static final String RESTRICTION_OPTION_PATTERN =
+            "//span[@class='g-select-list__option-default-label' and text()='%s']";
+    private static final String RESTRICTION_TAB_ITEM_BY_NAME =
+            "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']/ancestor::div[@class='v-restrictions-tab-item']";
+    private static final String ACTIVE_RESTRICTION_BY_NAME =
+            "//div[text()='%s']/ancestor::div[@class='v-client-restrictions-list-item']";
+    private static final String CLEAR_RESTRICTION_BUTTON_BY_NAME =
+            ACTIVE_RESTRICTION_BY_NAME + "/descendant::button[contains(@data-qa,'control__remove')]";
+    private static final String RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME =
+            ACTIVE_RESTRICTION_BY_NAME + "/descendant::span[contains(text(),'account')]/ancestor::button";
 
     public RestrictionPage(Page page) {
         super(page);
@@ -74,13 +78,16 @@ public class RestrictionPage extends AbstractPage {
         this.addRestrictionButton = page.locator("//div[@class='v-list-select']/descendant::button");
         this.applyRestrictionButton = page.locator("//span[text()='Apply']/parent::button[not(@disabled)]");
         this.commentInput = page.locator("//textarea");
-        this.applyChangesButton = page.locator("//div[@class='v-restrictions-tab-drawer__footer']/descendant::span[text()='Apply changes' or text()='Apply']/parent::button");
+        this.applyChangesButton = page.locator(
+                "//div[@class='v-restrictions-tab-drawer__footer']/descendant::span[text()='Apply changes' or text()='Apply']/parent::button");
         this.restrictionAppliedIcon = page.locator("//div[@class='v-restrictions-tab-item__status']/*[not(@class)]");
         this.restrictionAppliedBy = page.locator("//span[contains(@class,'v-restrictions-tab-item__actor')]");
         this.restrictionAppliedComment = page.locator("//span[contains(@class,'v-restrictions-tab-item__comment')]");
         this.restrictionAppliedDate = page.locator("//span[contains(@class,'v-restrictions-tab-item__date')]");
         this.restrictionTabLoaded = page.locator("//div[@class='v-investigation-tools-tabs__content']");
-        this.inactiveAccountLabel = page.locator("//div[@class='v-accounts-list-item__labels']/descendant::div[text()='Inactive']").first();
+        this.inactiveAccountLabel = page.locator(
+                        "//div[@class='v-accounts-list-item__labels']/descendant::div[text()='Inactive']")
+                .first();
         this.restrictionOption = page.locator("//span[@class='g-select-list__option-default-label']");
         this.restrictionOptionsContainer = page.locator("//div[@class='v-list-select__list-container']");
     }
@@ -91,15 +98,14 @@ public class RestrictionPage extends AbstractPage {
         waitForPageToLoad();
     }
 
-
     public void openRestrictionsTab() {
         Allure.step("Open restrictions tab by click tab button in ui");
         restrictionTab.click();
         waitForPageToLoad();
     }
 
-    public static void checkKafkaRequestApplyUserId(int userIdInt) throws JsonProcessingException,
-            InterruptedException {
+    public static void checkKafkaRequestApplyUserId(int userIdInt)
+            throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for apply cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
         Thread.sleep(7000);
@@ -144,8 +150,8 @@ public class RestrictionPage extends AbstractPage {
         checkKafkaRequestApplyAccount(accountIdInt, 525_600);
     }
 
-    public void checkKafkaRequestApplyAccount(int accountIdInt, int banDurationMin) throws JsonProcessingException,
-            InterruptedException {
+    public void checkKafkaRequestApplyAccount(int accountIdInt, int banDurationMin)
+            throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
         String accoundId = String.valueOf(accountIdInt);
         KafkaHelper helper = new KafkaHelper();
@@ -167,13 +173,19 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((apply.restriction));
     }
 
-    public static void checkKafkaRequestApplyAccount(int accountIdInt, int serverId, int banDurationMin,
-            int restrictionId, String reason, String restrictionCode) throws JsonProcessingException,
-            InterruptedException {
+    public static void checkKafkaRequestApplyAccount(
+            int accountIdInt,
+            int serverId,
+            int banDurationMin,
+            int restrictionId,
+            String reason,
+            String restrictionCode)
+            throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
         String accountId = String.valueOf(accountIdInt);
         KafkaHelper helper = new KafkaHelper();
-        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, String.valueOf(restrictionId));
+        List<String> kafkaResponses =
+                helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, String.valueOf(restrictionId));
         String kafkaResponse = kafkaResponses.getLast();
         writeLog("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -191,17 +203,18 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public static void checkKafkaRequestApplyTradingEnv(ApplyTradingEnvironmentRestrictionMessage expected)
-            throws JsonProcessingException,
-            InterruptedException {
+            throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for trading env restriction apply for account in kafka");
         String accountId = String.valueOf(expected.getAccountId());
         KafkaHelper helper = new KafkaHelper();
-        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_TRADING_ENV_RESTRICTIONS_APPLY, String.valueOf(accountId));
+        List<String> kafkaResponses =
+                helper.consumeMessages(KAFKA_TOPIC_TRADING_ENV_RESTRICTIONS_APPLY, String.valueOf(accountId));
         String kafkaResponse = kafkaResponses.getLast();
         writeLog("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        ApplyTradingEnvironmentRestrictionMessage actual = objectMapper.readValue(kafkaResponse, ApplyTradingEnvironmentRestrictionMessage.class);
+        ApplyTradingEnvironmentRestrictionMessage actual =
+                objectMapper.readValue(kafkaResponse, ApplyTradingEnvironmentRestrictionMessage.class);
         assertNotNull(actual);
         assertNotNull(actual.getRestriction());
         assertNotNull(actual.getTimestamp());
@@ -213,7 +226,6 @@ public class RestrictionPage extends AbstractPage {
         expected.setModifier(actual.getModifier());
         assertEquals(expected, actual);
     }
-
 
     public void checkKafkaRequestCancelAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction cancellation for account in kafka");
@@ -232,9 +244,8 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((cancel.getRestrictions()));
     }
 
-
-    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
-            JsonProcessingException {
+    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus)
+            throws InterruptedException, JsonProcessingException {
         Allure.step("Check withdrawal approval message");
         writeLog("we search transaction " + transactionID);
         KafkaHelper helper = new KafkaHelper();
@@ -257,10 +268,15 @@ public class RestrictionPage extends AbstractPage {
     @Step("Clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
         Allure.step("Clean user restriction history of client " + ucid);
-        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "'", ClientGeneralRestriction.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(
+                POSTGRES,
+                MITIGATION_CLIENT_GENERAL_RESTRICTION,
+                "ucid = '" + ucid + "'",
+                ClientGeneralRestriction.class);
         for (ClientGeneralRestriction i : restrictionList) {
             String idString = i.getId().toString();
-            deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
+            deleteEntryFromDb(
+                    POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
             deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
             deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
             deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
@@ -270,16 +286,23 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionGeneral(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
         Allure.step("check user have general restriction in Mitigation DataBase");
-        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientGeneralRestriction.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(
+                POSTGRES,
+                MITIGATION_CLIENT_GENERAL_RESTRICTION,
+                "ucid = '" + ucid + "' and restriction_id = " + restrictionId,
+                ClientGeneralRestriction.class);
         ClientGeneralRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
         assertEquals(expectedStatus, restriction.getStatus());
     }
 
-    public static void checkUserHaveRestrictionTrading(String ucid, int restrictionId)
-            throws Exception {
+    public static void checkUserHaveRestrictionTrading(String ucid, int restrictionId) throws Exception {
         Allure.step("check user have trading restriction in Mitigation DataBase");
-        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientTradingRestriction.class);
+        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(
+                POSTGRES,
+                MITIGATION_CLIENT_TRADING_RESTRICTION,
+                "ucid = '" + ucid + "' and restriction_id = " + restrictionId,
+                ClientTradingRestriction.class);
         ClientTradingRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
     }
@@ -289,7 +312,6 @@ public class RestrictionPage extends AbstractPage {
     public void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'");
     }
-
 
     public void isPageLoaded() {
         int n = 0;
@@ -308,7 +330,8 @@ public class RestrictionPage extends AbstractPage {
     public void addNewRestriction(Restriction restriction, String comment) {
         openRestrictionsDrawerButton.click();
         addRestrictionButton.click();
-        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName()))
+                .click();
         applyRestrictionButton.click();
         commentInput.fill(comment);
         applyChangesButton.click();
@@ -325,32 +348,48 @@ public class RestrictionPage extends AbstractPage {
     public void verifyRestrictionAppliedInUi(Restriction restriction, User user, String comment) {
         Locator restrictionItem = page.locator(String.format(RESTRICTION_TAB_ITEM_BY_NAME, restriction.getName()));
         restrictionItem.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
-        assertThat("Verify lock icon is visible", restrictionItem.locator(restrictionAppliedIcon).isVisible(), is(true));
-        assertThat("Verify applied by text", restrictionItem.locator(restrictionAppliedBy).textContent(), is(String.format("Set by %s %s", user.getFirstName(), user.getLastName())));
-        assertThat("Verify comment", restrictionItem.locator(restrictionAppliedComment).textContent(), is(String.format(" %s", comment)));
-        assertThat("Verify application date", restrictionItem.locator(restrictionAppliedDate).textContent(), matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}"));
+        assertThat(
+                "Verify lock icon is visible",
+                restrictionItem.locator(restrictionAppliedIcon).isVisible(),
+                is(true));
+        assertThat(
+                "Verify applied by text",
+                restrictionItem.locator(restrictionAppliedBy).textContent(),
+                is(String.format("Set by %s %s", user.getFirstName(), user.getLastName())));
+        assertThat(
+                "Verify comment",
+                restrictionItem.locator(restrictionAppliedComment).textContent(),
+                is(String.format(" %s", comment)));
+        assertThat(
+                "Verify application date",
+                restrictionItem.locator(restrictionAppliedDate).textContent(),
+                matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}"));
     }
 
     @Step("Remove the provided restriction")
     public void removeRestriction(Restriction restriction, String comment) {
         openRestrictionsDrawerButton.click();
-        page.locator(String.format(CLEAR_RESTRICTION_BUTTON_BY_NAME, restriction.getName())).click();
+        page.locator(String.format(CLEAR_RESTRICTION_BUTTON_BY_NAME, restriction.getName()))
+                .click();
         commentInput.fill(comment);
         applyChangesButton.click();
     }
 
     @Step("Verify restriction is not applied in UI")
     public void verifyRestrictionNotAppliedInUi(Restriction restriction) {
-        page.locator(String.format(RESTRICTION_TAB_ITEM_BY_NAME, restriction.getName())).waitFor(new Locator.WaitForOptions().setState(DETACHED));
+        page.locator(String.format(RESTRICTION_TAB_ITEM_BY_NAME, restriction.getName()))
+                .waitFor(new Locator.WaitForOptions().setState(DETACHED));
     }
 
     @Step("Verify inactive label in account selection is visible")
     public void verifyInactiveLabelIsVisible(Restriction restriction) {
         openRestrictionsDrawerButton.click();
         addRestrictionButton.click();
-        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName()))
+                .click();
         applyRestrictionButton.click();
-        page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName())).click();
+        page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName()))
+                .click();
         inactiveAccountLabel.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 
@@ -358,9 +397,11 @@ public class RestrictionPage extends AbstractPage {
     public String getLastActivityTooltip(Restriction restriction) {
         openRestrictionsDrawerButton.click();
         addRestrictionButton.click();
-        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName()))
+                .click();
         applyRestrictionButton.click();
-        page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName())).click();
+        page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName()))
+                .click();
         activitySection.last().hover();
         return tooltip.textContent();
     }
@@ -386,6 +427,4 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("check is restriction tab visible");
         restrictionTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
-
 }
-

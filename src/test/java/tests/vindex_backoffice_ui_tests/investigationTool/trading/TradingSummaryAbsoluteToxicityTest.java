@@ -1,22 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -32,6 +15,22 @@ import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingSummaryAbsoluteToxicityTest extends TestBaseWeb {
 
@@ -76,7 +75,10 @@ public class TradingSummaryAbsoluteToxicityTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify title", tradingPage.getAbsoluteToxicityWidgetTitle(), is("Absolute toxicity USD"));
-        assertThat("Verify value", tradingPage.getAbsoluteToxicityWidgetValue(), is(formatter.format(trade1.toxicityUsd + trade2.toxicityUsd)));
+        assertThat(
+                "Verify value",
+                tradingPage.getAbsoluteToxicityWidgetValue(),
+                is(formatter.format(trade1.toxicityUsd + trade2.toxicityUsd)));
         assertThat("Verify info", tradingPage.getAbsoluteToxicityWidgetInfo(), is(String.format("on %s deals", "2")));
     }
 
@@ -95,7 +97,8 @@ public class TradingSummaryAbsoluteToxicityTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify value", tradingPage.getAbsoluteToxicityWidgetValue(), is(formatter.format(trade1.toxicityUsd)));
+        assertThat(
+                "Verify value", tradingPage.getAbsoluteToxicityWidgetValue(), is(formatter.format(trade1.toxicityUsd)));
         assertThat("Verify info", tradingPage.getAbsoluteToxicityWidgetInfo(), is(String.format("on %s deal", "1")));
     }
 

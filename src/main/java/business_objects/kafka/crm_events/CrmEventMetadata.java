@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class CrmEventMetadata {
@@ -11,8 +10,7 @@ public class CrmEventMetadata {
     @JsonProperty("platform")
     public String platform;
 
-    public CrmEventMetadata() {
-    }
+    public CrmEventMetadata() {}
 
     public CrmEventMetadata(String created) {
         this.created = created;

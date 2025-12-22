@@ -1,19 +1,5 @@
 package helpers.data.rules.trading;
 
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
-import business_objects.kafka.mt_events.TradeEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.DataHelper;
-import io.qameta.allure.Step;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
@@ -22,28 +8,57 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.kafka.mt_events.TradeEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import helpers.data.enums.Brand;
+import io.qameta.allure.Step;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RuleTestData("mirror-trading-bybit")
 public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient1 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient2 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient3 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient4 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient5 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient6 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient7 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient8 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient9 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient10 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient11 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient12 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient13 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient14 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient15 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
-    private static final ClientHelper mirrorTradingCloseTradeBybitClient16 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient1 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient2 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient3 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient4 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient5 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient6 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient7 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient8 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient9 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient10 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient11 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient12 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient13 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient14 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient15 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
+    private static final ClientHelper mirrorTradingCloseTradeBybitClient16 =
+            getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
 
     @Step("Create data for Mirror trading rule")
     private static DataHelper getMirrorTradingBybitRuleData(ClientHelper client) {
@@ -126,8 +141,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient7);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 1);
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 5001d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 5001d;
@@ -139,8 +154,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 301);
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 500d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 500d;
@@ -163,7 +178,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects =
+                List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
         data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
 
@@ -176,8 +192,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
         // leverage
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
@@ -195,8 +211,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
         // leverage
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
@@ -215,8 +231,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.mtBalanceOrdersObjects = List.of(
-                generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects =
+                List.of(generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
         // leverage
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);

@@ -1,7 +1,8 @@
 package helpers.data.enums.deduction;
 
 public enum AlertStatus {
-    CLOSED("CLOSED"), OPEN("OPEN");
+    CLOSED("CLOSED"),
+    OPEN("OPEN");
 
     private final String displayName;
 

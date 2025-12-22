@@ -1,8 +1,8 @@
 package business_objects.db.clickhouse.dp_and_wd_by_channel;
 
-import helpers.data.ClientHelper;
-
 import static utils.Utils.*;
+
+import helpers.data.ClientHelper;
 
 public class dpAndWdByChannelFactory {
     public static dpAndWdByChannelObject generatedpAndWdByChannelObject(ClientHelper client) {

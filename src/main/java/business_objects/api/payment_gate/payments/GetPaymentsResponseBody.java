@@ -1,7 +1,6 @@
 package business_objects.api.payment_gate.payments;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -21,8 +20,7 @@ public class GetPaymentsResponseBody {
     private String error;
     private String message;
 
-    public GetPaymentsResponseBody() {
-    }
+    public GetPaymentsResponseBody() {}
 
     public Integer getPage() {
         return page;
@@ -90,8 +88,7 @@ public class GetPaymentsResponseBody {
         private Event event;
         private List<Decision> decisions;
 
-        public Item() {
-        }
+        public Item() {}
 
         public UUID getPaymentId() {
             return paymentId;
@@ -181,8 +178,7 @@ public class GetPaymentsResponseBody {
         private Double withdrawalAmountUSD;
         private String withdrawalApplicationTime;
 
-        public Event() {
-        }
+        public Event() {}
 
         public UUID getId() {
             return id;
@@ -418,8 +414,7 @@ public class GetPaymentsResponseBody {
         private String lastFour;
         private String binNumber;
 
-        public Card() {
-        }
+        public Card() {}
 
         public Integer getCard3ds() {
             return card3ds;
@@ -482,9 +477,14 @@ public class GetPaymentsResponseBody {
         private String actor;
 
         public Decision(
-                String decisionType, Integer decisionCode, String decisionName, Integer rejectionCode,
+                String decisionType,
+                Integer decisionCode,
+                String decisionName,
+                Integer rejectionCode,
                 String reasonString,
-                List<Attribute> rejectionAttributes, Timestamp decidedAt, String actor) {
+                List<Attribute> rejectionAttributes,
+                Timestamp decidedAt,
+                String actor) {
             this.decisionType = decisionType;
             this.decisionCode = decisionCode;
             this.rejectionCode = rejectionCode;
@@ -494,8 +494,7 @@ public class GetPaymentsResponseBody {
             this.actor = actor;
         }
 
-        public Decision() {
-        }
+        public Decision() {}
 
         public String getDecision() {
             return decision;
@@ -541,8 +540,7 @@ public class GetPaymentsResponseBody {
             return rejectionAttributes;
         }
 
-        public void setRejectionAttributes(
-                List<Attribute> rejectionAttributes) {
+        public void setRejectionAttributes(List<Attribute> rejectionAttributes) {
             this.rejectionAttributes = rejectionAttributes;
         }
 
@@ -574,8 +572,7 @@ public class GetPaymentsResponseBody {
             private String code;
             private String value;
 
-            public Attribute() {
-            }
+            public Attribute() {}
 
             public Attribute(String code, String value) {
                 this.code = code;
@@ -598,6 +595,5 @@ public class GetPaymentsResponseBody {
                 this.value = value;
             }
         }
-
     }
 }

@@ -1,22 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
-import business_objects.api.clickhouse_api_service.get_trades_group_by.GetTradesGroupByResponse;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_trades_group_by.GetTradesGroupByRequest.getTradesGroupBy;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.*;
@@ -26,6 +9,22 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.clickhouse_api_service.get_trades_group_by.GetTradesGroupByResponse;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Disabled("Covered because of missing table on env")
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -83,8 +82,14 @@ class GetTradesGroupByTests extends TestBaseApi {
         trade7 = generateTradeByClient(client3);
         trade6.setSymbol("BTCEUR");
 
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateCrmTbAccountData(client2), generateCrmTbAccountData(client3)));
-        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7));
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_TABLE_NAME,
+                List.of(
+                        generateCrmTbAccountData(client),
+                        generateCrmTbAccountData(client2),
+                        generateCrmTbAccountData(client3)));
+        insertObjectsToDb(
+                MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7));
     }
 
     @AfterAll
@@ -102,12 +107,44 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getVolumeLots() + trade4.getVolumeLots(),
+                trade3.getProfitUsd()
+                        + trade3.getCommissionUsd()
+                        + trade3.getStorageUsd()
+                        + trade4.getProfitUsd()
+                        + trade4.getCommissionUsd()
+                        + trade4.getStorageUsd(),
+                trade3.getStorageUsd() + trade4.getStorageUsd(),
+                trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -122,12 +159,34 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit(), trade1.getProfit(), trade1.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(), trade1.getStorageUsd(), trade1.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit(), trade3.getProfit(), trade3.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(), trade3.getStorageUsd(), trade3.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit(),
+                trade1.getProfit(),
+                trade1.getVolumeLots(),
+                trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(),
+                trade1.getStorageUsd(),
+                trade1.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit(),
+                trade3.getProfit(),
+                trade3.getVolumeLots(),
+                trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(),
+                trade3.getStorageUsd(),
+                trade3.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -142,12 +201,34 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade2.getSymbol(), trade2.getProfit(), trade2.getProfit(), trade2.getVolumeLots(), trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade2.getStorageUsd(), trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade4.getSymbol(), trade4.getProfit(), trade4.getProfit(), trade4.getVolumeLots(), trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade4.getStorageUsd(), trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade2.getSymbol(),
+                trade2.getProfit(),
+                trade2.getProfit(),
+                trade2.getVolumeLots(),
+                trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(),
+                trade2.getStorageUsd(),
+                trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade4.getSymbol(),
+                trade4.getProfit(),
+                trade4.getProfit(),
+                trade4.getVolumeLots(),
+                trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(),
+                trade4.getStorageUsd(),
+                trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -162,12 +243,34 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade2.getSymbol(), trade2.getProfit(), trade2.getProfit(), trade2.getVolumeLots(), trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade2.getStorageUsd(), trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade4.getSymbol(), trade4.getProfit(), trade4.getProfit(), trade4.getVolumeLots(), trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade4.getStorageUsd(), trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade2.getSymbol(),
+                trade2.getProfit(),
+                trade2.getProfit(),
+                trade2.getVolumeLots(),
+                trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(),
+                trade2.getStorageUsd(),
+                trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade4.getSymbol(),
+                trade4.getProfit(),
+                trade4.getProfit(),
+                trade4.getVolumeLots(),
+                trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(),
+                trade4.getStorageUsd(),
+                trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -182,12 +285,34 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit(), trade1.getProfit(), trade1.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(), trade1.getStorageUsd(), trade1.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit(), trade3.getProfit(), trade3.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(), trade3.getStorageUsd(), trade3.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit(),
+                trade1.getProfit(),
+                trade1.getVolumeLots(),
+                trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(),
+                trade1.getStorageUsd(),
+                trade1.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit(),
+                trade3.getProfit(),
+                trade3.getVolumeLots(),
+                trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(),
+                trade3.getStorageUsd(),
+                trade3.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -203,12 +328,44 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getVolumeLots() + trade4.getVolumeLots(),
+                trade3.getProfitUsd()
+                        + trade3.getCommissionUsd()
+                        + trade3.getStorageUsd()
+                        + trade4.getProfitUsd()
+                        + trade4.getCommissionUsd()
+                        + trade4.getStorageUsd(),
+                trade3.getStorageUsd() + trade4.getStorageUsd(),
+                trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
@@ -224,12 +381,44 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getVolumeLots() + trade4.getVolumeLots(),
+                trade3.getProfitUsd()
+                        + trade3.getCommissionUsd()
+                        + trade3.getStorageUsd()
+                        + trade4.getProfitUsd()
+                        + trade4.getCommissionUsd()
+                        + trade4.getStorageUsd(),
+                trade3.getStorageUsd() + trade4.getStorageUsd(),
+                trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
@@ -244,12 +433,44 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getVolumeLots() + trade4.getVolumeLots(),
+                trade3.getProfitUsd()
+                        + trade3.getCommissionUsd()
+                        + trade3.getStorageUsd()
+                        + trade4.getProfitUsd()
+                        + trade4.getCommissionUsd()
+                        + trade4.getStorageUsd(),
+                trade3.getStorageUsd() + trade4.getStorageUsd(),
+                trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
@@ -264,12 +485,44 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade3.getSymbol(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getVolumeLots() + trade4.getVolumeLots(),
+                trade3.getProfitUsd()
+                        + trade3.getCommissionUsd()
+                        + trade3.getStorageUsd()
+                        + trade4.getProfitUsd()
+                        + trade4.getCommissionUsd()
+                        + trade4.getStorageUsd(),
+                trade3.getStorageUsd() + trade4.getStorageUsd(),
+                trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup2, responseGroup1));
     }
 
@@ -284,11 +537,28 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                null,
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, anyOf(hasItem(responseGroup1)));
     }
 
@@ -301,11 +571,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
-        assertThat("Assert error", mappedResponse.getError(), equalTo("Either clientId or tradingAccount and serverId must be provided."));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                equalTo("Either clientId or tradingAccount and serverId must be provided."));
     }
 
     @Test
@@ -317,11 +591,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
-        assertThat("Assert error", mappedResponse.getError(), equalTo("Either clientId or tradingAccount and serverId must be provided."));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                equalTo("Either clientId or tradingAccount and serverId must be provided."));
     }
 
     @Test
@@ -334,11 +612,16 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
-        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                equalTo(
+                        "Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
     }
 
     @Test
@@ -351,11 +634,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
-        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                equalTo("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
     }
 
     @Test
@@ -369,12 +656,14 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
         assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'action' with value: 'test'"));
+        assertThat(
+                "Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'action' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
@@ -389,12 +678,14 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
         assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'entry' with value: 'test'"));
+        assertThat(
+                "Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'entry' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
@@ -409,12 +700,16 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
         assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'dateFrom' with value: 'test'"));
+        assertThat(
+                "Assert detail",
+                mappedResponse.getDetail(),
+                equalTo("Failed to convert 'dateFrom' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
@@ -429,12 +724,14 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
         assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'dateTo' with value: 'test'"));
+        assertThat(
+                "Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'dateTo' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
@@ -449,11 +746,16 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
-        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid &quot;orderBy&quot; property format. The property may include only: symbol, profit, profitUSD"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                equalTo(
+                        "Invalid &quot;orderBy&quot; property format. The property may include only: symbol, profit, profitUSD"));
     }
 
     @Test
@@ -467,11 +769,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
-        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
+        assertThat(
+                "Assert error",
+                mappedResponse.getError(),
+                equalTo("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
     }
 
     @Test
@@ -485,12 +791,14 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
         assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'limit' with value: 'test'"));
+        assertThat(
+                "Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
@@ -503,12 +811,44 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                client.getUcid(),
+                trade1.getSymbol(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getProfit() + trade2.getProfit(),
+                trade1.getVolumeLots() + trade2.getVolumeLots(),
+                trade1.getProfitUsd()
+                        + trade1.getCommissionUsd()
+                        + trade1.getStorageUsd()
+                        + trade2.getProfitUsd()
+                        + trade2.getCommissionUsd()
+                        + trade2.getStorageUsd(),
+                trade1.getStorageUsd() + trade2.getStorageUsd(),
+                trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client.getTradingAccount().toString(),
+                client.getServerId().toString(),
+                client.getUcid(),
+                trade3.getSymbol(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getProfit() + trade4.getProfit(),
+                trade3.getVolumeLots() + trade4.getVolumeLots(),
+                trade3.getProfitUsd()
+                        + trade3.getCommissionUsd()
+                        + trade3.getStorageUsd()
+                        + trade4.getProfitUsd()
+                        + trade4.getCommissionUsd()
+                        + trade4.getStorageUsd(),
+                trade3.getStorageUsd() + trade4.getStorageUsd(),
+                trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -523,14 +863,35 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client2.getTradingAccount().toString(), client2.getServerId().toString(), null, trade6.getSymbol(), trade6.getProfit(), trade6.getProfit(), trade6.getVolumeLots(), trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd(), trade6.getStorageUsd(), trade6.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client3.getTradingAccount().toString(), client3.getServerId().toString(), null, trade7.getSymbol(), trade7.getProfit(), trade7.getProfit(), trade7.getVolumeLots(), trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd(), trade7.getStorageUsd(), trade7.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client2.getTradingAccount().toString(),
+                client2.getServerId().toString(),
+                null,
+                trade6.getSymbol(),
+                trade6.getProfit(),
+                trade6.getProfit(),
+                trade6.getVolumeLots(),
+                trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd(),
+                trade6.getStorageUsd(),
+                trade6.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client3.getTradingAccount().toString(),
+                client3.getServerId().toString(),
+                null,
+                trade7.getSymbol(),
+                trade7.getProfit(),
+                trade7.getProfit(),
+                trade7.getVolumeLots(),
+                trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd(),
+                trade7.getStorageUsd(),
+                trade7.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
-
     }
 
     @Test
@@ -544,12 +905,34 @@ class GetTradesGroupByTests extends TestBaseApi {
         Response response = getTradesGroupBy(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(
+                        objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class))
+                .toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client2.getTradingAccount().toString(), client2.getServerId().toString(), null, trade6.getSymbol(), trade6.getProfit(), trade6.getProfit(), trade6.getVolumeLots(), trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd(), trade6.getStorageUsd(), trade6.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client3.getTradingAccount().toString(), client3.getServerId().toString(), null, trade7.getSymbol(), trade7.getProfit(), trade7.getProfit(), trade7.getVolumeLots(), trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd(), trade7.getStorageUsd(), trade7.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(
+                client2.getTradingAccount().toString(),
+                client2.getServerId().toString(),
+                null,
+                trade6.getSymbol(),
+                trade6.getProfit(),
+                trade6.getProfit(),
+                trade6.getVolumeLots(),
+                trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd(),
+                trade6.getStorageUsd(),
+                trade6.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(
+                client3.getTradingAccount().toString(),
+                client3.getServerId().toString(),
+                null,
+                trade7.getSymbol(),
+                trade7.getProfit(),
+                trade7.getProfit(),
+                trade7.getVolumeLots(),
+                trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd(),
+                trade7.getStorageUsd(),
+                trade7.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 }

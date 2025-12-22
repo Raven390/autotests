@@ -1,23 +1,22 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static utils.Constants.*;
 import static utils.Utils.waitForConnectionSearchToUpdate;
+
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
 
@@ -73,10 +72,14 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionTable();
         List<String> attributesList = connectionPage.getConnectionTableAttributesList(connectedClient);
-        assertThat(attributesList, hasItems("phoneNumber+1*********3", "emailAddressm***e@gmx.net", "documentNumber3***********2"));
+        assertThat(
+                attributesList,
+                hasItems("phoneNumber+1*********3", "emailAddressm***e@gmx.net", "documentNumber3***********2"));
         connectionPage.clickUnmaskConnectionTableDataButton();
         attributesList = connectionPage.getConnectionTableAttributesList(connectedClient);
-        assertThat(attributesList, hasItems("phoneNumber+1810347493", "emailAddressmatisse@gmx.net", "documentNumber3110200460092"));
+        assertThat(
+                attributesList,
+                hasItems("phoneNumber+1810347493", "emailAddressmatisse@gmx.net", "documentNumber3110200460092"));
     }
 
     @AfterAll

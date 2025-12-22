@@ -1,8 +1,8 @@
 package business_objects.db.clickhouse.mt_tb_user;
 
-import java.util.Objects;
-
 import static utils.Utils.getCurrentTimestampDbFormat;
+
+import java.util.Objects;
 
 public class MtTbUserObject {
 
@@ -27,13 +27,29 @@ public class MtTbUserObject {
     public String lastActionDate;
     public String lastUpdated;
 
-    public MtTbUserObject() {
-    }
+    public MtTbUserObject() {}
 
-    public MtTbUserObject(Integer userId, String ucid, Integer account, String serverName, String platform, String type,
-            Integer serverId, String createdDate, String status, Double balance, String currency, Double balanceUsd,
-            Double equity, Double credit, Integer leverage, String accountGroup, Double marginFree, Double pnl,
-            String lastActionDate, String lastUpdated) {
+    public MtTbUserObject(
+            Integer userId,
+            String ucid,
+            Integer account,
+            String serverName,
+            String platform,
+            String type,
+            Integer serverId,
+            String createdDate,
+            String status,
+            Double balance,
+            String currency,
+            Double balanceUsd,
+            Double equity,
+            Double credit,
+            Integer leverage,
+            String accountGroup,
+            Double marginFree,
+            Double pnl,
+            String lastActionDate,
+            String lastUpdated) {
         this.userId = userId;
         this.ucid = ucid;
         this.account = account;
@@ -56,8 +72,8 @@ public class MtTbUserObject {
         this.lastUpdated = lastUpdated;
     }
 
-    public MtTbUserObject(Integer userId, String ucid, Integer account, String serverName, String platform,
-            Integer serverId) {
+    public MtTbUserObject(
+            Integer userId, String ucid, Integer account, String serverName, String platform, Integer serverId) {
         this.userId = userId;
         this.ucid = ucid;
         this.account = account;
@@ -85,16 +101,61 @@ public class MtTbUserObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MtTbUserObject that = (MtTbUserObject) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverName, that.serverName) && Objects.equals(platform, that.platform) && Objects.equals(type, that.type) && Objects.equals(serverId, that.serverId) && Objects.equals(createdDate, that.createdDate) && Objects.equals(status, that.status) && Objects.equals(balance, that.balance) && Objects.equals(currency, that.currency) && Objects.equals(balanceUsd, that.balanceUsd) && Objects.equals(equity, that.equity) && Objects.equals(credit, that.credit) && Objects.equals(leverage, that.leverage) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(marginFree, that.marginFree) && Objects.equals(pnl, that.pnl) && Objects.equals(lastActionDate, that.lastActionDate) && Objects.equals(lastUpdated, that.lastUpdated);
+        return Objects.equals(userId, that.userId)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(type, that.type)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(createdDate, that.createdDate)
+                && Objects.equals(status, that.status)
+                && Objects.equals(balance, that.balance)
+                && Objects.equals(currency, that.currency)
+                && Objects.equals(balanceUsd, that.balanceUsd)
+                && Objects.equals(equity, that.equity)
+                && Objects.equals(credit, that.credit)
+                && Objects.equals(leverage, that.leverage)
+                && Objects.equals(accountGroup, that.accountGroup)
+                && Objects.equals(marginFree, that.marginFree)
+                && Objects.equals(pnl, that.pnl)
+                && Objects.equals(lastActionDate, that.lastActionDate)
+                && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, ucid, account, serverName, platform, type, serverId, createdDate, status, balance, currency, balanceUsd, equity, credit, leverage, accountGroup, marginFree, pnl, lastActionDate, lastUpdated);
+        return Objects.hash(
+                userId,
+                ucid,
+                account,
+                serverName,
+                platform,
+                type,
+                serverId,
+                createdDate,
+                status,
+                balance,
+                currency,
+                balanceUsd,
+                equity,
+                credit,
+                leverage,
+                accountGroup,
+                marginFree,
+                pnl,
+                lastActionDate,
+                lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "MtTbUserObject{" + "userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverName='" + serverName + '\'' + ", platform='" + platform + '\'' + ", type='" + type + '\'' + ", serverId=" + serverId + ", createdDate='" + createdDate + '\'' + ", status='" + status + '\'' + ", balance=" + balance + ", currency='" + currency + '\'' + ", balanceUsd=" + balanceUsd + ", equity=" + equity + ", credit=" + credit + ", leverage=" + leverage + ", accountGroup='" + accountGroup + '\'' + ", marginFree=" + marginFree + ", pnl=" + pnl + ", lastActionDate='" + lastActionDate + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
+        return "MtTbUserObject{" + "userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account
+                + ", serverName='" + serverName + '\'' + ", platform='" + platform + '\'' + ", type='" + type + '\''
+                + ", serverId=" + serverId + ", createdDate='" + createdDate + '\'' + ", status='" + status + '\''
+                + ", balance=" + balance + ", currency='" + currency + '\'' + ", balanceUsd=" + balanceUsd + ", equity="
+                + equity + ", credit=" + credit + ", leverage=" + leverage + ", accountGroup='" + accountGroup + '\''
+                + ", marginFree=" + marginFree + ", pnl=" + pnl + ", lastActionDate='" + lastActionDate + '\''
+                + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

@@ -1,27 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.restriction_events.WithdrawalApprovals;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -34,6 +12,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.restriction_events.WithdrawalApprovals;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.io.IOException;
+import java.math.RoundingMode;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PaymentsWithdrawalsTest extends TestBaseWeb {
@@ -62,42 +61,76 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         withdrawalAlert1.rule.attributes.check = "Big_Amount";
         withdrawalAlert2.rule.attributes.amount = "1001.13";
         withdrawalAlert2.rule.attributes.currency = "USD";
-        withdrawalAlert2.rule.attributes.createTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0).replace(" ", "T") + "+03:00";
+        withdrawalAlert2.rule.attributes.createTime = getCurrentTimestampMinusOffsetFormatted(
+                                DATE_AND_TIME, 0, 0, 1, 0, 0)
+                        .replace(" ", "T")
+                + "+03:00";
         withdrawalAlert2.rule.attributes.check = "WR_Blacklist";
         withdrawalAlert3.rule.attributes.amount = "60783.76";
         withdrawalAlert3.rule.attributes.currency = "GBP";
-        withdrawalAlert3.rule.attributes.createTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 1, 0, 0, 0).replace(" ", "T") + "+03:00";
+        withdrawalAlert3.rule.attributes.createTime = getCurrentTimestampMinusOffsetFormatted(
+                                DATE_AND_TIME, 0, 1, 0, 0, 0)
+                        .replace(" ", "T")
+                + "+03:00";
         withdrawalAlert3.rule.attributes.check = "High_Risk";
-        withdrawalData1.add(transformDate(withdrawalAlert1.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""), DATE_AND_TIME, DATE));
-        withdrawalData1.add(transformDate(withdrawalAlert1.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""), DATE_AND_TIME, TIME));
+        withdrawalData1.add(transformDate(
+                withdrawalAlert1.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""),
+                DATE_AND_TIME,
+                DATE));
+        withdrawalData1.add(transformDate(
+                withdrawalAlert1.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""),
+                DATE_AND_TIME,
+                TIME));
         withdrawalData1.add(withdrawalAlert1.rule.attributes.paymentChannel);
         withdrawalData1.add(withdrawalAlert1.rule.attributes.paymentType);
-        withdrawalData1.add(String.format("%s %s", formatter.format(Double.valueOf(withdrawalAlert1.rule.attributes.amount)), withdrawalAlert1.rule.attributes.currency));
+        withdrawalData1.add(String.format(
+                "%s %s",
+                formatter.format(Double.valueOf(withdrawalAlert1.rule.attributes.amount)),
+                withdrawalAlert1.rule.attributes.currency));
         withdrawalData1.add(withdrawalAlert1.rule.attributes.account);
         withdrawalData1.add(withdrawalAlert1.rule.attributes.platform);
         withdrawalData1.add(withdrawalAlert1.rule.attributes.check);
         withdrawalData1.add("Risk Audit");
-        withdrawalData2.add(transformDate(withdrawalAlert2.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""), DATE_AND_TIME, DATE));
-        withdrawalData2.add(transformDate(withdrawalAlert2.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""), DATE_AND_TIME, TIME));
+        withdrawalData2.add(transformDate(
+                withdrawalAlert2.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""),
+                DATE_AND_TIME,
+                DATE));
+        withdrawalData2.add(transformDate(
+                withdrawalAlert2.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""),
+                DATE_AND_TIME,
+                TIME));
         withdrawalData2.add(withdrawalAlert2.rule.attributes.paymentChannel);
         withdrawalData2.add(withdrawalAlert2.rule.attributes.paymentType);
-        withdrawalData2.add(String.format("%s %s", formatter.format(Double.valueOf(withdrawalAlert2.rule.attributes.amount)), withdrawalAlert2.rule.attributes.currency));
+        withdrawalData2.add(String.format(
+                "%s %s",
+                formatter.format(Double.valueOf(withdrawalAlert2.rule.attributes.amount)),
+                withdrawalAlert2.rule.attributes.currency));
         withdrawalData2.add(withdrawalAlert2.rule.attributes.account);
         withdrawalData2.add(withdrawalAlert2.rule.attributes.platform);
         withdrawalData2.add(withdrawalAlert2.rule.attributes.check);
         withdrawalData2.add("Risk Audit");
-        withdrawalData3.add(transformDate(withdrawalAlert3.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""), DATE_AND_TIME, DATE));
-        withdrawalData3.add(transformDate(withdrawalAlert3.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""), DATE_AND_TIME, TIME));
+        withdrawalData3.add(transformDate(
+                withdrawalAlert3.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""),
+                DATE_AND_TIME,
+                DATE));
+        withdrawalData3.add(transformDate(
+                withdrawalAlert3.rule.attributes.createTime.replace("T", " ").replace("+03:00", ""),
+                DATE_AND_TIME,
+                TIME));
         withdrawalData3.add(withdrawalAlert3.rule.attributes.paymentChannel);
         withdrawalData3.add(withdrawalAlert3.rule.attributes.paymentType);
-        withdrawalData3.add(String.format("%s %s", formatter.format(Double.valueOf(withdrawalAlert3.rule.attributes.amount)), withdrawalAlert3.rule.attributes.currency));
+        withdrawalData3.add(String.format(
+                "%s %s",
+                formatter.format(Double.valueOf(withdrawalAlert3.rule.attributes.amount)),
+                withdrawalAlert3.rule.attributes.currency));
         withdrawalData3.add(withdrawalAlert3.rule.attributes.account);
         withdrawalData3.add(withdrawalAlert3.rule.attributes.platform);
         withdrawalData3.add(withdrawalAlert3.rule.attributes.check);
         withdrawalData3.add("Risk Audit");
         List<RuleAlert> withdrawalAlertList = List.of(withdrawalAlert1, withdrawalAlert2, withdrawalAlert3);
         for (RuleAlert withdrawalAlert : withdrawalAlertList) {
-            kafka.produceMessage(withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
+            kafka.produceMessage(
+                    withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         }
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
@@ -117,7 +150,10 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         paymentsPage.clickPaymentsTabButton();
         paymentsPage.clickWithdrawalsTabButton();
-        assertThat("Verify amount of withdrawals", paymentsPage.getWithdrawalsTabButtonText(), is("Withdrawal requests 3"));
+        assertThat(
+                "Verify amount of withdrawals",
+                paymentsPage.getWithdrawalsTabButtonText(),
+                is("Withdrawal requests 3"));
     }
 
     @Test
@@ -133,8 +169,21 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         paymentsPage.clickPaymentsTabButton();
         paymentsPage.clickWithdrawalsTabButton();
-        assertThat("Verify create time filter options", paymentsPage.getCreateTimeFilterOptions(), containsInAnyOrder("Last 8 hours", "Last 24 hours", "Last 7 days", "Last 30 days", "Last 60 days", "Custom dates"));
-        assertThat("Verify amount filter options", paymentsPage.getAmountFilterOptions(), containsInAnyOrder("0-1,000", "1,000-5,000", "5,000-10,000", "10,000-50,000", ">50,000", "Custom amount"));
+        assertThat(
+                "Verify create time filter options",
+                paymentsPage.getCreateTimeFilterOptions(),
+                containsInAnyOrder(
+                        "Last 8 hours",
+                        "Last 24 hours",
+                        "Last 7 days",
+                        "Last 30 days",
+                        "Last 60 days",
+                        "Custom dates"));
+        assertThat(
+                "Verify amount filter options",
+                paymentsPage.getAmountFilterOptions(),
+                containsInAnyOrder(
+                        "0-1,000", "1,000-5,000", "5,000-10,000", "10,000-50,000", ">50,000", "Custom amount"));
     }
 
     @Test
@@ -150,9 +199,17 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         paymentsPage.clickPaymentsTabButton();
         paymentsPage.clickWithdrawalsTabButton();
-        assertThat("Verify table headers", paymentsPage.getTableHeaders(), containsInAnyOrder("DATE", "TYPE", "AMOUNT", "ACCOUNT", "CHECK", "STATUS"));
+        assertThat(
+                "Verify table headers",
+                paymentsPage.getTableHeaders(),
+                containsInAnyOrder("DATE", "TYPE", "AMOUNT", "ACCOUNT", "CHECK", "STATUS"));
         assertThat("Verify rows count", paymentsPage.getRowsCount(), is(3));
-        assertThat("Verify data in table", paymentsPage.getAllRowsData(), hasItems(Stream.of(withdrawalData1, withdrawalData2, withdrawalData3).flatMap(List::stream).toArray(String[]::new)));
+        assertThat(
+                "Verify data in table",
+                paymentsPage.getAllRowsData(),
+                hasItems(Stream.of(withdrawalData1, withdrawalData2, withdrawalData3)
+                        .flatMap(List::stream)
+                        .toArray(String[]::new)));
     }
 
     @Test
@@ -168,16 +225,31 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         paymentsPage.clickPaymentsTabButton();
         paymentsPage.clickWithdrawalsTabButton();
-        assertThat("Verify sort by amount tooltip", paymentsPage.getAmountColumnTooltip(), is("Sort by amount:Descending"));
+        assertThat(
+                "Verify sort by amount tooltip",
+                paymentsPage.getAmountColumnTooltip(),
+                is("Sort by amount:Descending"));
         paymentsPage.clickAmountColumn();
-        assertThat("Verify sort by amount tooltip", paymentsPage.getAmountColumnTooltip(), is("Change sorting to:Ascending"));
+        assertThat(
+                "Verify sort by amount tooltip",
+                paymentsPage.getAmountColumnTooltip(),
+                is("Change sorting to:Ascending"));
         paymentsPage.clickAmountColumn();
         assertThat("Verify sort by amount tooltip", paymentsPage.getAmountColumnTooltip(), is("Remove sorting"));
-        assertThat("Verify sort by date tooltip", paymentsPage.getDateColumnTooltip(), is("Sort by request date:Newest → Oldest"));
+        assertThat(
+                "Verify sort by date tooltip",
+                paymentsPage.getDateColumnTooltip(),
+                is("Sort by request date:Newest → Oldest"));
         paymentsPage.clickDateColumn();
-        assertThat("Verify sort by date tooltip", paymentsPage.getDateColumnTooltip(), is("Change sorting to:Oldest → Newest"));
+        assertThat(
+                "Verify sort by date tooltip",
+                paymentsPage.getDateColumnTooltip(),
+                is("Change sorting to:Oldest → Newest"));
         paymentsPage.clickDateColumn();
-        assertThat("Verify sort by date tooltip", paymentsPage.getDateColumnTooltip(), is("Change sorting to:Newest → Oldest"));
+        assertThat(
+                "Verify sort by date tooltip",
+                paymentsPage.getDateColumnTooltip(),
+                is("Change sorting to:Newest → Oldest"));
     }
 
     @Test
@@ -195,7 +267,12 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         paymentsPage.clickWithdrawalsTabButton();
         paymentsPage.selectCreateTimeFilterOption("Last 7 days");
         assertThat("Verify rows count", paymentsPage.getRowsCount(), is(2));
-        assertThat("Verify data in table", paymentsPage.getAllRowsData(), hasItems(Stream.of(withdrawalData1, withdrawalData2).flatMap(List::stream).toArray(String[]::new)));
+        assertThat(
+                "Verify data in table",
+                paymentsPage.getAllRowsData(),
+                hasItems(Stream.of(withdrawalData1, withdrawalData2)
+                        .flatMap(List::stream)
+                        .toArray(String[]::new)));
     }
 
     @Test
@@ -213,7 +290,10 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         paymentsPage.clickWithdrawalsTabButton();
         paymentsPage.selectAmountFilterOption(">50,000");
         assertThat("Verify rows count", paymentsPage.getRowsCount(), is(1));
-        assertThat("Verify data in table", paymentsPage.getAllRowsData(), hasItems(withdrawalData3.toArray(String[]::new)));
+        assertThat(
+                "Verify data in table",
+                paymentsPage.getAllRowsData(),
+                hasItems(withdrawalData3.toArray(String[]::new)));
     }
 
     @Test
@@ -234,10 +314,17 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         String comment = "Autotest process withdrawals comment";
         paymentsPage.fillSubmitPanelInput(comment);
         paymentsPage.clickRejectAllButton();
-        Map<String, List<String>> messagesMap = kafka.consumeMessages(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalAlert1.rule.attributes.withdrawalId, withdrawalAlert2.rule.attributes.withdrawalId, withdrawalAlert3.rule.attributes.withdrawalId);
-        WithdrawalApprovals approval1 = objectMapper.readValue(messagesMap.get(withdrawalAlert1.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
-        WithdrawalApprovals approval2 = objectMapper.readValue(messagesMap.get(withdrawalAlert2.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
-        WithdrawalApprovals approval3 = objectMapper.readValue(messagesMap.get(withdrawalAlert3.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
+        Map<String, List<String>> messagesMap = kafka.consumeMessages(
+                KAFKA_TOPIC_WITHDRAWAL_APPROVALS,
+                withdrawalAlert1.rule.attributes.withdrawalId,
+                withdrawalAlert2.rule.attributes.withdrawalId,
+                withdrawalAlert3.rule.attributes.withdrawalId);
+        WithdrawalApprovals approval1 = objectMapper.readValue(
+                messagesMap.get(withdrawalAlert1.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
+        WithdrawalApprovals approval2 = objectMapper.readValue(
+                messagesMap.get(withdrawalAlert2.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
+        WithdrawalApprovals approval3 = objectMapper.readValue(
+                messagesMap.get(withdrawalAlert3.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
         for (WithdrawalApprovals approval : List.of(approval1, approval2, approval3)) {
             assertThat("Verify kafka withdrawal message id", approval.getMessageId(), notNullValue());
             assertThat("Verify kafka withdrawal timestamp", approval.getTimestamp(), notNullValue());
@@ -245,15 +332,36 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
             assertThat("Verify kafka withdrawal regulator", approval.getRegulator(), is(client.getRegulator()));
             assertThat("Verify kafka withdrawal internal reason", approval.getInternalReason(), is(""));
             assertThat("Verify kafka withdrawal status", approval.getStatus(), is("Refuse"));
-            assertThat("Verify kafka withdrawal orderNumber", approval.getOrderNumber(), is(withdrawalAlert1.rule.attributes.orderId));
+            assertThat(
+                    "Verify kafka withdrawal orderNumber",
+                    approval.getOrderNumber(),
+                    is(withdrawalAlert1.rule.attributes.orderId));
             assertThat("Verify kafka withdrawal checkName", approval.getCheckName(), notNullValue());
         }
-        assertThat("Verify kafka withdrawal transfer id", approval1.getTransferId(), is(Long.valueOf(withdrawalAlert1.rule.attributes.withdrawalId)));
-        assertThat("Verify kafka withdrawal checkName", approval1.getCheckName(), is(withdrawalAlert1.rule.attributes.check));
-        assertThat("Verify kafka withdrawal transfer id", approval2.getTransferId(), is(Long.valueOf(withdrawalAlert2.rule.attributes.withdrawalId)));
-        assertThat("Verify kafka withdrawal checkName", approval2.getCheckName(), is(withdrawalAlert2.rule.attributes.check));
-        assertThat("Verify kafka withdrawal transfer id", approval3.getTransferId(), is(Long.valueOf(withdrawalAlert3.rule.attributes.withdrawalId)));
-        assertThat("Verify kafka withdrawal checkName", approval3.getCheckName(), is(withdrawalAlert3.rule.attributes.check));
+        assertThat(
+                "Verify kafka withdrawal transfer id",
+                approval1.getTransferId(),
+                is(Long.valueOf(withdrawalAlert1.rule.attributes.withdrawalId)));
+        assertThat(
+                "Verify kafka withdrawal checkName",
+                approval1.getCheckName(),
+                is(withdrawalAlert1.rule.attributes.check));
+        assertThat(
+                "Verify kafka withdrawal transfer id",
+                approval2.getTransferId(),
+                is(Long.valueOf(withdrawalAlert2.rule.attributes.withdrawalId)));
+        assertThat(
+                "Verify kafka withdrawal checkName",
+                approval2.getCheckName(),
+                is(withdrawalAlert2.rule.attributes.check));
+        assertThat(
+                "Verify kafka withdrawal transfer id",
+                approval3.getTransferId(),
+                is(Long.valueOf(withdrawalAlert3.rule.attributes.withdrawalId)));
+        assertThat(
+                "Verify kafka withdrawal checkName",
+                approval3.getCheckName(),
+                is(withdrawalAlert3.rule.attributes.check));
     }
 
     @AfterAll

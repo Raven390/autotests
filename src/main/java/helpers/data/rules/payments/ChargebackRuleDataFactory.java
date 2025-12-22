@@ -1,5 +1,18 @@
 package helpers.data.rules.payments;
 
+import static business_objects.db.clickhouse.client_cards.ClientCardObjectFactory.generateClientCardsObject;
+import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
+import static business_objects.db.clickhouse.crm_bp_callbacks.CrmBpCallbacksFactory.generateCrmBpCallbacksObject;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnection;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Utils.*;
+
 import business_objects.db.clickhouse.client_cards.ClientCardsObject;
 import business_objects.db.clickhouse.crm_bp_callbacks.CrmBpCallbacksObject;
 import business_objects.db.clickhouse.crm_tb_deposit_channel.CrmTbDepositChannelObject;
@@ -16,7 +29,6 @@ import helpers.data.DataHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.FraudType;
 import io.qameta.allure.Description;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -24,21 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.db.clickhouse.client_cards.ClientCardObjectFactory.generateClientCardsObject;
-import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
-import static business_objects.db.clickhouse.crm_bp_callbacks.CrmBpCallbacksFactory.generateCrmBpCallbacksObject;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnection;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Utils.*;
-
 public class ChargebackRuleDataFactory {
-
 
     private static final ClientHelper chargebackRuleClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient2 = getRandomVantageClientAllFields();
@@ -80,16 +78,40 @@ public class ChargebackRuleDataFactory {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
-        attributes = Attributes.builder().cardMaskedNumber(cardMaskedNumber).cardExpiration(cardExpiration).status("approved").currency(baseCurrency).cardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName() + "off").is3d(false).amount(500.00).build();
+        attributes = Attributes.builder()
+                .cardMaskedNumber(cardMaskedNumber)
+                .cardExpiration(cardExpiration)
+                .status("approved")
+                .currency(baseCurrency)
+                .cardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName() + "off")
+                .is3d(false)
+                .amount(500.00)
+                .build();
 
-        charge = Charge.builder().attributes(attributes).id(getRandomUuidString()).build();
+        charge = Charge.builder()
+                .attributes(attributes)
+                .id(getRandomUuidString())
+                .build();
 
-        callbackData = CallbackData.builder().orderId("TST" + getRandomIntPositive()).charge(charge).build();
+        callbackData = CallbackData.builder()
+                .orderId("TST" + getRandomIntPositive())
+                .charge(charge)
+                .build();
         callback = Callback.builder().data(callbackData).build();
 
-        callbackEvent = CallbackEvent.builder().id(getRandomUuidString()).brand(data.clientHelper.getBrand()).clientId(data.clientHelper.getUserId().longValue()).type("callback_deposit").regulator(data.clientHelper.getRegulator()).businessOrderId("TST" + getRandomIntPositive()).messageId(getRandomUuidString()).eventDate(Instant.now().toString()).callback(callback).paymentMethodCode("PMC").build();
+        callbackEvent = CallbackEvent.builder()
+                .id(getRandomUuidString())
+                .brand(data.clientHelper.getBrand())
+                .clientId(data.clientHelper.getUserId().longValue())
+                .type("callback_deposit")
+                .regulator(data.clientHelper.getRegulator())
+                .businessOrderId("TST" + getRandomIntPositive())
+                .messageId(getRandomUuidString())
+                .eventDate(Instant.now().toString())
+                .callback(callback)
+                .paymentMethodCode("PMC")
+                .build();
         data.callbackEvent = callbackEvent;
-
 
         CrmTbDepositEntity deposit0 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit0.setStatus("Pending");
@@ -119,21 +141,19 @@ public class ChargebackRuleDataFactory {
         buildCallbackEvent();
         data.callbackEvent = callbackEvent;
 
-
-        //set deposit
+        // set deposit
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, "2222"));
         data.crmTbDepositObjects.add(deposit1);
 
         return data;
-
     }
 
     private static DataHelper getChargebackTest3Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient3);
 
-        //set deposit
+        // set deposit
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration));
@@ -149,30 +169,28 @@ public class ChargebackRuleDataFactory {
         buildCallbackEvent();
         data.callbackEvent = callbackEvent;
 
-        //set fraud
+        // set fraud
         data.clientFraudTypes.add(createClientFraudTypeCh(data.clientHelper.getUcid(), FraudType.CHARGEBACK.getCode()));
 
-        //set deposit
+        // set deposit
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration));
         data.crmTbDepositObjects.add(deposit1);
 
         return data;
-
     }
 
     private static DataHelper getChargebackTest5Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient5);
 
-        //set deposit
+        // set deposit
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit1.setAmountUsd(BigDecimal.valueOf(100.0));
         deposit1.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, "2222"));
         data.crmTbDepositObjects.add(deposit1);
 
         return data;
-
     }
 
     private static DataHelper getChargebackTest6Data() {
@@ -183,7 +201,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -194,24 +212,42 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1700.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3);
 
         return data;
-
     }
 
     private static DataHelper getChargebackTest7Data() {
@@ -222,7 +258,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -234,17 +270,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
@@ -253,7 +308,6 @@ public class ChargebackRuleDataFactory {
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
 
         return data;
-
     }
 
     private static DataHelper getChargebackTest8Data() {
@@ -264,7 +318,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -276,18 +330,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
-
+        // set client connections
 
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
@@ -297,7 +369,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -306,13 +379,14 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
         CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
         data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -330,7 +404,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -342,17 +416,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -361,7 +454,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -370,7 +464,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -380,9 +475,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -396,7 +496,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -411,7 +512,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -423,17 +524,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -442,7 +562,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -451,7 +572,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -461,9 +583,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -477,7 +604,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -498,7 +626,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -510,17 +638,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -529,7 +676,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -538,7 +686,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -548,9 +697,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -564,7 +718,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -587,7 +742,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -599,17 +754,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -618,7 +792,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -627,7 +802,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -637,9 +813,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -653,7 +834,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -678,7 +860,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -690,17 +872,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -709,7 +910,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -718,7 +920,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -728,9 +931,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -744,7 +952,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -773,7 +982,7 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -785,17 +994,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1000.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -804,7 +1032,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -813,7 +1042,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -823,9 +1053,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
@@ -839,7 +1074,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -863,7 +1099,7 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest15Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient15);
 
-        //set deposits
+        // set deposits
         int wdTypeId = getRandomBytePositive();
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
@@ -879,18 +1115,36 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
 
@@ -904,18 +1158,22 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest16Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient16);
 
-        //set open trades
+        // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
         trade1.setPositionId(getRandomLongPositive());
         trade1.setEntry(0);
         trade1.setSymbol("EURUSD");
         data.mt5DealsCoercedObjects = List.of(trade1);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
 
@@ -929,11 +1187,15 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest17Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient17);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
 
@@ -947,11 +1209,15 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest18Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient18);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -960,7 +1226,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -969,7 +1236,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         data.connections = List.of(connection1, connection2);
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
@@ -979,9 +1247,14 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
@@ -993,11 +1266,15 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest19Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient19);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set deposits
+        // set deposits
         int wdTypeId = getRandomBytePositive();
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
@@ -1013,13 +1290,28 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -1028,7 +1320,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -1037,7 +1330,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
         connection3.connectionScore = 0.8;
@@ -1046,7 +1340,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo3.connectionAttributeValue = "test";
         connectionInfo3.sourceAttributeValue = "test";
         connectionInfo3.relationType = "exact";
-        connection3.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
         data.connections = List.of(connection1, connection2, connection3);
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
         ClientHelper connectedClient5 = getRandomVantageClientAllFields();
@@ -1056,17 +1351,26 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
         data.connectedClientHelpers = List.of(connectedClient3);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
 
-        //set segment
-        SegmentationTableObject segment = SegmentationTableObject.builder().date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0)).ucid(data.clientHelper.getUcid()).segment("Medium").build();
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Medium")
+                .build();
         data.segmentObjects = List.of(segment);
 
         return data;
@@ -1075,11 +1379,15 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest20Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient20);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set deposits
+        // set deposits
         int wdTypeId = getRandomBytePositive();
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
@@ -1095,13 +1403,28 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -1110,7 +1433,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -1119,7 +1443,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
         connection3.connectionScore = 0.8;
@@ -1128,7 +1453,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo3.connectionAttributeValue = "test";
         connectionInfo3.sourceAttributeValue = "test";
         connectionInfo3.relationType = "exact";
-        connection3.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
         data.connections = List.of(connection1, connection2, connection3);
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
         ClientHelper connectedClient5 = getRandomVantageClientAllFields();
@@ -1138,24 +1464,33 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
         data.connectedClientHelpers = List.of(connectedClient3);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
 
-        //set open trades
+        // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
         trade1.setPositionId(getRandomLongPositive());
         trade1.setEntry(0);
         trade1.setSymbol("EURUSD");
         data.mt5DealsCoercedObjects = List.of(trade1);
 
-        //set segment
-        SegmentationTableObject segment = SegmentationTableObject.builder().date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0)).ucid(data.clientHelper.getUcid()).segment("Low").build();
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Low")
+                .build();
         data.segmentObjects = List.of(segment);
 
         return data;
@@ -1164,11 +1499,15 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest21Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient21);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set deposits
+        // set deposits
         int wdTypeId = getRandomBytePositive();
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
@@ -1183,13 +1522,28 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -1198,7 +1552,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -1207,7 +1562,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
         connection3.connectionScore = 0.8;
@@ -1216,7 +1572,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo3.connectionAttributeValue = "test";
         connectionInfo3.sourceAttributeValue = "test";
         connectionInfo3.relationType = "exact";
-        connection3.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
         data.connections = List.of(connection1, connection2, connection3);
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
         ClientHelper connectedClient5 = getRandomVantageClientAllFields();
@@ -1226,24 +1583,33 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
         data.connectedClientHelpers = List.of(connectedClient3);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
 
-        //set open trades
+        // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
         trade1.setPositionId(getRandomLongPositive());
         trade1.setEntry(0);
         trade1.setSymbol("EURUSD");
         data.mt5DealsCoercedObjects = List.of(trade1);
 
-        //set segment
-        SegmentationTableObject segment = SegmentationTableObject.builder().date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0)).ucid(data.clientHelper.getUcid()).segment("Very High").build();
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Very High")
+                .build();
 
         data.segmentObjects = List.of(segment);
 
@@ -1253,11 +1619,15 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest22Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient22);
 
-        //set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder().ts(getCurrentTimestampDbFormat()).currency(baseCurrency).rate(1.1).build();
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
         data.ratesUsdCurrentObjects = List.of(tick);
 
-        //set deposits
+        // set deposits
         int wdTypeId = getRandomBytePositive();
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
@@ -1270,13 +1640,28 @@ public class ChargebackRuleDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(2).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        //set client connections
+        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
         connection1.connectionScore = 0.8;
@@ -1285,7 +1670,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo1.connectionAttributeValue = "test";
         connectionInfo1.sourceAttributeValue = "test";
         connectionInfo1.relationType = "exact";
-        connection1.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
         ClientHelper connectedClient2 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
         connection2.connectionScore = 0.8;
@@ -1294,7 +1680,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo2.connectionAttributeValue = "test";
         connectionInfo2.sourceAttributeValue = "test";
         connectionInfo2.relationType = "exact";
-        connection2.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
         ClientHelper connectedClient3 = getRandomVantageClientAllFields();
         ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
         connection3.connectionScore = 0.8;
@@ -1303,7 +1690,8 @@ public class ChargebackRuleDataFactory {
         connectionInfo3.connectionAttributeValue = "test";
         connectionInfo3.sourceAttributeValue = "test";
         connectionInfo3.relationType = "exact";
-        connection3.connectionInfo = ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
         data.connections = List.of(connection1, connection2, connection3);
         ClientHelper connectedClient4 = getRandomVantageClientAllFields();
         ClientHelper connectedClient5 = getRandomVantageClientAllFields();
@@ -1313,22 +1701,31 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
         data.connectedClientHelpers = List.of(connectedClient3);
-        data.connectedUsers = List.of(connectedUserCrmTbUserObject1, connectedUserCrmTbUserObject2, connectedUserCrmTbUserObject3, connectedUserCrmTbUserObject4, connectedUserCrmTbUserObject5);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
 
-        //set client cards
+        // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2);
 
-        //set open trades
+        // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
         trade1.setPositionId(getRandomLongPositive());
         trade1.setEntry(0);
         trade1.setSymbol("EURUSD");
         data.mt5DealsCoercedObjects = List.of(trade1);
 
-        //set segment
-        SegmentationTableObject segment = SegmentationTableObject.builder().date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0)).ucid(data.clientHelper.getUcid()).segment("Ultra High").build();
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Ultra High")
+                .build();
 
         data.segmentObjects = List.of(segment);
 
@@ -1343,7 +1740,7 @@ public class ChargebackRuleDataFactory {
     public static Map<String, DataHelper> setupChargebackData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
-//         Put all the db data for setup in a map
+        //         Put all the db data for setup in a map
         map.put("1", getChargebackTest1Data());
         map.put("2", getChargebackTest2Data());
         map.put("3", getChargebackTest3Data());

@@ -4,8 +4,7 @@ public class FraudTypeCategory {
     private String fraudTypeCode;
     private Integer categoryId;
 
-    public FraudTypeCategory() {
-    }
+    public FraudTypeCategory() {}
 
     public FraudTypeCategory(String fraudTypeCode, Integer categoryId) {
         this.fraudTypeCode = fraudTypeCode;

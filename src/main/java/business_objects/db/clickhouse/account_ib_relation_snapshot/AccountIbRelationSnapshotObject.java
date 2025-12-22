@@ -23,14 +23,28 @@ public class AccountIbRelationSnapshotObject {
     private String lastUpdated;
     private Integer isRebateAccount;
 
-    public AccountIbRelationSnapshotObject() {
-    }
+    public AccountIbRelationSnapshotObject() {}
 
-    public AccountIbRelationSnapshotObject(Integer userId, String brand, String regulator, String ucid, Long account,
-            Integer serverId, String serverName, Integer directIb, Integer directIbLevel, Integer directIbRebateAccount,
-            Integer masterIb, Integer masterIbRebateAccount, String recordEffectiveStartDate,
-            String recordEffectiveEndDate, Boolean recordActiveFlag, Integer isDel, String recordDeletedFlag,
-            String lastUpdated, Integer isRebateAccount) {
+    public AccountIbRelationSnapshotObject(
+            Integer userId,
+            String brand,
+            String regulator,
+            String ucid,
+            Long account,
+            Integer serverId,
+            String serverName,
+            Integer directIb,
+            Integer directIbLevel,
+            Integer directIbRebateAccount,
+            Integer masterIb,
+            Integer masterIbRebateAccount,
+            String recordEffectiveStartDate,
+            String recordEffectiveEndDate,
+            Boolean recordActiveFlag,
+            Integer isDel,
+            String recordDeletedFlag,
+            String lastUpdated,
+            Integer isRebateAccount) {
         this.userId = userId;
         this.brand = brand;
         this.regulator = regulator;
@@ -208,16 +222,61 @@ public class AccountIbRelationSnapshotObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AccountIbRelationSnapshotObject that = (AccountIbRelationSnapshotObject) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(directIb, that.directIb) && Objects.equals(directIbLevel, that.directIbLevel) && Objects.equals(directIbRebateAccount, that.directIbRebateAccount) && Objects.equals(masterIb, that.masterIb) && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount) && Objects.equals(recordEffectiveStartDate, that.recordEffectiveStartDate) && Objects.equals(recordEffectiveEndDate, that.recordEffectiveEndDate) && Objects.equals(recordActiveFlag, that.recordActiveFlag) && Objects.equals(isDel, that.isDel) && Objects.equals(recordDeletedFlag, that.recordDeletedFlag) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(isRebateAccount, that.isRebateAccount);
+        return Objects.equals(userId, that.userId)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(directIb, that.directIb)
+                && Objects.equals(directIbLevel, that.directIbLevel)
+                && Objects.equals(directIbRebateAccount, that.directIbRebateAccount)
+                && Objects.equals(masterIb, that.masterIb)
+                && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount)
+                && Objects.equals(recordEffectiveStartDate, that.recordEffectiveStartDate)
+                && Objects.equals(recordEffectiveEndDate, that.recordEffectiveEndDate)
+                && Objects.equals(recordActiveFlag, that.recordActiveFlag)
+                && Objects.equals(isDel, that.isDel)
+                && Objects.equals(recordDeletedFlag, that.recordDeletedFlag)
+                && Objects.equals(lastUpdated, that.lastUpdated)
+                && Objects.equals(isRebateAccount, that.isRebateAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, brand, regulator, ucid, account, serverId, serverName, directIb, directIbLevel, directIbRebateAccount, masterIb, masterIbRebateAccount, recordEffectiveStartDate, recordEffectiveEndDate, recordActiveFlag, isDel, recordDeletedFlag, lastUpdated, isRebateAccount);
+        return Objects.hash(
+                userId,
+                brand,
+                regulator,
+                ucid,
+                account,
+                serverId,
+                serverName,
+                directIb,
+                directIbLevel,
+                directIbRebateAccount,
+                masterIb,
+                masterIbRebateAccount,
+                recordEffectiveStartDate,
+                recordEffectiveEndDate,
+                recordActiveFlag,
+                isDel,
+                recordDeletedFlag,
+                lastUpdated,
+                isRebateAccount);
     }
 
     @Override
     public String toString() {
-        return "AccountIbRelationSnapshotObject{" + "userId=" + userId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", directIb=" + directIb + ", directIbLevel=" + directIbLevel + ", directIbRebateAccount=" + directIbRebateAccount + ", masterIb=" + masterIb + ", masterIbRebateAccount=" + masterIbRebateAccount + ", recordEffectiveStartDate='" + recordEffectiveStartDate + '\'' + ", recordEffectiveEndDate='" + recordEffectiveEndDate + '\'' + ", recordActiveFlag=" + recordActiveFlag + ", isDel=" + isDel + ", recordDeletedFlag='" + recordDeletedFlag + '\'' + ", lastUpdated='" + lastUpdated + '\'' + ", isRebateAccount=" + isRebateAccount + '}';
+        return "AccountIbRelationSnapshotObject{" + "userId=" + userId + ", brand='" + brand + '\'' + ", regulator='"
+                + regulator + '\'' + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverId=" + serverId
+                + ", serverName='" + serverName + '\'' + ", directIb=" + directIb + ", directIbLevel=" + directIbLevel
+                + ", directIbRebateAccount=" + directIbRebateAccount + ", masterIb=" + masterIb
+                + ", masterIbRebateAccount=" + masterIbRebateAccount + ", recordEffectiveStartDate='"
+                + recordEffectiveStartDate + '\'' + ", recordEffectiveEndDate='" + recordEffectiveEndDate + '\''
+                + ", recordActiveFlag=" + recordActiveFlag + ", isDel=" + isDel + ", recordDeletedFlag='"
+                + recordDeletedFlag + '\'' + ", lastUpdated='" + lastUpdated + '\'' + ", isRebateAccount="
+                + isRebateAccount + '}';
     }
 }

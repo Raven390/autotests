@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigInteger;
 import java.util.Objects;
 
@@ -28,7 +27,7 @@ public class ClientTradingEnvironmentRestriction extends ClientRestriction {
 
     /**
      * Get status
-     * 
+     *
      * @return status
      **/
     public RestrictionStatus getStatus() {
@@ -46,7 +45,7 @@ public class ClientTradingEnvironmentRestriction extends ClientRestriction {
 
     /**
      * (required for trading restrictions): Account ID (Login) to which the restriction applies.
-     * 
+     *
      * @return accountId
      **/
     public BigInteger getAccountId() {
@@ -64,7 +63,7 @@ public class ClientTradingEnvironmentRestriction extends ClientRestriction {
 
     /**
      * (required for trading restrictions): Server of the account.
-     * 
+     *
      * @return serverId
      **/
     public Integer getServerId() {
@@ -82,7 +81,7 @@ public class ClientTradingEnvironmentRestriction extends ClientRestriction {
 
     /**
      * Get level
-     * 
+     *
      * @return level
      **/
     public String getLevel() {
@@ -101,8 +100,13 @@ public class ClientTradingEnvironmentRestriction extends ClientRestriction {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ClientTradingEnvironmentRestriction clientTradingEnvironmentRestriction = (ClientTradingEnvironmentRestriction) o;
-        return Objects.equals(this.status, clientTradingEnvironmentRestriction.status) && Objects.equals(this.accountId, clientTradingEnvironmentRestriction.accountId) && Objects.equals(this.serverId, clientTradingEnvironmentRestriction.serverId) && Objects.equals(this.level, clientTradingEnvironmentRestriction.level) && super.equals(o);
+        ClientTradingEnvironmentRestriction clientTradingEnvironmentRestriction =
+                (ClientTradingEnvironmentRestriction) o;
+        return Objects.equals(this.status, clientTradingEnvironmentRestriction.status)
+                && Objects.equals(this.accountId, clientTradingEnvironmentRestriction.accountId)
+                && Objects.equals(this.serverId, clientTradingEnvironmentRestriction.serverId)
+                && Objects.equals(this.level, clientTradingEnvironmentRestriction.level)
+                && super.equals(o);
     }
 
     @Override

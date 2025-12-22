@@ -1,9 +1,7 @@
 package business_objects.api.clickhouse_api_service.get_swap_free_volumes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
-
 
 public class GetSwapFreeVolumesResponse {
 
@@ -27,6 +25,4 @@ public class GetSwapFreeVolumesResponse {
         @JsonProperty("volumeEndOfDay")
         public String volumeEndOfDay;
     }
-
-
 }

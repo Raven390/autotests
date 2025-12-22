@@ -2,7 +2,6 @@ package business_objects.api.clickhouse_api_service.get_credits;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class GetCreditsResponse {
 
     @JsonProperty("tradeId")
@@ -28,6 +27,8 @@ public class GetCreditsResponse {
 
     @Override
     public String toString() {
-        return "GetCreditsResponse{" + "tradeId=" + tradeId + ", clientId=" + clientId + ", createTime='" + createTime + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", profitUSD=" + profitUSD + ", profit=" + profit + ", comment='" + comment + '\'' + '}';
+        return "GetCreditsResponse{" + "tradeId=" + tradeId + ", clientId=" + clientId + ", createTime='" + createTime
+                + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", profitUSD=" + profitUSD + ", profit="
+                + profit + ", comment='" + comment + '\'' + '}';
     }
 }

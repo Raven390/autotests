@@ -1,19 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.PaymentAlertMessage;
-import business_objects.kafka.alerts.PaymentAlertMessageV2;
-import business_objects.ui.user.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import helpers.data.enums.Brand;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
 import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcidByTrigger;
@@ -25,6 +11,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
+
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.PaymentAlertMessage;
+import business_objects.kafka.alerts.PaymentAlertMessageV2;
+import business_objects.ui.user.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import helpers.data.enums.Brand;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -201,7 +200,8 @@ class SuspiciousClientsPaymentFiltersTest extends TestBaseWeb {
 
         List<String> clientIds = investigationPage.getClientIdsFromClientCards();
         assertThat("Verify that only 1 client is filtered", clientIds.size(), is(1));
-        assertThat("Verify that the correct client is filtered", clientIds, contains(String.valueOf(crmTbUser1.userId)));
+        assertThat(
+                "Verify that the correct client is filtered", clientIds, contains(String.valueOf(crmTbUser1.userId)));
 
         // both alerts
         investigationPage.clickSuspiciousClientsFiltration();
@@ -210,7 +210,10 @@ class SuspiciousClientsPaymentFiltersTest extends TestBaseWeb {
 
         clientIds = investigationPage.getClientIdsFromClientCards();
         assertThat("Verify that 2 clients are filtered", clientIds.size(), is(2));
-        assertThat("Verify that both clients are filtered", clientIds, containsInAnyOrder(String.valueOf(crmTbUser1.userId), String.valueOf(crmTbUser2.userId)));
+        assertThat(
+                "Verify that both clients are filtered",
+                clientIds,
+                containsInAnyOrder(String.valueOf(crmTbUser1.userId), String.valueOf(crmTbUser2.userId)));
 
         // nothing found
         investigationPage.clickSuspiciousClientsFiltration();
@@ -235,7 +238,8 @@ class SuspiciousClientsPaymentFiltersTest extends TestBaseWeb {
 
         List<String> clientIds = investigationPage.getClientIdsFromClientCards();
         assertThat("Verify that only 1 client is filtered by payment method", clientIds.size(), is(1));
-        assertThat("Verify that the correct client is filtered", clientIds, contains(String.valueOf(crmTbUser2.userId)));
+        assertThat(
+                "Verify that the correct client is filtered", clientIds, contains(String.valueOf(crmTbUser2.userId)));
     }
 
     @AfterAll

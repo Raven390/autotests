@@ -1,7 +1,6 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 /**
@@ -59,7 +58,9 @@ public class ClientBybitRestriction extends ClientRestriction {
             return false;
         }
         ClientBybitRestriction clientBybitRestriction = (ClientBybitRestriction) o;
-        return Objects.equals(this.status, clientBybitRestriction.status) && Objects.equals(this.accountId, clientBybitRestriction.accountId) && super.equals(o);
+        return Objects.equals(this.status, clientBybitRestriction.status)
+                && Objects.equals(this.accountId, clientBybitRestriction.accountId)
+                && super.equals(o);
     }
 
     @Override

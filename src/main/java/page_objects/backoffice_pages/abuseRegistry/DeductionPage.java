@@ -1,17 +1,16 @@
 package page_objects.backoffice_pages.abuseRegistry;
 
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class DeductionPage extends AbstractPage {
 
@@ -46,18 +45,22 @@ public class DeductionPage extends AbstractPage {
     private final Locator batchDeductionValidationItems;
     private final Locator batchDeductionValidationHeader;
 
-    private static final String FILTER_OPTION_BY_TEXT_PATTERN = "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
-    private static final String COLUMN_VALUE_BY_ORDER_PATTERN = "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
+    private static final String FILTER_OPTION_BY_TEXT_PATTERN =
+            "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
+    private static final String COLUMN_VALUE_BY_ORDER_PATTERN =
+            "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
     private static final String DEDUCTION_TABLE_LOCATOR = "//*[@data-qa='deductions__table']";
     private static final String DEDUCTION_TABLE_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
     private static final String ILLEGAL_PROFIT_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[1]";
-    private static final String SUGGESTED_DEDUCTION_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[2]";
+    private static final String SUGGESTED_DEDUCTION_INPUT_LOCATOR =
+            "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[2]";
     private static final String DEDUCTION_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[3]";
     private static final String COMMENTARY_INPUT_LOCATOR = DEDUCTION_TABLE_DRAWER_LOCATOR + "//textarea";
     private static final String DRAWER_CANCEL_BUTTON_LOCATOR = "//span[text()='Cancel']/ancestor::button";
     private static final String DRAWER_SAVE_BUTTON_LOCATOR = "//span[text()='Save']/ancestor::button";
     private static final String DRAWER_DEDUCT_BUTTON_LOCATOR = "//span[text()='Deduct']/ancestor::button";
-    private static final String DRAWER_FILE_BUTTON_LOCATOR = "//button[@data-qa='deductions__multiselect_panel__get_file']";
+    private static final String DRAWER_FILE_BUTTON_LOCATOR =
+            "//button[@data-qa='deductions__multiselect_panel__get_file']";
 
     public DeductionPage(Page page) {
         super(page);
@@ -65,15 +68,21 @@ public class DeductionPage extends AbstractPage {
         this.deductionTabButton = page.locator("//input[@value='DEDUCTIONS']");
         this.deductionTableHeaders = page.locator("//div[contains(@class,'v-header-cell') and text()]");
         this.deductionTableRow = page.locator("//div[contains(@class,'v-body-row')]");
-        this.deductionTableRowData = page.locator("//div[contains(@class,'v-body-cell')]/descendant::*[contains(@class,'g-text')]");
+        this.deductionTableRowData =
+                page.locator("//div[contains(@class,'v-body-cell')]/descendant::*[contains(@class,'g-text')]");
         this.tableBody = page.locator("//div[@class='v-table-body']");
         this.statusFilter = page.locator("//button[@data-qa='deductions__filters__statuses']");
         this.emailFilter = page.locator("//button[@data-qa='deductions__filters__email_statuses']");
         this.brandsFilter = page.locator("//button[@data-qa='deductions__filters__brands']");
-        this.filterOptions = page.locator("//div[@data-qa='select-popup']/descendant::span[@class='g-select-list__option-default-label']");
+        this.filterOptions = page.locator(
+                "//div[@data-qa='select-popup']/descendant::span[@class='g-select-list__option-default-label']");
         this.statusValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 5));
-        this.emailValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).first();
-        this.brandValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).last();
+        this.emailValues = deductionTableRow
+                .locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6))
+                .first();
+        this.brandValues = deductionTableRow
+                .locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6))
+                .last();
         this.deductionTable = page.locator(DEDUCTION_TABLE_LOCATOR);
         this.singleEditButton = page.locator("//button/span[text() = 'Edit']");
         this.illegalProfitInput = page.locator(ILLEGAL_PROFIT_INPUT_LOCATOR);
@@ -86,11 +95,14 @@ public class DeductionPage extends AbstractPage {
         this.toast = page.locator(".g-toaster .g-toast__content");
         this.getFileButton = page.locator(DRAWER_FILE_BUTTON_LOCATOR);
         this.batchDeductionButton = page.locator("//*[text()='Batch deduction']/ancestor::button");
-        this.batchDeductionAccountsListTextarea = page.locator("//*[@class='v-text-area-with-counter']/descendant::textarea");
+        this.batchDeductionAccountsListTextarea =
+                page.locator("//*[@class='v-text-area-with-counter']/descendant::textarea");
         this.batchDeductionApproveAllButton = page.locator("//button[contains(@class,'g-button_view_toned-success')]");
-        this.batchDeductionConfirmApproveButton = page.locator("//button[@data-qa='approve_all_deduction_input_footer_button__confirm']");
+        this.batchDeductionConfirmApproveButton =
+                page.locator("//button[@data-qa='approve_all_deduction_input_footer_button__confirm']");
         this.batchDeductionValidationItems = page.locator("//div[@class='v-deduction-butch-failed-item']");
-        this.batchDeductionValidationHeader = page.locator("//div[@data-qa='drawer_header']/descendant::*[text()='Failed validation']");
+        this.batchDeductionValidationHeader =
+                page.locator("//div[@data-qa='drawer_header']/descendant::*[text()='Failed validation']");
     }
 
     @Step("Click abuse registry button")
@@ -293,7 +305,9 @@ public class DeductionPage extends AbstractPage {
 
     public void checkOneDeductionRecalculated() {
         toast.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
-        assertEquals("Illegal profit and suggested deduction were recalculated for 1 client due to changes in realized or floating PNL after record creation", toast.textContent());
+        assertEquals(
+                "Illegal profit and suggested deduction were recalculated for 1 client due to changes in realized or floating PNL after record creation",
+                toast.textContent());
     }
 
     @Step("Click batch deduction button")
@@ -326,4 +340,3 @@ public class DeductionPage extends AbstractPage {
         return list;
     }
 }
-

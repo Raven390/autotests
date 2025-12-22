@@ -1,9 +1,8 @@
 package business_objects.db.clickhouse.payments_total;
 
-import helpers.data.ClientHelper;
-
-
 import static utils.Utils.*;
+
+import helpers.data.ClientHelper;
 
 public class PaymentsTotalFactory {
     public static PaymentsTotalObject generatePaymentsTotalObjectClient(ClientHelper client) {

@@ -1,7 +1,6 @@
 package business_objects.kafka.crm_db_events.login;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class LoginDbEventData {
@@ -24,11 +23,10 @@ public class LoginDbEventData {
     @JsonProperty("cookie")
     public String cookie;
 
-    public LoginDbEventData() {
-    }
+    public LoginDbEventData() {}
 
-    public LoginDbEventData(String loginDatetime, Integer userId, String brand, String ipAddress, String uaString,
-            String cookie) {
+    public LoginDbEventData(
+            String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie) {
         this.loginDatetime = loginDatetime;
         this.userId = userId;
         this.brand = brand;
@@ -42,7 +40,12 @@ public class LoginDbEventData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LoginDbEventData that = (LoginDbEventData) o;
-        return Objects.equals(loginDatetime, that.loginDatetime) && Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(uaString, that.uaString) && Objects.equals(cookie, that.cookie);
+        return Objects.equals(loginDatetime, that.loginDatetime)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(ipAddress, that.ipAddress)
+                && Objects.equals(uaString, that.uaString)
+                && Objects.equals(cookie, that.cookie);
     }
 
     @Override
@@ -52,6 +55,8 @@ public class LoginDbEventData {
 
     @Override
     public String toString() {
-        return "LoginDbEventData{" + "loginDatetime='" + loginDatetime + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", ipAddress='" + ipAddress + '\'' + ", uaString='" + uaString + '\'' + ", cookie='" + cookie + '\'' + '}';
+        return "LoginDbEventData{" + "loginDatetime='" + loginDatetime + '\'' + ", userId=" + userId + ", brand='"
+                + brand + '\'' + ", ipAddress='" + ipAddress + '\'' + ", uaString='" + uaString + '\'' + ", cookie='"
+                + cookie + '\'' + '}';
     }
 }

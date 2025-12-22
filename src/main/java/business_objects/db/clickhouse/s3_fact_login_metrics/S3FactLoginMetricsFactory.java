@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.s3_fact_login_metrics;
 
+import static utils.Utils.*;
+
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
-
-import static utils.Utils.*;
 
 public class S3FactLoginMetricsFactory {
     @Step("Generate data for given account")

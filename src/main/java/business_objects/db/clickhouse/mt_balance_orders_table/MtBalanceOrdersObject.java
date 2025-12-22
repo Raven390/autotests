@@ -1,6 +1,5 @@
 package business_objects.db.clickhouse.mt_balance_orders_table;
 
-
 import java.util.Objects;
 
 public class MtBalanceOrdersObject {
@@ -185,13 +184,21 @@ public class MtBalanceOrdersObject {
         this.internalComment = internalComment;
     }
 
-    public MtBalanceOrdersObject() {
-    }
+    public MtBalanceOrdersObject() {}
 
     public MtBalanceOrdersObject(
-            Integer ticket, Integer serverId, String serverName, String ucid, String brand,
+            Integer ticket,
+            Integer serverId,
+            String serverName,
+            String ucid,
+            String brand,
             String regulator,
-            Integer userId, Integer account, String createTime, Double amount, Double amountUsd, String currency,
+            Integer userId,
+            Integer account,
+            String createTime,
+            Double amount,
+            Double amountUsd,
+            String currency,
             String comment) {
         this.ticket = ticket;
         this.serverId = serverId;
@@ -212,16 +219,61 @@ public class MtBalanceOrdersObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         MtBalanceOrdersObject that = (MtBalanceOrdersObject) o;
-        return Objects.equals(ticket, that.ticket) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(userId, that.userId) && Objects.equals(platform, that.platform) && Objects.equals(account, that.account) && Objects.equals(currency, that.currency) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(amount, that.amount) && Objects.equals(rateToUsd, that.rateToUsd) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(orderType, that.orderType) && Objects.equals(comment, that.comment) && Objects.equals(isDeleted, that.isDeleted) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(internalComment, that.internalComment);
+        return Objects.equals(ticket, that.ticket)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(serverName, that.serverName)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(account, that.account)
+                && Objects.equals(currency, that.currency)
+                && Objects.equals(createTime, that.createTime)
+                && Objects.equals(createTimeUtc, that.createTimeUtc)
+                && Objects.equals(amount, that.amount)
+                && Objects.equals(rateToUsd, that.rateToUsd)
+                && Objects.equals(amountUsd, that.amountUsd)
+                && Objects.equals(orderType, that.orderType)
+                && Objects.equals(comment, that.comment)
+                && Objects.equals(isDeleted, that.isDeleted)
+                && Objects.equals(lastUpdated, that.lastUpdated)
+                && Objects.equals(internalComment, that.internalComment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticket, serverId, serverName, ucid, brand, regulator, userId, platform, account, currency, createTime, createTimeUtc, amount, rateToUsd, amountUsd, orderType, comment, isDeleted, lastUpdated, internalComment);
+        return Objects.hash(
+                ticket,
+                serverId,
+                serverName,
+                ucid,
+                brand,
+                regulator,
+                userId,
+                platform,
+                account,
+                currency,
+                createTime,
+                createTimeUtc,
+                amount,
+                rateToUsd,
+                amountUsd,
+                orderType,
+                comment,
+                isDeleted,
+                lastUpdated,
+                internalComment);
     }
 
     @Override
     public String toString() {
-        return "MtBalanceOrdersObject{" + "ticket=" + ticket + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", platform='" + platform + '\'' + ", account=" + account + ", currency='" + currency + '\'' + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", amount=" + amount + ", rateToUsd=" + rateToUsd + ", amountUsd=" + amountUsd + ", orderType='" + orderType + '\'' + ", comment='" + comment + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
+        return "MtBalanceOrdersObject{" + "ticket=" + ticket + ", serverId=" + serverId + ", serverName='" + serverName
+                + '\'' + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\''
+                + ", userId=" + userId + ", platform='" + platform + '\'' + ", account=" + account + ", currency='"
+                + currency + '\'' + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\''
+                + ", amount=" + amount + ", rateToUsd=" + rateToUsd + ", amountUsd=" + amountUsd + ", orderType='"
+                + orderType + '\'' + ", comment='" + comment + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='"
+                + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
     }
 }

@@ -1,14 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.auditTrail;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.ClientHelper;
-import helpers.database.ArHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.BoHelper.*;
@@ -19,13 +10,20 @@ import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static utils.Constants.*;
 
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import helpers.database.ArHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 @Feature("BMS-2413 Display counter for active alert on Audit Trail tab")
 class AuditTrailAlertCounterTest extends TestBaseWeb {
     static ClientHelper client = getRandomVantageClient();
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
-
 
     @BeforeAll
     static void setup() {
@@ -51,7 +49,8 @@ class AuditTrailAlertCounterTest extends TestBaseWeb {
 
     @Test
     @AllureId("1874")
-    @DisplayName("BO user with Payment Team role can see counter with the active payment alert and not for trading alerts")
+    @DisplayName(
+            "BO user with Payment Team role can see counter with the active payment alert and not for trading alerts")
     void alertCounterPaymentTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         sendSimplePaymentAlert(client.getUcid());
@@ -82,7 +81,8 @@ class AuditTrailAlertCounterTest extends TestBaseWeb {
 
     @Test
     @AllureId("1891")
-    @DisplayName("BO user with General Role role can see counter with the active payment alert for selected type of alerts")
+    @DisplayName(
+            "BO user with General Role role can see counter with the active payment alert for selected type of alerts")
     void alertCounterGeneralRoleTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         sendSimplePaymentAlert(client.getUcid());

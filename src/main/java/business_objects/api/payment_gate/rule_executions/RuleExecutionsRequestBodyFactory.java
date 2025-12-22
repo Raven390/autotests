@@ -1,11 +1,10 @@
 package business_objects.api.payment_gate.rule_executions;
 
-import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import static utils.Utils.getRandomIntPositive;
 
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import java.sql.Timestamp;
 import java.time.Instant;
-
-import static utils.Utils.getRandomIntPositive;
 
 public class RuleExecutionsRequestBodyFactory {
 
@@ -48,5 +47,4 @@ public class RuleExecutionsRequestBodyFactory {
         body.setPaymentId(event.getPaymentId());
         return body;
     }
-
 }

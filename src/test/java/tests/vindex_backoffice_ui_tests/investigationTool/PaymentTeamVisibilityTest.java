@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import helpers.data.ClientHelper;
-import helpers.database.ArHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -37,6 +21,20 @@ import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import helpers.data.ClientHelper;
+import helpers.database.ArHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -63,7 +61,6 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
     private static MtMt4TradesCoercedObject trade9;
     private static MtMt4TradesCoercedObject trade10;
     private static MtMt4TradesCoercedObject tradeWithdrawal;
-
 
     @BeforeAll
     static void setup() throws Exception {
@@ -118,8 +115,28 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4, account5));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
-        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(crmTbAccFormtAccount1, crmTbAccFormtAccount2, crmTbAccFormtAccount3, crmTbAccFormtAccount4, crmTbAccFormtAccount5));
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, tradeWithdrawal, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
+        insertObjectsToDb(
+                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
+                List.of(
+                        crmTbAccFormtAccount1,
+                        crmTbAccFormtAccount2,
+                        crmTbAccFormtAccount3,
+                        crmTbAccFormtAccount4,
+                        crmTbAccFormtAccount5));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(
+                        trade1,
+                        trade2,
+                        tradeWithdrawal,
+                        trade3,
+                        trade4,
+                        trade5,
+                        trade6,
+                        trade7,
+                        trade8,
+                        trade9,
+                        trade10));
         MtMt5PositionsObject position = generateMtMt5PositionsObject(client);
         position.setAccount(mtAccount2.account);
         position.setServerId(mtAccount2.sourceIdSt);
@@ -187,8 +204,16 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from IN ('%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
+        deleteEntryFromDb(
+                CRM_USER_TABLE_NAME,
+                String.format(
+                        "ucid IN ('%s', '%s', '%s')",
+                        client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
+        deleteEntryFromDb(
+                CONNECTIONS_TABLE_NAME,
+                String.format(
+                        "user_from IN ('%s', '%s', '%s')",
+                        client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
         cleanClientAudit(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
         deleteUserBO(client.getUcid());
         deleteUserBO(connectedClient1.getUcid());
@@ -196,8 +221,5 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-
     }
-
-
 }

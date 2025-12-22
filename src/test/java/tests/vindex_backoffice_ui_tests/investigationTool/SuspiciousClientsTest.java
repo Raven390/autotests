@@ -1,16 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.PaymentAlertMessageV2;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.*;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
@@ -23,6 +12,16 @@ import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
+
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.PaymentAlertMessageV2;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -52,9 +51,12 @@ class SuspiciousClientsTest extends TestBaseWeb {
         PaymentAlertMessageV2 alertPayment3 = generatePaymentAlertByUcidByTrigger(crmTbUser5.ucid, "withdrawalFromWA");
         kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(alert2.alertId, objectMapper.writeValueAsString(alert2), KAFKA_TOPIC_ALERTS);
-        kafka.produceMessage(alertPayment1.getId().toString(), objectMapper.writeValueAsString(alertPayment1), KAFKA_TOPIC_ALERTS);
-        kafka.produceMessage(alertPayment2.id.toString(), objectMapper.writeValueAsString(alertPayment2), KAFKA_TOPIC_ALERTS);
-        kafka.produceMessage(alertPayment3.id.toString(), objectMapper.writeValueAsString(alertPayment3), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment1.getId().toString(), objectMapper.writeValueAsString(alertPayment1), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment2.id.toString(), objectMapper.writeValueAsString(alertPayment2), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment3.id.toString(), objectMapper.writeValueAsString(alertPayment3), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -149,8 +151,14 @@ class SuspiciousClientsTest extends TestBaseWeb {
         List<String> clientIdsFromClientCards = investigationPage.getClientIdsFromClientCards();
         List<Boolean> priorityFromClientCards = investigationPage.getPriorityFromClientCards();
         assertThat("Assert that there is 3 payment suspicious clients", clientIdsFromClientCards.size(), is(3));
-        assertThat("Assert that payment suspicious clients in order", clientIdsFromClientCards.stream().map(Integer::parseInt).toList(), containsInRelativeOrder(crmTbUser4.userId, crmTbUser5.userId, crmTbUser3.userId));
-        assertThat("Assert that payment suspicious clients in order", priorityFromClientCards, containsInRelativeOrder(true, true, false));
+        assertThat(
+                "Assert that payment suspicious clients in order",
+                clientIdsFromClientCards.stream().map(Integer::parseInt).toList(),
+                containsInRelativeOrder(crmTbUser4.userId, crmTbUser5.userId, crmTbUser3.userId));
+        assertThat(
+                "Assert that payment suspicious clients in order",
+                priorityFromClientCards,
+                containsInRelativeOrder(true, true, false));
     }
 
     @Test
@@ -168,8 +176,14 @@ class SuspiciousClientsTest extends TestBaseWeb {
         List<String> clientIdsFromClientCards = investigationPage.getClientIdsFromClientCards();
         List<Boolean> priorityFromClientCards = investigationPage.getPriorityFromClientCards();
         assertThat("Assert that there is 2 trading suspicious clients", clientIdsFromClientCards.size(), is(2));
-        assertThat("Assert that payment suspicious clients in order", clientIdsFromClientCards.stream().map(Integer::parseInt).toList(), containsInRelativeOrder(crmTbUser1.userId, crmTbUser2.userId));
-        assertThat("Assert that payment suspicious clients in order", priorityFromClientCards, containsInRelativeOrder(true, true));
+        assertThat(
+                "Assert that payment suspicious clients in order",
+                clientIdsFromClientCards.stream().map(Integer::parseInt).toList(),
+                containsInRelativeOrder(crmTbUser1.userId, crmTbUser2.userId));
+        assertThat(
+                "Assert that payment suspicious clients in order",
+                priorityFromClientCards,
+                containsInRelativeOrder(true, true));
     }
 
     @AfterAll

@@ -7,8 +7,7 @@ public class MtCidTableEntry {
     private String ucid;
     private String mtCid;
 
-    public MtCidTableEntry() {
-    }
+    public MtCidTableEntry() {}
 
     public MtCidTableEntry(String ucid, String mt_cid) {
         this.ucid = ucid;

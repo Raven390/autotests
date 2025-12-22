@@ -3,7 +3,6 @@ package generator.app;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -12,8 +11,7 @@ import java.util.Optional;
 
 final class MetadataRepository {
 
-    public record Result(Object value, Timestamp timestamp) {
-    }
+    public record Result(Object value, Timestamp timestamp) {}
 
     private final Connection connection;
     private final ObjectMapper objectMapper;
@@ -30,7 +28,8 @@ final class MetadataRepository {
     }
 
     public Optional<Result> find(String name, TypeReference<?> asType) throws IllegalStateException {
-        try (var st = connection.prepareStatement("SELECT value, created FROM result WHERE key = ? ORDER BY created DESC")) {
+        try (var st =
+                connection.prepareStatement("SELECT value, created FROM result WHERE key = ? ORDER BY created DESC")) {
             st.setString(1, name);
             var rs = st.executeQuery();
             if (!rs.isBeforeFirst()) {

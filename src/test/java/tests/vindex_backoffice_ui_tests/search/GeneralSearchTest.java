@@ -1,23 +1,5 @@
 package tests.vindex_backoffice_ui_tests.search;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.microsoft.playwright.Page;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.search.GeneralSearchElements;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Locale;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
@@ -30,11 +12,38 @@ import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.microsoft.playwright.Page;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
+import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.search.GeneralSearchElements;
+import tests.TestBaseWeb;
+
 class GeneralSearchTest extends TestBaseWeb {
     private static final ClientHelper client1;
+
     static {
-        client1 = ClientHelper.builder().userId(161_605).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(161_605_001).tradingAccount2(161_605_002).serverId(42).build();
+        client1 = ClientHelper.builder()
+                .userId(161_605)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca41f")
+                .brand(Brand.VANTAGE)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(161_605_001)
+                .tradingAccount2(161_605_002)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser1 = generateStaticUserByClient(client1);
     private static CrmTbAccountObject account11 = generateStaticCrmTbAccountActive(client1);
     private static CrmTbAccountObject account12 = generateAdditionalStaticCrmTbAccountActive(client1);
@@ -42,9 +51,19 @@ class GeneralSearchTest extends TestBaseWeb {
     private static MtAccountObject mtAccount12 = generateMtAccountByCrmTbAccount(account12);
 
     private static final ClientHelper client2;
+
     static {
-        client2 = ClientHelper.builder().userId(161_605).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.VJP).regulator(Regulator.VFSC2).tradingAccount(161_605_001).tradingAccount2(161_605_002).serverId(24).build();
+        client2 = ClientHelper.builder()
+                .userId(161_605)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca41f")
+                .brand(Brand.VJP)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(161_605_001)
+                .tradingAccount2(161_605_002)
+                .serverId(24)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser2 = generateStaticUserByClient(client2);
     private static CrmTbAccountObject account21 = generateStaticCrmTbAccountActive(client2);
     private static CrmTbAccountObject account22 = generateAdditionalStaticCrmTbAccountActive(client2);
@@ -119,7 +138,13 @@ class GeneralSearchTest extends TestBaseWeb {
         generalSearch.openSearch();
         generalSearch.inputSearchText(client1.getUserId());
         generalSearch.inputSearchPressEnter();
-        generalSearch.checkClientsCard(client1.getUserId(), client1.getBrand(), crmTbUser1.firstName, crmTbUser1.lastName, crmTbUser1.country, crmTbUser1.registrationDate);
+        generalSearch.checkClientsCard(
+                client1.getUserId(),
+                client1.getBrand(),
+                crmTbUser1.firstName,
+                crmTbUser1.lastName,
+                crmTbUser1.country,
+                crmTbUser1.registrationDate);
     }
 
     @Test
@@ -151,7 +176,14 @@ class GeneralSearchTest extends TestBaseWeb {
         generalSearch.openSearch();
         generalSearch.inputSearchText(client1.getTradingAccount());
         generalSearch.inputSearchPressEnter();
-        generalSearch.checkClientsCardAccount(client1.getTradingAccount(), client1.getBrand(), crmTbUser1.firstName, crmTbUser1.lastName, crmTbUser1.country, crmTbUser1.registrationDate, account11.platform);
+        generalSearch.checkClientsCardAccount(
+                client1.getTradingAccount(),
+                client1.getBrand(),
+                crmTbUser1.firstName,
+                crmTbUser1.lastName,
+                crmTbUser1.country,
+                crmTbUser1.registrationDate,
+                account11.platform);
     }
 
     @Test
@@ -171,7 +203,8 @@ class GeneralSearchTest extends TestBaseWeb {
             generalSearch.clickTradingClientsCard(client1.getUserId(), client1.getBrand());
         });
         GeneralSearchElements newTab = new GeneralSearchElements(newPage);
-        String expectedUrl = client1.getBrand().toLowerCase(Locale.ROOT) + "-" + client1.getUserId() + "/trading/operations";
+        String expectedUrl =
+                client1.getBrand().toLowerCase(Locale.ROOT) + "-" + client1.getUserId() + "/trading/operations";
         newTab.checkPageUrl(expectedUrl);
     }
 
@@ -287,7 +320,6 @@ class GeneralSearchTest extends TestBaseWeb {
 
         // Verify that no client card appears
         Assertions.assertFalse(
-                generalSearch.isCardPresent(client1.getUcid()), "No client card should appear for non-existent email"
-        );
+                generalSearch.isCardPresent(client1.getUcid()), "No client card should appear for non-existent email");
     }
 }

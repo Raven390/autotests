@@ -1,25 +1,25 @@
 package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingScotlandDataFactory.setupMirrorTradingScotlandRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.DataDeleteHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_RULE)
@@ -39,7 +39,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dbDataMap);
+        DataDeleteHelper.deleteData(dbDataMap);
     }
 
     @Test
@@ -55,7 +55,8 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @Test
     @AllureId("1433")
-    @DisplayName("Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. ElementId: Event_end_8")
+    @DisplayName(
+            "Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. ElementId: Event_end_8")
     void mirrorTradeRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
 
@@ -77,7 +78,8 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @Test
     @AllureId("1435")
-    @DisplayName("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
+    @DisplayName(
+            "Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
     void mirrorTradeRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
 
@@ -85,10 +87,13 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
         checkElementId("Event_1k86ppo", data.closeTradeMtEvent.id, "mirror_trade");
 
-        //Verify alerts
+        // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().timestamp,
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
         assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
@@ -102,8 +107,14 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("Mirror trade pattern"));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
         assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.ticketId,
+                is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().rule.attributes.account,
+                is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
@@ -111,5 +122,4 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         // Verify restriction
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Mirror trade pattern");
     }
-
 }

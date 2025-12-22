@@ -17,12 +17,21 @@ public class TsBySymbolDailyObject {
     public String lastUpdated;
     public Double totalNotionalValueUsd;
 
-    public TsBySymbolDailyObject() {
-    }
+    public TsBySymbolDailyObject() {}
 
-    public TsBySymbolDailyObject(String ucid, Long account, String date, String symbol, Double totalPnl,
-            Double notionalValueUsd, Long countWinDeals, Long countTotalDeals, Long countDealsLess10m,
-            Double totalToxicityUsd, String lastUpdated, Double totalNotionalValueUsd) {
+    public TsBySymbolDailyObject(
+            String ucid,
+            Long account,
+            String date,
+            String symbol,
+            Double totalPnl,
+            Double notionalValueUsd,
+            Long countWinDeals,
+            Long countTotalDeals,
+            Long countDealsLess10m,
+            Double totalToxicityUsd,
+            String lastUpdated,
+            Double totalNotionalValueUsd) {
         this.ucid = ucid;
         this.account = account;
         this.date = date;
@@ -41,16 +50,43 @@ public class TsBySymbolDailyObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TsBySymbolDailyObject that = (TsBySymbolDailyObject) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(date, that.date) && Objects.equals(symbol, that.symbol) && Objects.equals(totalPnl, that.totalPnl) && Objects.equals(notionalValueUsd, that.notionalValueUsd) && Objects.equals(countWinDeals, that.countWinDeals) && Objects.equals(countTotalDeals, that.countTotalDeals) && Objects.equals(countDealsLess10m, that.countDealsLess10m) && Objects.equals(totalToxicityUsd, that.totalToxicityUsd) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(totalNotionalValueUsd, that.totalNotionalValueUsd);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(account, that.account)
+                && Objects.equals(date, that.date)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(totalPnl, that.totalPnl)
+                && Objects.equals(notionalValueUsd, that.notionalValueUsd)
+                && Objects.equals(countWinDeals, that.countWinDeals)
+                && Objects.equals(countTotalDeals, that.countTotalDeals)
+                && Objects.equals(countDealsLess10m, that.countDealsLess10m)
+                && Objects.equals(totalToxicityUsd, that.totalToxicityUsd)
+                && Objects.equals(lastUpdated, that.lastUpdated)
+                && Objects.equals(totalNotionalValueUsd, that.totalNotionalValueUsd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, account, date, symbol, totalPnl, notionalValueUsd, countWinDeals, countTotalDeals, countDealsLess10m, totalToxicityUsd, lastUpdated, totalNotionalValueUsd);
+        return Objects.hash(
+                ucid,
+                account,
+                date,
+                symbol,
+                totalPnl,
+                notionalValueUsd,
+                countWinDeals,
+                countTotalDeals,
+                countDealsLess10m,
+                totalToxicityUsd,
+                lastUpdated,
+                totalNotionalValueUsd);
     }
 
     @Override
     public String toString() {
-        return "TsBySymbolDailyObject{" + "ucid='" + ucid + '\'' + ", account=" + account + ", date='" + date + '\'' + ", symbol='" + symbol + '\'' + ", totalPnl=" + totalPnl + ", notionalValueUsd=" + notionalValueUsd + ", countWinDeals=" + countWinDeals + ", countTotalDeals=" + countTotalDeals + ", countDealsLess10m=" + countDealsLess10m + ", totalToxicityUsd=" + totalToxicityUsd + ", lastUpdated='" + lastUpdated + '\'' + ", totalNotionalValueUsd=" + totalNotionalValueUsd + '}';
+        return "TsBySymbolDailyObject{" + "ucid='" + ucid + '\'' + ", account=" + account + ", date='" + date + '\''
+                + ", symbol='" + symbol + '\'' + ", totalPnl=" + totalPnl + ", notionalValueUsd=" + notionalValueUsd
+                + ", countWinDeals=" + countWinDeals + ", countTotalDeals=" + countTotalDeals + ", countDealsLess10m="
+                + countDealsLess10m + ", totalToxicityUsd=" + totalToxicityUsd + ", lastUpdated='" + lastUpdated + '\''
+                + ", totalNotionalValueUsd=" + totalNotionalValueUsd + '}';
     }
 }

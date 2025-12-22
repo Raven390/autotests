@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_mirror_score;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetMirrorScoreResponse {
@@ -12,8 +11,7 @@ public class GetMirrorScoreResponse {
     @JsonProperty("ucidScore")
     private String ucidScore;
 
-    public GetMirrorScoreResponse() {
-    }
+    public GetMirrorScoreResponse() {}
 
     public GetMirrorScoreResponse(String modelScore, String ucidScore) {
         this.modelScore = modelScore;
@@ -49,6 +47,7 @@ public class GetMirrorScoreResponse {
 
     @Override
     public String toString() {
-        return "GetMirrorScoreResponse{" + "modelScore='" + modelScore + '\'' + ", ucidScore='" + ucidScore + '\'' + '}';
+        return "GetMirrorScoreResponse{" + "modelScore='" + modelScore + '\'' + ", ucidScore='" + ucidScore + '\''
+                + '}';
     }
 }

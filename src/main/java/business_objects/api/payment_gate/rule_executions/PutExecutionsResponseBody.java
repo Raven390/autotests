@@ -1,7 +1,6 @@
 package business_objects.api.payment_gate.rule_executions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class PutExecutionsResponseBody {
@@ -15,8 +14,7 @@ public class PutExecutionsResponseBody {
     @JsonProperty("message")
     private String message;
 
-    public PutExecutionsResponseBody() {
-    }
+    public PutExecutionsResponseBody() {}
 
     public PutExecutionsResponseBody(String Integer, String error, String message) {
         this.id = id;
@@ -51,8 +49,9 @@ public class PutExecutionsResponseBody {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PutExecutionsResponseBody that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(error, that.error) && Objects.equals(
-                message, that.message);
+        return Objects.equals(id, that.id)
+                && Objects.equals(error, that.error)
+                && Objects.equals(message, that.message);
     }
 
     @Override
@@ -62,6 +61,7 @@ public class PutExecutionsResponseBody {
 
     @Override
     public String toString() {
-        return "RuleExecutionsResponseBodyFactory{" + "id='" + id + '\'' + ", error='" + error + '\'' + ", message='" + message + '\'' + '}';
+        return "RuleExecutionsResponseBodyFactory{" + "id='" + id + '\'' + ", error='" + error + '\'' + ", message='"
+                + message + '\'' + '}';
     }
 }

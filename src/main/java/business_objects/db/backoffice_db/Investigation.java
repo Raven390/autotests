@@ -14,11 +14,18 @@ public class Investigation {
     private String status;
     private String clientUcid;
 
-    public Investigation() {
-    }
+    public Investigation() {}
 
-    public Investigation(Integer id, String type, String assignedUserId, String completedByUserId, String createdAt,
-            String startedAt, String completedAt, String status, String clientUcid) {
+    public Investigation(
+            Integer id,
+            String type,
+            String assignedUserId,
+            String completedByUserId,
+            String createdAt,
+            String startedAt,
+            String completedAt,
+            String status,
+            String clientUcid) {
         this.id = id;
         this.type = type;
         this.assignedUserId = assignedUserId;
@@ -106,17 +113,28 @@ public class Investigation {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Investigation that = (Investigation) o;
-        return Objects.equals(id, that.id) && Objects.equals(type, that.type) && Objects.equals(assignedUserId, that.assignedUserId) && Objects.equals(completedByUserId, that.completedByUserId) && Objects.equals(createdAt, that.createdAt) && Objects.equals(startedAt, that.startedAt) && Objects.equals(completedAt, that.completedAt) && Objects.equals(status, that.status) && Objects.equals(clientUcid, that.clientUcid);
+        return Objects.equals(id, that.id)
+                && Objects.equals(type, that.type)
+                && Objects.equals(assignedUserId, that.assignedUserId)
+                && Objects.equals(completedByUserId, that.completedByUserId)
+                && Objects.equals(createdAt, that.createdAt)
+                && Objects.equals(startedAt, that.startedAt)
+                && Objects.equals(completedAt, that.completedAt)
+                && Objects.equals(status, that.status)
+                && Objects.equals(clientUcid, that.clientUcid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, assignedUserId, completedByUserId, createdAt, startedAt, completedAt, status, clientUcid);
+        return Objects.hash(
+                id, type, assignedUserId, completedByUserId, createdAt, startedAt, completedAt, status, clientUcid);
     }
 
     @Override
     public String toString() {
-        return "Investigation{" + "id=" + id + ", type='" + type + '\'' + ", assignedUserId='" + assignedUserId + '\'' + ", completedByUserId='" + completedByUserId + '\'' + ", createdAt='" + createdAt + '\'' + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt + '\'' + ", status='" + status + '\'' + ", clientUcid='" + clientUcid + '\'' + '}';
+        return "Investigation{" + "id=" + id + ", type='" + type + '\'' + ", assignedUserId='" + assignedUserId + '\''
+                + ", completedByUserId='" + completedByUserId + '\'' + ", createdAt='" + createdAt + '\''
+                + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt + '\'' + ", status='" + status
+                + '\'' + ", clientUcid='" + clientUcid + '\'' + '}';
     }
-
 }

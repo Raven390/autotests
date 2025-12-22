@@ -1,9 +1,7 @@
 package business_objects.api.clickhouse_api_service.get_bonuses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
-
 
 public class GetBonusesResponse {
 
@@ -28,12 +26,16 @@ public class GetBonusesResponse {
     @JsonProperty("bonusGroup")
     String bonusGroup;
 
-    public GetBonusesResponse() {
-    }
+    public GetBonusesResponse() {}
 
     public GetBonusesResponse(
-            Integer transferId, String createTime, String clientId, Double actualAmountUsd, Double actualAmount,
-            String bonusType, String bonusGroup) {
+            Integer transferId,
+            String createTime,
+            String clientId,
+            Double actualAmountUsd,
+            Double actualAmount,
+            String bonusType,
+            String bonusGroup) {
         this.transferId = transferId;
         this.createTime = createTime;
         this.clientId = clientId;
@@ -47,10 +49,13 @@ public class GetBonusesResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         GetBonusesResponse that = (GetBonusesResponse) o;
-        return Objects.equals(transferId, that.transferId) && Objects.equals(createTime, that.createTime) && Objects.equals(
-                clientId, that.clientId) && Objects.equals(actualAmountUsd, that.actualAmountUsd) && Objects.equals(
-                        actualAmount, that.actualAmount) && Objects.equals(bonusType, that.bonusType) && Objects.equals(
-                                bonusGroup, that.bonusGroup);
+        return Objects.equals(transferId, that.transferId)
+                && Objects.equals(createTime, that.createTime)
+                && Objects.equals(clientId, that.clientId)
+                && Objects.equals(actualAmountUsd, that.actualAmountUsd)
+                && Objects.equals(actualAmount, that.actualAmount)
+                && Objects.equals(bonusType, that.bonusType)
+                && Objects.equals(bonusGroup, that.bonusGroup);
     }
 
     @Override
@@ -60,7 +65,9 @@ public class GetBonusesResponse {
 
     @Override
     public String toString() {
-        return "GetBonusesResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\'' + ", clientId='" + clientId + '\'' + ", actualAmountUsd=" + actualAmountUsd + ", actualAmount=" + actualAmount + ", bonusType='" + bonusType + '\'' + ", bonusGroup='" + bonusGroup + '\'' + '}';
+        return "GetBonusesResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\''
+                + ", clientId='" + clientId + '\'' + ", actualAmountUsd=" + actualAmountUsd + ", actualAmount="
+                + actualAmount + ", bonusType='" + bonusType + '\'' + ", bonusGroup='" + bonusGroup + '\'' + '}';
     }
 
     public Integer getTransferId() {

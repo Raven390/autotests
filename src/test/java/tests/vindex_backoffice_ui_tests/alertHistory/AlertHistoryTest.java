@@ -1,5 +1,16 @@
 package tests.vindex_backoffice_ui_tests.alertHistory;
 
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.ui.user.UserFactory.autotestUserOne;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Brand.VANTAGE;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.getCurrentDate;
+
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.ui.user.User;
@@ -11,17 +22,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static business_objects.ui.user.UserFactory.autotestUserOne;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.Brand.VANTAGE;
-import static helpers.database.DbHelper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
-import static utils.Utils.getCurrentDate;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("BMS-1446 Alert history")
@@ -70,13 +70,44 @@ class AlertHistoryTest extends TestBaseWeb {
     void verifyAlertHistory1() {
         String dateTimeRegex = "\\d{4}-\\d{2}-\\d{2}\\d{2}:\\d{2}:\\d{2}";
         assertThat("Verify alert history page title", alertHistoryPage.getTitle(), is("Alert history"));
-        assertThat("Verify alert history table headers", alertHistoryPage.getTableHeaders(), contains("CLIENT", "ALERTED RULE", "CREATED", "RESOLVED", "DURATION", "INVESTIGATOR", "RESOLUTION", "QC", "REVIEWER", "QC NOTE"));
-        assertThat("Verify alert history client value", alertHistoryPage.getClientValues().getFirst(), is(String.format("%s %s%s", crmTbUser.firstName, crmTbUser.lastName, client.getUserId())));
-        assertThat("Verify alert history rule name value", alertHistoryPage.getAlertedRuleValues().getFirst(), is(alert.rule.name));
-        assertThat("Verify alert history created cell value", alertHistoryPage.getCreatedValues().getFirst(), matchesPattern(dateTimeRegex));
-        assertThat("Verify alert history resolved cell value", alertHistoryPage.getResolvedValues().getFirst(), matchesPattern(dateTimeRegex));
-        assertThat("Verify alert history duration value", alertHistoryPage.getDurationValues().getFirst(), is("0 min"));
-        assertThat("Verify alert history investigator value", alertHistoryPage.getInvestigatorValues().getFirst(), is(String.format("%s %s", user.getFirstName(), user.getLastName())));
+        assertThat(
+                "Verify alert history table headers",
+                alertHistoryPage.getTableHeaders(),
+                contains(
+                        "CLIENT",
+                        "ALERTED RULE",
+                        "CREATED",
+                        "RESOLVED",
+                        "DURATION",
+                        "INVESTIGATOR",
+                        "RESOLUTION",
+                        "QC",
+                        "REVIEWER",
+                        "QC NOTE"));
+        assertThat(
+                "Verify alert history client value",
+                alertHistoryPage.getClientValues().getFirst(),
+                is(String.format("%s %s%s", crmTbUser.firstName, crmTbUser.lastName, client.getUserId())));
+        assertThat(
+                "Verify alert history rule name value",
+                alertHistoryPage.getAlertedRuleValues().getFirst(),
+                is(alert.rule.name));
+        assertThat(
+                "Verify alert history created cell value",
+                alertHistoryPage.getCreatedValues().getFirst(),
+                matchesPattern(dateTimeRegex));
+        assertThat(
+                "Verify alert history resolved cell value",
+                alertHistoryPage.getResolvedValues().getFirst(),
+                matchesPattern(dateTimeRegex));
+        assertThat(
+                "Verify alert history duration value",
+                alertHistoryPage.getDurationValues().getFirst(),
+                is("0 min"));
+        assertThat(
+                "Verify alert history investigator value",
+                alertHistoryPage.getInvestigatorValues().getFirst(),
+                is(String.format("%s %s", user.getFirstName(), user.getLastName())));
     }
 
     @Test
@@ -89,7 +120,10 @@ class AlertHistoryTest extends TestBaseWeb {
         alertHistoryPage.clickFilterButton();
         alertHistoryPage.selectBrandFilter(client.getBrand());
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected brand is displayed", alertHistoryPage.getUcidBrandValues(), everyItem(is(VANTAGE.getUcidBrand())));
+        assertThat(
+                "Verify only selected brand is displayed",
+                alertHistoryPage.getUcidBrandValues(),
+                everyItem(is(VANTAGE.getUcidBrand())));
     }
 
     @Test
@@ -102,7 +136,10 @@ class AlertHistoryTest extends TestBaseWeb {
         alertHistoryPage.clickFilterButton();
         alertHistoryPage.selectRulesFilter(alert.rule.name);
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected rule is displayed", alertHistoryPage.getAlertedRuleValues(), everyItem(is(alert.rule.name)));
+        assertThat(
+                "Verify only selected rule is displayed",
+                alertHistoryPage.getAlertedRuleValues(),
+                everyItem(is(alert.rule.name)));
     }
 
     @Test
@@ -116,7 +153,10 @@ class AlertHistoryTest extends TestBaseWeb {
         String date = getCurrentDate();
         alertHistoryPage.selectCreationDate(date, date);
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected creation date is displayed", alertHistoryPage.getCreatedValues(), everyItem(startsWith(date)));
+        assertThat(
+                "Verify only selected creation date is displayed",
+                alertHistoryPage.getCreatedValues(),
+                everyItem(startsWith(date)));
     }
 
     @Test
@@ -130,7 +170,10 @@ class AlertHistoryTest extends TestBaseWeb {
         String date = getCurrentDate();
         alertHistoryPage.selectResolutionDate(date, date);
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected resolution date is displayed", alertHistoryPage.getResolvedValues(), everyItem(startsWith(date)));
+        assertThat(
+                "Verify only selected resolution date is displayed",
+                alertHistoryPage.getResolvedValues(),
+                everyItem(startsWith(date)));
     }
 
     @Test
@@ -144,7 +187,10 @@ class AlertHistoryTest extends TestBaseWeb {
         String fullName = String.format("%s %s", user.getFirstName(), user.getLastName());
         alertHistoryPage.selectInvestigatorFilter(fullName);
         alertHistoryPage.applyFilter();
-        assertThat("Verify only selected resolution date is displayed", alertHistoryPage.getInvestigatorValues(), everyItem(is(fullName)));
+        assertThat(
+                "Verify only selected resolution date is displayed",
+                alertHistoryPage.getInvestigatorValues(),
+                everyItem(is(fullName)));
     }
 
     @AfterAll

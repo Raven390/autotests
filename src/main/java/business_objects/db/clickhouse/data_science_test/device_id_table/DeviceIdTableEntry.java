@@ -7,8 +7,7 @@ public class DeviceIdTableEntry {
     public String ucid;
     public String deviceId;
 
-    public DeviceIdTableEntry() {
-    }
+    public DeviceIdTableEntry() {}
 
     public DeviceIdTableEntry(String ucid, String deviceId) {
         this.ucid = ucid;

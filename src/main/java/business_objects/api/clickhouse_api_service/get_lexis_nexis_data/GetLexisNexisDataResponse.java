@@ -1,7 +1,6 @@
 package business_objects.api.clickhouse_api_service.get_lexis_nexis_data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -22,8 +21,7 @@ public class GetLexisNexisDataResponse {
         @JsonProperty("eventId")
         public Integer eventId;
 
-        public Items() {
-        }
+        public Items() {}
 
         public Items(String id) {
             this.id = id;
@@ -40,7 +38,9 @@ public class GetLexisNexisDataResponse {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Items items = (Items) o;
-            return Objects.equals(id, items.id) && Objects.equals(mobile_code, items.mobile_code) && Objects.equals(eventId, items.eventId);
+            return Objects.equals(id, items.id)
+                    && Objects.equals(mobile_code, items.mobile_code)
+                    && Objects.equals(eventId, items.eventId);
         }
 
         @Override

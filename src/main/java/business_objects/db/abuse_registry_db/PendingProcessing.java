@@ -9,8 +9,7 @@ public class PendingProcessing {
     private String fraudSubtypeCode;
     private Integer abuserHistoryId;
 
-    public PendingProcessing() {
-    }
+    public PendingProcessing() {}
 
     public PendingProcessing(String ucid, String fraudTypeCode, String fraudSubtypeCode, Integer abuserHistoryId) {
         this.ucid = ucid;
@@ -55,7 +54,10 @@ public class PendingProcessing {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PendingProcessing that = (PendingProcessing) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(fraudTypeCode, that.fraudTypeCode) && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode) && Objects.equals(abuserHistoryId, that.abuserHistoryId);
+        return Objects.equals(ucid, that.ucid)
+                && Objects.equals(fraudTypeCode, that.fraudTypeCode)
+                && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode)
+                && Objects.equals(abuserHistoryId, that.abuserHistoryId);
     }
 
     @Override
@@ -65,6 +67,7 @@ public class PendingProcessing {
 
     @Override
     public String toString() {
-        return "PendingProcessing{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", abuserHistoryId=" + abuserHistoryId + '}';
+        return "PendingProcessing{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\''
+                + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", abuserHistoryId=" + abuserHistoryId + '}';
     }
 }

@@ -3,7 +3,6 @@ package business_objects.api.payment_gate.payments_decisions;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -39,8 +38,7 @@ public class PutDecisionsResponseBody {
     @JsonProperty("message")
     private String message;
 
-    public PutDecisionsResponseBody() {
-    }
+    public PutDecisionsResponseBody() {}
 
     // Getters and setters
     public Integer getDecisionId() {
@@ -112,7 +110,14 @@ public class PutDecisionsResponseBody {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PutDecisionsResponseBody that = (PutDecisionsResponseBody) o;
-        return Objects.equals(decisionId, that.decisionId) && Objects.equals(paymentId, that.paymentId) && Objects.equals(decisionType, that.decisionType) && Objects.equals(decisionCode, that.decisionCode) && Objects.equals(decidedAt, that.decidedAt) && Objects.equals(created, that.created) && Objects.equals(error, that.error) && Objects.equals(message, that.message);
+        return Objects.equals(decisionId, that.decisionId)
+                && Objects.equals(paymentId, that.paymentId)
+                && Objects.equals(decisionType, that.decisionType)
+                && Objects.equals(decisionCode, that.decisionCode)
+                && Objects.equals(decidedAt, that.decidedAt)
+                && Objects.equals(created, that.created)
+                && Objects.equals(error, that.error)
+                && Objects.equals(message, that.message);
     }
 
     @Override
@@ -122,7 +127,10 @@ public class PutDecisionsResponseBody {
 
     @Override
     public String toString() {
-        return "PutDecisionsResponseBody{" + "decisionId='" + decisionId + '\'' + ", paymentId='" + paymentId + '\'' + ", decisionType='" + decisionType + '\'' + ", decisionCode='" + decisionCode + '\'' + ", decidedAt='" + decidedAt + '\'' + ", created=" + created + ", error='" + error + '\'' + ", message='" + message + '\'' + '}';
+        return "PutDecisionsResponseBody{" + "decisionId='" + decisionId + '\'' + ", paymentId='" + paymentId + '\''
+                + ", decisionType='" + decisionType + '\'' + ", decisionCode='" + decisionCode + '\'' + ", decidedAt='"
+                + decidedAt + '\'' + ", created=" + created + ", error='" + error + '\'' + ", message='" + message
+                + '\'' + '}';
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -144,8 +152,7 @@ public class PutDecisionsResponseBody {
         @JsonProperty("decidedAt")
         private String decidedAt;
 
-        public CreatedItem() {
-        }
+        public CreatedItem() {}
 
         public String getDecisionId() {
             return decisionId;
@@ -192,7 +199,11 @@ public class PutDecisionsResponseBody {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             CreatedItem that = (CreatedItem) o;
-            return Objects.equals(decisionId, that.decisionId) && Objects.equals(paymentId, that.paymentId) && Objects.equals(decisionType, that.decisionType) && Objects.equals(decisionCode, that.decisionCode) && Objects.equals(decidedAt, that.decidedAt);
+            return Objects.equals(decisionId, that.decisionId)
+                    && Objects.equals(paymentId, that.paymentId)
+                    && Objects.equals(decisionType, that.decisionType)
+                    && Objects.equals(decisionCode, that.decisionCode)
+                    && Objects.equals(decidedAt, that.decidedAt);
         }
 
         @Override
@@ -202,7 +213,9 @@ public class PutDecisionsResponseBody {
 
         @Override
         public String toString() {
-            return "CreatedItem{" + "decisionId='" + decisionId + '\'' + ", paymentId='" + paymentId + '\'' + ", decisionType='" + decisionType + '\'' + ", decisionCode='" + decisionCode + '\'' + ", decidedAt='" + decidedAt + '\'' + '}';
+            return "CreatedItem{" + "decisionId='" + decisionId + '\'' + ", paymentId='" + paymentId + '\''
+                    + ", decisionType='" + decisionType + '\'' + ", decisionCode='" + decisionCode + '\''
+                    + ", decidedAt='" + decidedAt + '\'' + '}';
         }
     }
 }

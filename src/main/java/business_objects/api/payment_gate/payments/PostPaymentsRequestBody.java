@@ -1,7 +1,6 @@
 package business_objects.api.payment_gate.payments;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -92,17 +91,37 @@ public class PostPaymentsRequestBody {
     @JsonProperty("card")
     private Card card;
 
-    public PostPaymentsRequestBody() {
-    }
+    public PostPaymentsRequestBody() {}
 
-    public PostPaymentsRequestBody(String schemaVersion, String brand, String regulator, String type, String id,
-            Integer clientId, Integer withdrawalId, String merchantOrderId, Integer mt4Account,
-            String accountType, String platform, String checkName, Integer statusId,
-            String status, String eventDate, String withdrawalApplicationTime,
-            String withdrawalCurrency, BigDecimal withdrawalAmount, BigDecimal withdrawalAmountUSD,
-            String paymentMethodCode, Integer paymentChannelCode, String paymentChannelName,
-            String paymentTypeName, Integer paymentTypeCode, String ip, String statusKYC,
-            BigDecimal cost, Card card) {
+    public PostPaymentsRequestBody(
+            String schemaVersion,
+            String brand,
+            String regulator,
+            String type,
+            String id,
+            Integer clientId,
+            Integer withdrawalId,
+            String merchantOrderId,
+            Integer mt4Account,
+            String accountType,
+            String platform,
+            String checkName,
+            Integer statusId,
+            String status,
+            String eventDate,
+            String withdrawalApplicationTime,
+            String withdrawalCurrency,
+            BigDecimal withdrawalAmount,
+            BigDecimal withdrawalAmountUSD,
+            String paymentMethodCode,
+            Integer paymentChannelCode,
+            String paymentChannelName,
+            String paymentTypeName,
+            Integer paymentTypeCode,
+            String ip,
+            String statusKYC,
+            BigDecimal cost,
+            Card card) {
         this.schemaVersion = schemaVersion;
         this.brand = brand;
         this.regulator = regulator;
@@ -361,7 +380,34 @@ public class PostPaymentsRequestBody {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PostPaymentsRequestBody that)) return false;
-        return Objects.equals(schemaVersion, that.schemaVersion) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(type, that.type) && Objects.equals(id, that.id) && Objects.equals(clientId, that.clientId) && Objects.equals(withdrawalId, that.withdrawalId) && Objects.equals(merchantOrderId, that.merchantOrderId) && Objects.equals(mt4Account, that.mt4Account) && Objects.equals(accountType, that.accountType) && Objects.equals(platform, that.platform) && Objects.equals(checkName, that.checkName) && Objects.equals(statusId, that.statusId) && Objects.equals(status, that.status) && Objects.equals(eventDate, that.eventDate) && Objects.equals(withdrawalApplicationTime, that.withdrawalApplicationTime) && Objects.equals(withdrawalCurrency, that.withdrawalCurrency) && bigDecimalEquals(withdrawalAmount, that.withdrawalAmount) && bigDecimalEquals(withdrawalAmountUSD, that.withdrawalAmountUSD) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(paymentChannelCode, that.paymentChannelCode) && Objects.equals(paymentChannelName, that.paymentChannelName) && Objects.equals(paymentTypeName, that.paymentTypeName) && Objects.equals(paymentTypeCode, that.paymentTypeCode) && Objects.equals(ip, that.ip) && Objects.equals(statusKYC, that.statusKYC) && bigDecimalEquals(cost, that.cost) && Objects.equals(card, that.card);
+        return Objects.equals(schemaVersion, that.schemaVersion)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(type, that.type)
+                && Objects.equals(id, that.id)
+                && Objects.equals(clientId, that.clientId)
+                && Objects.equals(withdrawalId, that.withdrawalId)
+                && Objects.equals(merchantOrderId, that.merchantOrderId)
+                && Objects.equals(mt4Account, that.mt4Account)
+                && Objects.equals(accountType, that.accountType)
+                && Objects.equals(platform, that.platform)
+                && Objects.equals(checkName, that.checkName)
+                && Objects.equals(statusId, that.statusId)
+                && Objects.equals(status, that.status)
+                && Objects.equals(eventDate, that.eventDate)
+                && Objects.equals(withdrawalApplicationTime, that.withdrawalApplicationTime)
+                && Objects.equals(withdrawalCurrency, that.withdrawalCurrency)
+                && bigDecimalEquals(withdrawalAmount, that.withdrawalAmount)
+                && bigDecimalEquals(withdrawalAmountUSD, that.withdrawalAmountUSD)
+                && Objects.equals(paymentMethodCode, that.paymentMethodCode)
+                && Objects.equals(paymentChannelCode, that.paymentChannelCode)
+                && Objects.equals(paymentChannelName, that.paymentChannelName)
+                && Objects.equals(paymentTypeName, that.paymentTypeName)
+                && Objects.equals(paymentTypeCode, that.paymentTypeCode)
+                && Objects.equals(ip, that.ip)
+                && Objects.equals(statusKYC, that.statusKYC)
+                && bigDecimalEquals(cost, that.cost)
+                && Objects.equals(card, that.card);
     }
 
     private static boolean bigDecimalEquals(BigDecimal a, BigDecimal b) {
@@ -374,8 +420,34 @@ public class PostPaymentsRequestBody {
     public int hashCode() {
         // Use normalized BigDecimal to keep hashCode consistent with equals
         return Objects.hash(
-                schemaVersion, brand, regulator, type, id, clientId, withdrawalId, merchantOrderId, mt4Account, accountType, platform, checkName, statusId, status, eventDate, withdrawalApplicationTime, withdrawalCurrency, normalizeBigDecimal(withdrawalAmount), normalizeBigDecimal(withdrawalAmountUSD), paymentMethodCode, paymentChannelCode, paymentChannelName, paymentTypeName, paymentTypeCode, ip, statusKYC, normalizeBigDecimal(cost), card
-        );
+                schemaVersion,
+                brand,
+                regulator,
+                type,
+                id,
+                clientId,
+                withdrawalId,
+                merchantOrderId,
+                mt4Account,
+                accountType,
+                platform,
+                checkName,
+                statusId,
+                status,
+                eventDate,
+                withdrawalApplicationTime,
+                withdrawalCurrency,
+                normalizeBigDecimal(withdrawalAmount),
+                normalizeBigDecimal(withdrawalAmountUSD),
+                paymentMethodCode,
+                paymentChannelCode,
+                paymentChannelName,
+                paymentTypeName,
+                paymentTypeCode,
+                ip,
+                statusKYC,
+                normalizeBigDecimal(cost),
+                card);
     }
 
     private static BigDecimal normalizeBigDecimal(BigDecimal val) {
@@ -402,11 +474,10 @@ public class PostPaymentsRequestBody {
         @JsonProperty("card3ds")
         private Integer card3ds;
 
-        public Card() {
-        }
+        public Card() {}
 
-        public Card(String binNumber, String lastFour, String expMonth, String expYear, String fullName,
-                Integer card3ds) {
+        public Card(
+                String binNumber, String lastFour, String expMonth, String expYear, String fullName, Integer card3ds) {
             this.binNumber = binNumber;
             this.lastFour = lastFour;
             this.expMonth = expMonth;
@@ -467,7 +538,12 @@ public class PostPaymentsRequestBody {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Card card1)) return false;
-            return Objects.equals(binNumber, card1.binNumber) && Objects.equals(lastFour, card1.lastFour) && Objects.equals(expMonth, card1.expMonth) && Objects.equals(expYear, card1.expYear) && Objects.equals(fullName, card1.fullName) && Objects.equals(card3ds, card1.card3ds);
+            return Objects.equals(binNumber, card1.binNumber)
+                    && Objects.equals(lastFour, card1.lastFour)
+                    && Objects.equals(expMonth, card1.expMonth)
+                    && Objects.equals(expYear, card1.expYear)
+                    && Objects.equals(fullName, card1.fullName)
+                    && Objects.equals(card3ds, card1.card3ds);
         }
 
         @Override

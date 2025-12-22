@@ -1,18 +1,5 @@
 package tests.mirror_trading_score_service_tests;
 
-import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
-import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
-import helpers.data.ClientHelper;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.util.List;
-
 import static business_objects.api.mirror_trading_score_service.MirrorTradingScoreRequest.getMirrorTradingScore;
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomBybitClient;
@@ -22,6 +9,18 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+
+import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
+import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
+import helpers.data.ClientHelper;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.util.List;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_MIRROR_TRADING_SCORE_API_SERVICE)
 @Story(STORY_GET_MIRROR_TRADING_SCORE)

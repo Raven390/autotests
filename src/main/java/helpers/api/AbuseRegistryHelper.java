@@ -1,5 +1,12 @@
 package helpers.api;
 
+import static business_objects.api.abuse_registry.AbuseRegistryRequest.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static utils.ConfigFactory.ABUSE_REGISTRY_BASE_PATH;
+import static utils.Utils.writeLog;
+
 import business_objects.api.abuse_registry.PostAbuserStatusRequestBody;
 import business_objects.api.abuse_registry.PostFraudTypesRequestBody;
 import business_objects.api.abuse_registry.PostFraudTypesV2RequestBody;
@@ -9,17 +16,9 @@ import helpers.data.enums.FraudSubtype;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
 import helpers.http_helper.HttpHelper;
-import okhttp3.Response;
-
 import java.io.IOException;
 import java.util.List;
-
-import static business_objects.api.abuse_registry.AbuseRegistryRequest.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static utils.ConfigFactory.ABUSE_REGISTRY_BASE_PATH;
-import static utils.Utils.writeLog;
+import okhttp3.Response;
 
 public class AbuseRegistryHelper {
 
@@ -29,8 +28,7 @@ public class AbuseRegistryHelper {
     private static final String COMMENT = "Set by autotest";
     private static final String ASSERT_REASON = "Check that request was successful";
 
-    private AbuseRegistryHelper() {
-    }
+    private AbuseRegistryHelper() {}
 
     public static void addFraudsForClient(ClientHelper client, List<FraudType> fraudTypes, FraudTypeStatus status)
             throws IOException, InterruptedException {
@@ -40,11 +38,23 @@ public class AbuseRegistryHelper {
         }
     }
 
-    public static void addFraudForClient(ClientHelper client, FraudType fraudType, FraudSubtype fraudSubtype,
-            FraudTypeStatus status, List<String> symbols)
+    public static void addFraudForClient(
+            ClientHelper client,
+            FraudType fraudType,
+            FraudSubtype fraudSubtype,
+            FraudTypeStatus status,
+            List<String> symbols)
             throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
-                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), COMMENT, fraudSubtype != null ? fraudSubtype.getCode() : null, symbols)));
+                ACTOR,
+                SYSTEM,
+                COMMENT,
+                List.of(new PostFraudTypesV2RequestBody.FraudType(
+                        fraudType.getCode(),
+                        status.getStatus(),
+                        COMMENT,
+                        fraudSubtype != null ? fraudSubtype.getCode() : null,
+                        symbols)));
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postFraudTypesV2(client, requestBody).code();
@@ -61,11 +71,14 @@ public class AbuseRegistryHelper {
         writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
-    public static void addFraudForClient(ClientHelper client, FraudType fraudType,
-            FraudTypeStatus status, List<String> symbols)
-            throws IOException {
+    public static void addFraudForClient(
+            ClientHelper client, FraudType fraudType, FraudTypeStatus status, List<String> symbols) throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
-                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), COMMENT, null, symbols)));
+                ACTOR,
+                SYSTEM,
+                COMMENT,
+                List.of(new PostFraudTypesV2RequestBody.FraudType(
+                        fraudType.getCode(), status.getStatus(), COMMENT, null, symbols)));
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postFraudTypesV2(client, requestBody).code();
@@ -86,15 +99,23 @@ public class AbuseRegistryHelper {
             throws IOException {
         assertThat("Check that fraudTypes list is not empty", fraudTypes.size(), greaterThan(0));
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
-                ACTOR, SYSTEM, COMMENT, fraudTypes.stream().map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(status.getStatus(), fraudType.getCode())).toList());
+                ACTOR,
+                SYSTEM,
+                COMMENT,
+                fraudTypes.stream()
+                        .map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(
+                                status.getStatus(), fraudType.getCode()))
+                        .toList());
         assertThat(ASSERT_REASON, postFraudTypes(ucid, requestBody).code(), is(200));
         writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, ucid));
     }
 
-    public static void addFraudForClient(ClientFraudTypes fraud)
-            throws IOException {
+    public static void addFraudForClient(ClientFraudTypes fraud) throws IOException {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
-                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus("CONFIRMED", fraud.getFraudTypeCode())));
+                ACTOR,
+                SYSTEM,
+                COMMENT,
+                List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus("CONFIRMED", fraud.getFraudTypeCode())));
         assertThat(ASSERT_REASON, postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
         writeLog("fraud " + fraud.getFraudTypeCode() + " successfully sent for client " + fraud.getUcid());
     }
@@ -105,18 +126,18 @@ public class AbuseRegistryHelper {
         }
     }
 
-    public static void addFraudForClient(ClientFraudTypes fraud, String status)
-            throws IOException {
+    public static void addFraudForClient(ClientFraudTypes fraud, String status) throws IOException {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
-                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus(status, fraud.getFraudTypeCode())));
+                ACTOR,
+                SYSTEM,
+                COMMENT,
+                List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus(status, fraud.getFraudTypeCode())));
         assertThat(ASSERT_REASON, postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
     }
 
-
-    public static void setClientStatus(ClientHelper client, FraudTypeStatus status)
-            throws IOException {
-        PostAbuserStatusRequestBody requestBody = new PostAbuserStatusRequestBody(
-                ACTOR, SYSTEM, COMMENT, status.getStatus());
+    public static void setClientStatus(ClientHelper client, FraudTypeStatus status) throws IOException {
+        PostAbuserStatusRequestBody requestBody =
+                new PostAbuserStatusRequestBody(ACTOR, SYSTEM, COMMENT, status.getStatus());
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postAbuserStatus(client, requestBody).code();

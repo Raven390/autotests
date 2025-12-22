@@ -1,26 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.*;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.List;
-import java.util.Locale;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
@@ -36,19 +15,58 @@ import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
+import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.*;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.List;
+import java.util.Locale;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 class SummaryPanelTest extends TestBaseWeb {
     private static final ClientHelper client;
     private static final ClientHelper clientBybit;
-    static {
-        client = ClientHelper.builder().userId(222_201).uid("d555fa11-3e45-44d3-8070-e28eaff987c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(222_201_001).tradingAccount2(22_201_002).serverId(42).build();
 
-        clientBybit = ClientHelper.builder().userId(222_202).uid("d555fa11-3e45-44d3-8070-e28eaff987c8").brand(Brand.BYBIT).regulator(Regulator.VFSC2).tradingAccount(222_201_003).tradingAccount2(22_201_004).serverId(42).build();
+    static {
+        client = ClientHelper.builder()
+                .userId(222_201)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff987c7")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(222_201_001)
+                .tradingAccount2(22_201_002)
+                .serverId(42)
+                .build();
+
+        clientBybit = ClientHelper.builder()
+                .userId(222_202)
+                .uid("d555fa11-3e45-44d3-8070-e28eaff987c8")
+                .brand(Brand.BYBIT)
+                .regulator(Regulator.VFSC2)
+                .tradingAccount(222_201_003)
+                .tradingAccount2(22_201_004)
+                .serverId(42)
+                .build();
     }
+
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static final CrmTbUserObject crmTbUserBybit = generateStaticUserByClient(clientBybit);
-    private static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.US));
+    private static final DecimalFormat decimalFormat =
+            new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.US));
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
     private static CrmTbAccountObject accountBybit;
@@ -108,7 +126,8 @@ class SummaryPanelTest extends TestBaseWeb {
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2));
 
         // Calculate today_pnl_usd (today's closed deals: profit + commission + storage)
-        double realizedPnl = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd()) + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
+        double realizedPnl = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd())
+                + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -126,11 +145,23 @@ class SummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
 
         Allure.step("Prepare DB data for test user");
-        MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(
+                client,
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getCurrentTimestampDbFormat());
         deposit1.setComment("123 deposit 456");
-        MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(
+                client,
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getCurrentTimestampDbFormat());
         deposit2.setComment("123 deposit 456");
-        MtBalanceOrdersObject deposit3 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject deposit3 = generateMtBalanceOrder(
+                client,
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getCurrentTimestampDbFormat());
         deposit3.setComment("123 pam 456");
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
 
@@ -138,8 +169,9 @@ class SummaryPanelTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
 
-        //we don't count deposits with comment containing '%pam%'
-        String formattedExpectedPnl = decimalFormat.format(roundDouble(deposit1.amountUsd + deposit2.amountUsd, 2)) + " USD";
+        // we don't count deposits with comment containing '%pam%'
+        String formattedExpectedPnl =
+                decimalFormat.format(roundDouble(deposit1.amountUsd + deposit2.amountUsd, 2)) + " USD";
         generalTab.checkSummaryPanelValue("Deposits", formattedExpectedPnl);
     }
 
@@ -151,11 +183,23 @@ class SummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
 
         Allure.step("Prepare DB data for test user");
-        MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(clientBybit, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(
+                clientBybit,
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getCurrentTimestampDbFormat());
         deposit1.setServerName("123bybit" + deposit1.serverName);
-        MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(clientBybit, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(
+                clientBybit,
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getRandomRoundedDouble(0.01, 99_999.99),
+                getCurrentTimestampDbFormat());
         deposit2.setServerName("123bybit" + deposit2.serverName);
-        MtBalanceOrdersObject deposit3 = generateMtBalanceOrder(clientBybit, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject deposit3 = generateMtBalanceOrder(
+                clientBybit,
+                getRandomRoundedDouble(-99_999.99, -0.01),
+                getRandomRoundedDouble(-99_999.99, -0.01),
+                getCurrentTimestampDbFormat());
         deposit3.setServerName("123bybit" + deposit3.serverName);
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
 
@@ -163,8 +207,9 @@ class SummaryPanelTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(clientBybit.getUcid());
 
-        //we don't count negative deposits
-        String formattedExpectedPnl = decimalFormat.format(roundDouble(deposit1.amountUsd + deposit2.amountUsd, 2)) + " USD";
+        // we don't count negative deposits
+        String formattedExpectedPnl =
+                decimalFormat.format(roundDouble(deposit1.amountUsd + deposit2.amountUsd, 2)) + " USD";
         generalTab.checkSummaryPanelValue("Deposits", formattedExpectedPnl);
     }
 
@@ -188,7 +233,10 @@ class SummaryPanelTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
 
-        String formattedExpectedWithdrawals = decimalFormat.format(Math.abs(roundDouble(crmTbWithdrawal1.getAmountUsd().doubleValue() + crmTbWithdrawal2.getAmountUsd().doubleValue(), 2)));
+        String formattedExpectedWithdrawals = decimalFormat.format(Math.abs(roundDouble(
+                crmTbWithdrawal1.getAmountUsd().doubleValue()
+                        + crmTbWithdrawal2.getAmountUsd().doubleValue(),
+                2)));
         generalTab.checkSummaryPanelValue("Withdrawals", formattedExpectedWithdrawals);
     }
 
@@ -198,8 +246,16 @@ class SummaryPanelTest extends TestBaseWeb {
     @DisplayName("Clients summary panel Segment test")
     void clientSummarySegmentTest() {
         Allure.step("Prepare DB data for test user");
-        SegmentationTableObject segment1 = SegmentationTableObject.builder().ucid(client.getUcid()).segment("Low").date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0)).build();
-        SegmentationTableObject segment2 = SegmentationTableObject.builder().ucid(client.getUcid()).segment("Medium").date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0)).build();
+        SegmentationTableObject segment1 = SegmentationTableObject.builder()
+                .ucid(client.getUcid())
+                .segment("Low")
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0))
+                .build();
+        SegmentationTableObject segment2 = SegmentationTableObject.builder()
+                .ucid(client.getUcid())
+                .segment("Medium")
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .build();
 
         insertObjectsToDb(SEGMENTATION_TABLE_NAME, List.of(segment1, segment2));
 
@@ -207,7 +263,6 @@ class SummaryPanelTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
         generalTab.checkSummaryPanelValue("Segment", segment2.getSegment());
-
     }
 
     @Test
@@ -236,7 +291,10 @@ class SummaryPanelTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
         generalTab.checkSummaryPanelFraudValue("Fraud", CPA_ABUSE.getDisplayName());
-        generalTab.checkSummaryPanelFraudValue("Fraud", String.format("%s %s", FraudTypeStatus.POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getDisplayName()));
+        generalTab.checkSummaryPanelFraudValue(
+                "Fraud",
+                String.format(
+                        "%s %s", FraudTypeStatus.POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getDisplayName()));
     }
 
     @Test
@@ -274,8 +332,6 @@ class SummaryPanelTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue(
-                "Company RFR", decimalFormat.format(generalTab.calculateRevenue(revenue))
-        );
+        generalTab.checkSummaryPanelValue("Company RFR", decimalFormat.format(generalTab.calculateRevenue(revenue)));
     }
 }

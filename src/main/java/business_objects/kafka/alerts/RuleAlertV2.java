@@ -57,7 +57,7 @@ public class RuleAlertV2 {
     private String currency;
 
     @JsonProperty("account")
-    private String account;
+    private Integer account;
 
     @JsonProperty("symbol")
     private String symbol;
@@ -83,7 +83,6 @@ public class RuleAlertV2 {
 
         @JsonProperty("name")
         private String name;
-
     }
 
     @Getter
@@ -191,5 +190,20 @@ public class RuleAlertV2 {
 
         @JsonProperty("Card used by known fraudster")
         private String cardUsedByKnownFraudster;
+
+        @JsonProperty("Profit")
+        private String profit;
+
+        @JsonProperty("Withdrawals")
+        private String withdrawals;
+
+        @JsonProperty("Risk free revenue")
+        private String riskFreeRevenue;
+
+        @JsonProperty("Amount of credits")
+        private String amountOfCredits;
+
+        @JsonProperty("Floating profit USD")
+        private String floatingProfitUSD;
     }
 }

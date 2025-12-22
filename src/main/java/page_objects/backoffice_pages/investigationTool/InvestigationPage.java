@@ -1,21 +1,5 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import business_objects.db.audit_service_db.EventOld;
-import business_objects.ui.user.User;
-import com.microsoft.playwright.*;
-import com.microsoft.playwright.options.WaitForSelectorState;
-import helpers.database.DbName;
-import io.qameta.allure.Allure;
-import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,6 +10,21 @@ import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.ConfigFactory.ENTER_PAGE_E2E;
 import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
 import static utils.TestUtils.comparePageScreenshotWithBaseline;
+
+import business_objects.db.audit_service_db.EventOld;
+import business_objects.ui.user.User;
+import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class InvestigationPage extends AbstractPage {
     private final Locator pageLogo;
@@ -110,10 +109,14 @@ public class InvestigationPage extends AbstractPage {
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
     private static final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
-    private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'suspicious_clients__card')]";
-    private static final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
-    private static final String INVESTIGATION_TYPE_LOCATOR_TEMPLATE = "//span[@class='g-select-list__option-default-label' and text()='%s']";
-    public static final String HIGH_PRIORITY_LOCATOR = "//div[contains(@class,'v-suspicious-client-card__alerts-count') and contains(@class,'v-suspicious-client-card__alerts-count_isHighPriority')]";
+    private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN =
+            "//div[text()='%s']/ancestor::div[contains(@data-qa,'suspicious_clients__card')]";
+    private static final String FILTER_LOADING =
+            "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
+    private static final String INVESTIGATION_TYPE_LOCATOR_TEMPLATE =
+            "//span[@class='g-select-list__option-default-label' and text()='%s']";
+    public static final String HIGH_PRIORITY_LOCATOR =
+            "//div[contains(@class,'v-suspicious-client-card__alerts-count') and contains(@class,'v-suspicious-client-card__alerts-count_isHighPriority')]";
     private final Locator unassignedSuspiciousClientsCounter;
     private final Locator mySuspiciousClientsCounter;
     private final Locator allSuspiciousClientsCounter;
@@ -134,13 +137,20 @@ public class InvestigationPage extends AbstractPage {
         this.statusRowHeader = page.locator(".g-table__head .v-alert-list__column_type_status");
         this.assigneeRowHeader = page.locator(".g-table__head .v-alert-list__column_type_assignee");
         this.tagRowHeader = page.locator(".g-table__body .v-alert-list__column_type_tag");
-        this.dateRowCell = page.locator(".g-table__body .v-alert-list__column_type_date").first();
-        this.amountRowCell = page.locator(".g-table__head .v-alert-list__column_type_amount").first();
-        this.ruleRowCell = page.locator(".g-table__body .v-alert-list__column_type_rule").first();
-        this.clientRowCell = page.locator(".g-table__body .v-alert-list__column_type_client").first();
-        this.statusRowCell = page.locator(".g-table__body .v-alert-list__column_type_status").first();
-        this.assigneeRowCell = page.locator(".g-table__body .v-alert-list__column_type_assignee").first();
-        this.tagRowCell = page.locator(".g-table__body .v-alert-list__column_type_tag").first();
+        this.dateRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_date").first();
+        this.amountRowCell =
+                page.locator(".g-table__head .v-alert-list__column_type_amount").first();
+        this.ruleRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_rule").first();
+        this.clientRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_client").first();
+        this.statusRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_status").first();
+        this.assigneeRowCell = page.locator(".g-table__body .v-alert-list__column_type_assignee")
+                .first();
+        this.tagRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_tag").first();
         this.soundButton = page.locator(".soundButton"); // not implemented
         this.refreshButton = page.locator(".refreshButton"); // not implemented
         this.profileButton = page.locator(".profileButton"); // not implemented-dummy
@@ -153,16 +163,21 @@ public class InvestigationPage extends AbstractPage {
         this.darkBody = page.locator(".g-root.g-root_theme_dark");
         this.lightBody = page.locator(".g-root.g-root_theme_light");
         this.susClientSection = page.locator("[data-qa='investigation_page__suspicious_clients_container']");
-        this.susClientSectionFolded = page.locator(".v-investigation-tools-side-panel_collapsed[data-qa='investigation_page__suspicious_clients_container']");
+        this.susClientSectionFolded = page.locator(
+                ".v-investigation-tools-side-panel_collapsed[data-qa='investigation_page__suspicious_clients_container']");
         this.susClientList = page.locator("[data-qa='investigation_page__suspicious_clients_list']");
         this.assignToMeFilter = page.locator("[data-qa='suspicious_clients__tabs'] [value='MY']");
         this.unassignedFilter = page.locator("[data-qa='suspicious_clients__tabs'] [value='UNASSIGNED']");
         this.allSusClientsFilter = page.locator("[data-qa='suspicious_clients__tabs'] [value='ALL']");
-        this.allSuspiciousClientsCounter = page.locator("//*[@data-qa='suspicious_clients__tabs']//*[@value='ALL']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
-        this.mySuspiciousClientsCounter = page.locator("//*[@data-qa='suspicious_clients__tabs']//*[@value='MY']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
-        this.unassignedSuspiciousClientsCounter = page.locator("//*[@data-qa='suspicious_clients__tabs']//*[@value='UNASSIGNED']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
+        this.allSuspiciousClientsCounter = page.locator(
+                "//*[@data-qa='suspicious_clients__tabs']//*[@value='ALL']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
+        this.mySuspiciousClientsCounter = page.locator(
+                "//*[@data-qa='suspicious_clients__tabs']//*[@value='MY']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
+        this.unassignedSuspiciousClientsCounter = page.locator(
+                "//*[@data-qa='suspicious_clients__tabs']//*[@value='UNASSIGNED']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
         this.susClientSectionFoldButton = page.locator("[data-qa='suspicious_clients__list_toggle']");
-        this.susClientSectionFoldButtonFolded = page.locator(".v-investigation-tools-side-panel__toggler_collapsed [data-qa='suspicious_clients__list_toggle']");
+        this.susClientSectionFoldButtonFolded = page.locator(
+                ".v-investigation-tools-side-panel__toggler_collapsed [data-qa='suspicious_clients__list_toggle']");
         this.addCommentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
         this.addCommentSubmitButton = page.locator("[data-qa='investigation_tools__add_comment_submit_button']");
         this.addCommentPopup = page.locator("[data-qa='investigation_tools__add_comment_popup']");
@@ -173,36 +188,50 @@ public class InvestigationPage extends AbstractPage {
         this.investigateButtonList = page.locator("[data-qa='investigation_tools__client_card_assign_button']");
         this.suspiciousClientsList = page.locator("[data-qa='suspicious_clients__list']");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
-        this.clientContainer = page.locator("//*[@data-qa='suspicious_clients__list']//*[@data-qa='data_item_wrapper_container']");
+        this.clientContainer =
+                page.locator("//*[@data-qa='suspicious_clients__list']//*[@data-qa='data_item_wrapper_container']");
         this.brandImage = page.locator("//img[@class='g-avatar__image']");
         this.countryCodeElement = page.locator("//span[contains(@class,'g-text')]");
         this.clientIdElement = page.locator("//div[contains(@class,'g-text_variant_subheader-1')]");
         this.investigationStatusElement = page.locator("//div[contains(@class,'v-suspicious-client-card__status')]");
-        this.clientAssignmentElement = page.locator("//div[contains(@class,'v-suspicious-client-card__assigned-user')]");
+        this.clientAssignmentElement =
+                page.locator("//div[contains(@class,'v-suspicious-client-card__assigned-user')]");
         this.clientCardTimerElement = page.locator("//div[contains(@class,'v-suspicious-client-card__timer')]");
-        this.clientCardAlertsCountElement = page.locator("//div[contains(@class,'v-suspicious-client-card__alerts-count')]");
-        this.currentTabCardsCountElement = page.locator("//label[contains(@class,'g-radio-button__option_checked')]/descendant::span[contains(@class,'g-color-text_color_hint')]");
+        this.clientCardAlertsCountElement =
+                page.locator("//div[contains(@class,'v-suspicious-client-card__alerts-count')]");
+        this.currentTabCardsCountElement = page.locator(
+                "//label[contains(@class,'g-radio-button__option_checked')]/descendant::span[contains(@class,'g-color-text_color_hint')]");
         this.suspiciousClientsFilterIcon = page.locator("//button[@data-qa='suspicious_clients__filters_toggle']");
         this.applyFilterButton = page.locator("//button[@data-qa='suspicious_clients__filters__apply']");
         this.showMoreRulesButton = page.locator("//span[text()='Show more']/..");
         this.ruleSearchInput = page.locator("//input[@placeholder='Search by rule']");
-        this.resetBrandsButton = page.locator("//button[@data-qa='suspicious_clients__filters__brands__title__reset']/descendant::span[text()='Reset']");
-        this.resetRulesButton = page.locator("//button[@data-qa='suspicious_clients__filters__rules__title__reset']/descendant::span[text()='Reset']");
-        this.resetCountriesButton = page.locator("//button[@data-qa='suspicious_clients__filters__countries__title__reset']/descendant::span[text()='Reset']");
-        this.resetAssigneeButton = page.locator("//button[@data-qa='suspicious_clients__filters__assignees__title__reset']/descendant::span[text()='Reset']");
+        this.resetBrandsButton = page.locator(
+                "//button[@data-qa='suspicious_clients__filters__brands__title__reset']/descendant::span[text()='Reset']");
+        this.resetRulesButton = page.locator(
+                "//button[@data-qa='suspicious_clients__filters__rules__title__reset']/descendant::span[text()='Reset']");
+        this.resetCountriesButton = page.locator(
+                "//button[@data-qa='suspicious_clients__filters__countries__title__reset']/descendant::span[text()='Reset']");
+        this.resetAssigneeButton = page.locator(
+                "//button[@data-qa='suspicious_clients__filters__assignees__title__reset']/descendant::span[text()='Reset']");
         this.brandButtons = page.locator("//button[contains(@data-qa,'suspicious_clients__filters__brands__item')]");
         this.ruleCheckboxes = page.locator("//label[contains(@data-qa,'suspicious_clients__filters__rules__item')]");
-        this.countryCheckboxes = page.locator("//label[contains(@data-qa,'suspicious_clients__filters__countries__item')]");
-        this.assigneeCheckboxes = page.locator("//label[contains(@data-qa,'suspicious_clients__filters__assignees__item')]");
+        this.countryCheckboxes =
+                page.locator("//label[contains(@data-qa,'suspicious_clients__filters__countries__item')]");
+        this.assigneeCheckboxes =
+                page.locator("//label[contains(@data-qa,'suspicious_clients__filters__assignees__item')]");
         this.assignButton = page.locator("//button[@data-qa='investigation_tools__client_card_assign_button']");
         this.commentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.selectInvestigationTypeDropDown = page.locator("//button[@data-qa='suspicious_clients__select_type']");
-        this.filterAmountFrom = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__from']/descendant::input");
-        this.filterAmountTo = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__to']/descendant::input");
+        this.filterAmountFrom = page.locator(
+                "//*[@data-qa='suspicious_clients__filters__amount__input__input__from']/descendant::input");
+        this.filterAmountTo =
+                page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__to']/descendant::input");
         this.tabTitle = page.locator(".v-investigation-tools-tabs__marker .g-tabs__item-title");
-        this.amountFilterPresets = page.locator("//div[@data-qa='suspicious_clients__filters__amount__presets']/descendant::*[@class='g-button__text']");
-        this.resetAmountFilterButton = page.locator("//button[@data-qa='suspicious_clients__filters__amount__input__title__reset']");
+        this.amountFilterPresets = page.locator(
+                "//div[@data-qa='suspicious_clients__filters__amount__presets']/descendant::*[@class='g-button__text']");
+        this.resetAmountFilterButton =
+                page.locator("//button[@data-qa='suspicious_clients__filters__amount__input__title__reset']");
     }
 
     @Step("Open the autotest login page main page")
@@ -226,15 +255,26 @@ public class InvestigationPage extends AbstractPage {
     @Step("Open the MOCKED BackOffice main page")
     public void navigateMock() {
         page.route("**/api/alerts", route -> {
-            String alert = "{\n" + "        'id': 1518,\n" + "        'uuid': 'c6b6af2e-43a2-425d-bf87-ee2b6141e267',\n" + "        'date': '2024-09-12T07:57:46.713048Z',\n" + "        'amount': {\n" + "            'value': -235331367481903743,\n" + "            'currency': 'Monica'\n" + "        },\n" + "        'rule': [\n" + "            'ProctorMan',\n" + "            'Marquez',\n" + "            'Ramirez',\n" + "            'Simpson',\n" + "            'McFadden',\n" + "            'Farley'\n" + "        ],\n" + "        'client': {\n" + "            'id': null,\n" + "            'regulator': null,\n" + "            'brand': null\n" + "        },\n" + "        'status': 'NEW',\n" + "        'tag': []\n" + "    }";
+            String alert = "{\n" + "        'id': 1518,\n" + "        'uuid': 'c6b6af2e-43a2-425d-bf87-ee2b6141e267',\n"
+                    + "        'date': '2024-09-12T07:57:46.713048Z',\n" + "        'amount': {\n"
+                    + "            'value': -235331367481903743,\n" + "            'currency': 'Monica'\n"
+                    + "        },\n" + "        'rule': [\n" + "            'ProctorMan',\n"
+                    + "            'Marquez',\n" + "            'Ramirez',\n" + "            'Simpson',\n"
+                    + "            'McFadden',\n" + "            'Farley'\n" + "        ],\n" + "        'client': {\n"
+                    + "            'id': null,\n" + "            'regulator': null,\n" + "            'brand': null\n"
+                    + "        },\n" + "        'status': 'NEW',\n" + "        'tag': []\n" + "    }";
             APIResponse response = route.fetch();
             String body = response.text();
             Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody(alert).setHeaders(headers));
+            route.fulfill(new Route.FulfillOptions()
+                    .setResponse(response)
+                    .setBody(alert)
+                    .setHeaders(headers));
         });
         page.navigate(BASE_URL_E2E);
         waitForPageToLoad();
-        page.evaluate("document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
+        page.evaluate(
+                "document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
     }
 
     @Step("Check that user is logged in")
@@ -385,8 +425,7 @@ public class InvestigationPage extends AbstractPage {
         allSusClientsFilter.locator("[aria-checked='true']").isVisible();
     }
 
-    @Deprecated//need to update logic of mock
-
+    @Deprecated // need to update logic of mock
     @Step("Compare alert page with baseline screenshots")
     public void compareAlertPageWithBaseline(Page page, String baselinePath) {
         waitForPageToLoad();
@@ -404,7 +443,11 @@ public class InvestigationPage extends AbstractPage {
         page.route("**/clients/" + ucid + "/comments", route -> {
             APIResponse response = route.fetch();
             Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+            route.fulfill(new Route.FulfillOptions()
+                    .setResponse(response)
+                    .setBody("500")
+                    .setHeaders(headers)
+                    .setStatus(500));
         });
     }
 
@@ -435,7 +478,6 @@ public class InvestigationPage extends AbstractPage {
         page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, paymentMethod)).click();
     }
 
-
     @Step
     public void fillPriorityFilter(String priority) {
         Allure.step("Fill priority filter");
@@ -446,7 +488,10 @@ public class InvestigationPage extends AbstractPage {
     public void verifyAllCardsFilteredByHighPriority() {
         for (int i = 0; i < clientContainer.count(); i++) {
             Locator child = clientContainer.nth(i).locator(HIGH_PRIORITY_LOCATOR);
-            assertThat("Assert that client card is according to high priority filtration", child.isVisible(), equalTo(true));
+            assertThat(
+                    "Assert that client card is according to high priority filtration",
+                    child.isVisible(),
+                    equalTo(true));
         }
     }
 
@@ -472,14 +517,22 @@ public class InvestigationPage extends AbstractPage {
         page.waitForTimeout(500);
         waitForPageToLoad();
         int attempts = 0;
-        while ((!page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).isVisible()) && attempts < 5000) {
-            suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
+        while ((!page.locator(String.format(
+                                "//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId))
+                        .isVisible())
+                && attempts < 5000) {
+            suspiciousClientsList.hover(); // .evaluate("e => e.scrollTop += 100");
             page.mouse().wheel(0, 100);
             page.waitForTimeout(500);
             attempts++;
         }
-        page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).hover();
-        page.locator(String.format("//div[text()='%s']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button", userId)).nth(0).click();
+        page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId))
+                .hover();
+        page.locator(String.format(
+                        "//div[text()='%s']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button",
+                        userId))
+                .nth(0)
+                .click();
         String message = infoToast.textContent();
         assertEquals("Client investigation started", message);
     }
@@ -490,14 +543,21 @@ public class InvestigationPage extends AbstractPage {
         page.waitForTimeout(500);
         waitForPageToLoad();
         int attempts = 0;
-        while ((!page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).isVisible()) && attempts < 5000) {
-            suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
+        while ((!page.locator(String.format(
+                                "//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId))
+                        .isVisible())
+                && attempts < 5000) {
+            suspiciousClientsList.hover(); // .evaluate("e => e.scrollTop += 100");
             page.mouse().wheel(0, 100);
             page.waitForTimeout(500);
             attempts++;
         }
-        page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).hover();
-        Locator investigateButton1 = page.locator(String.format("//div[text()='%s']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button", userId)).nth(0);
+        page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId))
+                .hover();
+        Locator investigateButton1 = page.locator(String.format(
+                        "//div[text()='%s']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button",
+                        userId))
+                .nth(0);
         assertTrue(investigateButton1.isDisabled());
     }
 
@@ -568,8 +628,8 @@ public class InvestigationPage extends AbstractPage {
             clientsCountryList.add(child.textContent());
         }
         String iso2Pattern = "^[A-Z]{2}$";
-        clientsCountryList.forEach(country -> assertThat(String.format("Assert that country '%s' matches iso2 format", country), country.matches(iso2Pattern))
-        );
+        clientsCountryList.forEach(country -> assertThat(
+                String.format("Assert that country '%s' matches iso2 format", country), country.matches(iso2Pattern)));
     }
 
     @Step("Verify each client card has a client id")
@@ -582,8 +642,9 @@ public class InvestigationPage extends AbstractPage {
             clientIdList.add(child.textContent());
         }
         String positiveIntsPattern = "^[1-9]\\d*$";
-        clientIdList.forEach(clientId -> assertThat(String.format("Assert that clientId '%s' is a positive int", clientId), clientId.matches(positiveIntsPattern))
-        );
+        clientIdList.forEach(clientId -> assertThat(
+                String.format("Assert that clientId '%s' is a positive int", clientId),
+                clientId.matches(positiveIntsPattern)));
     }
 
     @Step("Verify each client card has any investigation status")
@@ -595,9 +656,11 @@ public class InvestigationPage extends AbstractPage {
             assertThat(child.count(), not(equalTo(0)));
             investigationStatusList.add(child.textContent());
         }
-        investigationStatusList.forEach(status -> assertThat(String.format("Assert that investigation status '%s' has value in ['Investigating', 'Suspicious']", status), status, anyOf(is("Investigating"), is("Suspicious"))
-        )
-        );
+        investigationStatusList.forEach(status -> assertThat(
+                String.format(
+                        "Assert that investigation status '%s' has value in ['Investigating', 'Suspicious']", status),
+                status,
+                anyOf(is("Investigating"), is("Suspicious"))));
     }
 
     @Step("Verify each client card has investigation status 'Investigating'")
@@ -609,9 +672,10 @@ public class InvestigationPage extends AbstractPage {
             assertThat(child.count(), not(equalTo(0)));
             investigationStatusList.add(child.textContent());
         }
-        investigationStatusList.forEach(status -> assertThat(String.format("Assert that investigation status '%s' has value 'Investigating'", status), status, (is("Investigating"))
-        )
-        );
+        investigationStatusList.forEach(status -> assertThat(
+                String.format("Assert that investigation status '%s' has value 'Investigating'", status),
+                status,
+                (is("Investigating"))));
     }
 
     @Step("Verify each client card has investigation status 'Investigating'")
@@ -623,9 +687,10 @@ public class InvestigationPage extends AbstractPage {
             assertThat(child.count(), not(equalTo(0)));
             assignmentList.add(child.textContent());
         }
-        assignmentList.forEach(assignee -> assertThat("Assert that assignment element is present", assignee, (is(String.format("%s %s", user.getFirstName(), user.getLastName())))
-        )
-        );
+        assignmentList.forEach(assignee -> assertThat(
+                "Assert that assignment element is present",
+                assignee,
+                (is(String.format("%s %s", user.getFirstName(), user.getLastName())))));
     }
 
     @Step("Verify each client card has a card timer")
@@ -638,8 +703,8 @@ public class InvestigationPage extends AbstractPage {
             cardTimerList.add(child.textContent());
         }
         String timerPattern = "^(\\d{1,2}:\\d{2}(:\\d{2})?|(\\d{1,2}d \\d{1,2}h))$";
-        cardTimerList.forEach(timer -> assertThat(String.format("Assert that card timer '%s' is a positive int", timer), timer.matches(timerPattern))
-        );
+        cardTimerList.forEach(timer -> assertThat(
+                String.format("Assert that card timer '%s' is a positive int", timer), timer.matches(timerPattern)));
     }
 
     @Step("Verify each client card has an alert count")
@@ -652,8 +717,9 @@ public class InvestigationPage extends AbstractPage {
             alertCountList.add(child.textContent());
         }
         String positiveIntsPattern = "^[1-9]\\d*$";
-        alertCountList.forEach(alertCount -> assertThat(String.format("Assert that alert count '%s' is a positive int", alertCount), alertCount.matches(positiveIntsPattern))
-        );
+        alertCountList.forEach(alertCount -> assertThat(
+                String.format("Assert that alert count '%s' is a positive int", alertCount),
+                alertCount.matches(positiveIntsPattern)));
     }
 
     @Step("Verify client cards count is equal to actual number of client cards in the list")
@@ -670,8 +736,12 @@ public class InvestigationPage extends AbstractPage {
         if (matcher.find()) {
             int actualCardsCount = (Integer.parseInt(matcher.group(1)) / 110) + 1;
             int expectedCardsCount = Integer.parseInt(currentTabCardsCountElement.textContent());
-            assertThat(String.format("Assert that card count in tab (%s) is equal to card count by counting rows (%s)", expectedCardsCount, actualCardsCount), actualCardsCount, equalTo(expectedCardsCount)
-            );
+            assertThat(
+                    String.format(
+                            "Assert that card count in tab (%s) is equal to card count by counting rows (%s)",
+                            expectedCardsCount, actualCardsCount),
+                    actualCardsCount,
+                    equalTo(expectedCardsCount));
         } else {
             assertThat("Was not able to find 'top' value in style attribute", false);
         }
@@ -682,7 +752,8 @@ public class InvestigationPage extends AbstractPage {
             page.locator(CLIENT_LIST_LOADING).waitFor(new Locator.WaitForOptions().setTimeout(5000));
         } catch (PlaywrightException ignored) {
         }
-        page.waitForSelector(CLIENT_LIST_LOADING, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(
+                CLIENT_LIST_LOADING, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
         page.waitForSelector(FILTER_LOADING, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
@@ -704,7 +775,10 @@ public class InvestigationPage extends AbstractPage {
         assertThat(clientContainer.count(), greaterThan(0));
         for (int i = 0; i < clientContainer.count(); i++) {
             Locator child = clientContainer.nth(i).locator(brandImage);
-            assertThat("Assert that brand image is one for Vantage", child.getAttribute("src"), equalTo(VANTAGE_BRAND_IMAGE_SRC));
+            assertThat(
+                    "Assert that brand image is one for Vantage",
+                    child.getAttribute("src"),
+                    equalTo(VANTAGE_BRAND_IMAGE_SRC));
         }
     }
 
@@ -736,7 +810,10 @@ public class InvestigationPage extends AbstractPage {
         assertThat(clientContainer.count(), greaterThan(0));
         for (int i = 0; i < clientContainer.count(); i++) {
             Locator child = clientContainer.nth(i).locator(countryCodeElement);
-            assertThat("Assert that country in client card is according to filtration", child.textContent(), equalTo(country));
+            assertThat(
+                    "Assert that country in client card is according to filtration",
+                    child.textContent(),
+                    equalTo(country));
         }
     }
 
@@ -749,35 +826,50 @@ public class InvestigationPage extends AbstractPage {
         assertThat(clientContainer.count(), greaterThan(0));
         for (int i = 0; i < clientContainer.count(); i++) {
             Locator child = clientContainer.nth(i).locator(clientAssignmentElement);
-            assertThat("Assert that assignee in client card is according to filtration", child.textContent(), equalTo(String.format("%s %s", assignee.getFirstName(), assignee.getLastName())));
+            assertThat(
+                    "Assert that assignee in client card is according to filtration",
+                    child.textContent(),
+                    equalTo(String.format("%s %s", assignee.getFirstName(), assignee.getLastName())));
         }
     }
 
     public void verifyNoBrandIsSelected() {
         for (int i = 0; i < brandButtons.count(); i++) {
             Locator button = brandButtons.nth(i);
-            assertThat("Assert that each brand button is not selected", button.getAttribute("class"), not(containsString("g-button_view_action")));
+            assertThat(
+                    "Assert that each brand button is not selected",
+                    button.getAttribute("class"),
+                    not(containsString("g-button_view_action")));
         }
     }
 
     public void verifyNoRuleIsSelected() {
         for (int i = 0; i < ruleCheckboxes.count(); i++) {
             Locator checkbox = ruleCheckboxes.nth(i);
-            assertThat("Assert that each rule checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
+            assertThat(
+                    "Assert that each rule checkbox is not selected",
+                    checkbox.getAttribute("class"),
+                    not(containsString("g-checkbox_checked")));
         }
     }
 
     public void verifyNoCountryIsSelected() {
         for (int i = 0; i < countryCheckboxes.count(); i++) {
             Locator checkbox = countryCheckboxes.nth(i);
-            assertThat("Assert that each country checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
+            assertThat(
+                    "Assert that each country checkbox is not selected",
+                    checkbox.getAttribute("class"),
+                    not(containsString("g-checkbox_checked")));
         }
     }
 
     public void verifyNoAssigneeIsSelected() {
         for (int i = 0; i < assigneeCheckboxes.count(); i++) {
             Locator checkbox = assigneeCheckboxes.nth(i);
-            assertThat("Assert that each assignee checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
+            assertThat(
+                    "Assert that each assignee checkbox is not selected",
+                    checkbox.getAttribute("class"),
+                    not(containsString("g-checkbox_checked")));
         }
     }
 
@@ -853,28 +945,26 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("Verify client card with client id {clientId} is visible")
     public void verifyClientCardWithClientIdVisible(String clientId) {
-        assertThat("Assert client card with client id is visible", page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId)).isVisible(), equalTo(true));
+        assertThat(
+                "Assert client card with client id is visible",
+                page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId))
+                        .isVisible(),
+                equalTo(true));
     }
-
 
     public void openCommentForm() {
         commentButton.click();
         addCommentInput.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-
     }
-
 
     public void isCommentButtonDisabled() {
         Allure.step("check if comment button is disabled");
         assertTrue(commentButton.isDisabled());
-
     }
-
 
     public void cantOpenCommentForm() {
         waitForPageToLoad();
         assertTrue(commentButton.isDisabled());
-
     }
 
     @Step("Click client card with client id {clientId}")
@@ -901,24 +991,34 @@ public class InvestigationPage extends AbstractPage {
     public void clickSelectInvestigationType(String investigationType) {
         waitForPageToLoad();
         selectInvestigationTypeDropDown.click();
-        page.locator(String.format(INVESTIGATION_TYPE_LOCATOR_TEMPLATE, investigationType)).click();
+        page.locator(String.format(INVESTIGATION_TYPE_LOCATOR_TEMPLATE, investigationType))
+                .click();
     }
 
     public void selectInvestigationTypeSwitchIsHidden() {
         selectInvestigationTypeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
-        assertThat("Assert that select investigation type drop down is hidden", selectInvestigationTypeDropDown.isVisible(), equalTo(false));
+        assertThat(
+                "Assert that select investigation type drop down is hidden",
+                selectInvestigationTypeDropDown.isVisible(),
+                equalTo(false));
     }
 
     public void investigationTypeSwitchIsNotPresented() {
         waitForPageToLoad();
         selectInvestigationTypeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
-        assertThat("Assert that select investigation type drop down is hidden", selectInvestigationTypeDropDown.isVisible(), equalTo(false));
+        assertThat(
+                "Assert that select investigation type drop down is hidden",
+                selectInvestigationTypeDropDown.isVisible(),
+                equalTo(false));
     }
 
     public void investigationTypeSwitchIsPresented() {
         waitForPageToLoad();
         selectInvestigationTypeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertThat("Assert that select investigation type drop down is present", selectInvestigationTypeDropDown.isVisible(), equalTo(true));
+        assertThat(
+                "Assert that select investigation type drop down is present",
+                selectInvestigationTypeDropDown.isVisible(),
+                equalTo(true));
     }
 
     @Step("Select 'Trading' investigation type from the dropdown")

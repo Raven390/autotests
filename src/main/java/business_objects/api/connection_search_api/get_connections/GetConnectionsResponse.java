@@ -1,11 +1,10 @@
 package business_objects.api.connection_search_api.get_connections;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import static utils.Utils.roundDouble;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 import java.util.Objects;
-
-import static utils.Utils.roundDouble;
 
 public class GetConnectionsResponse {
 
@@ -39,12 +38,19 @@ public class GetConnectionsResponse {
     @JsonProperty("connectionScoreToInitial")
     public Double connectionScoreToInitial;
 
-    public GetConnectionsResponse() {
-    }
+    public GetConnectionsResponse() {}
 
-    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength,
-            ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType,
-            Double connectionStrengthToInitial, Double connectionScore, Double connectionScoreToInitial) {
+    public GetConnectionsResponse(
+            String clientIdFrom,
+            String clientIdTo,
+            Double connectionStrength,
+            ConnectionDetail[] connectionDetail,
+            String connectionType,
+            Integer connectionDepth,
+            String abuseType,
+            Double connectionStrengthToInitial,
+            Double connectionScore,
+            Double connectionScoreToInitial) {
         this.clientIdFrom = clientIdFrom;
         this.clientIdTo = clientIdTo;
         this.connectionStrength = connectionStrength;
@@ -62,12 +68,28 @@ public class GetConnectionsResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetConnectionsResponse that = (GetConnectionsResponse) o;
-        return Objects.equals(clientIdFrom, that.clientIdFrom) && Objects.equals(clientIdTo, that.clientIdTo) && Objects.deepEquals(connectionDetail, that.connectionDetail) && Objects.equals(connectionType, that.connectionType) && Objects.equals(connectionDepth, that.connectionDepth) && Objects.equals(abuseType, that.abuseType) && Objects.equals(roundDouble(connectionScore, 4), roundDouble(that.connectionScore, 4)) && Objects.equals(roundDouble(connectionScoreToInitial, 4), roundDouble(that.connectionScoreToInitial, 4));
+        return Objects.equals(clientIdFrom, that.clientIdFrom)
+                && Objects.equals(clientIdTo, that.clientIdTo)
+                && Objects.deepEquals(connectionDetail, that.connectionDetail)
+                && Objects.equals(connectionType, that.connectionType)
+                && Objects.equals(connectionDepth, that.connectionDepth)
+                && Objects.equals(abuseType, that.abuseType)
+                && Objects.equals(roundDouble(connectionScore, 4), roundDouble(that.connectionScore, 4))
+                && Objects.equals(
+                        roundDouble(connectionScoreToInitial, 4), roundDouble(that.connectionScoreToInitial, 4));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientIdFrom, clientIdTo, Arrays.hashCode(connectionDetail), connectionType, connectionDepth, abuseType, roundDouble(connectionScore, 4), roundDouble(connectionScoreToInitial, 4));
+        return Objects.hash(
+                clientIdFrom,
+                clientIdTo,
+                Arrays.hashCode(connectionDetail),
+                connectionType,
+                connectionDepth,
+                abuseType,
+                roundDouble(connectionScore, 4),
+                roundDouble(connectionScoreToInitial, 4));
     }
 
     public static class ConnectionDetail {
@@ -84,11 +106,13 @@ public class GetConnectionsResponse {
         @JsonProperty("relationType")
         public String relationType;
 
-        public ConnectionDetail() {
-        }
+        public ConnectionDetail() {}
 
-        public ConnectionDetail(String connectionAttributeName, String connectionAttributeValue,
-                String sourceAttributeValue, String relationType) {
+        public ConnectionDetail(
+                String connectionAttributeName,
+                String connectionAttributeValue,
+                String sourceAttributeValue,
+                String relationType) {
             this.connectionAttributeName = connectionAttributeName;
             this.connectionAttributeValue = connectionAttributeValue;
             this.sourceAttributeValue = sourceAttributeValue;
@@ -100,7 +124,10 @@ public class GetConnectionsResponse {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ConnectionDetail that = (ConnectionDetail) o;
-            return Objects.equals(connectionAttributeName, that.connectionAttributeName) && Objects.equals(connectionAttributeValue, that.connectionAttributeValue) && Objects.equals(sourceAttributeValue, that.sourceAttributeValue) && Objects.equals(relationType, that.relationType);
+            return Objects.equals(connectionAttributeName, that.connectionAttributeName)
+                    && Objects.equals(connectionAttributeValue, that.connectionAttributeValue)
+                    && Objects.equals(sourceAttributeValue, that.sourceAttributeValue)
+                    && Objects.equals(relationType, that.relationType);
         }
 
         @Override
@@ -110,12 +137,19 @@ public class GetConnectionsResponse {
 
         @Override
         public String toString() {
-            return "ConnectionDetail{" + "connectionAttributeName='" + connectionAttributeName + '\'' + ", connectionAttributeValue='" + connectionAttributeValue + '\'' + ", sourceAttributeValue='" + sourceAttributeValue + '\'' + ", relationType='" + relationType + '\'' + '}';
+            return "ConnectionDetail{" + "connectionAttributeName='" + connectionAttributeName + '\''
+                    + ", connectionAttributeValue='" + connectionAttributeValue + '\'' + ", sourceAttributeValue='"
+                    + sourceAttributeValue + '\'' + ", relationType='" + relationType + '\'' + '}';
         }
     }
 
     @Override
     public String toString() {
-        return "GetConnectionsResponse{" + "clientIdFrom='" + clientIdFrom + '\'' + ", clientIdTo='" + clientIdTo + '\'' + ", connectionStrength=" + connectionStrength + ", connectionDetail=" + Arrays.toString(connectionDetail) + ", connectionType='" + connectionType + '\'' + ", connectionDepth=" + connectionDepth + ", abuseType='" + abuseType + '\'' + ", connectionStrengthToInitial=" + connectionStrengthToInitial + ", connectionScore=" + connectionScore + ", connectionScoreToInitial=" + connectionScoreToInitial + '}';
+        return "GetConnectionsResponse{" + "clientIdFrom='" + clientIdFrom + '\'' + ", clientIdTo='" + clientIdTo + '\''
+                + ", connectionStrength=" + connectionStrength + ", connectionDetail="
+                + Arrays.toString(connectionDetail) + ", connectionType='" + connectionType + '\''
+                + ", connectionDepth=" + connectionDepth + ", abuseType='" + abuseType + '\''
+                + ", connectionStrengthToInitial=" + connectionStrengthToInitial + ", connectionScore="
+                + connectionScore + ", connectionScoreToInitial=" + connectionScoreToInitial + '}';
     }
 }

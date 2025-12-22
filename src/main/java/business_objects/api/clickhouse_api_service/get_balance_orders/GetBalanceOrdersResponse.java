@@ -1,9 +1,7 @@
 package business_objects.api.clickhouse_api_service.get_balance_orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
-
 
 public class GetBalanceOrdersResponse {
 
@@ -25,11 +23,15 @@ public class GetBalanceOrdersResponse {
     @JsonProperty("comment")
     String comment;
 
-    public GetBalanceOrdersResponse() {
-    }
+    public GetBalanceOrdersResponse() {}
 
-    public GetBalanceOrdersResponse(String tradeDate, Integer tradeId, Integer tradingAccount, Double profit,
-            Double profitUSD, String comment) {
+    public GetBalanceOrdersResponse(
+            String tradeDate,
+            Integer tradeId,
+            Integer tradingAccount,
+            Double profit,
+            Double profitUSD,
+            String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -43,9 +45,12 @@ public class GetBalanceOrdersResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetBalanceOrdersResponse that = (GetBalanceOrdersResponse) o;
-        return Objects.equals(tradeDate, that.tradeDate) && Objects.equals(
-                tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(profit, that.profit) && Objects.equals(
-                        profitUsd, that.profitUsd) && Objects.equals(comment, that.comment);
+        return Objects.equals(tradeDate, that.tradeDate)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(profit, that.profit)
+                && Objects.equals(profitUsd, that.profitUsd)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
@@ -55,7 +60,9 @@ public class GetBalanceOrdersResponse {
 
     @Override
     public String toString() {
-        return "GetBalanceOrdersResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUSD=" + profitUsd + ", comment='" + comment + '\'' + '}';
+        return "GetBalanceOrdersResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId
+                + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUSD=" + profitUsd
+                + ", comment='" + comment + '\'' + '}';
     }
 
     public String getTradeDate() {

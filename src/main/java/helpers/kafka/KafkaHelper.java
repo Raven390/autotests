@@ -4,6 +4,7 @@ import static utils.ConfigFactory.*;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
 
+import io.qameta.allure.Step;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -13,8 +14,6 @@ import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.Future;
-
-import io.qameta.allure.Step;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -183,11 +182,15 @@ public class KafkaHelper {
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
             properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PRIVATE);
             properties.put(
-                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + System.getenv("KAFKA_PASSWORD") + "';");
+                    "sasl.jaas.config",
+                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
+                            + System.getenv("KAFKA_PASSWORD") + "';");
         } else {
             properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PUBLIC);
             properties.put(
-                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + KAFKA_PASSWORD + "';");
+                    "sasl.jaas.config",
+                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
+                            + KAFKA_PASSWORD + "';");
         }
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -202,12 +205,16 @@ public class KafkaHelper {
             // Private Kafka setup for CI environment
             properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PRIVATE);
             properties.put(
-                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + System.getenv("KAFKA_PASSWORD") + "';");
+                    "sasl.jaas.config",
+                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
+                            + System.getenv("KAFKA_PASSWORD") + "';");
         } else {
             // Public Kafka setup for local environment
             properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PUBLIC);
             properties.put(
-                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + KAFKA_PASSWORD + "';");
+                    "sasl.jaas.config",
+                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
+                            + KAFKA_PASSWORD + "';");
         }
 
         // Deserializers for key and value
@@ -265,7 +272,8 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     writeLog(String.format(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d",
+                            topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // If the record contains the specified id, return it
                     if (record.value() != null && record.value().contains(id)) {
@@ -279,7 +287,7 @@ public class KafkaHelper {
             return KAFKA_NO_MESSAGE_FOUND_ERROR;
         } finally {
             cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
-            consumer.close();// Ensure the consumer is closed
+            consumer.close(); // Ensure the consumer is closed
         }
     }
 
@@ -322,7 +330,8 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     writeLog(String.format(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d",
+                            topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // If the record contains the specified id, add it to the list
                     if (record.value() != null && record.value().contains(id)) {
@@ -384,7 +393,8 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     writeLog(String.format(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d",
+                            topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // If the record contains the specified id, add it to the list
                     if (record.value() != null && record.value().contains(id)) {
@@ -416,7 +426,8 @@ public class KafkaHelper {
             ConsumerRecords<String, String> records;
             String consumerId = getFreeConsumerId();
             Properties properties = getKafkaConsumerProperties(consumerId);
-            String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
+            String consumerGroupId =
+                    properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
             // Subscribe to the topic
@@ -433,7 +444,8 @@ public class KafkaHelper {
                     // Process each record
                     for (ConsumerRecord<String, String> record : records) {
                         writeLog(String.format(
-                                "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                                "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d",
+                                topic, record.key(), record.value(), record.partition(), record.offset()));
 
                         // If the record contains the specified id, return it
                         if (record.value() != null && record.value().contains(id)) {
@@ -449,8 +461,7 @@ public class KafkaHelper {
                 }
                 // After X attempts, if no matching message is found, return null
                 cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
-                return new MessageWithHeaders(
-                        KAFKA_NO_MESSAGE_FOUND_ERROR, new HashMap<>());
+                return new MessageWithHeaders(KAFKA_NO_MESSAGE_FOUND_ERROR, new HashMap<>());
             }
             // Ensure the consumer is closed
             finally {
@@ -499,15 +510,18 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     writeLog(String.format(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d",
+                            topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // Check each id in the idList for a match in the record value
                     for (String id : idList) {
-                        if (!foundMessages.containsKey(id) && record.value() != null && record.value().contains(id)) {
+                        if (!foundMessages.containsKey(id)
+                                && record.value() != null
+                                && record.value().contains(id)) {
                             if (foundMessages.get(id) != null) {
                                 foundMessages.get(id).add(record.value());
                             } else {
-                                foundMessages.put(id, List.of(record.value()));// Store the found message
+                                foundMessages.put(id, List.of(record.value())); // Store the found message
                             }
                         }
                     }
@@ -540,7 +554,8 @@ public class KafkaHelper {
             Future<RecordMetadata> future = producer.send(record);
             metadata = future.get();
             writeLog(String.format(
-                    "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), metadata.offset()));
+                    "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d",
+                    topic, record.key(), record.value(), record.partition(), metadata.offset()));
         } catch (Exception e) {
             writeLog("Error producing message");
         }
@@ -561,7 +576,8 @@ public class KafkaHelper {
                     Future<RecordMetadata> future = producer.send(record);
                     RecordMetadata metadata = future.get();
                     writeLog(String.format(
-                            "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), metadata.partition(), metadata.offset()));
+                            "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d",
+                            topic, record.key(), record.value(), metadata.partition(), metadata.offset()));
                 } catch (Exception e) {
                     writeLog("Error producing message in loop");
                 }
@@ -610,7 +626,8 @@ public class KafkaHelper {
                         if (text != null && record.value().contains(text)) {
                             cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
                             return new MatchResultWithMessage(
-                                    true, "Matching Record Found: " + record.value() + ". Based on search with: " + text);
+                                    true,
+                                    "Matching Record Found: " + record.value() + ". Based on search with: " + text);
                         }
                     }
                 }
@@ -647,7 +664,9 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    writeLog(String.format("Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                    writeLog(String.format(
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d",
+                            topic, record.key(), record.value(), record.partition(), record.offset()));
                     // Check if each textToSearch is present in the message value
                     for (String text : textToSearchList) {
                         if (record.value() != null && record.value().contains(text)) {

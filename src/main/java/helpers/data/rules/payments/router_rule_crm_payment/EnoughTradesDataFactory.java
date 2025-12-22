@@ -1,5 +1,22 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
+import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequestBodyFactory.generatePostRuleExecutionsBody;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
+import static business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObjectFactory.generateMt4TradesObject;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClientZero;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
+import static utils.Utils.*;
+
 import business_objects.api.payment_gate.rule_executions.PostRuleExecutionsBody;
 import business_objects.db.clickhouse.crm_tb_deposit_channel.CrmTbDepositChannelObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
@@ -13,35 +30,17 @@ import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsOb
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
+import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Description;
-import utils.Utils;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequestBodyFactory.generatePostRuleExecutionsBody;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
-import static business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObjectFactory.generateMt4TradesObject;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
-import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClientZero;
-import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
-import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
-import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
-import static helpers.database.DbHelper.*;
-import static utils.Constants.*;
-import static utils.Utils.*;
+import utils.Utils;
 
 public class EnoughTradesDataFactory {
     private static final ClientHelper enoughTradesRuleClient1 = getRandomVantageClientAllFields();
@@ -56,31 +55,32 @@ public class EnoughTradesDataFactory {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
-        data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4",                            // accountType
-                Utils.getRandomIntPositive().toString(),      // binNumber
-                data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // checkName
-                data.clientHelper.getUserId(),                // clientId
-                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
-                "4",                                          // expMonth
-                "2030",                                       // expYear
-                data.clientHelper.getFirstName(),             // fullName
-                getRandomUuidString(),                        // id
-                "VTSG" + getRandomIntPositive(),              // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(),        // mt4Account
-                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
-                "-",                                 // paymentChannelName
-                "CREDIT_CARD",                       // paymentMethodCode
-                "WEB",                               // platform
-                data.clientHelper.getRegulator(),    // regulator
-                "1.0",                               // schemaVersion
-                CRM_WITHDRAWAL_EVENT,                // type
-                1,                                   // withdrawalAmount
-                Instant.now().toString(),               // withdrawalApplicationTime
-                "EUR",                               // withdrawalCurrency
-                getRandomIntPositive()               // withdrawalId
-        );
+        data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
+                .accountType("MT4")
+                .binNumber(Utils.getRandomIntPositive().toString())
+                .brand(data.clientHelper.getBrand().toLowerCase())
+                .checkName("")
+                .clientId(data.clientHelper.getUserId())
+                .eventDate(Instant.now().toString())
+                .expMonth("4")
+                .expYear("2030")
+                .fullName(data.clientHelper.getFirstName())
+                .id(getRandomUuidString())
+                .merchantOrderId("VTSG" + getRandomIntPositive())
+                .mt4Account(data.clientHelper.getTradingAccount())
+                .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
+                .paymentChannelName("-")
+                .paymentMethodCode("CREDIT_CARD")
+                .platform("WEB")
+                .regulator(data.clientHelper.getRegulator())
+                .schemaVersion("1.0")
+                .type(CRM_WITHDRAWAL_EVENT)
+                .withdrawalAmount(1.0)
+                .withdrawalApplicationTime(Instant.now().toString())
+                .withdrawalCurrency("EUR")
+                .withdrawalId(Long.valueOf(getRandomIntPositive()))
+                .status("Risk audit")
+                .build();
         return data;
     }
 
@@ -119,13 +119,19 @@ public class EnoughTradesDataFactory {
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
         String catName = "International cat";
-        CrmTbWithdrawalTypeObject wdType = CrmTbWithdrawalTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(1).enName(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbWithdrawalTypeObject wdType = CrmTbWithdrawalTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .enName(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbWithdrawalTypeObjects = List.of(wdType);
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setSourceIdSt(sourceId));
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setPaymentTypeId(wdTypeId));
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setAmountUsd(BigDecimal.valueOf(200.0)));
 
-        //set deposits
+        // set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
@@ -134,15 +140,29 @@ public class EnoughTradesDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(250.0)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(1).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper);//set credits
+        MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper); // set credits
         credit.setAmountUsd(100.0);
         data.mtTbCreditsObjects = List.of(credit);
-        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(data.clientHelper);//set profit
+        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(data.clientHelper); // set profit
         deal.setProfitUsd(1000.0);
         deal.setCommissionUsd(1000.0);
         data.mt5DealsCoercedObjects = List.of(deal);
@@ -160,7 +180,6 @@ public class EnoughTradesDataFactory {
         data.MtMt4TradesObjects = List.of(trade);
 
         return data;
-
     }
 
     private static DataHelper getEnoughTradesTestAlert2Data() {
@@ -174,7 +193,13 @@ public class EnoughTradesDataFactory {
         int sourceId = getRandomBytePositive();
         int pcId = getRandomBytePositive();
         String catName = "International cat";
-        CrmTbWithdrawalTypeObject wdType = CrmTbWithdrawalTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(1).enName(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbWithdrawalTypeObject wdType = CrmTbWithdrawalTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .enName(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbWithdrawalTypeObjects = List.of(wdType);
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setSourceIdSt(sourceId));
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setPaymentTypeId(wdTypeId));
@@ -187,15 +212,29 @@ public class EnoughTradesDataFactory {
         data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
         data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
         data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(250.0)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder().id(wdTypeId).sourceIdSt(sourceId).category(1).name(catName).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder().id(pcId).sourceIdSt(sourceId).channelId(pcId).typeId(wdTypeId).name(catName).isMobileChannel(0).lastUpdated(getCurrentTimestampDbFormat()).build();
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper);//set credits
+        MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper); // set credits
         credit.setAmountUsd(100.0);
         data.mtTbCreditsObjects = List.of(credit);
-        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(data.clientHelper);//set profit
+        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(data.clientHelper); // set profit
         deal.setProfitUsd(1000.0);
         deal.setCommissionUsd(1000.0);
         data.mt5DealsCoercedObjects = List.of(deal);
@@ -213,20 +252,19 @@ public class EnoughTradesDataFactory {
         data.MtMt4TradesObjects = List.of(trade);
 
         PaymentEventsObject paymentEventsObject1 = generatePaymentEventsObject(data.clientHelper);
-        PaymentDetailsObject paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, data.clientHelper);
+        PaymentDetailsObject paymentDetailsObject1 =
+                generatePaymentDetailsObject(paymentEventsObject1, data.clientHelper);
         PostRuleExecutionsBody postRuleExecutionsBody1 = generatePostRuleExecutionsBody(paymentEventsObject1);
-        PaymentRuleExecutionsObject paymentRuleExecutionsObject1 = generatePaymentRuleExecutionsObject(paymentEventsObject1);
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject1 =
+                generatePaymentRuleExecutionsObject(paymentEventsObject1);
         paymentRuleExecutionsObject1.setRuleEndId(112);
         paymentRuleExecutionsObject1.setRuleId(3);
-
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
         insertObjectToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, paymentRuleExecutionsObject1);
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
 
-
         return data;
-
     }
 
     public static Map<String, DataHelper> setupEnoughTradesRuleData() {

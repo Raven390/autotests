@@ -1,5 +1,10 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Utils.roundDouble;
+
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -7,16 +12,9 @@ import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import page_objects.backoffice_pages.AbstractPage;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.Utils.roundDouble;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class GeneralTab extends AbstractPage {
 
@@ -76,9 +74,11 @@ public class GeneralTab extends AbstractPage {
     private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
     private static final String KYC_STATUS_SELECTOR = "[data-qa='investigation_tools_kyc__status']";
-    private static final String GENERAL_TAB_LOADING_ELEMENT = "//div[contains(@class,'v-investigation-tools-general-skeleton__skeleton')]";
+    private static final String GENERAL_TAB_LOADING_ELEMENT =
+            "//div[contains(@class,'v-investigation-tools-general-skeleton__skeleton')]";
     private static final String GENERAL_INFO_HEADER = "//div[@class='v-investigation-tools-general-info__header']";
-    private static final String ELEMENT_BY_LABEL_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-investigation-tools-general-info__item']/descendant::div[@class='v-text-with-icon__text']";
+    private static final String ELEMENT_BY_LABEL_PATTERN =
+            "//span[text()='%s']/ancestor::div[@class='v-investigation-tools-general-info__item']/descendant::div[@class='v-text-with-icon__text']";
     private static final String BUTTON_LOADING = "//button[contains(@class,'g-button_loading')]";
     private static final String POF_ROW_SELECTOR = "//tr[@data-qa='investigation_tools_kyc__face_row']";
     private static final String KYC_ROW_TITLE = "//td[@data-qa='investigation_tools_kyc_row__title']";
@@ -87,20 +87,26 @@ public class GeneralTab extends AbstractPage {
     private static final String KYC_ROW_PARAMS = "//td[@data-qa='investigation_tools_kyc_row__params']";
     private static final String KYC_ROW_ATTEMPT = "//td[@data-qa='investigation_tools_kyc_row__attempts']";
     private static final String SECONDARY_TEXT_SELECTOR = "//*[contains(@class,'g-color-text_color_secondary')]";
-    private static final String NOT_SECONDARY_TEXT_SELECTOR = "//*[not (contains(@class,'g-color-text_color_secondary'))]";
+    private static final String NOT_SECONDARY_TEXT_SELECTOR =
+            "//*[not (contains(@class,'g-color-text_color_secondary'))]";
     private static final String SUMMARY_PANEL = "//*[@data-qa='investigation_page__investigation_tools'";
-    private static final String SUMMARY_PANEL_VALUE = "//div[contains(@class, 'v-client-summary-panel-v2__value')]/div[@class= 'v-text-with-icon__text']";
+    private static final String SUMMARY_PANEL_VALUE =
+            "//div[contains(@class, 'v-client-summary-panel-v2__value')]/div[@class= 'v-text-with-icon__text']";
     private static final String SUMMARY_PANEL_ITEM = "//div[contains(@class, 'v-client-summary-panel-v2__item')]";
     private static final String IB_ROW = "//*[text()='IB program']//ancestor::tr";
     private static final String REFERRAL_ROW = "//*[text()='Referral client']//ancestor::tr";
     private static final String CPA_ROW = "//*[text()='CPA affiliate']//ancestor::tr";
-    private static final String REFERRAL_LOGIN = "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_login')]";
+    private static final String REFERRAL_LOGIN =
+            "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_login')]";
     private static final String REFERRAL_DATE = "//*[contains(@class, 'v-registration-source-row__date')]";
-    private static final String REFERRAL_REBATES = "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_rebates')]";
+    private static final String REFERRAL_REBATES =
+            "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_rebates')]";
     private static final String TEXT_ELEMENT = "//*[contains(@class, 'v-text-with-icon__text')]";
     private static final String MANAGER_NAME = "//*[contains(@class,'v-sales-manager-item__name')]";
-    private static final String MANAGER_ORGANISATION = "//*[@class='v-sales-manager-item__manager-org-name']//" + VARIANT_BODY_1_SELECTOR;
-    private static final String MANAGER_ACCOUNTS = "//*[@class='v-sales-manager-item__manager-accounts-list']//" + VARIANT_BODY_1_SELECTOR;
+    private static final String MANAGER_ORGANISATION =
+            "//*[@class='v-sales-manager-item__manager-org-name']//" + VARIANT_BODY_1_SELECTOR;
+    private static final String MANAGER_ACCOUNTS =
+            "//*[@class='v-sales-manager-item__manager-accounts-list']//" + VARIANT_BODY_1_SELECTOR;
     private static final String VERIFICATION_FILES_ITEM_PATTERN = "//*[@data-qa='preview_%s']";
 
     public GeneralTab(Page page) {
@@ -123,7 +129,8 @@ public class GeneralTab extends AbstractPage {
         this.originalSizeButton = page.locator(".v-gallery__controls button").nth(1);
         this.rotateButton = page.locator(".v-gallery__controls button").nth(3);
         this.mirrorButton = page.locator(".v-gallery__controls button").nth(4);
-        this.imageFile = page.locator("//div[@class='v-investigation-tools-kyc-drawer__gallery']/descendant::*[@data-qa='gallery__image']");
+        this.imageFile = page.locator(
+                "//div[@class='v-investigation-tools-kyc-drawer__gallery']/descendant::*[@data-qa='gallery__image']");
         this.sliderForwardButton = page.locator(".v-gallery__slides button").nth(0);
         this.sliderBackwardButton = page.locator(".v-gallery__slides button").nth(1);
         this.sliderGalleryCounter = page.locator(".v-gallery__slides .v-gallery__counter");
@@ -132,15 +139,21 @@ public class GeneralTab extends AbstractPage {
         this.poiNotAppliedPlaceholder = page.locator(KYC_STATUS_SELECTOR).getByText("Proof of identity not applied");
         this.attemptSection = page.locator(".v-investigation-tools-kyc-row__cell_type_attempts");
         this.kycAddressRow = page.locator("[data-qa='investigation_tools_kyc__address_row']");
-        this.kycAddressRowDetails = page.locator("[data-qa='investigation_tools_kyc__address_row'] [data-qa='investigation_tools_kyc_row__params']");
+        this.kycAddressRowDetails = page.locator(
+                "[data-qa='investigation_tools_kyc__address_row'] [data-qa='investigation_tools_kyc_row__params']");
         this.kycIdRow = page.locator("[data-qa='investigation_tools_kyc__identity_row']");
-        this.kycIdRowDetails = page.locator("[data-qa='investigation_tools_kyc__identity_row'] [data-qa='investigation_tools_kyc_row__params']");
+        this.kycIdRowDetails = page.locator(
+                "[data-qa='investigation_tools_kyc__identity_row'] [data-qa='investigation_tools_kyc_row__params']");
         this.historyDrawer = page.locator("[data-qa='drawer_body']");
-        this.fullNameElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
-        this.registrationDateAgoElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
+        this.fullNameElement = page.locator(
+                String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
+        this.registrationDateAgoElement = page.locator(
+                String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
         this.showHiddenDataButton = page.locator("//button[@data-qa='general_info__unmask_btn']");
-        this.registrationSourceReferral = page.locator("//span[text()='Referral client']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
-        this.registrationSourceCpa = page.locator("//span[text()='CPA affiliate']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
+        this.registrationSourceReferral = page.locator(
+                "//span[text()='Referral client']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
+        this.registrationSourceCpa = page.locator(
+                "//span[text()='CPA affiliate']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
         this.fileViewerImage = page.locator("[data-qa='gallery__image']");
         this.fileViewerImagePresentation = page.locator("[data-qa='gallery__slide']");
         this.attemptItem = page.locator(".v-investigation-tools-kyc-attempts__item");
@@ -148,13 +161,18 @@ public class GeneralTab extends AbstractPage {
         this.cpaOverviewButton = page.locator("//div[text()='CPA overview']");
         this.verificationRow = page.locator("//*[@data-qa='investigation_tools_kyc__verification_row']");
         this.verificationRowTitle = verificationRow.locator("//*[@data-qa='investigation_tools_kyc_row__title']");
-        this.verificationRowFilesCount = verificationRow.locator("//*[@data-qa='investigation_tools_kyc_row__attempts']");
-        this.verificationDrawerContainer = page.locator("//div[@data-qa='drawer_container']").last();
-        this.verificationDrawerTitle = verificationDrawerContainer.locator("//div[@class='v-drawer-header__title-container']/div[contains(@class,'g-text')]");
-        this.verificationDrawerSubheader = verificationDrawerContainer.locator("//*[contains(@class,'v-drawer-header__sub-header')]");
+        this.verificationRowFilesCount =
+                verificationRow.locator("//*[@data-qa='investigation_tools_kyc_row__attempts']");
+        this.verificationDrawerContainer =
+                page.locator("//div[@data-qa='drawer_container']").last();
+        this.verificationDrawerTitle = verificationDrawerContainer.locator(
+                "//div[@class='v-drawer-header__title-container']/div[contains(@class,'g-text')]");
+        this.verificationDrawerSubheader =
+                verificationDrawerContainer.locator("//*[contains(@class,'v-drawer-header__sub-header')]");
         this.verificationDrawerListItems = page.locator("//*[@class='v-pp-verification-files-drawer-list__item']");
         this.verificationDrawerListDate = page.locator("//*[@class='v-pp-verification-files-drawer-list__datetime']");
-        this.verificationDrawerListFileNumber = page.locator("//*[@class='v-pp-verification-files-drawer-list__content']/*[contains(@class,'g-label')]");
+        this.verificationDrawerListFileNumber = page.locator(
+                "//*[@class='v-pp-verification-files-drawer-list__content']/*[contains(@class,'g-label')]");
         this.verificationDrawerPreviewGroups = page.locator("//*[@data-qa='pp_verification_files_drawer__previews']");
         this.kycStatus = page.locator("//*[@data-qa='investigation_tools_kyc__status']");
     }
@@ -188,20 +206,34 @@ public class GeneralTab extends AbstractPage {
 
     @Step("Check KYC status general")
     public void checkKycStatusGeneral(String title, String status) {
-        page.waitForSelector(String.format("//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title));
-        assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title)).getByText(status).isVisible());
+        page.waitForSelector(
+                String.format("//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title));
+        assertTrue(page.locator(String.format(
+                        "//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title))
+                .getByText(status)
+                .isVisible());
     }
 
     @Step("Check KYC attempts general")
     public void checkKycAttemptsGeneral(String title, String expectedAttempts) {
-        page.waitForSelector("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]");
-        assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]", title)).getByText(expectedAttempts).isVisible());
+        page.waitForSelector("//span[text()='" + title
+                + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]");
+        assertTrue(page.locator(String.format(
+                        "//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]",
+                        title))
+                .getByText(expectedAttempts)
+                .isVisible());
     }
 
     @Step("Check KYC attempts general")
     public void checkIdInfoGeneral(String title, String expectedInfo) {
-        page.waitForSelector("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]");
-        assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_params')]", title)).getByText(expectedInfo).isVisible());
+        page.waitForSelector("//span[text()='" + title
+                + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]");
+        assertTrue(page.locator(String.format(
+                        "//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_params')]",
+                        title))
+                .getByText(expectedInfo)
+                .isVisible());
     }
 
     @Step("KYC details is displayed")
@@ -309,7 +341,8 @@ public class GeneralTab extends AbstractPage {
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
         page.waitForTimeout(500);
-        page.waitForSelector(GENERAL_TAB_LOADING_ELEMENT, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(
+                GENERAL_TAB_LOADING_ELEMENT, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
     @Step("Get full name")
@@ -419,11 +452,14 @@ public class GeneralTab extends AbstractPage {
     }
 
     public void checkValueKycPofTitle(String expectedValue) {
-        assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_TITLE).textContent());
+        assertEquals(
+                expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_TITLE).textContent());
     }
 
     public void checkValueKycPofStatus(String expectedValue) {
-        assertEquals(expectedValue.toLowerCase(), page.locator(POF_ROW_SELECTOR + KYC_ROW_STATUS).textContent().toLowerCase());
+        assertEquals(
+                expectedValue.toLowerCase(),
+                page.locator(POF_ROW_SELECTOR + KYC_ROW_STATUS).textContent().toLowerCase());
     }
 
     public void checkValueKycPofDate(String expectedValue) {
@@ -431,15 +467,20 @@ public class GeneralTab extends AbstractPage {
         String testValue = values[0] + ":" + values[1];
         String locator = POF_ROW_SELECTOR + KYC_ROW_DATE + "//" + VARIANT_BODY_1_SELECTOR;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(testValue.toLowerCase(), page.locator(locator).nth(0).textContent().toLowerCase());
+        assertEquals(
+                testValue.toLowerCase(),
+                page.locator(locator).nth(0).textContent().toLowerCase());
     }
 
     public void checkValueKycPofParameters(String expectedValue) {
-        assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_PARAMS).textContent());
+        assertEquals(
+                expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_PARAMS).textContent());
     }
 
     public void checkValueKycPofAttempts(String expectedValue) {
-        assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_ATTEMPT).first().textContent());
+        assertEquals(
+                expectedValue,
+                page.locator(POF_ROW_SELECTOR + KYC_ROW_ATTEMPT).first().textContent());
     }
 
     public void checkSummaryPanelValue(String sectionName, String expectedValue) {
@@ -447,7 +488,9 @@ public class GeneralTab extends AbstractPage {
         String locator = SUMMARY_PANEL_ITEM + "//*[text()='" + sectionName + "']/.." + SUMMARY_PANEL_VALUE;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         String actualValue = page.locator(locator).textContent();
-        if ("Withdrawals".equals(sectionName) || "Company RFR".equals(sectionName) || "Trading PNL".equals(sectionName)) {
+        if ("Withdrawals".equals(sectionName)
+                || "Company RFR".equals(sectionName)
+                || "Trading PNL".equals(sectionName)) {
             actualValue = actualValue.replace(" USD", "");
         }
         assertEquals(expectedValue, actualValue);
@@ -471,13 +514,14 @@ public class GeneralTab extends AbstractPage {
         String locator = IB_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_REBATES + TEXT_ELEMENT;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         String testedValue = decimalFormat.format(expectedValue);
-        assertEquals("IB rebates " + testedValue + "  USD", page.locator(locator).textContent());
-
+        assertEquals(
+                "IB rebates " + testedValue + "  USD", page.locator(locator).textContent());
     }
 
     public void checkManagerData(String expectedName, String expectedOrg, String expectedAcc) {
         Allure.step("check manager name is displayed");
-        String sectionLocator = "//*[text()='" + expectedName + "']/ancestor::*[@class='v-sales-manager-item__manager']";
+        String sectionLocator =
+                "//*[text()='" + expectedName + "']/ancestor::*[@class='v-sales-manager-item__manager']";
         Locator nameLocator = page.locator(sectionLocator + MANAGER_NAME);
         nameLocator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals(expectedName, nameLocator.textContent());
@@ -491,8 +535,7 @@ public class GeneralTab extends AbstractPage {
         assertEquals(expectedAcc, accLocator.textContent());
     }
 
-    public void checkManagerOrganisation(int index, String expectedName) {
-    }
+    public void checkManagerOrganisation(int index, String expectedName) {}
 
     public void checkManagerAccounts(int index, String expectedName) {
         Allure.step("check manager account");
@@ -552,8 +595,8 @@ public class GeneralTab extends AbstractPage {
         String locator = CPA_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_REBATES + TEXT_ELEMENT;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         String testedValue = decimalFormat.format(expectedValue);
-        assertEquals("CPA rebates " + testedValue + "  USD", page.locator(locator).textContent());
-
+        assertEquals(
+                "CPA rebates " + testedValue + "  USD", page.locator(locator).textContent());
     }
 
     public void checkCpaDate(int login, String expectedValue) {
@@ -568,7 +611,25 @@ public class GeneralTab extends AbstractPage {
     }
 
     public Double calculateRevenue(S3FactLoginMetricsObject revenue) {
-        return revenue.getDailyCoreSpreadRevenueOz() + revenue.getDailyCoreSpreadRevenuePe() + revenue.getDailyTakerSpreadRevenueOz() + revenue.getDailyTakerSpreadRevenuePe() + revenue.getDailyLpSpreadRevenueOz() + revenue.getDailyLpSpreadRevenuePe() + revenue.getDailyVbSpreadRevenueOz() + revenue.getDailyVbSpreadRevenuePe() + revenue.getDailyAppliedMinSpreadRevenueOz() + revenue.getDailyAppliedMinSpreadRevenuePe() + revenue.getDailyAppliedMaxSpreadRevenueOz() + revenue.getDailyAppliedMaxSpreadRevenuePe() + revenue.getDailyMakerSpreadRevenueOz() - revenue.getDailyClientSlippageRevenueOz() - revenue.getDailyClientSlippageRevenuePe() - revenue.getDailyCommissionRevenue() - revenue.getDailySwapsRevenue() - revenue.getIbCommission() - revenue.getSalesCommission();
+        return revenue.getDailyCoreSpreadRevenueOz()
+                + revenue.getDailyCoreSpreadRevenuePe()
+                + revenue.getDailyTakerSpreadRevenueOz()
+                + revenue.getDailyTakerSpreadRevenuePe()
+                + revenue.getDailyLpSpreadRevenueOz()
+                + revenue.getDailyLpSpreadRevenuePe()
+                + revenue.getDailyVbSpreadRevenueOz()
+                + revenue.getDailyVbSpreadRevenuePe()
+                + revenue.getDailyAppliedMinSpreadRevenueOz()
+                + revenue.getDailyAppliedMinSpreadRevenuePe()
+                + revenue.getDailyAppliedMaxSpreadRevenueOz()
+                + revenue.getDailyAppliedMaxSpreadRevenuePe()
+                + revenue.getDailyMakerSpreadRevenueOz()
+                - revenue.getDailyClientSlippageRevenueOz()
+                - revenue.getDailyClientSlippageRevenuePe()
+                - revenue.getDailyCommissionRevenue()
+                - revenue.getDailySwapsRevenue()
+                - revenue.getIbCommission()
+                - revenue.getSalesCommission();
     }
 
     public void clickCpaOverviewButton() {
@@ -612,7 +673,10 @@ public class GeneralTab extends AbstractPage {
     public List<String> getVerificationDrawerFileDates() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < verificationDrawerListItems.count(); i++) {
-            list.add(verificationDrawerListItems.nth(i).locator(verificationDrawerListDate).textContent());
+            list.add(verificationDrawerListItems
+                    .nth(i)
+                    .locator(verificationDrawerListDate)
+                    .textContent());
         }
         return list;
     }
@@ -620,13 +684,18 @@ public class GeneralTab extends AbstractPage {
     public List<String> getVerificationDrawerFileNumbers() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < verificationDrawerListItems.count(); i++) {
-            list.add(verificationDrawerListItems.nth(i).locator(verificationDrawerListFileNumber).textContent());
+            list.add(verificationDrawerListItems
+                    .nth(i)
+                    .locator(verificationDrawerListFileNumber)
+                    .textContent());
         }
         return list;
     }
 
     public void clickFilePreviewByGroupAndFileIndex(int groupIndex, int fileIndex) {
-        verificationDrawerPreviewGroups.nth(groupIndex).locator(String.format(VERIFICATION_FILES_ITEM_PATTERN, fileIndex)).click();
+        verificationDrawerPreviewGroups
+                .nth(groupIndex)
+                .locator(String.format(VERIFICATION_FILES_ITEM_PATTERN, fileIndex))
+                .click();
     }
 }
-

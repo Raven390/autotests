@@ -1,22 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Symbol;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Muted;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Stream;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -31,6 +14,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Symbol;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 public class TradingSummaryVolumeTest extends TestBaseWeb {
 
@@ -54,7 +53,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     private static final MtMt4TradesCoercedObject trade13 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade14 = generateMt4TradesCoerced(client);
     private static final String MONTH_DAY_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
-    private static final String WEEK_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2} - (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
+    private static final String WEEK_LABEL_PATTERN =
+            "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2} - (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
     private static final String MONTH_YEAR_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4}$";
     private static final String YEAR_LABEL_PATTERN = "^\\d{4}$";
 
@@ -92,7 +92,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }
 
     @Order(1)
@@ -113,14 +114,19 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("15K"));
         String maxVolumeDate = transformDate(trade2.getCloseTime(), DATE_AND_TIME, MONTH_TEXT_AND_DAY);
         String maxVolume = formatter.format(trade2.getNotionalValueUsd());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8)
+                .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                .sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
         assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
-        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify Volume x axis labels match expected pattern",
+                tradingPage.getVolumeXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(2)
@@ -143,15 +149,23 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("35K"));
-        String maxVolume = formatter.format(Stream.of(trade9, trade10).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String maxVolume = formatter.format(Stream.of(trade9, trade10)
+                .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                .sum());
+        String totalVolume = formatter.format(
+                Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10)
+                        .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                        .sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), matchesPattern(WEEK_LABEL_PATTERN));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
         assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
-        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify Volume x axis labels match expected pattern",
+                tradingPage.getVolumeXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(3)
@@ -175,15 +189,24 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
         String maxVolumeDate = transformDate(trade11.getCloseTime(), DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
-        String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String maxVolume = formatter.format(Stream.of(trade11, trade12)
+                .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                .sum());
+        String totalVolume = formatter.format(Stream.of(
+                        trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11,
+                        trade12)
+                .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                .sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
         assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
-        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+        assertThat(
+                "Verify Volume x axis labels match expected pattern",
+                tradingPage.getVolumeXAxisLabels(),
+                everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     @Order(4)
@@ -207,17 +230,25 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("150K"));
         String maxVolumeDate = transformDate(trade11.getCloseTime(), DATE_AND_TIME, YEAR);
-        String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
-        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14).mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd).sum());
+        String maxVolume = formatter.format(Stream.of(trade11, trade12)
+                .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                .sum());
+        String totalVolume = formatter.format(Stream.of(
+                        trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11,
+                        trade12, trade13, trade14)
+                .mapToDouble(MtMt4TradesCoercedObject::getNotionalValueUsd)
+                .sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
         assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
         assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
-        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(YEAR_LABEL_PATTERN)));
+        assertThat(
+                "Verify Volume x axis labels match expected pattern",
+                tradingPage.getVolumeXAxisLabels(),
+                everyItem(matchesPattern(YEAR_LABEL_PATTERN)));
     }
-
 
     @Disabled("need hack for canvas")
     @Muted

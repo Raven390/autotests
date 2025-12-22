@@ -2,14 +2,12 @@ package business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_
 
 import java.util.Objects;
 
-
 public class DictActiveTradingDaysByUcidObject {
     // Declare variables
     public String ucid;
     public String tradeDate;
 
-    public DictActiveTradingDaysByUcidObject() {
-    }
+    public DictActiveTradingDaysByUcidObject() {}
 
     public DictActiveTradingDaysByUcidObject(String ucid, String tradeDate) {
         this.ucid = ucid;

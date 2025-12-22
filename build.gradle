@@ -134,8 +134,7 @@ spotless {
                 .addMutator('UnnecessarySemicolon')
                 .addMutator('UseTextBlocks')
         formatAnnotations()
-        //palantirJavaFormat()
-        eclipse().configFile('src/main/resources/eclipse-code-style.xml')
+        palantirJavaFormat()
     }
 }
 

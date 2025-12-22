@@ -1,23 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.auditTrail;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.AlertMessageType;
-import business_objects.kafka.alerts.BaseAlertMessageV2;
-import business_objects.kafka.alerts.TradingAlertMessageV2;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -30,6 +12,23 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getRandomUuid;
 import static utils.Utils.insertCrmAccountsToDb;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.AlertMessageType;
+import business_objects.kafka.alerts.BaseAlertMessageV2;
+import business_objects.kafka.alerts.TradingAlertMessageV2;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -57,13 +56,39 @@ class AuditSidePanelAlertAttributesTest extends TestBaseWeb {
         rule.ver = "0.2.0";
 
         TradingAlertMessageV2 openTradeAlert1 = new TradingAlertMessageV2(
-                getRandomUuid(), AlertMessageType.TRADING, OffsetDateTime.now(), OffsetDateTime.now(), crmTbUser.ucid, SLIPPAGE_FREE_ABUSE.getCode(), "Close Trade", "Slippage abuse: Account Slippage: 1669.4 Account Profit: -17539.5045 Client Slippage: 1669.4", rule, new HashMap<>(Map.of("ticketId", "11111")), String.valueOf(account.account), "XAUUSD", String.valueOf(account.serverIdSt)
-        );
+                getRandomUuid(),
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now(),
+                crmTbUser.ucid,
+                SLIPPAGE_FREE_ABUSE.getCode(),
+                "Close Trade",
+                "Slippage abuse: Account Slippage: 1669.4 Account Profit: -17539.5045 Client Slippage: 1669.4",
+                rule,
+                new HashMap<>(Map.of("ticketId", "11111")),
+                String.valueOf(account.account),
+                "XAUUSD",
+                String.valueOf(account.serverIdSt));
         TradingAlertMessageV2 openTradeAlert2 = new TradingAlertMessageV2(
-                getRandomUuid(), AlertMessageType.TRADING, OffsetDateTime.now(), OffsetDateTime.now(), crmTbUser.ucid, SLIPPAGE_FREE_ABUSE.getCode(), "Close Trade", "Slippage abuse: Account Slippage: 1669.4 Account Profit: -17539.5045 Client Slippage: 1669.4", rule, new HashMap<>(Map.of("ticketId", "11112")), String.valueOf(account.account), "XAUUSD", String.valueOf(account.serverIdSt)
-        );
+                getRandomUuid(),
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now(),
+                crmTbUser.ucid,
+                SLIPPAGE_FREE_ABUSE.getCode(),
+                "Close Trade",
+                "Slippage abuse: Account Slippage: 1669.4 Account Profit: -17539.5045 Client Slippage: 1669.4",
+                rule,
+                new HashMap<>(Map.of("ticketId", "11112")),
+                String.valueOf(account.account),
+                "XAUUSD",
+                String.valueOf(account.serverIdSt));
 
-        kafka.produceMessages(getRandomUuid().toString(), KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(openTradeAlert1), objectMapper.writeValueAsString(openTradeAlert2));
+        kafka.produceMessages(
+                getRandomUuid().toString(),
+                KAFKA_TOPIC_ALERTS,
+                objectMapper.writeValueAsString(openTradeAlert1),
+                objectMapper.writeValueAsString(openTradeAlert2));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -73,9 +98,36 @@ class AuditSidePanelAlertAttributesTest extends TestBaseWeb {
         auditTrailPage.clickFirstAuditCard();
 
         assertThat("Verify rule name", auditTrailPage.getAuditTrailDetailsTitle(), is(rule.name));
-        assertThat("Verify alert type and status", auditTrailPage.getAuditTrailDetailsLabels(), contains("Trading", "Active"));
-        assertThat("Verify alert attribute names", auditTrailPage.getAuditTrailDetailsAttributeNames(), contains("Alerts", "First alert", "Last alert", "Reason", "Fraud type", "Symbol", "Account", "Server ID", "ticketId", "ticketId"));
-        assertThat("Verify alert attribute values", auditTrailPage.getAuditTrailDetailsAttributeValues(), hasItems("2 close trade alerts", openTradeAlert1.reason, openTradeAlert1.fraudType, openTradeAlert1.symbol, openTradeAlert1.account, openTradeAlert1.serverId, "11111", "11112"));
+        assertThat(
+                "Verify alert type and status",
+                auditTrailPage.getAuditTrailDetailsLabels(),
+                contains("Trading", "Active"));
+        assertThat(
+                "Verify alert attribute names",
+                auditTrailPage.getAuditTrailDetailsAttributeNames(),
+                contains(
+                        "Alerts",
+                        "First alert",
+                        "Last alert",
+                        "Reason",
+                        "Fraud type",
+                        "Symbol",
+                        "Account",
+                        "Server ID",
+                        "ticketId",
+                        "ticketId"));
+        assertThat(
+                "Verify alert attribute values",
+                auditTrailPage.getAuditTrailDetailsAttributeValues(),
+                hasItems(
+                        "2 close trade alerts",
+                        openTradeAlert1.reason,
+                        openTradeAlert1.fraudType,
+                        openTradeAlert1.symbol,
+                        openTradeAlert1.account,
+                        openTradeAlert1.serverId,
+                        "11111",
+                        "11112"));
     }
 
     @AfterAll

@@ -1,20 +1,5 @@
 package tests.click_house_api_service_tests;
 
-import business_objects.api.clickhouse_api_service.get_trade_by_id.GetTradeResponse;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.api.clickhouse_api_service.get_trade_by_id.GetTradeRequest.getTrade;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
@@ -26,6 +11,20 @@ import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.formatTimeToUtc;
 
+import business_objects.api.clickhouse_api_service.get_trade_by_id.GetTradeResponse;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
+
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_TRADES)
 @Tag(TEAM_CORE)
@@ -35,7 +34,6 @@ class GetTradeByTradeIdTests extends TestBaseApi {
 
     private static ClientHelper clientHelper = getRandomVantageClient();
     private static Mt5DealsCoercedObject trade1;
-
 
     @BeforeAll
     static void setup() {
@@ -60,7 +58,8 @@ class GetTradeByTradeIdTests extends TestBaseApi {
         Response response = getTrade(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
-        GetTradeResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradeResponse[].class);
+        GetTradeResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetTradeResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].getTradeId(), is(trade1.getDeal()));

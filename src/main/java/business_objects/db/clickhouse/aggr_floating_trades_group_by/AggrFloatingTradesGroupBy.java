@@ -11,11 +11,18 @@ public class AggrFloatingTradesGroupBy {
     public Double floatingProfitUsd;
     public Double totalMargin;
 
-    public AggrFloatingTradesGroupBy() {
-    }
+    public AggrFloatingTradesGroupBy() {}
 
-    public AggrFloatingTradesGroupBy(Integer tradingAccount, Integer serverId, String date, Integer entry,
-            Integer action, String symbol, Double floatingProfit, Double floatingProfitUsd, Double totalMargin) {
+    public AggrFloatingTradesGroupBy(
+            Integer tradingAccount,
+            Integer serverId,
+            String date,
+            Integer entry,
+            Integer action,
+            String symbol,
+            Double floatingProfit,
+            Double floatingProfitUsd,
+            Double totalMargin) {
         this.tradingAccount = tradingAccount;
         this.serverId = serverId;
         this.date = date;
@@ -29,6 +36,9 @@ public class AggrFloatingTradesGroupBy {
 
     @Override
     public String toString() {
-        return "AggrFloatingTradesGroupBy{" + "tradingAccount=" + tradingAccount + ", serverId=" + serverId + ", date='" + date + '\'' + ", entry=" + entry + ", action=" + action + ", symbol='" + symbol + '\'' + ", floatingProfit=" + floatingProfit + ", floatingProfitUsd=" + floatingProfitUsd + ", totalMargin=" + totalMargin + '}';
+        return "AggrFloatingTradesGroupBy{" + "tradingAccount=" + tradingAccount + ", serverId=" + serverId + ", date='"
+                + date + '\'' + ", entry=" + entry + ", action=" + action + ", symbol='" + symbol + '\''
+                + ", floatingProfit=" + floatingProfit + ", floatingProfitUsd=" + floatingProfitUsd + ", totalMargin="
+                + totalMargin + '}';
     }
 }

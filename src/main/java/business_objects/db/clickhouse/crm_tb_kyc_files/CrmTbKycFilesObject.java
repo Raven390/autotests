@@ -1,8 +1,7 @@
 package business_objects.db.clickhouse.crm_tb_kyc_files;
 
-import lombok.*;
-
 import java.math.BigInteger;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,7 +1,6 @@
 package business_objects.kafka.deductions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class AccountDeductionRequestResponse {
@@ -18,8 +17,7 @@ public class AccountDeductionRequestResponse {
     @JsonProperty("failReason")
     private String failReason;
 
-    public AccountDeductionRequestResponse() {
-    }
+    public AccountDeductionRequestResponse() {}
 
     public AccountDeductionRequestResponse(String processedAt, String messageId, String status, String failReason) {
         this.processedAt = processedAt;
@@ -64,7 +62,10 @@ public class AccountDeductionRequestResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AccountDeductionRequestResponse that = (AccountDeductionRequestResponse) o;
-        return Objects.equals(processedAt, that.processedAt) && Objects.equals(messageId, that.messageId) && Objects.equals(status, that.status) && Objects.equals(failReason, that.failReason);
+        return Objects.equals(processedAt, that.processedAt)
+                && Objects.equals(messageId, that.messageId)
+                && Objects.equals(status, that.status)
+                && Objects.equals(failReason, that.failReason);
     }
 
     @Override
@@ -74,10 +75,12 @@ public class AccountDeductionRequestResponse {
 
     @Override
     public String toString() {
-        return "AccountDeductionRequestResponse{" + "processedAt='" + processedAt + '\'' + ", messageId='" + messageId + '\'' + ", status='" + status + '\'' + ", failReason='" + failReason + '\'' + '}';
+        return "AccountDeductionRequestResponse{" + "processedAt='" + processedAt + '\'' + ", messageId='" + messageId
+                + '\'' + ", status='" + status + '\'' + ", failReason='" + failReason + '\'' + '}';
     }
 
     public String messageString() {
-        return "{" + "processedAt='" + processedAt + '\'' + ", messageId='" + messageId + '\'' + ", status='" + status + '\'' + ", failReason='" + failReason + '\'' + '}';
+        return "{" + "processedAt='" + processedAt + '\'' + ", messageId='" + messageId + '\'' + ", status='" + status
+                + '\'' + ", failReason='" + failReason + '\'' + '}';
     }
 }

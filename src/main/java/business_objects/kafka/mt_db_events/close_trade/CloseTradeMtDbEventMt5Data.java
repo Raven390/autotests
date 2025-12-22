@@ -32,7 +32,13 @@ public class CloseTradeMtDbEventMt5Data {
     public Integer serverId;
 
     public CloseTradeMtDbEventMt5Data(
-            String closeTime, int tradeId, int mtAccount, double volume, String symbol, int entry, int action,
+            String closeTime,
+            int tradeId,
+            int mtAccount,
+            double volume,
+            String symbol,
+            int entry,
+            int action,
             int serverId) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -49,7 +55,14 @@ public class CloseTradeMtDbEventMt5Data {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CloseTradeMtDbEventMt5Data that = (CloseTradeMtDbEventMt5Data) o;
-        return Objects.equals(closeTime, that.closeTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(mtAccount, that.mtAccount) && Objects.equals(volume, that.volume) && Objects.equals(symbol, that.symbol) && Objects.equals(entry, that.entry) && Objects.equals(action, that.action) && Objects.equals(serverId, that.serverId);
+        return Objects.equals(closeTime, that.closeTime)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(mtAccount, that.mtAccount)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(entry, that.entry)
+                && Objects.equals(action, that.action)
+                && Objects.equals(serverId, that.serverId);
     }
 
     @Override
@@ -59,6 +72,8 @@ public class CloseTradeMtDbEventMt5Data {
 
     @Override
     public String toString() {
-        return "CloseTradeMtDbEventMt5Data{" + "closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId + ", mtAccount=" + mtAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", entry=" + entry + ", action=" + action + ", serverId=" + serverId + '}';
+        return "CloseTradeMtDbEventMt5Data{" + "closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId
+                + ", mtAccount=" + mtAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", entry=" + entry
+                + ", action=" + action + ", serverId=" + serverId + '}';
     }
 }

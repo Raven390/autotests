@@ -1,12 +1,11 @@
 package business_objects.kafka.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter

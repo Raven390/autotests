@@ -1,5 +1,10 @@
 package tests.event_generator_service_tests.mt_events.data_dumper.close_trade;
 
+import static business_objects.kafka.mt_data_dumper_events.CloseTradeFactory.generateCloseTradeDataDumperMt5;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static utils.Constants.*;
+
 import business_objects.kafka.mt_data_dumper_events.TradeEventMt5;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.kafka.MatchResultWithMessage;
@@ -11,11 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
-
-import static business_objects.kafka.mt_data_dumper_events.CloseTradeFactory.generateCloseTradeDataDumperMt5;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static utils.Constants.*;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_CLOSE_TRADE_EVENT)
@@ -44,7 +44,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
         closeTradeMt5.getPayload().setAction(0);
 
         Allure.step("Write message to Mt5_DealPerform topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -52,8 +53,9 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(true));
-
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(true));
     }
 
     @Test
@@ -68,7 +70,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
         closeTradeMt5.getPayload().setAction(1);
 
         Allure.step("Write message to Mt5_DealPerform topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -76,8 +79,9 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(true));
-
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(true));
     }
 
     @Test
@@ -93,7 +97,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
         closeTradeMt5.getPayload().setAction(1);
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -101,8 +106,9 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
-
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -117,7 +123,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
         closeTradeMt5.getPayload().setAction(1);
 
         Allure.step("Write message to Mt5_DealPerform topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -125,8 +132,9 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
-
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -141,7 +149,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
         closeTradeMt5.getPayload().setAction(1);
 
         Allure.step("Write message to Mt5_DealPerform topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -149,8 +158,9 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
-
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 
     @Test
@@ -165,7 +175,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
         closeTradeMt5.getPayload().setAction(2);
 
         Allure.step("Write message to Mt5_DealPerform topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
+        kafka.produceMessage(
+                KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -173,7 +184,8 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
-
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
+                isAnyMatchPresentInMessages.matchResult(),
+                equalTo(false));
     }
 }

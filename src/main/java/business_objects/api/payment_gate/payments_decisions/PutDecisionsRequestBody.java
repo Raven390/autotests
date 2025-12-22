@@ -1,7 +1,6 @@
 package business_objects.api.payment_gate.payments_decisions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -37,8 +36,7 @@ public class PutDecisionsRequestBody {
         private String code;
         private String value;
 
-        public Attribute() {
-        }
+        public Attribute() {}
 
         public Attribute(String code, String value) {
             this.code = code;
@@ -78,9 +76,7 @@ public class PutDecisionsRequestBody {
         }
     }
 
-
-    public PutDecisionsRequestBody() {
-    }
+    public PutDecisionsRequestBody() {}
 
     public PutDecisionsRequestBody(String decisionType, Integer decisionCode, String decidedAt) {
         this.decisionType = decisionType;

@@ -1,21 +1,19 @@
 package page_objects.backoffice_pages.search;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
-import page_objects.backoffice_pages.AbstractPage;
-
-
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.Locale;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import page_objects.backoffice_pages.AbstractPage;
 
 public class GeneralSearchElements extends AbstractPage {
 
@@ -28,10 +26,13 @@ public class GeneralSearchElements extends AbstractPage {
     private static final String SIDEBAR_MENU = "//div[@class='v-sidebar__menu']";
     private static final String SEARCH_OVERLAY_LOCATOR = "*[@class='v-search-overlay']";
     private static final String SEARCH_CLIENT_CARD_LOCATOR = "*[@class='v-search-client-card']";
-    private static final String SEARCH_CLIENT_CARD_COUNTRY_LOCATOR = "*[contains(@class, 'v-search-client-card__country')]";
-    private static final String SEARCH_ERROR_CONTAINER_LOCATOR = "div[@class='v-search']/descendant::div[@class='v-error-view__content']";
+    private static final String SEARCH_CLIENT_CARD_COUNTRY_LOCATOR =
+            "*[contains(@class, 'v-search-client-card__country')]";
+    private static final String SEARCH_ERROR_CONTAINER_LOCATOR =
+            "div[@class='v-search']/descendant::div[@class='v-error-view__content']";
     private static final String SEARCH_CLIENT_CARD_HEADER_LOCATOR = "*[@class='v-search-client-card__header']";
-    private static final String SEARCH_CLIENT_CARD_BUTTONS_LOCATOR = "*[@class='v-search-client-card__externals']/button";
+    private static final String SEARCH_CLIENT_CARD_BUTTONS_LOCATOR =
+            "*[@class='v-search-client-card__externals']/button";
     public static final String CLEAR_BUTTON_SELECTOR = "[aria-label='Clear']";
     private static final String CLIENT_SEARCH_CARD = "[data-qa='client_search__card__%s']";
 
@@ -72,44 +73,75 @@ public class GeneralSearchElements extends AbstractPage {
         Allure.step("Check error screen");
         errorScreen.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals("The client was not found", errorText1.textContent());
-        assertEquals("Please check if your query is correct or use another parameter to search", errorText2.textContent());
+        assertEquals(
+                "Please check if your query is correct or use another parameter to search", errorText2.textContent());
     }
 
     public void findClientsCard(String clientId, String clientBrand) {
         Allure.step("Check client card is visible");
-        page.locator("//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        page.locator("//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::"
+                        + SEARCH_CLIENT_CARD_LOCATOR)
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     public void findClientsCard(Integer clientId, String clientBrand) {
         findClientsCard(String.valueOf(clientId), clientBrand);
     }
 
-    public void checkClientsCard(String clientId, String clientBrand, String clientFirstName, String clientLastName,
-            String clientCountry, String clientRegistrationDate) {
+    public void checkClientsCard(
+            String clientId,
+            String clientBrand,
+            String clientFirstName,
+            String clientLastName,
+            String clientCountry,
+            String clientRegistrationDate) {
         Allure.step("Check data in clients card");
-        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
+        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::"
+                + SEARCH_CLIENT_CARD_LOCATOR;
         page.locator(clientCard).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String name = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_HEADER_LOCATOR + "//" + SUBHEADER_3_LOCATOR).textContent();
+        String name = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_HEADER_LOCATOR + "//" + SUBHEADER_3_LOCATOR)
+                .textContent();
         assertEquals(clientFirstName + " " + clientLastName, name);
-        String country = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_COUNTRY_LOCATOR).textContent();
+        String country = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_COUNTRY_LOCATOR)
+                .textContent();
         assertEquals(clientCountry, country);
         String registrationDate = page.locator(clientCard + "//div[3]/span").textContent();
         assertEquals(clientRegistrationDate, registrationDate);
     }
 
-    public void checkClientsCard(Integer clientId, String clientBrand, String clientFirstName, String clientLastName,
-            String clientCountry, String clientRegistrationDate) {
-        checkClientsCard(String.valueOf(clientId), clientBrand, clientFirstName, clientLastName, clientCountry, clientRegistrationDate);
+    public void checkClientsCard(
+            Integer clientId,
+            String clientBrand,
+            String clientFirstName,
+            String clientLastName,
+            String clientCountry,
+            String clientRegistrationDate) {
+        checkClientsCard(
+                String.valueOf(clientId),
+                clientBrand,
+                clientFirstName,
+                clientLastName,
+                clientCountry,
+                clientRegistrationDate);
     }
 
-    public void checkClientsCardAccount(String accountId, String clientBrand, String clientFirstName,
-            String clientLastName, String clientCountry, String clientRegistrationDate, String clientAccountPlatform) {
+    public void checkClientsCardAccount(
+            String accountId,
+            String clientBrand,
+            String clientFirstName,
+            String clientLastName,
+            String clientCountry,
+            String clientRegistrationDate,
+            String clientAccountPlatform) {
         Allure.step("Check data in clients card");
-        String clientCard = "//span[text() = '" + accountId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
+        String clientCard = "//span[text() = '" + accountId + "']/../..//span[text() = '" + clientBrand
+                + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
         page.locator(clientCard).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String name = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_HEADER_LOCATOR + "//" + SUBHEADER_3_LOCATOR).textContent();
+        String name = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_HEADER_LOCATOR + "//" + SUBHEADER_3_LOCATOR)
+                .textContent();
         assertEquals(clientFirstName + " " + clientLastName, name);
-        String country = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_COUNTRY_LOCATOR).textContent();
+        String country = page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_COUNTRY_LOCATOR)
+                .textContent();
         assertEquals(clientCountry, country);
         String registrationDate = page.locator(clientCard + "//div[3]/span").textContent();
         assertEquals(clientRegistrationDate, registrationDate);
@@ -117,20 +149,35 @@ public class GeneralSearchElements extends AbstractPage {
         assertEquals(clientAccountPlatform, accountPlatform);
     }
 
-    public void checkClientsCardAccount(Integer accountId, String clientBrand, String clientFirstName,
-            String clientLastName, String clientCountry, String clientRegistrationDate, String clientAccountPlatform) {
-        checkClientsCardAccount(String.valueOf(accountId), clientBrand, clientFirstName, clientLastName, clientCountry, clientRegistrationDate, clientAccountPlatform);
+    public void checkClientsCardAccount(
+            Integer accountId,
+            String clientBrand,
+            String clientFirstName,
+            String clientLastName,
+            String clientCountry,
+            String clientRegistrationDate,
+            String clientAccountPlatform) {
+        checkClientsCardAccount(
+                String.valueOf(accountId),
+                clientBrand,
+                clientFirstName,
+                clientLastName,
+                clientCountry,
+                clientRegistrationDate,
+                clientAccountPlatform);
     }
 
     public void clickTradingClientsCard(String clientId, String clientBrand) {
         Allure.step("Click trading button and check that you was redirected to trading/operations of client");
         waitForPageToLoad();
-        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
+        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::"
+                + SEARCH_CLIENT_CARD_LOCATOR;
         page.locator(clientCard).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         waitForPageToLoad();
         page.locator(clientCard).hover();
-        page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_BUTTONS_LOCATOR).nth(0).click();
-
+        page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_BUTTONS_LOCATOR)
+                .nth(0)
+                .click();
     }
 
     public void clickTradingClientsCard(Integer clientId, String clientBrand) {
@@ -140,12 +187,14 @@ public class GeneralSearchElements extends AbstractPage {
     public void clickConnectionSearchClientsCard(String clientId, String clientBrand) {
         Allure.step("Click trading button and check that you was redirected to connection serch tab of client");
         waitForPageToLoad();
-        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
+        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::"
+                + SEARCH_CLIENT_CARD_LOCATOR;
         page.locator(clientCard).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         waitForPageToLoad();
         page.locator(clientCard).hover();
-        page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_BUTTONS_LOCATOR).nth(1).click();
-
+        page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_BUTTONS_LOCATOR)
+                .nth(1)
+                .click();
     }
 
     public void clickConnectionSearchClientsCard(Integer clientId, String clientBrand) {
@@ -155,32 +204,33 @@ public class GeneralSearchElements extends AbstractPage {
     public void clickClientsCard(String clientId, String clientBrand) {
         Allure.step("Click trading button and check that you was redirected to connection serch tab of client");
         waitForPageToLoad();
-        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
+        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::"
+                + SEARCH_CLIENT_CARD_LOCATOR;
         page.locator(clientCard).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         waitForPageToLoad();
         page.locator(clientCard).click();
-
     }
 
     public void clickClientsCard(Integer clientId, String clientBrand) {
         clickClientsCard(String.valueOf(clientId), clientBrand);
     }
 
-    public void clickCopyButtonClientsCard(String clientId, String clientBrand) throws IOException,
-            UnsupportedFlavorException {
+    public void clickCopyButtonClientsCard(String clientId, String clientBrand)
+            throws IOException, UnsupportedFlavorException {
         Allure.step("Click copy button and check that link to client's page is saved in clipboard");
         waitForPageToLoad();
-        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::" + SEARCH_CLIENT_CARD_LOCATOR;
+        String clientCard = "//span[text() = '" + clientId + "']/../..//span[text() = '" + clientBrand + "']/ancestor::"
+                + SEARCH_CLIENT_CARD_LOCATOR;
         page.locator(clientCard).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         waitForPageToLoad();
         page.locator(clientCard).hover();
-        page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_BUTTONS_LOCATOR).nth(2).click();
+        page.locator(clientCard + "//" + SEARCH_CLIENT_CARD_BUTTONS_LOCATOR)
+                .nth(2)
+                .click();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Clipboard clipboard = toolkit.getSystemClipboard();
         String clipboardText = (String) clipboard.getData(DataFlavor.stringFlavor);
         assertTrue(clipboardText.contains(clientBrand.toLowerCase(Locale.ROOT) + "-" + clientId + "/alerts"));
-
-
     }
 
     public void clearSearch() {
@@ -191,7 +241,8 @@ public class GeneralSearchElements extends AbstractPage {
     }
 
     public void waitForClientCard(String text) {
-        page.locator(CLIENT_SEARCH_CARD.formatted(text)).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        page.locator(CLIENT_SEARCH_CARD.formatted(text))
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     public void clickCopyButtonClientsCard(Integer clientId, String clientBrand) {
@@ -199,7 +250,9 @@ public class GeneralSearchElements extends AbstractPage {
     }
 
     public String getClientFullName(String ucid) {
-        return page.locator(CLIENT_SEARCH_CARD.formatted(ucid)).locator(".v-search-client-card__header").textContent();
+        return page.locator(CLIENT_SEARCH_CARD.formatted(ucid))
+                .locator(".v-search-client-card__header")
+                .textContent();
     }
 
     public Page clickCard(String ucid) {
@@ -219,6 +272,4 @@ public class GeneralSearchElements extends AbstractPage {
         Locator card = page.locator(CLIENT_SEARCH_CARD.formatted(ucid));
         return card.isVisible();
     }
-
 }
-

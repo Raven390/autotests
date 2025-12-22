@@ -1,10 +1,9 @@
 package business_objects.kafka.payment.acknowledgement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
 
 @Setter
 @Getter
@@ -48,15 +47,4 @@ public class Acknowledge {
 
     @JsonProperty("paymentId")
     private UUID paymentId;
-
-    public Acknowledge() {
-    }
-
-    public Acknowledge(String timestamp, String correlationId, UUID paymentId, String status, String subtype) {
-        this.timestamp = timestamp;
-        this.correlationId = correlationId;
-        this.paymentId = paymentId;
-        this.status = status;
-        this.subtype = subtype;
-    }
 }

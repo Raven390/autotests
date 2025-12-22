@@ -1,18 +1,19 @@
 package business_objects.api.clickhouse_api_service.get_mirror_accounts_by_trades;
 
+import static utils.ConfigFactory.*;
+
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.Step;
-import okhttp3.Response;
-
 import java.io.IOException;
 import java.util.Map;
-
-import static utils.ConfigFactory.*;
+import okhttp3.Response;
 
 public class GetMirrorAccountsByTradesRequest {
 
     @Step("Get mirror account by trades")
     public static Response getMirrorAccountsByTrades(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES, null, paramsMap);
+        return new HttpHelper()
+                .sendGetRequest(
+                        CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES, null, paramsMap);
     }
 }

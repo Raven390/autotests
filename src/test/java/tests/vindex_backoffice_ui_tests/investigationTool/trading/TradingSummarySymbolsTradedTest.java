@@ -1,5 +1,14 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
+
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
@@ -12,30 +21,29 @@ import helpers.data.enums.Symbol;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import java.sql.SQLException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
-import static utils.Constants.*;
-import static utils.Utils.insertCrmAccountsToDb;
-
 public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
 
     private static final ClientHelper client;
+
     static {
-        client = ClientHelper.builder().userId(202_005).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_005_001).serverId(42).build();
+        client = ClientHelper.builder()
+                .userId(202_005)
+                .uid("e5880ca5-8578-4a1e-969d-7a64716ca41f")
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .tradingAccount(202_005_001)
+                .serverId(42)
+                .build();
     }
+
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account1);
@@ -68,7 +76,8 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
     @Test
     @AllureId("965")
     @Feature("BMS-724 Symbols traded")
-    @DisplayName("Test that Symbol Traded show one segment 'other' when all symbols volume are lesser than total volume")
+    @DisplayName(
+            "Test that Symbol Traded show one segment 'other' when all symbols volume are lesser than total volume")
     public void SymbolsTradedOnlyOtherTest() throws ReflectiveOperationException, SQLException {
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
@@ -121,18 +130,25 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         trade15.setSymbol("USDQ");
         trade16.setSymbol("USDR");
 
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14, trade15, trade16));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME,
+                List.of(
+                        trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11,
+                        trade12, trade13, trade14, trade15, trade16));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.enableViewAmount();
         tradingPage.countSymbolTradedBar(1);
-        int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14, trade15, trade16);
+        int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(
+                trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12,
+                trade13, trade14, trade15, trade16);
         tradingPage.hoverOverSymbolTradedBar(0);
         tradingPage.checkSymbolTradedOtherTooltipHeaderValue(16, expectedAmount);
         tradingPage.checkSymbolTradedOtherTooltipLinesCount(12);
-        int expectedAmountOther = tradingPage.calculateNotionValueUsdByDealInt(trade11, trade12, trade13, trade14, trade15, trade16);
+        int expectedAmountOther =
+                tradingPage.calculateNotionValueUsdByDealInt(trade11, trade12, trade13, trade14, trade15, trade16);
         tradingPage.checkSymbolTradedOtherTooltipFooter(6, expectedAmountOther);
     }
 
@@ -259,5 +275,4 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         int expectedVolume2 = tradingPage.calculateLotsByDealInt(trade21, trade22);
         tradingPage.checkSymbolTradedTooltipValueLots(trade21.getSymbol(), expectedVolume2);
     }
-
 }

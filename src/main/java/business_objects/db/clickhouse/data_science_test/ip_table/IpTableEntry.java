@@ -7,8 +7,7 @@ public class IpTableEntry {
     public String ucid;
     public String ip;
 
-    public IpTableEntry() {
-    }
+    public IpTableEntry() {}
 
     public IpTableEntry(String ucid, String ip) {
         this.ucid = ucid;

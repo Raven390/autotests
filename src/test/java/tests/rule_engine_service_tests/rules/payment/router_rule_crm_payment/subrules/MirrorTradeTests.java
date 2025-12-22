@@ -1,23 +1,20 @@
-package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
+package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules;
 
+import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.payments.router_rule_crm_payment.MirrorTradeDataFactory.setupMirrorTradeRuleData;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
+
+import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.*;
-import tests.TestBaseRule;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.payments.router_rule_crm_payment.MirrorTradeDataFactory.setupMirrorTradeRuleData;
-
-import static helpers.database.DbHelper.*;
-
-import static utils.Constants.*;
-
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADE_IN_ROUTER_RULE)
@@ -37,20 +34,20 @@ class MirrorTradeTests extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        DataHelper.deleteData(dataMap);
+        DataDeleteHelper.deleteData(dataMap);
     }
 
     @Test
     @AllureId("1773")
-    @DisplayName("Mirror trade in router rule. Exit without alert if mirror trade flag is false. ElementId: Event_1gdl5i3")
+    @DisplayName(
+            "Mirror trade in router rule. Exit without alert if mirror trade flag is false. ElementId: Event_1gdl5i3")
     void mirrorTradeRule1Test() throws Exception {
         DataHelper data = dataMap.get("1");
 
-        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "mirror_trade_rr");
         checkElementId("Activity_1kf15qu", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
-
     }
 
     @Test
@@ -59,9 +56,9 @@ class MirrorTradeTests extends TestBaseRule {
     void mirrorTradeRule2Test() throws Exception {
         DataHelper data = dataMap.get("2");
 
-        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1waht3m", data.crmWithdrawalEvent.getId(), "mirror_trade_rr");
-        checkElementId("Activity_1kf15qu", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("Event_1waht3m", data.crmWithdrawalEventV2.getId(), "mirror_trade_rr");
+        checkElementId("Activity_1kf15qu", data.crmWithdrawalEventV2.getId(), "router_rule_crm_payment");
     }
 }

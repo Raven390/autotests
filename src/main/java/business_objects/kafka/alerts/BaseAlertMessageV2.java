@@ -4,16 +4,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true, defaultImpl = TradingAlertMessageV2.class)
-@JsonSubTypes({@JsonSubTypes.Type(value = TradingAlertMessageV2.class, name = "TRADING"), @JsonSubTypes.Type(value = PaymentAlertMessageV2.class, name = "PAYMENT"),
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        visible = true,
+        defaultImpl = TradingAlertMessageV2.class)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = TradingAlertMessageV2.class, name = "TRADING"),
+    @JsonSubTypes.Type(value = PaymentAlertMessageV2.class, name = "PAYMENT"),
 })
 @Getter
 @Setter
@@ -49,9 +54,17 @@ public class BaseAlertMessageV2 {
     @JsonProperty("attributes")
     public Map<String, String> attributes;
 
-    public BaseAlertMessageV2(UUID id, AlertMessageType type, OffsetDateTime dateTime,
-            OffsetDateTime triggerCreatedTime, String ucid, String fraudType,
-            String trigger, String reason, Rule rule, Map<String, String> attributes) {
+    public BaseAlertMessageV2(
+            UUID id,
+            AlertMessageType type,
+            OffsetDateTime dateTime,
+            OffsetDateTime triggerCreatedTime,
+            String ucid,
+            String fraudType,
+            String trigger,
+            String reason,
+            Rule rule,
+            Map<String, String> attributes) {
         this.id = id;
         this.type = type;
         this.dateTime = dateTime;

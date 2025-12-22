@@ -19,12 +19,24 @@ public class IbSummaryByDateObject {
     public Double equity;
     public Double notionalValue;
 
-    public IbSummaryByDateObject() {
-    }
+    public IbSummaryByDateObject() {}
 
-    public IbSummaryByDateObject(Integer sourceIdSt, Integer userId, String brand, String regulator, String ucid,
-            Long ibRebateAccount, String date, Double pnl, Double rebate, Double netPnl, Double deposit,
-            Double withdrawal, Double netDeposit, Double equity, Double notionalValue) {
+    public IbSummaryByDateObject(
+            Integer sourceIdSt,
+            Integer userId,
+            String brand,
+            String regulator,
+            String ucid,
+            Long ibRebateAccount,
+            String date,
+            Double pnl,
+            Double rebate,
+            Double netPnl,
+            Double deposit,
+            Double withdrawal,
+            Double netDeposit,
+            Double equity,
+            Double notionalValue) {
         this.sourceIdSt = sourceIdSt;
         this.userId = userId;
         this.brand = brand;
@@ -46,16 +58,49 @@ public class IbSummaryByDateObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         IbSummaryByDateObject that = (IbSummaryByDateObject) o;
-        return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(ucid, that.ucid) && Objects.equals(ibRebateAccount, that.ibRebateAccount) && Objects.equals(date, that.date) && Objects.equals(pnl, that.pnl) && Objects.equals(rebate, that.rebate) && Objects.equals(netPnl, that.netPnl) && Objects.equals(deposit, that.deposit) && Objects.equals(withdrawal, that.withdrawal) && Objects.equals(netDeposit, that.netDeposit) && Objects.equals(equity, that.equity) && Objects.equals(notionalValue, that.notionalValue);
+        return Objects.equals(sourceIdSt, that.sourceIdSt)
+                && Objects.equals(userId, that.userId)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(regulator, that.regulator)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(ibRebateAccount, that.ibRebateAccount)
+                && Objects.equals(date, that.date)
+                && Objects.equals(pnl, that.pnl)
+                && Objects.equals(rebate, that.rebate)
+                && Objects.equals(netPnl, that.netPnl)
+                && Objects.equals(deposit, that.deposit)
+                && Objects.equals(withdrawal, that.withdrawal)
+                && Objects.equals(netDeposit, that.netDeposit)
+                && Objects.equals(equity, that.equity)
+                && Objects.equals(notionalValue, that.notionalValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceIdSt, userId, brand, regulator, ucid, ibRebateAccount, date, pnl, rebate, netPnl, deposit, withdrawal, netDeposit, equity, notionalValue);
+        return Objects.hash(
+                sourceIdSt,
+                userId,
+                brand,
+                regulator,
+                ucid,
+                ibRebateAccount,
+                date,
+                pnl,
+                rebate,
+                netPnl,
+                deposit,
+                withdrawal,
+                netDeposit,
+                equity,
+                notionalValue);
     }
 
     @Override
     public String toString() {
-        return "IbSummaryByDateObject{" + "sourceIdSt=" + sourceIdSt + ", userId=" + userId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\'' + ", ibRebateAccount=" + ibRebateAccount + ", date='" + date + '\'' + ", pnl=" + pnl + ", rebate=" + rebate + ", netPnl=" + netPnl + ", deposit=" + deposit + ", withdrawal=" + withdrawal + ", netDeposit=" + netDeposit + ", equity=" + equity + ", notionalValue=" + notionalValue + '}';
+        return "IbSummaryByDateObject{" + "sourceIdSt=" + sourceIdSt + ", userId=" + userId + ", brand='" + brand + '\''
+                + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\'' + ", ibRebateAccount=" + ibRebateAccount
+                + ", date='" + date + '\'' + ", pnl=" + pnl + ", rebate=" + rebate + ", netPnl=" + netPnl + ", deposit="
+                + deposit + ", withdrawal=" + withdrawal + ", netDeposit=" + netDeposit + ", equity=" + equity
+                + ", notionalValue=" + notionalValue + '}';
     }
 }

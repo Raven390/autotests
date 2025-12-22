@@ -1,12 +1,11 @@
 package business_objects.db.payment_gate.payment_decisions;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -24,13 +23,19 @@ public class PaymentDecisionsObject {
     private Timestamp dateDecided;
     private String reasonString;
 
-    public PaymentDecisionsObject() {
-    }
+    public PaymentDecisionsObject() {}
 
     @Deprecated
     public PaymentDecisionsObject(
-            Integer id, UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode, String actor,
-            Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateDecided) {
+            Integer id,
+            UUID paymentId,
+            String decisionType,
+            Integer decisionCode,
+            Integer rejectionCode,
+            String actor,
+            Timestamp dateCreated,
+            Timestamp dateUpdated,
+            Timestamp dateDecided) {
         this.id = id;
         this.paymentId = paymentId;
         this.decisionType = decisionType;
@@ -43,8 +48,16 @@ public class PaymentDecisionsObject {
     }
 
     public PaymentDecisionsObject(
-            Integer id, UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode, String actor,
-            Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateDecided, String reasonString) {
+            Integer id,
+            UUID paymentId,
+            String decisionType,
+            Integer decisionCode,
+            Integer rejectionCode,
+            String actor,
+            Timestamp dateCreated,
+            Timestamp dateUpdated,
+            Timestamp dateDecided,
+            String reasonString) {
         this.id = id;
         this.paymentId = paymentId;
         this.decisionType = decisionType;
@@ -60,20 +73,37 @@ public class PaymentDecisionsObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PaymentDecisionsObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(paymentId, that.paymentId) && Objects.equals(
-                decisionType, that.decisionType) && Objects.equals(decisionCode, that.decisionCode) && Objects.equals(
-                        rejectionCode, that.rejectionCode) && Objects.equals(actor, that.actor) && Objects.equals(
-                                dateCreated, that.dateCreated) && Objects.equals(dateUpdated, that.dateUpdated) && Objects.equals(
-                                        dateDecided, that.dateDecided);
+        return Objects.equals(id, that.id)
+                && Objects.equals(paymentId, that.paymentId)
+                && Objects.equals(decisionType, that.decisionType)
+                && Objects.equals(decisionCode, that.decisionCode)
+                && Objects.equals(rejectionCode, that.rejectionCode)
+                && Objects.equals(actor, that.actor)
+                && Objects.equals(dateCreated, that.dateCreated)
+                && Objects.equals(dateUpdated, that.dateUpdated)
+                && Objects.equals(dateDecided, that.dateDecided);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, paymentId, decisionType, decisionCode, rejectionCode, actor, dateCreated, dateUpdated, dateDecided, reasonString);
+        return Objects.hash(
+                id,
+                paymentId,
+                decisionType,
+                decisionCode,
+                rejectionCode,
+                actor,
+                dateCreated,
+                dateUpdated,
+                dateDecided,
+                reasonString);
     }
 
     @Override
     public String toString() {
-        return "PaymentDecisionsObject{" + "id=" + id + ", paymentId=" + paymentId + ", decisionType='" + decisionType + '\'' + ", decisionCode=" + decisionCode + ", rejectionCode=" + rejectionCode + ", actor='" + actor + '\'' + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", dateDecided=" + dateDecided + ", reasonString='" + reasonString + '\'' + '}';
+        return "PaymentDecisionsObject{" + "id=" + id + ", paymentId=" + paymentId + ", decisionType='" + decisionType
+                + '\'' + ", decisionCode=" + decisionCode + ", rejectionCode=" + rejectionCode + ", actor='" + actor
+                + '\'' + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", dateDecided="
+                + dateDecided + ", reasonString='" + reasonString + '\'' + '}';
     }
 }

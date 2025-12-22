@@ -1,9 +1,8 @@
 package business_objects.db.audit_service_db;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Data;
 
 @Data
 public class AuditEvent {

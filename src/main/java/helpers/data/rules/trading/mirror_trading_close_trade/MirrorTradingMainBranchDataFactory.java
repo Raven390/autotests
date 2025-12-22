@@ -1,17 +1,5 @@
 package helpers.data.rules.trading.mirror_trading_close_trade;
 
-import business_objects.kafka.mt_events.CloseTradeMtEvent;
-import business_objects.kafka.mt_events.TradeEventMetadata;
-import generator.annotations.RuleTestData;
-import helpers.data.ClientHelper;
-import helpers.data.DataHelper;
-import io.qameta.allure.Step;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -20,10 +8,21 @@ import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactor
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getRandomUuidString;
+
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import generator.annotations.RuleTestData;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Step;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RuleTestData("mirror-trading")
 public class MirrorTradingMainBranchDataFactory {
@@ -45,10 +44,19 @@ public class MirrorTradingMainBranchDataFactory {
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(client));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         data.closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), data.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), data.mt5DealsCoercedObjects.getFirst().getVolumeLots(), data.mt5DealsCoercedObjects.getFirst().getSymbol(), data.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+                getRandomUuidString(),
+                Instant.now().toString(),
+                data.mt5DealsCoercedObjects.getFirst().getPositionId(),
+                client.getTradingAccount(),
+                data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
+                data.mt5DealsCoercedObjects.getFirst().getSymbol(),
+                data.clientHelper.getServerId(),
+                MT_CLOSE_TRADE_EVENT,
+                Instant.now().toString(),
+                metadata,
+                Instant.now().toString());
         return data;
     }
-
 
     private static DataHelper getMirrorTradingMainBranchTest1Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingMainBranchClientTest1);

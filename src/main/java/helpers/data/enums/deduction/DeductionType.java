@@ -1,7 +1,9 @@
 package helpers.data.enums.deduction;
 
 public enum DeductionType {
-    PARTIAL_DEDUCTION("PARTIAL_DEDUCTION"), FULL_DEDUCTION("FULL_DEDUCTION"), NO_DEDUCTION("NO_DEDUCTION");
+    PARTIAL_DEDUCTION("PARTIAL_DEDUCTION"),
+    FULL_DEDUCTION("FULL_DEDUCTION"),
+    NO_DEDUCTION("NO_DEDUCTION");
 
     private final String displayName;
 
@@ -12,5 +14,4 @@ public enum DeductionType {
     public String getDisplayName() {
         return displayName;
     }
-
 }

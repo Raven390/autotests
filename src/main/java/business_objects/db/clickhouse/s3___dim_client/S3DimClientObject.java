@@ -1,6 +1,5 @@
 package business_objects.db.clickhouse.s3___dim_client;
 
-
 import java.util.Objects;
 
 public class S3DimClientObject {
@@ -17,7 +16,14 @@ public class S3DimClientObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         S3DimClientObject that = (S3DimClientObject) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(orgName, that.orgName) && Objects.equals(userName, that.userName) && Objects.equals(brand, that.brand) && Objects.equals(ucid, that.ucid) && Objects.equals(recordActiveFlag, that.recordActiveFlag) && Objects.equals(recordVersion, that.recordVersion) && Objects.equals(last_process_date, that.last_process_date);
+        return Objects.equals(userId, that.userId)
+                && Objects.equals(orgName, that.orgName)
+                && Objects.equals(userName, that.userName)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(ucid, that.ucid)
+                && Objects.equals(recordActiveFlag, that.recordActiveFlag)
+                && Objects.equals(recordVersion, that.recordVersion)
+                && Objects.equals(last_process_date, that.last_process_date);
     }
 
     @Override

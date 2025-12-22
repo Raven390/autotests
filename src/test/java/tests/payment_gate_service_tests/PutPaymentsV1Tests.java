@@ -1,5 +1,16 @@
 package tests.payment_gate_service_tests;
 
+import static business_objects.api.payment_gate.payments.PaymentsRequestBodyFactory.createPutPaymentsRequestBody;
+import static business_objects.api.payment_gate.payments.PaymentsRequests.putPayments;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.CleanTableHelper.cleanPaymentGateData;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.PaymentGateHelper.getPaymentEvent;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
 
 import business_objects.api.payment_gate.payments.PutPaymentsRequestBody;
 import business_objects.api.payment_gate.payments.PutPaymentsResponseBody;
@@ -11,26 +22,12 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import okhttp3.Response;
-import org.junit.jupiter.api.*;
-import tests.TestBaseApi;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-
-import static business_objects.api.payment_gate.payments.PaymentsRequestBodyFactory.createPutPaymentsRequestBody;
-import static business_objects.api.payment_gate.payments.PaymentsRequests.putPayments;
-import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
-import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.CleanTableHelper.cleanPaymentGateData;
-import static helpers.database.DbHelper.insertObjectsToDb;
-
-import static helpers.database.PaymentGateHelper.getPaymentEvent;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static utils.Constants.*;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_PUT_PAYMENTS_V1)
@@ -57,14 +54,14 @@ class PutPaymentsV1Tests extends TestBaseApi {
     private static PutPaymentsRequestBody putPaymentsRequestBody3;
     private static PutPaymentsRequestBody putPaymentsRequestBody4;
 
-
     @BeforeAll
     static void setupData() throws IOException {
 
         client1 = getRandomVantageClientAllFields();
         paymentEventsObject1 = generatePaymentEventsObject(client1);
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
-        paymentDetailsObject1.setPayload("{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
+        paymentDetailsObject1.setPayload(
+                "{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
 
         client2 = getRandomVantageClientAllFields();
         paymentEventsObject2 = generatePaymentEventsObject(client2);
@@ -78,8 +75,14 @@ class PutPaymentsV1Tests extends TestBaseApi {
         paymentEventsObject4 = generatePaymentEventsObject(client4);
         paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
 
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE,
+                List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
+        insertObjectsToDb(
+                DbName.POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE,
+                List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
 
         putPaymentsRequestBody1 = createPutPaymentsRequestBody(paymentEventsObject1.getPaymentId(), 2);
         putPaymentsRequestBody2 = createPutPaymentsRequestBody(paymentEventsObject2.getPaymentId(), 2);
@@ -105,13 +108,20 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat(response.code(), is(200));
 
         Allure.step("Validate Data in response");
-        PutPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
+        PutPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
         assertThat("Check response", mappedResponse.getPaymentId(), is(instanceOf(UUID.class)));
         assertThat("Check response", mappedResponse.getPaymentId(), is(paymentEventsObject1.getPaymentId()));
         assertThat("Check response", mappedResponse.getDecisionId(), is(2));
         assertThat("Check response", mappedResponse.getDecidedAt(), is(notNullValue()));
-        assertThat("Check response", mappedResponse.getLinks().getSelf(), is(String.format("/v1/payments/%s", paymentEventsObject1.getPaymentId())));
-        assertThat("Check id in db", getPaymentEvent(putPaymentsRequestBody1.getPaymentId()).getFinalDecisionId(), is(putPaymentsRequestBody1.getDecisionId()));
+        assertThat(
+                "Check response",
+                mappedResponse.getLinks().getSelf(),
+                is(String.format("/v1/payments/%s", paymentEventsObject1.getPaymentId())));
+        assertThat(
+                "Check id in db",
+                getPaymentEvent(putPaymentsRequestBody1.getPaymentId()).getFinalDecisionId(),
+                is(putPaymentsRequestBody1.getDecisionId()));
     }
 
     @Test
@@ -124,7 +134,8 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");
-        PutPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
+        PutPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
         assertThat("Check error", mappedResponse.getError(), is("bad_request"));
         assertThat("Check status", mappedResponse.getMessage(), is(nullValue()));
     }
@@ -139,7 +150,8 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");
-        PutPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
+        PutPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
         assertThat("Check error", mappedResponse.getError(), is("bad_request"));
         assertThat("Check status", mappedResponse.getMessage(), containsString("must not be null"));
     }
@@ -155,8 +167,12 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat(response.code(), is(404));
 
         Allure.step("Validate Data in response");
-        PutPaymentsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
+        PutPaymentsResponseBody mappedResponse =
+                objectMapper.readValue(response.body().string(), PutPaymentsResponseBody.class);
         assertThat("Check error", mappedResponse.getError(), is("not_found"));
-        assertThat("Check status", mappedResponse.getMessage(), is(String.format("paymentId d6bbcd33-30d5-4459-8aa7-b408732c0c30 is not found")));
+        assertThat(
+                "Check status",
+                mappedResponse.getMessage(),
+                is(String.format("paymentId d6bbcd33-30d5-4459-8aa7-b408732c0c30 is not found")));
     }
 }

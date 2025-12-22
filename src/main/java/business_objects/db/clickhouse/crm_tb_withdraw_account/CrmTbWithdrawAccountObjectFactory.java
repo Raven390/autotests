@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.crm_tb_withdraw_account;
 
+import static utils.Utils.getCurrentTimestampDbFormat;
+
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
-
-import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class CrmTbWithdrawAccountObjectFactory {
     @Step("Generate credit card object by user id")

@@ -1,7 +1,6 @@
 package business_objects.api.rule_engine_api.rule_deployments;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class GetRuleDeploymentResponse {
@@ -33,12 +32,18 @@ public class GetRuleDeploymentResponse {
     @JsonProperty("comment")
     String comment;
 
-    public GetRuleDeploymentResponse() {
-    }
+    public GetRuleDeploymentResponse() {}
 
     public GetRuleDeploymentResponse(
-            String version, String uuid, String authorName, String processId, String ruleName, Integer zeebeRevision,
-            String lastUpdate, String status, String comment) {
+            String version,
+            String uuid,
+            String authorName,
+            String processId,
+            String ruleName,
+            Integer zeebeRevision,
+            String lastUpdate,
+            String status,
+            String comment) {
         this.version = version;
         this.uuid = uuid;
         this.authorName = authorName;
@@ -54,11 +59,15 @@ public class GetRuleDeploymentResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         GetRuleDeploymentResponse that = (GetRuleDeploymentResponse) o;
-        return Objects.equals(version, that.version) && Objects.equals(uuid, that.uuid) && Objects.equals(
-                authorName, that.authorName) && Objects.equals(processId, that.processId) && Objects.equals(
-                        ruleName, that.ruleName) && Objects.equals(zeebeRevision, that.zeebeRevision) && Objects.equals(
-                                lastUpdate, that.lastUpdate) && Objects.equals(status, that.status) && Objects.equals(
-                                        comment, that.comment);
+        return Objects.equals(version, that.version)
+                && Objects.equals(uuid, that.uuid)
+                && Objects.equals(authorName, that.authorName)
+                && Objects.equals(processId, that.processId)
+                && Objects.equals(ruleName, that.ruleName)
+                && Objects.equals(zeebeRevision, that.zeebeRevision)
+                && Objects.equals(lastUpdate, that.lastUpdate)
+                && Objects.equals(status, that.status)
+                && Objects.equals(comment, that.comment);
     }
 
     @Override
@@ -68,7 +77,10 @@ public class GetRuleDeploymentResponse {
 
     @Override
     public String toString() {
-        return "GetRuleDeploymentsResponse{" + "version='" + version + '\'' + ", uuid='" + uuid + '\'' + ", authorName='" + authorName + '\'' + ", processId='" + processId + '\'' + ", ruleName='" + ruleName + '\'' + ", zeebeRevision=" + zeebeRevision + ", lastUpdate='" + lastUpdate + '\'' + ", status='" + status + '\'' + ", comment='" + comment + '\'' + '}';
+        return "GetRuleDeploymentsResponse{" + "version='" + version + '\'' + ", uuid='" + uuid + '\''
+                + ", authorName='" + authorName + '\'' + ", processId='" + processId + '\'' + ", ruleName='" + ruleName
+                + '\'' + ", zeebeRevision=" + zeebeRevision + ", lastUpdate='" + lastUpdate + '\'' + ", status='"
+                + status + '\'' + ", comment='" + comment + '\'' + '}';
     }
 
     public String getVersion() {

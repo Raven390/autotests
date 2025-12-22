@@ -3,7 +3,6 @@ package business_objects.api.payment_gate.payments;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -111,10 +110,14 @@ public class PutPaymentsResponseBody {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PutPaymentsResponseBody that)) return false;
-        return Objects.equals(paymentId, that.paymentId) && Objects.equals(decisionId, that.decisionId) && Objects.equals(
-                decidedAt, that.decidedAt) && Objects.equals(type, that.type) && Objects.equals(links, that.links) && Objects.equals(
-                        error, that.error) && Objects.equals(message, that.message) && Objects.equals(
-                                violations, that.violations);
+        return Objects.equals(paymentId, that.paymentId)
+                && Objects.equals(decisionId, that.decisionId)
+                && Objects.equals(decidedAt, that.decidedAt)
+                && Objects.equals(type, that.type)
+                && Objects.equals(links, that.links)
+                && Objects.equals(error, that.error)
+                && Objects.equals(message, that.message)
+                && Objects.equals(violations, that.violations);
     }
 
     @Override
@@ -124,7 +127,9 @@ public class PutPaymentsResponseBody {
 
     @Override
     public String toString() {
-        return "PutPaymentsResponseBody{" + "paymentId=" + paymentId + ", decisionId=" + decisionId + ", decidedAt='" + decidedAt + '\'' + ", type='" + type + '\'' + ", links=" + links + ", error='" + error + '\'' + ", message='" + message + '\'' + ", violations=" + violations + '}';
+        return "PutPaymentsResponseBody{" + "paymentId=" + paymentId + ", decisionId=" + decisionId + ", decidedAt='"
+                + decidedAt + '\'' + ", type='" + type + '\'' + ", links=" + links + ", error='" + error + '\''
+                + ", message='" + message + '\'' + ", violations=" + violations + '}';
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

@@ -1,12 +1,10 @@
 package business_objects.db.clickhouse.crm_tb_address_proof;
 
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigInteger;
-
 
 @AllArgsConstructor
 @NoArgsConstructor

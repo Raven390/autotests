@@ -1,9 +1,9 @@
 package business_objects.db.clickhouse.bo_alerts;
 
+import static utils.Utils.getCurrentTimestampDbFormat;
+
 import helpers.data.ClientHelper;
 import utils.Utils;
-
-import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class BoAlertsFactory {
 
@@ -35,5 +35,4 @@ public class BoAlertsFactory {
 
         return alert;
     }
-
 }

@@ -1,7 +1,6 @@
 package business_objects.api.lark.TenantAccessToken;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class TenantAccessTokenResponse {
@@ -53,7 +52,10 @@ public class TenantAccessTokenResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TenantAccessTokenResponse that = (TenantAccessTokenResponse) o;
-        return Objects.equals(code, that.code) && Objects.equals(msg, that.msg) && Objects.equals(tenantAccessToken, that.tenantAccessToken) && Objects.equals(expire, that.expire);
+        return Objects.equals(code, that.code)
+                && Objects.equals(msg, that.msg)
+                && Objects.equals(tenantAccessToken, that.tenantAccessToken)
+                && Objects.equals(expire, that.expire);
     }
 
     @Override
@@ -63,6 +65,7 @@ public class TenantAccessTokenResponse {
 
     @Override
     public String toString() {
-        return "TenantAccessTokenResponse{" + "code=" + code + ", msg='" + msg + '\'' + ", tenantAccessToken='" + tenantAccessToken + '\'' + ", expire=" + expire + '}';
+        return "TenantAccessTokenResponse{" + "code=" + code + ", msg='" + msg + '\'' + ", tenantAccessToken='"
+                + tenantAccessToken + '\'' + ", expire=" + expire + '}';
     }
 }

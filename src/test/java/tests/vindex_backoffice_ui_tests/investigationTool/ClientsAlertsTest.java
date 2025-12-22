@@ -1,13 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -17,6 +9,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesPattern;
 import static utils.Constants.*;
+
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -53,13 +53,25 @@ public class ClientsAlertsTest extends TestBaseWeb {
         assertThat("Verify alert date value", alertsPage.getAlertsDatesList().getFirst(), equalTo("Today"));
         String timePattern = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$";
         assertThat("Verify alert time value", alertsPage.getAlertsTimesList().getFirst(), matchesPattern(timePattern));
-        assertThat("Verify alert rule name value", alertsPage.getAlertsRuleNamesList().getFirst(), equalTo("Registration"));
-        assertThat("Verify alert rule trigger value", alertsPage.getAlertsRuleTriggersList().getFirst(), equalTo("clientRegistrationNew"));
-        assertThat("Verify alert attributes are present", alertsPage.getAlertsAttributesList().size(), equalTo(1));
+        assertThat(
+                "Verify alert rule name value",
+                alertsPage.getAlertsRuleNamesList().getFirst(),
+                equalTo("Registration"));
+        assertThat(
+                "Verify alert rule trigger value",
+                alertsPage.getAlertsRuleTriggersList().getFirst(),
+                equalTo("clientRegistrationNew"));
+        assertThat(
+                "Verify alert attributes are present",
+                alertsPage.getAlertsAttributesList().size(),
+                equalTo(1));
 
         alertsPage.filterAllAlerts();
         assertThat("Verify there are 2 alerts", alertsPage.getAlertsCount(), equalTo(2));
-        assertThat("Verify alerts are sorted by time desc", alertsPage.getAlertsRuleTriggersList().getFirst(), equalTo("clientRegistrationNew"));
+        assertThat(
+                "Verify alerts are sorted by time desc",
+                alertsPage.getAlertsRuleTriggersList().getFirst(),
+                equalTo("clientRegistrationNew"));
         assertThat("Verify text of the alerts counter", alertsPage.getAlertsCountText(), equalTo("2 in total"));
         RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert2.alertId, objectMapper.writeValueAsString(alert2), KAFKA_TOPIC_ALERTS);
@@ -69,7 +81,10 @@ public class ClientsAlertsTest extends TestBaseWeb {
         alertsPage.filterClosedAlerts();
         assertThat("Verify text of the alerts counter", alertsPage.getAlertsCountText(), equalTo("1 closed"));
         String alertStatusTooltipPattern = "^\\d{4}-\\d{2}-\\d{2} at [0-2]\\d:[0-5]\\d$";
-        assertThat("Verify text of the alert status tooltip", alertsPage.getFirstAlertStatus(), matchesPattern(alertStatusTooltipPattern));
+        assertThat(
+                "Verify text of the alert status tooltip",
+                alertsPage.getFirstAlertStatus(),
+                matchesPattern(alertStatusTooltipPattern));
     }
 
     @AfterAll

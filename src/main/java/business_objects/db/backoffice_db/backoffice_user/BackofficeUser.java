@@ -9,8 +9,7 @@ public class BackofficeUser {
     public String lastName;
     public String role;
 
-    public BackofficeUser() {
-    }
+    public BackofficeUser() {}
 
     public BackofficeUser(String firstName, String lastName, String role) {
         this.firstName = firstName;
@@ -30,7 +29,9 @@ public class BackofficeUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BackofficeUser that = (BackofficeUser) o;
-        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(role, that.role);
+        return Objects.equals(firstName, that.firstName)
+                && Objects.equals(lastName, that.lastName)
+                && Objects.equals(role, that.role);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class BackofficeUser {
 
     @Override
     public String toString() {
-        return "BackofficeUser{" + "id='" + id + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", role='" + role + '\'' + '}';
+        return "BackofficeUser{" + "id='" + id + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName
+                + '\'' + ", role='" + role + '\'' + '}';
     }
 }

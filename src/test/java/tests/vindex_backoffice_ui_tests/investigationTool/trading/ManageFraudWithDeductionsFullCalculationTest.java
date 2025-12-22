@@ -1,21 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_deals.Mt5DealsObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -40,6 +24,21 @@ import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cl
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_deals.Mt5DealsObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
 class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
@@ -49,7 +48,8 @@ class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
     private static final String REGEX_PATTERN_DEDUCTION = String.format("^-%s", REGEX_PATTERN);
     private static final String SUGGESTED_DEDUCTION_PATTERN_ILLEGAL = "Account %sBalance %s USD ・ Illegal %s USD";
     private static final String SUGGESTED_DEDUCTION_PATTERN = "^Account %sBalance " + REGEX_PATTERN;
-    private static final String SUGGESTED_DEDUCTION_PATTERN_USD = SUGGESTED_DEDUCTION_PATTERN_ILLEGAL.split(" ・")[0];
+    private static final String SUGGESTED_DEDUCTION_PATTERN_USD =
+            SUGGESTED_DEDUCTION_PATTERN_ILLEGAL.split(" ・")[0];
     private static final String COMMENT = "Test comment for deductions";
     private static MtAccountObject mtAccount1;
     private static CrmTbAccountForMtObject crmAccountMt1;
@@ -81,11 +81,13 @@ class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         crmAccountMt1 = generateAccountForMtByAccount(account1);
 
-
         String comment = "comment";
-        trade1 = generateMt4TradesCoercedAccountProfitComment(account1, getRandomRoundedDouble(-9999.99, 99_999.99), comment);
-        trade2 = generateMt4TradesCoercedAccountProfitComment(account1, getRandomRoundedDouble(-9999.99, 99_999.99), comment);
-        tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, getRandomRoundedDouble(-9999.99, -1.00), "withdraw");
+        trade1 = generateMt4TradesCoercedAccountProfitComment(
+                account1, getRandomRoundedDouble(-9999.99, 99_999.99), comment);
+        trade2 = generateMt4TradesCoercedAccountProfitComment(
+                account1, getRandomRoundedDouble(-9999.99, 99_999.99), comment);
+        tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(
+                account1, getRandomRoundedDouble(-9999.99, -1.00), "withdraw");
 
         deal1 = generateMt5DealsObject(client, 1, 0);
         deal1.setPositionId(trade1.getPositionId());
@@ -126,19 +128,38 @@ class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        String potentialMarketManipulation = String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName());
-//        assertThat("Verify previously reported fraud", resolvePage.getPreviouslyReportedFraudItems2(), contains(List.of(String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "EURUSD, GBPUSD"), List.of(potentialMarketManipulation, "")));
+        String potentialMarketManipulation =
+                String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName());
+        //        assertThat("Verify previously reported fraud", resolvePage.getPreviouslyReportedFraudItems2(),
+        // contains(List.of(String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "EURUSD,
+        // GBPUSD"), List.of(potentialMarketManipulation, "")));
         resolvePage.deleteFraudByNameNoPopup(potentialMarketManipulation);
         resolvePage.addFraud(LATENCY_ARBITRAGE, CONFIRMED);
         resolvePage.selectFraudSource(INSIGHT.getDisplayName());
         resolvePage.clickIllegalProfitAccountsDropdown();
         resolvePage.clickAccountInDropdown(mtAccount1.account.toString());
         resolvePage.clickUseAsIllegalProfit();
-        assertThat("Verify total illegal profit amount", resolvePage.getIllegalProfitAmount(), is(String.format("%s USD illegal profit", formatter.format((trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
+        assertThat(
+                "Verify total illegal profit amount",
+                resolvePage.getIllegalProfitAmount(),
+                is(String.format(
+                        "%s USD illegal profit",
+                        formatter.format(
+                                (trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
 
         List<String> deductionItems = resolvePage.getSuggestedDeductionItems();
         assertThat("Verify amount of deductions", deductionItems.size(), is(1));
-        assertThat("Verify 1st deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount1.account.toString())).toList().getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_ILLEGAL, mtAccount1.account, formatter.format(trade1.getProfit() + tradeWithdrawal.getProfit()), formatter.format((trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
-
+        assertThat(
+                "Verify 1st deduction illegal profit and balance",
+                deductionItems.stream()
+                        .filter(u -> u.contains(mtAccount1.account.toString()))
+                        .toList()
+                        .getFirst(),
+                is(String.format(
+                        SUGGESTED_DEDUCTION_PATTERN_ILLEGAL,
+                        mtAccount1.account,
+                        formatter.format(trade1.getProfit() + tradeWithdrawal.getProfit()),
+                        formatter.format(
+                                (trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
     }
 }

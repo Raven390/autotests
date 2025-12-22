@@ -1,18 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import helpers.data.ClientHelper;
-import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.*;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -26,6 +13,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.List;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TradingSummaryTotalPnlTest extends TestBaseWeb {
@@ -83,7 +82,8 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
+        insertObjectsToDb(
+                MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }
 
     @Order(1)
@@ -111,9 +111,15 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), is(maxLoss));
         assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), is("Max losing"));
         assertThat("Verify Total PNL max loss date", tradingPage.getTotalPnlMaxLossDate(), is(maxLossDate));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), is(maxProfit));
+        assertThat(
+                "Verify Total PNL max profit graph dot value",
+                tradingPage.getTotalPnlMaxProfitGraphDot(),
+                is(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), is(maxLoss));
-        assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        assertThat(
+                "Verify Total PNL x axis labels match expected pattern",
+                tradingPage.getTotalPnlXAxisLabels(),
+                everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(2)
@@ -144,9 +150,15 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), is(maxLoss));
         assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), is("Max losing"));
         assertThat("Verify Total PNL max loss date", tradingPage.getTotalPnlMaxLossDate(), is(maxLossDate));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), is(maxProfit));
+        assertThat(
+                "Verify Total PNL max profit graph dot value",
+                tradingPage.getTotalPnlMaxProfitGraphDot(),
+                is(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), is(maxLoss));
-        assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+        assertThat(
+                "Verify Total PNL x axis labels match expected pattern",
+                tradingPage.getTotalPnlXAxisLabels(),
+                everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     @Order(3)
@@ -177,9 +189,15 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), is(maxLoss));
         assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), is("Max losing"));
         assertThat("Verify Total PNL max loss date", tradingPage.getTotalPnlMaxLossDate(), is(maxLossDate));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), is(maxProfit));
+        assertThat(
+                "Verify Total PNL max profit graph dot value",
+                tradingPage.getTotalPnlMaxProfitGraphDot(),
+                is(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), is(maxLoss));
-        assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+        assertThat(
+                "Verify Total PNL x axis labels match expected pattern",
+                tradingPage.getTotalPnlXAxisLabels(),
+                everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     @AfterAll

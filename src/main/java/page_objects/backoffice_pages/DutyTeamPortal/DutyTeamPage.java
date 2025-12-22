@@ -1,14 +1,13 @@
 package page_objects.backoffice_pages.DutyTeamPortal;
 
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
-
-
-import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class DutyTeamPage extends AbstractPage {
 
@@ -19,7 +18,6 @@ public class DutyTeamPage extends AbstractPage {
         this.dutyTeamUi = page.locator(".v-duty-team-portal");
     }
 
-
     @Step("Navigate to Duty Team Portal")
     public void navigateToDutyTeamPage() {
         Allure.step("Navigate to Duty Team Portal");
@@ -27,10 +25,8 @@ public class DutyTeamPage extends AbstractPage {
         waitForPageToLoad();
     }
 
-
     @Step("check if Duty Team Portal opened")
     public void isDutyTeamPageOpened(Page page) {
         dutyTeamUi.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 }
-

@@ -1,24 +1,5 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
-import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.Country;
-import helpers.data.enums.Regulator;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import net.datafaker.Faker;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import tests.TestBaseWeb;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.random.RandomGenerator;
-
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.enums.DateTimeFormat.DATE;
@@ -30,15 +11,39 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Country;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.random.RandomGenerator;
+import net.datafaker.Faker;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import tests.TestBaseWeb;
+
 public class SessionsTabTest extends TestBaseWeb {
 
     public void deleteLexis(ClientHelper client) {
-        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, "user_id=" + client.getUserId() + " AND brand='" + client.getBrand() + "'");
+        deleteEntryFromDb(
+                LEXIS_NEXIS_TABLE_NAME, "user_id=" + client.getUserId() + " AND brand='" + client.getBrand() + "'");
     }
 
     static ClientHelper activityClient;
+
     static {
-        activityClient = ClientHelper.builder().userId(181_801).brand(Brand.INFINOX).regulator(Regulator.FCA).build();
+        activityClient = ClientHelper.builder()
+                .userId(181_801)
+                .brand(Brand.INFINOX)
+                .regulator(Regulator.FCA)
+                .build();
     }
 
     @BeforeAll
@@ -63,7 +68,8 @@ public class SessionsTabTest extends TestBaseWeb {
         lexis.setOs("android");
         lexis.setRiskRating("high");
         lexis.setPolicyScore(-50);
-        lexis.setSummaryReasonCodeOriginal("[ \"Connection via Mobile Hotspot\", \"First Time Mobile Hotspot  Used\", \"Computer browser used\" ]");
+        lexis.setSummaryReasonCodeOriginal(
+                "[ \"Connection via Mobile Hotspot\", \"First Time Mobile Hotspot  Used\", \"Computer browser used\" ]");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         sessionsTab.navigateEnterPage();
@@ -78,7 +84,8 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkRiskColumnColourDanger();
         sessionsTab.checkScoreColumnValue(lexis.getPolicyScore());
         sessionsTab.checkScoreColumnColourDanger();
-        sessionsTab.checkSummaryColumnValue("Connection via Mobile HotspotFirst Time Mobile Hotspot  UsedComputer browser used");
+        sessionsTab.checkSummaryColumnValue(
+                "Connection via Mobile HotspotFirst Time Mobile Hotspot  UsedComputer browser used");
     }
 
     @Test
@@ -266,7 +273,8 @@ public class SessionsTabTest extends TestBaseWeb {
     public void filterDateLast7daysTest() {
         deleteLexis(activityClient);
 
-        Allure.step("Prepare data for DB with dates inside and outside filtered diapason: one today, one today - 6 days, and one today - 7 days ");
+        Allure.step(
+                "Prepare data for DB with dates inside and outside filtered diapason: one today, one today - 6 days, and one today - 7 days ");
         LnSessionParsedObject todayLexis = generateLexisNexisDataByClient(activityClient);
         todayLexis.setEventDatetime(getCurrentTimestampDbFormat());
         todayLexis.setEventType("account_creation");
@@ -316,7 +324,8 @@ public class SessionsTabTest extends TestBaseWeb {
     public void filterDateLast30daysTest() {
         deleteLexis(activityClient);
 
-        Allure.step("Prepare data for DB with dates inside and outside filtered diapason: one today, one today - 29 days, and one today - 30 days ");
+        Allure.step(
+                "Prepare data for DB with dates inside and outside filtered diapason: one today, one today - 29 days, and one today - 30 days ");
         LnSessionParsedObject todayLexis = generateLexisNexisDataByClient(activityClient);
         todayLexis.setEventDatetime(getCurrentTimestampDbFormat());
         todayLexis.setEventType("account_creation");
@@ -366,7 +375,8 @@ public class SessionsTabTest extends TestBaseWeb {
     public void filterDateLast90daysTest() {
         deleteLexis(activityClient);
 
-        Allure.step("Prepare data for DB with dates inside and outside filtered diapason: one today, one today - 90 days, and one today - 89 days ");
+        Allure.step(
+                "Prepare data for DB with dates inside and outside filtered diapason: one today, one today - 90 days, and one today - 89 days ");
         LnSessionParsedObject todayLexis = generateLexisNexisDataByClient(activityClient);
         todayLexis.setEventDatetime(getCurrentTimestampDbFormat());
         todayLexis.setEventType("account_creation");
@@ -452,7 +462,9 @@ public class SessionsTabTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         sessionsTab.navigate(activityClient.getUcid());
         sessionsTab.clickDateFilter();
-        sessionsTab.setCustomDates(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 5, 0, 0), getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 98, 0, 0));
+        sessionsTab.setCustomDates(
+                getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 5, 0, 0),
+                getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 98, 0, 0));
         sessionsTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
         sessionsTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
         sessionsTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
@@ -594,8 +606,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setEmailageEmailriskscoreEariskbandid(22);
         firstLexis.setEmailageEmailriskscoreEaadvice("test advice");
 
-        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = " + firstLexis.getPolicyScore());
-
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = "
+                + firstLexis.getPolicyScore());
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -615,7 +627,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setRiskRating("Low");
         firstLexis.setPolicyScore(50);
 
-        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = " + firstLexis.getPolicyScore());
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = "
+                + firstLexis.getPolicyScore());
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -633,7 +646,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setRiskRating("Medium");
         firstLexis.setPolicyScore(0);
 
-        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = " + firstLexis.getPolicyScore());
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = "
+                + firstLexis.getPolicyScore());
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -649,7 +663,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setRiskRating("trusted");
         firstLexis.setPolicyScore(-50);
 
-        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = " + firstLexis.getPolicyScore());
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = "
+                + firstLexis.getPolicyScore());
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -665,7 +680,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setRiskRating("Low");
         firstLexis.setPolicyScore(-99);
 
-        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = " + firstLexis.getPolicyScore());
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = "
+                + firstLexis.getPolicyScore());
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -696,7 +712,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setEmailageEmailriskscoreEascore(11);
         firstLexis.setEmailageEmailriskscoreEariskbandid(22);
         firstLexis.setEmailageEmailriskscoreEaadvice("test advice");
-        firstLexis.setSummaryReasonCodeOriginal("[ \"Connection via Mobile Hotspot\", \"First Time Mobile Hotspot  Used\", \"Computer browser used\" ]");
+        firstLexis.setSummaryReasonCodeOriginal(
+                "[ \"Connection via Mobile Hotspot\", \"First Time Mobile Hotspot  Used\", \"Computer browser used\" ]");
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -705,7 +722,9 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.navigate(activityClient.getUcid());
         sessionsTab.clickOnDataRow();
         assertThat(sessionsTab.getSummarySectionTitle(), is("Summary"));
-        assertThat(sessionsTab.getSummarySectionText(), is("Connection via Mobile HotspotFirst Time Mobile Hotspot  UsedComputer browser used"));
+        assertThat(
+                sessionsTab.getSummarySectionText(),
+                is("Connection via Mobile HotspotFirst Time Mobile Hotspot  UsedComputer browser used"));
     }
 
     @Test
@@ -728,8 +747,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setEmailageEmailriskscoreEariskbandid(22);
         firstLexis.setEmailageEmailriskscoreEaadvice("test advice");
 
-        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = " + firstLexis.getPolicyScore());
-
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.getRiskRating() + ", and policyScore = "
+                + firstLexis.getPolicyScore());
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -762,7 +781,6 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setEmailageEmailriskscoreEariskbandid(22);
 
         Allure.step("Prepare data for DB with the tmxSummaryReasonCode equals " + firstLexis.getTmxSummaryReasonCode());
-
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
@@ -818,12 +836,12 @@ public class SessionsTabTest extends TestBaseWeb {
                 firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(300);
         firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestampSeconds());
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Very low");
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(80);
         firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestampSeconds());
 
@@ -843,12 +861,12 @@ public class SessionsTabTest extends TestBaseWeb {
                 firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(301);
         firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestampSeconds());
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Low");
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(79);
         firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestampSeconds());
 
@@ -864,14 +882,15 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(600);
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Moderate");
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(60);
 
         Allure.step("Prepare data for DB with the new set of data");
@@ -886,14 +905,15 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(601);
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("High");
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(59);
 
         Allure.step("Prepare data for DB with the new set of data");
@@ -908,14 +928,15 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(799);
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Very high");
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(40);
 
         Allure.step("Prepare data for DB with the new set of data");
@@ -930,14 +951,15 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(800);
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel(null);
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(39);
 
         Allure.step("Prepare data for DB with the new set of data");
@@ -952,14 +974,15 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(999);
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel(null);
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(1);
 
         Allure.step("Prepare data for DB with the new set of data");
@@ -974,14 +997,15 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
-        //email
+        // email
         firstLexis.setEmailageEmailriskscoreEascore(0);
-        //ip
+        // ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel(null);
-        //digital identity
+        // digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(null);
 
         Allure.step("Prepare data for DB with the new set of data");
@@ -996,7 +1020,8 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
         sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
+                firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
     }
 
     @Test
@@ -1024,21 +1049,24 @@ public class SessionsTabTest extends TestBaseWeb {
 
         firstLexis.setEmailageEmailriskscorePhonecarriertype("phoneCarrier" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscorePhoneownermatch("U");
-        firstLexis.setEmailageEmailriskscorePhonetofullnameconfidence(RandomGenerator.getDefault().nextInt(1, 101));
-        firstLexis.setEmailageEmailriskscorePhonetolastnameconfidence(RandomGenerator.getDefault().nextInt(1, 101));
+        firstLexis.setEmailageEmailriskscorePhonetofullnameconfidence(
+                RandomGenerator.getDefault().nextInt(1, 101));
+        firstLexis.setEmailageEmailriskscorePhonetolastnameconfidence(
+                RandomGenerator.getDefault().nextInt(1, 101));
 
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Review");
         firstLexis.setEmailageEmailriskscoreIpRiskreason("some IP reason" + getCurrentTimestampSeconds());
 
         firstLexis.setEmailageEmailriskscoreDomainrisklevel("some domain risk level" + getCurrentTimestampSeconds());
-        firstLexis.setEmailageEmailriskscoreDomainCreationDays(RandomGenerator.getDefault().nextInt(0, 101));
+        firstLexis.setEmailageEmailriskscoreDomainCreationDays(
+                RandomGenerator.getDefault().nextInt(0, 101));
         firstLexis.setEmailageEmailriskscoreDomainage("2007-11-19 06:58:43");
         firstLexis.setEmailageEmailriskscoreDomainexists("Not Sure");
         firstLexis.setEmailageEmailriskscoreDomaincategory("some domain category" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscoreDomainname("some domain name" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscoreDomaincompany("some domain company" + getCurrentTimestampSeconds());
-        firstLexis.setEmailageEmailriskscoreDomaincountry(Country.getRandomCountry().getCountryCode());
-
+        firstLexis.setEmailageEmailriskscoreDomaincountry(
+                Country.getRandomCountry().getCountryCode());
 
         Allure.step("Prepare data for DB with the first set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
@@ -1051,18 +1079,23 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkValueOfSubTableRow("Email", "fraud risk", firstLexis.getEmailageEmailriskscoreEaadvice());
         sessionsTab.checkValueOfSubTableRow("Email", "score", firstLexis.getEmailageEmailriskscoreEascore());
         sessionsTab.checkValueOfSubTableRow("Email", "reason", firstLexis.getEmailageEmailriskscoreEareason());
-//        activityTab.checkValueOfSubTableRow("Email", "created",firstLexis.emailageEmailriskscoreEareason);
+        //        activityTab.checkValueOfSubTableRow("Email", "created",firstLexis.emailageEmailriskscoreEareason);
 
         sessionsTab.checkValueOfSubTableRow("Phone", "type", firstLexis.getEmailageEmailriskscorePhonecarriertype());
         sessionsTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
-        sessionsTab.checkValueOfSubTableRowNAmeConfidence("Phone", "full name", firstLexis.getEmailageEmailriskscorePhonetofullnameconfidence());
-        sessionsTab.checkValueOfSubTableRowNAmeConfidence("Phone", "last name", firstLexis.getEmailageEmailriskscorePhonetolastnameconfidence());
+        sessionsTab.checkValueOfSubTableRowNAmeConfidence(
+                "Phone", "full name", firstLexis.getEmailageEmailriskscorePhonetofullnameconfidence());
+        sessionsTab.checkValueOfSubTableRowNAmeConfidence(
+                "Phone", "last name", firstLexis.getEmailageEmailriskscorePhonetolastnameconfidence());
 
-        sessionsTab.checkValueOfSubTableRow("IP address", "risk level", firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkValueOfSubTableRow(
+                "IP address", "risk level", firstLexis.getEmailageEmailriskscoreIpRisklevel());
         sessionsTab.checkValueOfSubTableRow("IP address", "reason", firstLexis.getEmailageEmailriskscoreIpRiskreason());
 
-        sessionsTab.checkValueOfSubTableRow("Domain", "risk level", firstLexis.getEmailageEmailriskscoreDomainrisklevel());
-//        activityTab.checkValueOfSubTableRow("Domain", "created",firstLexis.emailageEmailriskscoreDomainCreationDays);
+        sessionsTab.checkValueOfSubTableRow(
+                "Domain", "risk level", firstLexis.getEmailageEmailriskscoreDomainrisklevel());
+        //        activityTab.checkValueOfSubTableRow("Domain",
+        // "created",firstLexis.emailageEmailriskscoreDomainCreationDays);
         sessionsTab.checkValueOfSubTableRow("Domain", "exists", firstLexis.getEmailageEmailriskscoreDomainexists());
         sessionsTab.checkValueOfSubTableRow("Domain", "category", firstLexis.getEmailageEmailriskscoreDomaincategory());
         sessionsTab.checkValueOfSubTableRow("Domain", "name", firstLexis.getEmailageEmailriskscoreDomainname());
@@ -1072,7 +1105,8 @@ public class SessionsTabTest extends TestBaseWeb {
         deleteLexis(activityClient);
 
         firstLexis.setEmailageEmailriskscorePhoneownermatch("N");
-        firstLexis.setEmailageEmailriskscoreDomaincountry(Country.getRandomCountry().getCountryCode());
+        firstLexis.setEmailageEmailriskscoreDomaincountry(
+                Country.getRandomCountry().getCountryCode());
 
         Allure.step("Prepare data for DB with the another set of data");
 
@@ -1087,7 +1121,8 @@ public class SessionsTabTest extends TestBaseWeb {
         deleteLexis(activityClient);
 
         firstLexis.setEmailageEmailriskscorePhoneownermatch("Y");
-        firstLexis.setEmailageEmailriskscoreDomaincountry(Country.getRandomCountry().getCountryCode());
+        firstLexis.setEmailageEmailriskscoreDomaincountry(
+                Country.getRandomCountry().getCountryCode());
 
         Allure.step("Prepare data for DB with the another set of data");
 
@@ -1102,7 +1137,8 @@ public class SessionsTabTest extends TestBaseWeb {
         deleteLexis(activityClient);
 
         firstLexis.setEmailageEmailriskscorePhoneownermatch("P");
-        firstLexis.setEmailageEmailriskscoreDomaincountry(Country.getRandomCountry().getCountryCode());
+        firstLexis.setEmailageEmailriskscoreDomaincountry(
+                Country.getRandomCountry().getCountryCode());
 
         Allure.step("Prepare data for DB with the another set of data");
 
@@ -1140,7 +1176,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
-        Allure.step("Prepare data for DB with the first set of data. set conditionAttrib5 = \"agent_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
+        Allure.step(
+                "Prepare data for DB with the first set of data. set conditionAttrib5 = \"agent_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         sessionsTab.navigateEnterPage();
@@ -1154,7 +1191,12 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
         sessionsTab.checkValueOfSubTableRow("Device", "screen", firstLexis.getScreenRes());
         sessionsTab.checkValueOfSubTableRow("Device", "brand", startFromUpper(firstLexis.getAgentBrand()));
-        sessionsTab.checkValueOfSubTableRow("Device", "model", firstLexis.getAgentModel()); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkValueOfSubTableRow(
+                "Device",
+                "model",
+                firstLexis
+                        .getAgentModel()); // if condition_attrib_5 in (‘browser_computer’, 'other') then take the value
+        // from device_model else from agent_model
         sessionsTab.checkValueOfSubTableRow("Device", "name", firstLexis.getDeviceName());
         sessionsTab.checkValueOfSubTableRow("Device", "language", "English (United States)");
 
@@ -1170,7 +1212,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
-        Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
+        Allure.step(
+                "Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         sessionsTab.navigate(activityClient.getUcid());
@@ -1182,7 +1225,12 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
         sessionsTab.checkValueOfSubTableRow("Device", "screen", firstLexis.getScreenRes());
         sessionsTab.checkValueOfSubTableRow("Device", "brand", startFromUpper(firstLexis.getAgentBrand()));
-        sessionsTab.checkValueOfSubTableRow("Device", "model", firstLexis.getAgentModel()); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkValueOfSubTableRow(
+                "Device",
+                "model",
+                firstLexis
+                        .getAgentModel()); // if condition_attrib_5 in (‘browser_computer’, 'other') then take the value
+        // from device_model else from agent_model
         sessionsTab.checkValueOfSubTableRow("Device", "name", firstLexis.getDeviceName());
         sessionsTab.checkValueOfSubTableRow("Device", "language", "French (France)");
         deleteLexis(activityClient);
@@ -1198,7 +1246,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
-        Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_computer\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
+        Allure.step(
+                "Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_computer\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         sessionsTab.navigate(activityClient.getUcid());
@@ -1208,7 +1257,9 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
         sessionsTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
         sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
-        sessionsTab.checkSubTableRowNotPresented("Device", "model"); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkSubTableRowNotPresented(
+                "Device", "model"); // if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from
+        // device_model else from agent_model
         sessionsTab.checkSubTableRowNotPresented("Device", "name");
         sessionsTab.checkSubTableRowNotPresented("Device", "language");
 
@@ -1225,7 +1276,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
-        Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"Something\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
+        Allure.step(
+                "Prepare data for DB with the another set of data. set conditionAttrib5 = \"Something\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         sessionsTab.navigate(activityClient.getUcid());
@@ -1235,11 +1287,12 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
         sessionsTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
         sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
-        sessionsTab.checkSubTableRowNotPresented("Device", "model"); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkSubTableRowNotPresented(
+                "Device", "model"); // if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from
+        // device_model else from agent_model
         sessionsTab.checkSubTableRowNotPresented("Device", "name");
         sessionsTab.checkSubTableRowNotPresented("Device", "language");
     }
-
 
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -1267,7 +1320,8 @@ public class SessionsTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the set of the test data.");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        String expectedLanguages = "100% English (United States)90% English80% Chinese (China)70% Chinese (Taiwan, Province of China)60% Chinese";
+        String expectedLanguages =
+                "100% English (United States)90% English80% Chinese (China)70% Chinese (Taiwan, Province of China)60% Chinese";
 
         sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -1349,10 +1403,8 @@ public class SessionsTabTest extends TestBaseWeb {
         firstLexis.setInputIpGeo(testCountry2.getCountryCode());
         firstLexis.setInputIpRoutingType("some input IP routing type" + getCurrentTimestampSeconds());
 
-
         Allure.step("Prepare data for DB with the set of the test data.");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-
 
         sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -1361,12 +1413,17 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.openTabIpAdress();
 
         sessionsTab.checkIpSubTableRow("ip", firstLexis.getTrueIp(), firstLexis.getInputIpAddress());
-        sessionsTab.checkIpSubTableRow("isp", startFromUpper(firstLexis.getTrueIpIsp().toLowerCase()), startFromUpper(
-                firstLexis.getInputIpIsp().toLowerCase()));
+        sessionsTab.checkIpSubTableRow(
+                "isp",
+                startFromUpper(firstLexis.getTrueIpIsp().toLowerCase()),
+                startFromUpper(firstLexis.getInputIpIsp().toLowerCase()));
         sessionsTab.checkIpSubTableRow("postcode", firstLexis.getTrueIpPostalCode(), "–");
         sessionsTab.checkIpSubTableRow("city", firstLexis.getTrueIpCity(), firstLexis.getInputIpCity());
         sessionsTab.checkIpSubTableRow("geo", testCountry.getCountryCode(), testCountry2.getCountryCode());
-        sessionsTab.checkIpSubTableRow("connection", startFromUpper(firstLexis.getTrueIpConnectionType().toLowerCase()), "–");
+        sessionsTab.checkIpSubTableRow(
+                "connection",
+                startFromUpper(firstLexis.getTrueIpConnectionType().toLowerCase()),
+                "–");
         sessionsTab.checkIpSubTableRow("region", firstLexis.getTrueIpRegion(), firstLexis.getInputIpRegion());
         sessionsTab.checkIpSubTableRow("country", testCountry.getCountryName(), testCountry2.getCountryName());
     }

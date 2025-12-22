@@ -2,21 +2,20 @@ package business_objects.kafka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class MirrorScoreEvent {
 
     // JSON example for reference:
-//    {
-//             "type": "mirrorScore",
-//            "id": "7c8a3c2b-2a5e-4cb5-9f84-67a21e4adf93",
-//            "schemaVersion": "2.3",
-//            "timestamp": 1734973200,
-//            "actionTimeUtc": "2025-10-22T09:45:32Z",
-//            "ucid": "vantage-6794350",
-//            "countAction": 23,
-//            "actionId": "MT5-CLOSE-1734973200-01",
-//            "ucidScore": 1.33
-//    }
+    //    {
+    //             "type": "mirrorScore",
+    //            "id": "7c8a3c2b-2a5e-4cb5-9f84-67a21e4adf93",
+    //            "schemaVersion": "2.3",
+    //            "timestamp": 1734973200,
+    //            "actionTimeUtc": "2025-10-22T09:45:32Z",
+    //            "ucid": "vantage-6794350",
+    //            "countAction": 23,
+    //            "actionId": "MT5-CLOSE-1734973200-01",
+    //            "ucidScore": 1.33
+    //    }
 
     @JsonProperty("type")
     private String type;
@@ -46,8 +45,15 @@ public class MirrorScoreEvent {
     private Double ucidScore;
 
     public MirrorScoreEvent(
-            String type, String id, String schemaVersion, Integer timestamp, String actionTimeUtc, String ucid,
-            Integer countAction, String actionId, Double ucidScore) {
+            String type,
+            String id,
+            String schemaVersion,
+            Integer timestamp,
+            String actionTimeUtc,
+            String ucid,
+            Integer countAction,
+            String actionId,
+            Double ucidScore) {
         this.type = type;
         this.id = id;
         this.schemaVersion = schemaVersion;
@@ -59,8 +65,7 @@ public class MirrorScoreEvent {
         this.ucidScore = ucidScore;
     }
 
-    public MirrorScoreEvent() {
-    }
+    public MirrorScoreEvent() {}
 
     public String getType() {
         return type;

@@ -1,23 +1,22 @@
 package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
-import helpers.data.ClientHelper;
-import helpers.data.DataHelper;
-import io.qameta.allure.Description;
-import utils.Utils;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataHelper.setupData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.CRM_WITHDRAWAL_EVENT;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
+
+import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
+import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
+import io.qameta.allure.Description;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import utils.Utils;
 
 public class ConnectionSearchTradingAbuseDataFactory {
     private static final ClientHelper connectionSearchRuleClient1 = getRandomVantageClientAllFields();
@@ -27,31 +26,33 @@ public class ConnectionSearchTradingAbuseDataFactory {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
-        data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4",                            // accountType
-                Utils.getRandomIntPositive().toString(),      // binNumber
-                data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // Name
-                data.clientHelper.getUserId(),                // clientId
-                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
-                "4",                                          // expMonth
-                "2030",                                       // expYear
-                data.clientHelper.getFirstName(),             // fullName
-                getRandomUuidString(),                        // id
-                "VTSG" + getRandomIntPositive(),              // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(),        // mt4Account
-                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
-                "-",                                 // paymentChannelName
-                "CREDIT_CARD",                       // paymentMethodCode
-                "WEB",                               // platform
-                data.clientHelper.getRegulator(),    // regulator
-                "1.0",                               // schemaVersion
-                CRM_WITHDRAWAL_EVENT,                // type
-                1,                                   // withdrawalAmount
-                Instant.now().toString(),               // withdrawalApplicationTime
-                "EUR",                               // withdrawalCurrency
-                getRandomIntPositive()               // withdrawalId
-        );
+        data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
+                .accountType("MT4")
+                .binNumber(Utils.getRandomIntPositive().toString())
+                .brand(data.clientHelper.getBrand().toLowerCase())
+                .checkName("")
+                .clientId(data.clientHelper.getUserId())
+                .eventDate(Instant.now().toString())
+                .expMonth("4")
+                .expYear("2030")
+                .fullName(data.clientHelper.getFirstName())
+                .id(getRandomUuidString())
+                .merchantOrderId("VTSG" + getRandomIntPositive())
+                .mt4Account(data.clientHelper.getTradingAccount())
+                .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
+                .paymentChannelName("-")
+                .paymentMethodCode("CREDIT_CARD")
+                .platform("WEB")
+                .regulator(data.clientHelper.getRegulator())
+                .schemaVersion("1.0")
+                .type(CRM_WITHDRAWAL_EVENT)
+                .withdrawalAmount(1.0)
+                .withdrawalApplicationTime(Instant.now().toString())
+                .withdrawalCurrency("EUR")
+                .withdrawalId(Long.valueOf(getRandomIntPositive()))
+                .status("Risk audit")
+                .withdrawalAmountUSD(100d)
+                .build();
         return data;
     }
 
