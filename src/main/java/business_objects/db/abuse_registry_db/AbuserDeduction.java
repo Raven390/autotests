@@ -461,7 +461,6 @@ public class AbuserDeduction {
                 && Objects.equals(brandGroup, deduction.brandGroup)
                 && Objects.equals(statusOpenPositions, deduction.statusOpenPositions)
                 && Objects.equals(statusEmail, deduction.statusEmail)
-                && Objects.equals(statusDeduction, deduction.statusDeduction)
                 && Objects.equals(statusApproval, deduction.statusApproval)
                 && Objects.equals(comment, deduction.comment)
                 && compareDoubles(illegalProfit, deduction.illegalProfit)
@@ -489,7 +488,6 @@ public class AbuserDeduction {
                 brandGroup,
                 statusOpenPositions,
                 statusEmail,
-                statusDeduction,
                 statusApproval,
                 comment,
                 illegalProfit,

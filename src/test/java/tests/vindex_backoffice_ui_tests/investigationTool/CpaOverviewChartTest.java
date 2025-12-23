@@ -42,6 +42,8 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CpaOverviewChartTest extends TestBaseWeb {
 
@@ -148,8 +150,6 @@ public class CpaOverviewChartTest extends TestBaseWeb {
 
     @Order(1)
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1078")
     @DisplayName("Verify CPA overview Chart by days")
     public void verifyCpaOverviewChart1Test() {
@@ -183,8 +183,6 @@ public class CpaOverviewChartTest extends TestBaseWeb {
 
     @Order(2)
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1079")
     @DisplayName("Verify CPA overview Chart by days with empty data")
     public void verifyCpaOverviewChart2Test() {
@@ -226,8 +224,6 @@ public class CpaOverviewChartTest extends TestBaseWeb {
 
     @Order(3)
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1080")
     @DisplayName("Verify CPA overview Chart by months")
     public void verifyCpaOverviewChart3Test() {
@@ -297,7 +293,6 @@ public class CpaOverviewChartTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid, ibCrmTbUser.ucid);
-        deleteEntryFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));

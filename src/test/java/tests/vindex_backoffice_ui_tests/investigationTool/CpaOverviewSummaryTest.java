@@ -36,6 +36,8 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 public class CpaOverviewSummaryTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomUltimaMarketsClientAllFields();
@@ -104,8 +106,6 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1077")
     @DisplayName("Verify CPA overview Summary")
     public void verifyCpaOverviewSummaryTest() {
@@ -163,7 +163,6 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid, ibCrmTbUser.ucid);
-        deleteEntryFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
