@@ -1,5 +1,7 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Utils.writeLog;
@@ -103,18 +105,17 @@ public class PaymentsPage extends AbstractPage {
     private final Locator paymentProfileDrawerProfileTotalsWithdrawals;
     private final Locator paymentProfileDrawerProfileTotalsNetDeposits;
     private final Locator connectedClientsTableRows;
+    private final Locator cashflowEmptyStatePlaceholder;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR =
             "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
     private static final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR =
             "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
-    private static final String CASHFLOW_EMPTY_STATE_SELECTOR =
-            "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
     private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR =
-            "//*[contains(@class,'v-cash-flow-chart-line_type_deposit')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
+            "//div[contains(@class,'v-cash-flow-details_deposit')]/*[text()='No deposits']";
     private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR =
-            "//*[contains(@class,'v-cash-flow-chart-line_type_withdrawal')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
+            "//div[contains(@class,'v-cash-flow-details_withdrawal')]/*[text()='No withdrawals']";
     private static final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
     private static final String TIMELINE_SECTION =
             TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
@@ -259,6 +260,8 @@ public class PaymentsPage extends AbstractPage {
         this.paymentProfileDrawerProfileTotalsNetDeposits =
                 page.locator("[data-qa='drawer_payment_profile_details_total_net_deposit']");
         this.connectedClientsTableRows = page.locator(".v-body-row[data-qa*='virtualized_table__rows__']");
+        this.cashflowEmptyStatePlaceholder =
+                page.locator("//div[@class='v-cash-flow-v2__chart-container']/*[@data-qa='error_view']");
     }
 
     @Step("Open users operations tab")
@@ -790,16 +793,16 @@ public class PaymentsPage extends AbstractPage {
     @Step("Open users operations tab")
     public void checkCashflowEmptyStateIsVisible() {
         Allure.step("Check that Cashflow graph empty state is visible");
-        checkCashflowEmptyStateDepositIsVisible();
-        checkCashflowEmptyStateWithdrawalIsVisible();
+        cashflowEmptyStatePlaceholder.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertThat(cashflowEmptyStatePlaceholder.isVisible(), is(true));
     }
 
     @Step("Open users operations tab")
     public void checkCashflowEmptyStateIsNotVisible() {
         Allure.step("Check that Cashflow graph empty state is not visible");
         waitForPageToLoad();
-        checkCashflowEmptyStateDepositIsNotVisible();
-        checkCashflowEmptyStateWithdrawalIsNotVisible();
+        cashflowEmptyStatePlaceholder.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
+        assertThat(cashflowEmptyStatePlaceholder.isVisible(), is(false));
     }
 
     public void checkCashflowEmptyStateDepositIsVisible() {
