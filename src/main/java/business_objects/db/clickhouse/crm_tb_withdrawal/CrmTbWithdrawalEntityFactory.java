@@ -3,10 +3,12 @@ package business_objects.db.clickhouse.crm_tb_withdrawal;
 import static utils.Utils.*;
 
 import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Step;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class CrmTbWithdrawalEntityFactory {
@@ -72,5 +74,18 @@ public class CrmTbWithdrawalEntityFactory {
                 .bitwalletEmail("bitwallet@email.com")
                 .ebuyEmail("ebuy@email.com")
                 .build();
+    }
+
+    public static DataHelper addWithdrawalSumByCategory(DataHelper data, Double amount, Integer paymentType) {
+        data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
+        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(1);
+        data.crmTbWithdrawalObjects.getFirst().setPaymentTypeId(paymentType);
+        data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(amount));
+        data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(amount));
+        data.crmTbWithdrawalObjects.getFirst().setStatusId(7);
+        data.crmTbWithdrawalObjects.getFirst().setStatus("Complete");
+        data.crmTbWithdrawalObjects.getFirst().setPaymentType(String.valueOf(paymentType));
+        data.crmTbWithdrawalObjects.getFirst().setPaymentChannel("web");
+        return data;
     }
 }

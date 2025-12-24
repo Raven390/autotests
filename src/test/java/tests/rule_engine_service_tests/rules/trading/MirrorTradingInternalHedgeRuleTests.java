@@ -84,7 +84,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
         assertThat(
                 "Verify alert",
                 alerts.getFirst().getAccount(),
-                is(data.internalHedgeEvent.getPositiveLeg().getTradingAccount().toString()));
+                is(data.internalHedgeEvent.getPositiveLeg().getTradingAccount()));
         assertThat("Verify alert", alerts.getFirst().getSymbol(), is(data.internalHedgeEvent.getSymbolUnderlying()));
         assertThat(
                 "Verify alert",
