@@ -30,7 +30,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
     private static final ClientHelper connectionSearchRuleClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient2_1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient3 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient3_1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient4_1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient5 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient5_1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient6 = getRandomVantageClientAllFields();
@@ -117,7 +119,6 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient2_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
@@ -150,7 +151,7 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
     private static DataHelper getConnectionSearchPaymentAbuseTest3Data() throws IOException, InterruptedException {
         DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient3);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient5_1);
+        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient3_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, HEDGING);
@@ -185,9 +186,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
     private static DataHelper getConnectionSearchPaymentAbuseTest4Data() throws IOException, InterruptedException {
         DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient4);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient5_1);
+        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient4_1);
 
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.5);
+        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.55);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 

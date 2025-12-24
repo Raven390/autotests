@@ -334,8 +334,7 @@ public class Utils {
 
     public static Double getRandomRoundedDouble(double min, double max) {
         double random = ThreadLocalRandom.current().nextDouble(min, max);
-        double rounded = roundDouble(random, 2);
-        return rounded;
+        return roundDouble(random, 2);
     }
 
     public static Integer getRandomIntNotInRange(int lowerBound, int upperBound) {
@@ -399,7 +398,7 @@ public class Utils {
         if (decimals < 0) {
             throw new IllegalArgumentException("Decimals must be non-negative.");
         }
-        BigDecimal bd = new BigDecimal(value);
+        BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(decimals, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
@@ -596,5 +595,9 @@ public class Utils {
         String expiryMonth = expiry.substring(0, 2);
         String expiryYear = expiry.substring(2);
         return String.format(cardBin + "***" + cardLastFourDigits + "_" + expiryMonth + "/20" + expiryYear);
+    }
+
+    public static void sleep(long millis) throws InterruptedException {
+        Thread.sleep(millis);
     }
 }

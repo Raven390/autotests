@@ -498,7 +498,8 @@ public class DbHelper {
                         String enumValue = ((Enum<?>) value).name();
                         statement.setString(parameterIndex++, enumValue);
                     } else if ("payload".equalsIgnoreCase(columnName)
-                            && tableName.toLowerCase().endsWith("payment_details")) {
+                            && (tableName.toLowerCase().endsWith("payment_details")
+                                    || tableName.toLowerCase().endsWith("payment_decisions_sent"))) {
                         // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
                         org.postgresql.util.PGobject jsonbObject = new org.postgresql.util.PGobject();
                         jsonbObject.setType("jsonb");

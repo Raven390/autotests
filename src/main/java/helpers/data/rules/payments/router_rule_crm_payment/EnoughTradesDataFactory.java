@@ -86,20 +86,20 @@ public class EnoughTradesDataFactory {
 
     private static DataHelper getEnoughTradesTest1Data() {
         DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClient1);
-        data.crmWithdrawalEvent.setAccountCategory("IB");
+        data.crmWithdrawalEventV2.setAccountCategory("IB");
         return data;
     }
 
     private static DataHelper getEnoughTradesTest2Data() {
         DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClient2);
-        data.crmWithdrawalEvent.setFundType("PAMM");
+        data.crmWithdrawalEventV2.setFundType("PAMM");
 
         return data;
     }
 
     private static DataHelper getEnoughTradesTest3Data() {
         DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClient3);
-        data.crmWithdrawalEvent.setFundType("MAM");
+        data.crmWithdrawalEventV2.setFundType("MAM");
         return data;
     }
 
@@ -110,7 +110,7 @@ public class EnoughTradesDataFactory {
 
     private static DataHelper getEnoughTradesTestAlert1Data() {
         DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClientAlert1);
-        data.crmWithdrawalEvent.setWithdrawalAmountUSD(1000.0);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1000.0);
         CrmTbWithdrawalEntity withdrawal1 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
         CrmTbWithdrawalEntity withdrawal2 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
         CrmTbWithdrawalEntity withdrawal3 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
@@ -184,7 +184,7 @@ public class EnoughTradesDataFactory {
 
     private static DataHelper getEnoughTradesTestAlert2Data() {
         DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClientAlert2);
-        data.crmWithdrawalEvent.setWithdrawalAmountUSD(1000.0);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1000.0);
         CrmTbWithdrawalEntity withdrawal1 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
         CrmTbWithdrawalEntity withdrawal2 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
         CrmTbWithdrawalEntity withdrawal3 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);

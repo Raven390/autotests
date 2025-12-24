@@ -58,6 +58,9 @@ public class WithdrawalApprovalsV2 {
     @JsonProperty("rejectionReasonRecommend")
     private String rejectionReasonRecommend;
 
+    @JsonProperty("rejectionReasonAttr")
+    private String rejectionReasonAttr;
+
     @JsonProperty("underManualReview")
     private Integer underManualReview;
 

@@ -3,10 +3,12 @@ package business_objects.db.clickhouse.crm_tb_deposit_table;
 import static utils.Utils.*;
 
 import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Step;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class CrmTbDepositEntityFactory {
@@ -59,5 +61,21 @@ public class CrmTbDepositEntityFactory {
                 .paymentProfileMasked("paymentProfileMasked")
                 .paymentProfileKey("paymentProfileMaskedKey")
                 .build();
+    }
+
+    public static DataHelper addDepositSumByCategory(DataHelper data, Double amount) {
+        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
+        data.crmTbDepositObjects.getFirst().setBrandUid(0);
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(amount));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(amount));
+        data.crmTbDepositObjects.getFirst().setStatusId(5);
+        data.crmTbDepositObjects.getFirst().setStatus("Success");
+        data.crmTbDepositObjects.getFirst().setPaymentTypeId(9);
+        data.crmTbDepositObjects.getFirst().setPaymentType("Local Bank Transfer");
+        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
+        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
+        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        return data;
     }
 }
