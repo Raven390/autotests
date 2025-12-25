@@ -4,7 +4,9 @@ import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateA
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnection;
 import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
@@ -78,6 +80,7 @@ import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.FraudTypeStatus;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -380,5 +383,51 @@ public class DataHelper {
         alerts.getFirst().setRule(ruleName);
         alerts.getFirst().setStatus(status);
         this.boAlertsObjects = alerts;
+    }
+
+    public static DataHelper addWithdrawalSumByCategory(DataHelper data, Double amount, Integer paymentType) {
+        data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
+        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(1);
+        data.crmTbWithdrawalObjects.getFirst().setPaymentTypeId(paymentType);
+        data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(amount));
+        data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(amount));
+        data.crmTbWithdrawalObjects.getFirst().setStatusId(7);
+        data.crmTbWithdrawalObjects.getFirst().setStatus("Complete");
+        data.crmTbWithdrawalObjects.getFirst().setPaymentType(String.valueOf(paymentType));
+        data.crmTbWithdrawalObjects.getFirst().setPaymentChannel("web");
+        return data;
+    }
+
+    public static DataHelper addMultipleWithdrawalSumByCategory(
+            DataHelper data, Double amount, Integer paymentType, Integer withdrawalsNumber) {
+        data.crmTbWithdrawalObjects = new ArrayList<>();
+        for (int i = 0; i < withdrawalsNumber; i++) {
+            data.crmTbWithdrawalObjects.add(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
+            data.crmTbWithdrawalObjects.get(i).setSourceIdSt(1);
+            data.crmTbWithdrawalObjects.get(i).setPaymentTypeId(paymentType);
+            data.crmTbWithdrawalObjects.get(i).setAmount(BigDecimal.valueOf(amount));
+            data.crmTbWithdrawalObjects.get(i).setAmountUsd(BigDecimal.valueOf(amount));
+            data.crmTbWithdrawalObjects.get(i).setStatusId(7);
+            data.crmTbWithdrawalObjects.get(i).setStatus("Complete");
+            data.crmTbWithdrawalObjects.get(i).setPaymentType(String.valueOf(paymentType));
+            data.crmTbWithdrawalObjects.get(i).setPaymentChannel("web");
+        }
+        return data;
+    }
+
+    public static DataHelper addDepositSumByCategory(DataHelper data, Double amount) {
+        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
+        data.crmTbDepositObjects.getFirst().setBrandUid(0);
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(amount));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(amount));
+        data.crmTbDepositObjects.getFirst().setStatusId(5);
+        data.crmTbDepositObjects.getFirst().setStatus("Success");
+        data.crmTbDepositObjects.getFirst().setPaymentTypeId(1);
+        data.crmTbDepositObjects.getFirst().setPaymentType("Credit Card");
+        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
+        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
+        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        return data;
     }
 }

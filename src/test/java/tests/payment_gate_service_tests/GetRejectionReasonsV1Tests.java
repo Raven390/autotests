@@ -80,8 +80,8 @@ class GetRejectionReasonsV1Tests extends TestBaseApi {
         GetRejectionReasonsResponseBody item = mappedResponse[0];
         // Validate dictionary fields presence (do not assert exact values, just presence)
         assertThat("Assert code present", item.getCode(), is("0"));
-        assertThat("Assert name present", item.getName(), is("Test"));
-        assertThat("Assert description present", item.getDescription(), is("Remove when needed"));
+        assertThat("Assert name present", item.getName(), is("Account activity review"));
+        assertThat("Assert description present", item.getDescription(), is("Account activity review."));
         assertThat("Assert attributes", item.getAttributes(), notNullValue());
         assertThat("Assert attributes", item.getAttributes().getFirst().getCode(), is("1"));
         assertThat("Assert attributes", item.getAttributes().getFirst().getName(), is("Test attr"));

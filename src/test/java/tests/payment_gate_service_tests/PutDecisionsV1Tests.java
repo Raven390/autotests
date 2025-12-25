@@ -180,7 +180,7 @@ class PutDecisionsV1Tests extends TestBaseApi {
     void PutPaymentDecisionV1Test2() throws Exception {
 
         Allure.step("send post decisions request with valid data");
-        putPaymentDecisionBody3.setDecisionCode(0);
+        putPaymentDecisionBody3.setDecisionCode(1);
         putPaymentDecisionBody3.setDecisionType("risk");
         Response response = putDecisions(
                 paymentEventsObject2.getPaymentId().toString(),

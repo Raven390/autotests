@@ -35,7 +35,7 @@ public class Constants {
     public static final String FEATURE_PRODUCTION_TESTS_CLICKHOUSE_API = "Clickhouse Api. Production tests";
     public static final String FEATURE_PRODUCTION_TESTS_CONNECTION_SEARCH = "Connection search. Production tests";
     public static final String FEATURE_PAYMENT_GATE = "Payment gate";
-    public static final String FEATURE_UTILITIES_API_SERVICE = "Payment gate";
+    public static final String FEATURE_UTILITIES_API_SERVICE = "Utilities api service";
     // STORIES
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";

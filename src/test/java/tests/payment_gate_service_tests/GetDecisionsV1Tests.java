@@ -70,7 +70,7 @@ class GetDecisionsV1Tests extends TestBaseApi {
                 List.of(paymentRejectionAttributesObject1));
     }
 
-    // @AfterAll
+    @AfterAll
     static void deleteData() throws Exception {
         cleanPaymentGateData(
                 client1.getUcid(),
@@ -108,13 +108,13 @@ class GetDecisionsV1Tests extends TestBaseApi {
                 "Assert decisionCode equals DB decisionCode",
                 mappedResponse.getFirst().getDecisionCode(),
                 is(String.valueOf(paymentDecisionsObject1.getDecisionCode())));
-        assertThat("Assert decision", mappedResponse.getFirst().getDecision(), is("Approve"));
+        assertThat("Assert decision", mappedResponse.getFirst().getDecision(), is("Risk Approve"));
         assertThat("Assert time", mappedResponse.getFirst().getDecidedAt(), is(notNullValue()));
         assertThat(
                 "Assert rejection code",
                 mappedResponse.getFirst().getRejectionCode(),
                 is(paymentDecisionsObject1.getRejectionCode().toString()));
-        assertThat("Assert reason", mappedResponse.getFirst().getRejectionReason(), is("Internal control"));
+        assertThat("Assert reason", mappedResponse.getFirst().getRejectionReason(), is("Account activity review"));
         // TODO fix assertion
         // assertThat("Assert actor", mappedResponse.getFirst().getActor(), is("QA"));
         assertThat(

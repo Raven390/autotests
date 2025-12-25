@@ -152,8 +152,8 @@ public class RuleAlertV2 {
         @JsonProperty("Crypto withdrawal")
         private String cryptoWithdrawal;
 
-        @JsonProperty("Same data: eWallet & KYC")
-        private String sameDataEwalletKyc;
+        @JsonProperty("Shared unique identifier")
+        private String sharedUniqueIdentifier;
 
         @JsonProperty("Open trades")
         private String openTrades;

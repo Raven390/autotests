@@ -188,7 +188,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().getAttributes().getCryptoWithdrawal10k(), is(true));
         assertThat("Verify alert", alerts.getFirst().getAttributes().getCryptoDeposit(), is("0 USD"));
         assertThat("Verify alert", alerts.getFirst().getAttributes().getCryptoWithdrawal(), is("10001 USD"));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getSameDataEwalletKyc(), is(nullValue()));
+        assertThat("Verify alert", alerts.getFirst().getAttributes().getSharedUniqueIdentifier(), is(nullValue()));
     }
 
     @Test
