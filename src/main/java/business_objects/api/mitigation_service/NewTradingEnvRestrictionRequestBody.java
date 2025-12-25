@@ -42,6 +42,8 @@ public class NewTradingEnvRestrictionRequestBody {
     @JsonProperty("applicationReason")
     private String applicationReason = null;
 
+    public NewTradingEnvRestrictionRequestBody() {}
+
     public NewTradingEnvRestrictionRequestBody(
             String applicationReason,
             String level,

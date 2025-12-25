@@ -146,4 +146,24 @@ public class MitigationServiceRequest {
                         null,
                         cancelRestrictionRequestBody);
     }
+
+    public static Response postRestrictionV3(NewTradingEnvRestrictionRequestBody postRestrictionRequestBody)
+            throws IOException {
+        return new HttpHelper()
+                .sendPostRequest(
+                        MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3,
+                        null,
+                        null,
+                        postRestrictionRequestBody);
+    }
+
+    public static Response deleteRestrictionV3(DeleteTradingEnvRestrictionRequestBody deleteRestrictionRequestBody)
+            throws IOException {
+        return new HttpHelper()
+                .sendDeleteRequest(
+                        MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3,
+                        null,
+                        null,
+                        deleteRestrictionRequestBody);
+    }
 }

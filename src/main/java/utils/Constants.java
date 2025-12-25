@@ -265,6 +265,16 @@ public class Constants {
             "postgres.mi.client_general_restriction_kafka_response";
     public static final String MITIGATION_KAFKA_RESPONSE_TRADING =
             "postgres.mi.client_trading_restriction_kafka_response";
+    public static final String MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION =
+            "postgres.mi.client_trading_environment_restriction";
+    public static final String MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_ACTION =
+            "postgres.mi.client_trading_environment_restriction_action";
+    public static final String MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_QUEUE =
+            "postgres.mi.client_trading_environment_restriction_queue";
+    public static final String MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_KAFKA_RESPONSE =
+            "postgres.mi.client_trading_environment_restriction_kafka_response";
+    public static final String MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_KAFKA_REQUEST =
+            "postgres.mi.client_trading_environment_restriction_kafka_request";
     public static final String MITIGATION_CLIENT_BYBIT_RESTRICTION = "postgres.mi.client_bybit_restriction";
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "consolidated.mt___mt4_trades_coerced";
     public static final String MT4_TRADES_TABLE_NAME = "consolidated.mt___mt4_trades";
