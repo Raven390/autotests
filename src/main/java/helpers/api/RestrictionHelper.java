@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import business_objects.api.mitigation_service.DeleteTradingEnvRestrictionRequestBody;
 import business_objects.api.mitigation_service.MitigationServiceRequest;
 import business_objects.api.mitigation_service.NewTradingEnvRestrictionRequestBody;
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
@@ -148,6 +149,24 @@ public class RestrictionHelper {
     public static Response getClientRestrictionsV3(String ucid) throws IOException {
         Allure.step("Get client's restrictions through API");
         Response response = MitigationServiceRequest.getRestrictionsByUcidV3(ucid);
+        assertNotNull(response);
+        assertEquals(200, response.code());
+        return response;
+    }
+
+    @Step("Set trading env restriction through API")
+    public static Response postRestrictionV3(NewTradingEnvRestrictionRequestBody postRestrictionRequestBody)
+            throws IOException {
+        Response response = MitigationServiceRequest.postRestrictionV3(postRestrictionRequestBody);
+        assertNotNull(response);
+        assertEquals(200, response.code());
+        return response;
+    }
+
+    @Step("Delete trading env restriction through API")
+    public static Response deleteRestrictionV3(DeleteTradingEnvRestrictionRequestBody deleteRestrictionRequestBody)
+            throws IOException {
+        Response response = MitigationServiceRequest.deleteRestrictionV3(deleteRestrictionRequestBody);
         assertNotNull(response);
         assertEquals(200, response.code());
         return response;

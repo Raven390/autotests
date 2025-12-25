@@ -122,7 +122,7 @@ public class AuditTrailPage extends AbstractPage {
     @Step("Get list of all audit trail items v2")
     public List<AuditTrailItemV2> getAuditTrailItemsV2() {
         waitForPageToLoad();
-        page.waitForCondition(() -> auditTrailItemV2.count() > 0, new Page.WaitForConditionOptions().setTimeout(5000));
+        auditTrailItemV2.first().waitFor(new Locator.WaitForOptions().setState(VISIBLE));
         List<AuditTrailItemV2> auditTrailItems = new ArrayList<>();
         for (int i = 0; i < auditTrailItemV2.count(); i++) {
             AuditTrailItemV2 item = new AuditTrailItemV2();

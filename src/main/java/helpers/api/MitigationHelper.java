@@ -1,6 +1,7 @@
 package helpers.api;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -79,5 +80,20 @@ public class MitigationHelper {
                     restriction.getRestrictionId().intValue()));
         }
         return restrictionList;
+    }
+
+    public static void deleteTradingEnvironmentRestrictions(String ucid) throws Exception {
+        String whereRestrictionId = String.format(
+                "client_restriction_id IN (SELECT id from %s where ucid = '%s')",
+                MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION, ucid);
+        String whereUcid = String.format("ucid = '%s'", ucid);
+        deleteEntryFromDb(
+                DbName.POSTGRES, MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_KAFKA_REQUEST, whereRestrictionId);
+        deleteEntryFromDb(
+                DbName.POSTGRES, MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_KAFKA_RESPONSE, whereRestrictionId);
+        deleteEntryFromDb(
+                DbName.POSTGRES, MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_ACTION, whereRestrictionId);
+        deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION_QUEUE, whereUcid);
+        deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION, whereUcid);
     }
 }
