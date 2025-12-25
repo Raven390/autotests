@@ -1,7 +1,5 @@
 package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
 import static helpers.data.DataSetupHelper.setupData;
@@ -14,10 +12,8 @@ import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Description;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import utils.Utils;
 
@@ -31,6 +27,12 @@ public class ConnectionSearchDataFactory {
     private static final ClientHelper connectionSearchRuleClient5_1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient6 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient7 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient7_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient7_2 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient7_3 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient7_4 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient7_5 = getRandomVantageClientAllFields();
+    private static final ClientHelper connectionSearchRuleClient7_6 = getRandomVantageClientAllFields();
     private static final ClientHelper connectionSearchRuleClient8 = getRandomVantageClientAllFields();
 
     @Description("Create data for Connection search rule")
@@ -82,20 +84,7 @@ public class ConnectionSearchDataFactory {
 
     private static DataHelper getConnectionSearchTest3Data() {
         DataHelper data = getConnectionSearchRuleData(connectionSearchRuleClient3);
-        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
-        data.crmTbDepositObjects.getFirst().setBrandUid(0);
-        data.crmTbDepositObjects.getFirst().setAmountSubmitted(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountSubmittedUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setStatusId(5);
-        data.crmTbDepositObjects.getFirst().setStatus("Success");
-        data.crmTbDepositObjects.getFirst().setPaymentTypeId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentType("Credit Card");
-        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
-        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        addDepositSumByCategory(data, 501d);
         return data;
     }
 
@@ -113,22 +102,7 @@ public class ConnectionSearchDataFactory {
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
 
-        // add deposit exactly as in the provided INSERT
-
-        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data2.clientHelper));
-        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
-        data.crmTbDepositObjects.getFirst().setBrandUid(0);
-        data.crmTbDepositObjects.getFirst().setAmountSubmitted(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountSubmittedUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setStatusId(5);
-        data.crmTbDepositObjects.getFirst().setStatus("Success");
-        data.crmTbDepositObjects.getFirst().setPaymentTypeId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentType("Credit Card");
-        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
-        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        addDepositSumByCategory(data, 501d);
         return data;
     }
 
@@ -137,65 +111,34 @@ public class ConnectionSearchDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
-        // add deposit
-        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
-        data.crmTbDepositObjects.getFirst().setBrandUid(0);
-        data.crmTbDepositObjects.getFirst().setAmountSubmitted(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountSubmittedUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setStatusId(5);
-        data.crmTbDepositObjects.getFirst().setStatus("Success");
-        data.crmTbDepositObjects.getFirst().setPaymentTypeId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentType("Credit Card");
-        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
-        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        addDepositSumByCategory(data, 501d);
 
-        // add CRYPTO withdrawal
-        data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
-        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(1);
-        data.crmTbWithdrawalObjects.getFirst().setPaymentTypeId(5);
-        data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(10_001d));
-        data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(10_001d));
-        data.crmTbWithdrawalObjects.getFirst().setStatusId(7);
-        data.crmTbWithdrawalObjects.getFirst().setStatus("Complete");
-        data.crmTbWithdrawalObjects.getFirst().setPaymentType("5");
-        data.crmTbWithdrawalObjects.getFirst().setPaymentChannel("web");
+        addWithdrawalSumByCategory(data, 9000d, 5);
 
         return data;
     }
 
     private static DataHelper getConnectionSearchTest7Data() {
         DataHelper data = getConnectionSearchRuleData(connectionSearchRuleClient7);
+        DataHelper data2 = getConnectionSearchRuleData(connectionSearchRuleClient7_1);
+        DataHelper data3 = getConnectionSearchRuleData(connectionSearchRuleClient7_2);
+        DataHelper data4 = getConnectionSearchRuleData(connectionSearchRuleClient7_3);
+        DataHelper data5 = getConnectionSearchRuleData(connectionSearchRuleClient7_4);
+        DataHelper data6 = getConnectionSearchRuleData(connectionSearchRuleClient7_5);
+        DataHelper data7 = getConnectionSearchRuleData(connectionSearchRuleClient7_6);
+
+        addConnectionByPayoutIdAttribute(data, data2.clientHelper);
+        addConnectionByPayoutIdAttribute(data, data3.clientHelper);
+        addConnectionByPayoutIdAttribute(data, data4.clientHelper);
+        addConnectionByPayoutIdAttribute(data, data5.clientHelper);
+        addConnectionByPayoutIdAttribute(data, data6.clientHelper);
+        addConnectionByPayoutIdAttribute(data, data7.clientHelper);
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
-        // add deposit
-        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
-        data.crmTbDepositObjects.getFirst().setBrandUid(0);
-        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setStatusId(5);
-        data.crmTbDepositObjects.getFirst().setStatus("Success");
-        data.crmTbDepositObjects.getFirst().setPaymentTypeId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentType("Credit Card");
-        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
-        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        addDepositSumByCategory(data, 501d);
 
-        // add withdrawal exactly as in the provided INSERT
-        data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
-        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(1);
-        data.crmTbWithdrawalObjects.getFirst().setPaymentTypeId(4);
-        data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(50_001d));
-        data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(50_001d));
-        data.crmTbWithdrawalObjects.getFirst().setStatusId(7);
-        data.crmTbWithdrawalObjects.getFirst().setStatus("Complete");
-        data.crmTbWithdrawalObjects.getFirst().setPaymentType("4");
-        data.crmTbWithdrawalObjects.getFirst().setPaymentChannel("web");
+        addWithdrawalSumByCategory(data, 50_001d, 4);
 
         return data;
     }
@@ -205,30 +148,9 @@ public class ConnectionSearchDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
-        // add deposit
-        data.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setSourceIdSt(1);
-        data.crmTbDepositObjects.getFirst().setBrandUid(0);
-        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(501));
-        data.crmTbDepositObjects.getFirst().setStatusId(5);
-        data.crmTbDepositObjects.getFirst().setStatus("Success");
-        data.crmTbDepositObjects.getFirst().setPaymentTypeId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentType("Credit Card");
-        data.crmTbDepositObjects.getFirst().setPaymentChannelId(1);
-        data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
-        data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
+        addDepositSumByCategory(data, 501d);
 
-        // add withdrawal exactly as in the provided INSERT
-        data.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper));
-        data.crmTbWithdrawalObjects.getFirst().setSourceIdSt(1);
-        data.crmTbWithdrawalObjects.getFirst().setPaymentTypeId(4);
-        data.crmTbWithdrawalObjects.getFirst().setAmount(BigDecimal.valueOf(9000));
-        data.crmTbWithdrawalObjects.getFirst().setAmountUsd(BigDecimal.valueOf(9000));
-        data.crmTbWithdrawalObjects.getFirst().setStatusId(7);
-        data.crmTbWithdrawalObjects.getFirst().setStatus("Complete");
-        data.crmTbWithdrawalObjects.getFirst().setPaymentType("4");
-        data.crmTbWithdrawalObjects.getFirst().setPaymentChannel("web");
+        addWithdrawalSumByCategory(data, 9000d, 4);
 
         return data;
     }

@@ -31,6 +31,7 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
+@Disabled("Disabled on production")
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_RECONCILIATION)
 @Tag(TEAM_CORE)

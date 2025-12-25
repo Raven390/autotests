@@ -33,9 +33,6 @@ import tests.TestBaseRule;
 class ConnectionSearchTests extends TestBaseRule {
 
     private static Map<String, DataHelper> dataMap = new HashMap<>();
-    private static PaymentEventsObject paymentEventsObject1;
-    private static PaymentDetailsObject paymentDetailsObject1;
-    private static PaymentRuleExecutionsObject paymentRuleExecutionsObject1;
 
     @BeforeAll
     static void setupData() throws IOException {
@@ -58,9 +55,10 @@ class ConnectionSearchTests extends TestBaseRule {
 
         // create previous alert
         ClientHelper client1 = data.clientHelper;
-        paymentEventsObject1 = generatePaymentEventsObject(client1);
-        paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
-        paymentRuleExecutionsObject1 = generatePaymentRuleExecutionsObject(paymentEventsObject1);
+        PaymentEventsObject paymentEventsObject1 = generatePaymentEventsObject(client1);
+        PaymentDetailsObject paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject1 =
+                generatePaymentRuleExecutionsObject(paymentEventsObject1);
         paymentRuleExecutionsObject1.setRuleEndId(202);
         paymentRuleExecutionsObject1.setRuleId(6);
 

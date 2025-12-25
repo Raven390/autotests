@@ -1,5 +1,7 @@
 package helpers.data;
 
+import static helpers.data.rules.DepositTypeInserter.insertDepositTypeData;
+import static helpers.data.rules.WithdrawalTypeInserter.insertWithrawalTypeData;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -103,6 +105,7 @@ public class DataSetupHelper {
                 data.deviceIdTableEntries.forEach(payout -> insertObjectToDb(DEVICE_ID_TABLE_NAME, payout));
             }
             if (data.crmTbWithdrawalObjects != null) {
+                insertWithrawalTypeData();
                 data.crmTbWithdrawalObjects.forEach(
                         withdrawal -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal));
             }
@@ -111,6 +114,7 @@ public class DataSetupHelper {
                         withdrawalType -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE, withdrawalType));
             }
             if (data.crmTbDepositObjects != null) {
+                insertDepositTypeData();
                 data.crmTbDepositObjects.forEach(deposit -> insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit));
             }
             if (data.crmTbDepositTypeObjects != null) {

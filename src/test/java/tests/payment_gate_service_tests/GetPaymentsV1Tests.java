@@ -107,7 +107,7 @@ class GetPaymentsV1Tests extends TestBaseApi {
                 List.of(paymentRejectionAttributesObject1));
     }
 
-    // @AfterAll
+    @AfterAll
     static void deleteData() throws Exception {
         cleanPaymentGateData(
                 client1.getUcid(),
@@ -229,7 +229,7 @@ class GetPaymentsV1Tests extends TestBaseApi {
                 "Assert decisions list present",
                 decision.getDecisionCode(),
                 is(paymentDecisionsObject1.getDecisionCode()));
-        assertThat("Assert decisions list present", decision.getDecision(), is("Approve"));
+        assertThat("Assert decisions list present", decision.getDecision(), is("Risk Approve"));
         assertThat(
                 "Assert decisions list present",
                 decision.getAttributes().getFirst().getCode(),

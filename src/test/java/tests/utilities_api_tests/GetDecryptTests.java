@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 
-import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
+import business_objects.api.utilities_api.common.UtilitiesApiErrorResponse;
 import business_objects.api.utilities_api.decrypt.GetDecryptResponse;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Feature;
@@ -34,19 +34,13 @@ class GetDecryptTests extends TestBaseApi {
     private String emailDecrypted = "test14@example.com";
     private String phoneDecrypted = "+1810347493";
 
-    @BeforeAll
-    static void setup() {}
-
-    @AfterAll
-    static void teardown() throws Exception {}
-
     @Test
-    @DisplayName("Clickhouse Api. Get email/phone decrypt success (200)")
+    @DisplayName("Utilities Api. Get email/phone decrypt success (200)")
     void getDecryptTest1() throws IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("brand", client1.getBrand()); // Required
-        params.put("email", emailEncrypted); // Required
-        params.put("phoneNum", phoneEncrypted); // Required
+        params.put("brand", client1.getBrand());
+        params.put("email", emailEncrypted);
+        params.put("phoneNum", phoneEncrypted);
         Response response = getDecryptRequest(params);
 
         assertThat(response.body(), is(notNullValue()));
@@ -58,11 +52,11 @@ class GetDecryptTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get email decrypt success (200)")
+    @DisplayName("Utilities Api. Get email decrypt success (200)")
     void getDecryptTest2() throws IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("brand", client1.getBrand()); // Required
-        params.put("email", emailEncrypted); // Required
+        params.put("brand", client1.getBrand());
+        params.put("email", emailEncrypted);
         Response response = getDecryptRequest(params);
 
         assertThat(response.body(), is(notNullValue()));
@@ -74,11 +68,11 @@ class GetDecryptTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get phone decrypt success (200)")
+    @DisplayName("Utilities Api. Get phone decrypt success (200)")
     void getDecryptTest3() throws IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("brand", client1.getBrand()); // Required
-        params.put("phoneNum", phoneEncrypted); // Required
+        params.put("brand", client1.getBrand());
+        params.put("phoneNum", phoneEncrypted);
         Response response = getDecryptRequest(params);
 
         assertThat(response.body(), is(notNullValue()));
@@ -90,10 +84,10 @@ class GetDecryptTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get no email/phone decrypt success (200)")
+    @DisplayName("Utilities Api. Get no email/phone decrypt success (200)")
     void getDecryptTest4() throws IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("brand", client1.getBrand()); // Required
+        params.put("brand", client1.getBrand());
         Response response = getDecryptRequest(params);
 
         assertThat(response.body(), is(notNullValue()));
@@ -105,14 +99,14 @@ class GetDecryptTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get decrypt fail no brand passed (400)")
+    @DisplayName("Utilities Api. Get decrypt fail no brand passed (400)")
     void getDecryptTest5() throws IOException {
         Map<String, Object> params = new HashMap<>();
         Response response = getDecryptRequest(params);
 
         assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        UtilitiesApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), UtilitiesApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat(
                 "Assert email",
