@@ -124,6 +124,7 @@ public class ResolvePage extends AbstractPage {
             "//div[contains(@data-qa,'fraud_type_selector__submenu_%s__item')]";
     private static final String INFO_ICON_BY_FRAUD_TYPE_PATTERN =
             "//span[text()='%s']/ancestor::*[@class='v-fraud-type']/descendant::*[@class='v-reported-fraud-type-list__info-icon']";
+    private static final String FRAUD_SOURCE_PATTERN = "//button[@data-qa='buttons_list__item__%s']";
 
     public ResolvePage(Page page) {
         super(page);
@@ -655,8 +656,7 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Select fraud source")
     public void selectFraudSource(String fraudSource) {
-        fraudSourceDropdown.click();
-        page.getByText(fraudSource).click();
+        page.locator(String.format(FRAUD_SOURCE_PATTERN, fraudSource)).click();
     }
 
     @Step("Get illegal profit partial amount")

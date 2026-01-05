@@ -1,7 +1,6 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
@@ -15,8 +14,7 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampSeconds;
-import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.*;
 
 import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
@@ -62,13 +60,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         CrmTbUserObject crmClient2 = generateUserByClient(client2);
         CrmTbAccountObject account3 = generateCrmTbAccountDataForUi(client2);
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, crmClient2));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3));
-        insertObjectsToDb(
-                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
-                List.of(
-                        generateAccountForMtByAccount(account1),
-                        generateAccountForMtByAccount(account2),
-                        generateAccountForMtByAccount(account3)));
+        insertCrmAccountsToDb(account1, account2, account3);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client1);
@@ -102,8 +94,9 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), "Confirmed");
+        FraudType fraudTypeOld = FraudType.LATENCY_ARBITRAGE;
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -115,7 +108,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
         fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
@@ -182,7 +175,10 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), FraudTypeStatus.POTENTIAL.getDisplayName());
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(),
+                FraudTypeStatus.POTENTIAL.getDisplayName(),
+                FraudSource.VINDEX.getDisplayName());
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -246,8 +242,11 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), FraudTypeStatus.POTENTIAL.getDisplayName());
+        FraudType fraudTypeOld = FraudType.LATENCY_ARBITRAGE;
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(),
+                FraudTypeStatus.POTENTIAL.getDisplayName(),
+                FraudSource.VINDEX.getDisplayName());
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -258,7 +257,10 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), FraudTypeStatus.CONFIRMED.getDisplayName());
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(),
+                FraudTypeStatus.CONFIRMED.getDisplayName(),
+                FraudSource.VINDEX.getDisplayName());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
         fraudstersPage.verifySuccessMessageUpload(1);
@@ -267,7 +269,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
         fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
@@ -330,14 +332,17 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsDutyOpsUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
-        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudTypeOld = FraudType.LATENCY_ARBITRAGE;
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         // set 2 confirmed
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), FraudTypeStatus.CONFIRMED.getDisplayName());
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(),
+                FraudTypeStatus.CONFIRMED.getDisplayName(),
+                FraudSource.VINDEX.getDisplayName());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
         fraudstersPage.verifySuccessMessageUpload(1);
@@ -346,7 +351,10 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), FraudTypeStatus.CONFIRMED.getDisplayName());
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(),
+                FraudTypeStatus.CONFIRMED.getDisplayName(),
+                FraudSource.VINDEX.getDisplayName());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
         fraudstersPage.verifySuccessMessageUpload(1);
@@ -354,7 +362,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
         fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
@@ -396,12 +404,13 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.navigateAbuseRegistryFraudsters();
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         // upload 1 for deduction
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAdd(fraudType.getName(), FraudTypeStatus.CONFIRMED.getDisplayName());
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudType.getName(), FraudTypeStatus.CONFIRMED.getDisplayName(), FraudSource.VINDEX.getDisplayName());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
         fraudstersPage.verifySuccessMessageUpload(1);
@@ -444,7 +453,10 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), FraudTypeStatus.POTENTIAL.getDisplayName());
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(),
+                FraudTypeStatus.POTENTIAL.getDisplayName(),
+                FraudSource.VINDEX.getDisplayName());
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();

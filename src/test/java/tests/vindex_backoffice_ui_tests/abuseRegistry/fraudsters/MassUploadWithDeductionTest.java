@@ -17,8 +17,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampSeconds;
-import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.*;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
@@ -69,7 +68,7 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         CrmTbUserObject crmClient2 = generateUserByClient(client2);
         CrmTbAccountObject account3 = generateCrmTbAccountDataForUi(client2);
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, crmClient2));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3));
+        insertCrmAccountsToDb(account1, account2, account3);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, tradeWithdrawal, trade2));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client1);
@@ -89,17 +88,17 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     @AllureId("1555")
     @DisplayName("Batch upload PARTIAL_DEDUCTION test")
     void partialTest() throws Exception {
-
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.PRICING_ERROR;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), "Confirmed");
+        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudTypeOld.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -125,7 +124,6 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     @DisplayName(
             "Batch upload more than one acc client create pending_processing and 1 acc client create Holding deduction with FULL_DEDUCTION test")
     void moreThan1accAndFullDeductionTest() throws Exception {
-
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
 
@@ -133,13 +131,14 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudType = FraudType.BONUS_ABUSE;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAdd(fraudType.getName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -226,7 +225,6 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     @DisplayName(
             "Batch upload more than one acc client create pending_processing and 1 acc client create deduction with FULL_DEDUCTION test")
     void moreThan1accAndFullDeductionNotHoldingTest() throws Exception {
-
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
         executeQueryToDb(
@@ -239,13 +237,14 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        FraudType fraudType = FraudType.BONUS_ABUSE;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAdd(fraudType.getName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -338,7 +337,6 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     @DisplayName(
             "Batch upload more than one acc client create pending_processing and 1 acc client create Holding deduction with NO_DEDUCTION test")
     void moreThan1accAndNoDeductionTest() throws Exception {
-
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
 
@@ -346,13 +344,14 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudType = FraudType.CHARGEBACK;
+        FraudType fraudType = FraudType.REBATE_CHURNING;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAdd(fraudType.getName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -438,7 +437,6 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     @AllureId("1559")
     @DisplayName("Batch upload, then manageFraud check add deduction to fraud")
     void manageFraudCreateDeduction() throws Exception {
-
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
 
@@ -446,12 +444,13 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudType = FraudType.CHARGEBACK;
+        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAdd(fraudType.getName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
@@ -477,6 +476,7 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
 
         resolvePage.previouslyReportedFraudAddDeduction();
+        resolvePage.selectFraudSource(FraudSource.VINDEX.getDisplayName());
         resolvePage.clickIllegalProfitAccountsDropdown();
         resolvePage.clickAccountInDropdown(account2.account.toString());
         resolvePage.clickUseAsIllegalProfit();
@@ -500,7 +500,6 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     @AllureId("1560")
     @DisplayName("Batch upload no deduction created on potential")
     void potentialNoDeductionTest() throws Exception {
-
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
 
@@ -508,13 +507,14 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
-        FraudType fraudType = FraudType.CHARGEBACK;
+        FraudType fraudType = FraudType.PRICING_ERROR;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAdd(fraudType.getName(), "Potential");
+        fraudstersPage.addSelectedFraudAddWithSource(
+                fraudType.getName(), "Potential", FraudSource.VINDEX.getDisplayName());
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
