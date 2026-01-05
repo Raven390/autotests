@@ -110,7 +110,6 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT4_TRADES_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
         deleteObjectFromDb(CRM_WALLET_TRADE_ORDER_TABLE, CLIENT_UCID_WHERE);
-        deleteObjectFromDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, CLIENT_UCID_WHERE);
     }
 
     @Test
