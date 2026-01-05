@@ -2,6 +2,9 @@ package page_objects.backoffice_pages.investigationTool;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Utils.writeLog;
@@ -11,6 +14,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.Country;
 import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -361,23 +365,23 @@ public class SessionsTab extends AbstractPage {
         assertEquals(expectedValue, actualValue);
     }
 
+    @Step("Verify data is sorted by score ASC")
     public void checkScoreColumnIsAsc() {
-        Allure.step("Check that record is sorted by score in ASC order");
         waitForPageToLoad();
-        assertTrue(columnScoreData.count() > 1);
+        assertThat(columnScoreData.count(), greaterThan(1));
         int firstScore = Integer.parseInt(columnScoreData.first().textContent());
         int lastScore = Integer.parseInt(columnScoreData.last().textContent());
-        assertTrue(firstScore < lastScore);
+        assertThat(firstScore, lessThan(lastScore));
     }
 
+    @Step("Verify data is sorted by score DESC")
     public void checkScoreColumnIsDesc() {
-        Allure.step("Check that record is sorted by score in DESC order");
         waitForPageToLoad();
-        assertTrue(columnScoreData.count() > 1);
+        assertThat(columnScoreData.count(), greaterThan(1));
         int firstScore = Integer.parseInt(columnScoreData.first().textContent());
         int lastScore = Integer.parseInt(columnScoreData.last().textContent());
         writeLog("firstScore: " + firstScore + " and lastScore" + lastScore);
-        assertTrue(firstScore > lastScore);
+        assertThat(firstScore, greaterThan(lastScore));
     }
 
     public void checkScoreColumnColourDanger() {
@@ -445,56 +449,60 @@ public class SessionsTab extends AbstractPage {
         filterClearButton.click();
     }
 
+    @Step("Filter record by score ASC")
     public void setSortByScoreAsc() {
-        Allure.step("Filter record by score asc");
-        sortByScoreButton.first().click();
         sortByScoreButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        if (tooltip.getByText("Highest negative first").isVisible()) {
-            sortByScoreButton.first().click();
-        } else {
-            page.waitForTimeout(1);
+        for (int i = 0; i < 2; i++) {
+            if (tooltip.getByText("Sorted:Negative → Positive").isVisible()) {
+                break;
+            } else {
+                sortByScoreButton.first().click();
+            }
         }
     }
 
+    @Step("Sort record by score DESC")
     public void setSortByScoreDesc() {
-        Allure.step("Sort record by score desc");
-        sortByScoreButton.first().click();
         sortByScoreButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        if (tooltip.getByText("Highest positive first").isVisible()) {
-            sortByScoreButton.first().click();
-        } else {
-            page.waitForTimeout(1);
+        for (int i = 0; i < 2; i++) {
+            if (tooltip.getByText("Sorted:Positive → Negative").isVisible()) {
+                break;
+            } else {
+                sortByScoreButton.first().click();
+            }
         }
     }
 
+    @Step("Sort record by date ASC")
     public void setSortByDateAsc() {
-        Allure.step("Sort record by score desc");
-        sortByDateButton.first().click();
         sortByDateButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        if (tooltip.getByText("Newest events first").isVisible()) {
-            sortByDateButton.first().click();
-        } else {
-            page.waitForTimeout(1);
+        for (int i = 0; i < 2; i++) {
+            if (tooltip.getByText("Sorted:Oldest → Newest").isVisible()) {
+                break;
+            } else {
+                sortByDateButton.first().click();
+            }
         }
     }
 
+    @Step("Sort record by date DESC")
     public void setSortByDateDesc() {
-        Allure.step("Sort record by score desc");
-        sortByDateButton.first().click();
         sortByDateButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        if (tooltip.getByText("Oldest events first").isVisible()) {
-            sortByDateButton.first().click();
-        } else {
-            page.waitForTimeout(1);
+        for (int i = 0; i < 2; i++) {
+            if (tooltip.getByText("Sorted:Newest → Oldest").isVisible()) {
+                break;
+            } else {
+                sortByDateButton.first().click();
+            }
         }
     }
 
+    @Step("Verify data is sorted by date ASC")
     public void checkDateColumnIsAsc() {
-        Allure.step("Sort record by date ASC");
         waitForPageToLoad();
         assertTrue(columnDateData.count() > 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -505,11 +513,11 @@ public class SessionsTab extends AbstractPage {
         LocalDateTime firstDateTime = LocalDateTime.parse(firstDate, formatter);
         LocalDateTime lastDateTime = LocalDateTime.parse(lastDate, formatter);
         writeLog("firstDate: " + firstDate + " and lastDate" + lastDate);
-        assertTrue(firstDateTime.isAfter(lastDateTime));
+        assertThat(firstDateTime, lessThan(lastDateTime));
     }
 
+    @Step("Verify data is sorted by date DESC")
     public void checkDateColumnIsDesc() {
-        Allure.step("Sort record by date DESC");
         waitForPageToLoad();
         assertTrue(columnDateData.count() > 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -520,7 +528,7 @@ public class SessionsTab extends AbstractPage {
         LocalDateTime firstDateTime = LocalDateTime.parse(firstDate, formatter);
         LocalDateTime lastDateTime = LocalDateTime.parse(lastDate, formatter);
         writeLog("firstDate: " + firstDate + " and lastDate" + lastDate);
-        assertTrue(firstDateTime.isBefore(lastDateTime));
+        assertThat(firstDateTime, greaterThan(lastDateTime));
     }
 
     public void clickOnDataRow() {
