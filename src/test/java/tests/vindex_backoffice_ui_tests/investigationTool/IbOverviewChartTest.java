@@ -308,8 +308,5 @@ public class IbOverviewChartTest extends TestBaseWeb {
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(
-                ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME,
-                String.format("ucid IN ('%s', '%s')", relationSnapshot.getUcid(), relationSnapshot1.getUcid()));
     }
 }

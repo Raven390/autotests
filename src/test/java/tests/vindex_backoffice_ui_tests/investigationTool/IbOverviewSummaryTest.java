@@ -242,13 +242,5 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(
-                ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME,
-                String.format(
-                        "ucid IN ('%s', '%s', '%s', '%s')",
-                        relationSnapshot1.getUcid(),
-                        relationSnapshot2.getUcid(),
-                        relationSnapshot3.getUcid(),
-                        relationSnapshot4.getUcid()));
     }
 }
