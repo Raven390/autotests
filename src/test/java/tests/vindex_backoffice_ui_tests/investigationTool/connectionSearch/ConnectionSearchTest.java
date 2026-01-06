@@ -3,7 +3,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserWithUcidFirstName;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -78,14 +78,14 @@ class ConnectionSearchTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws Exception {
         // Users
-        CrmTbUserObject crmTbUser = generateUserWithUcidFirstName(client);
-        connectedCrmTbUser1 = generateUserWithUcidFirstName(connectedClient1);
-        connectedCrmTbUser2 = generateUserWithUcidFirstName(connectedClient2);
-        connectedCrmTbUser3 = generateUserWithUcidFirstName(connectedClient3);
+        CrmTbUserObject crmTbUser = generateUserByClient(client);
+        connectedCrmTbUser1 = generateUserByClient(connectedClient1);
+        connectedCrmTbUser2 = generateUserByClient(connectedClient2);
+        connectedCrmTbUser3 = generateUserByClient(connectedClient3);
         connectedCrmTbUser3.cpaId = getRandomIntPositive();
-        connectedCrmTbUser4 = generateUserWithUcidFirstName(connectedClient4);
-        connectedCrmTbUser5 = generateUserWithUcidFirstName(connectedClient5);
-        connectedCrmTbUser6 = generateUserWithUcidFirstName(connectedClient6);
+        connectedCrmTbUser4 = generateUserByClient(connectedClient4);
+        connectedCrmTbUser5 = generateUserByClient(connectedClient5);
+        connectedCrmTbUser6 = generateUserByClient(connectedClient6);
         insertObjectsToDb(
                 CRM_USER_TABLE_NAME,
                 List.of(
@@ -102,7 +102,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(connectedClient1, connectedClient3);
         ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntry(connectedClient2, connectedClient4);
         ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntryForUi(connectedClient3, connectedClient5);
-        ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntryForUi(connectedClient3, connectedClient6);
+        ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntryForUi(connectedClient4, connectedClient6);
         insertObjectsToDb(
                 CONNECTIONS_TABLE_NAME,
                 List.of(
@@ -210,50 +210,45 @@ class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Verify connection search ucids, statuses, order")
     void connectionSearchTest1() {
         investigationPage.navigateToClient(connectedClient6.getUcid());
-        resolvePage.clickInvestigateButtonIfPresented();
+        resolvePage.openResolveSuspicious();
         connectionPage.navigate(client.getUcid());
 
         // Statuses
         var statusReason = "Verify status shown in the node";
-        assertThat(statusReason, connectionPage.getStatusByNodeTitle(client.getUcid()), is(STATUS_NORMAL));
-        assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient1.getUcid()), is(STATUS_NORMAL));
-        assertThat(
-                statusReason, connectionPage.getStatusByNodeTitle(connectedClient2.getUcid()), is(STATUS_SUSPICIOUS));
-        assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient3.getUcid()), is(POTENTIAL_ABUSE));
+        assertThat(statusReason, connectionPage.getStatusByNodeUcid(client.getUcid()), is(STATUS_NORMAL));
+        assertThat(statusReason, connectionPage.getStatusByNodeUcid(connectedClient1.getUcid()), is(STATUS_NORMAL));
+        assertThat(statusReason, connectionPage.getStatusByNodeUcid(connectedClient2.getUcid()), is(STATUS_SUSPICIOUS));
+        assertThat(statusReason, connectionPage.getStatusByNodeUcid(connectedClient3.getUcid()), is(POTENTIAL_ABUSE));
         assertThat(
                 statusReason,
-                connectionPage.getStatusByNodeTitle(connectedClient4.getUcid()),
+                connectionPage.getStatusByNodeUcid(connectedClient4.getUcid()),
                 is(String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName())));
         assertThat(
                 statusReason,
-                connectionPage.getStatusByNodeTitle(connectedClient5.getUcid()),
+                connectionPage.getStatusByNodeUcid(connectedClient5.getUcid()),
                 is(GAP_TRADING.getName()));
         assertThat(
                 statusReason,
-                connectionPage.getStatusByNodeTitle(connectedClient6.getUcid()),
+                connectionPage.getStatusByNodeUcid(connectedClient6.getUcid()),
                 is(UNDER_INVESTIGATION.getDisplayName()));
 
         // Order
         var orderReason = "Verify order of the node in the graph";
-        assertThat(orderReason, connectionPage.getOrderByNodeTitle(client.getUcid()), is("0"));
-        assertThat(
-                orderReason, connectionPage.getOrderByNodeTitle(connectedClient1.getUcid()), anyOf(is("1"), is("2")));
-        assertThat(
-                orderReason, connectionPage.getOrderByNodeTitle(connectedClient2.getUcid()), anyOf(is("1"), is("2")));
-        assertThat(
-                orderReason, connectionPage.getOrderByNodeTitle(connectedClient3.getUcid()), anyOf(is("3"), is("4")));
-        assertThat(
-                orderReason, connectionPage.getOrderByNodeTitle(connectedClient4.getUcid()), anyOf(is("3"), is("4")));
-        assertThat(orderReason, connectionPage.getOrderByNodeTitle(connectedClient5.getUcid()), is("5"));
+        assertThat(orderReason, connectionPage.getOrderByNodeUcid(client.getUcid()), is("0"));
+        assertThat(orderReason, connectionPage.getOrderByNodeUcid(connectedClient1.getUcid()), anyOf(is("1"), is("2")));
+        assertThat(orderReason, connectionPage.getOrderByNodeUcid(connectedClient2.getUcid()), anyOf(is("1"), is("2")));
+        assertThat(orderReason, connectionPage.getOrderByNodeUcid(connectedClient3.getUcid()), anyOf(is("3"), is("4")));
+        assertThat(orderReason, connectionPage.getOrderByNodeUcid(connectedClient4.getUcid()), anyOf(is("3"), is("4")));
+        assertThat(orderReason, connectionPage.getOrderByNodeUcid(connectedClient5.getUcid()), is("5"));
     }
 
     @Test
     @AllureId("311")
     @DisplayName("Verify connection attributes in node")
     void connectionSearchTest2() {
-        connectionPage.clickExpandNodeByTitle(connectedClient3.getUcid());
+        connectionPage.clickExpandNodeByUcid(connectedClient3.getUcid());
         assertThat(
-                connectionPage.getNodeAttributesByTitle(connectedClient3.getUcid()),
+                connectionPage.getNodeAttributesByUcid(connectedClient3.getUcid()),
                 containsInAnyOrder(
                         CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID,
                         CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS,
@@ -270,8 +265,10 @@ class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("311")
     @DisplayName("Verify data in card")
     void connectionSearchTest3() {
-        connectionPage.clickNodeByTitle(connectedClient3.getUcid());
-        assertThat(connectionPage.getCardClientName(), is(String.format("%s ", connectedClient3.getUcid())));
+        connectionPage.clickNodeByUcid(connectedClient3.getUcid());
+        assertThat(
+                connectionPage.getCardClientName(),
+                is(String.format("%s %s", connectedClient3.getFirstName(), connectedClient3.getLastName())));
         assertThat(connectionPage.isCardShowHiddenButtonVisible(), is(true));
         assertThat(connectionPage.isCardOpenInNewTabButtonVisible(), is(true));
         assertThat(
@@ -302,55 +299,36 @@ class ConnectionSearchTest extends TestBaseWeb {
                 connectionPage.getCardTotalPnl(), is(String.format("%s USD", formatter.format(trade.getProfitUsd()))));
         assertThat(
                 connectionPage.getCardDeposit(), is(String.format("%s USD", formatter.format(deposit.getAmountUsd()))));
-        assertThat(
-                connectionPage.getCardWithdrawal(),
-                is(String.format(
-                        "%s USD",
-                        formatter.format(withdrawal.getAmountUsd().subtract(withdrawal.getReversedAmountUsd())))));
+        assertThat(connectionPage.getCardWithdrawal(), is("0"));
         assertThat(connectionPage.getCardFraud(), is(POTENTIAL_ABUSE));
         assertThat(connectionPage.getDirectConnectionsAmount(), is("2"));
-        assertThat(connectionPage.getDirectConnectionType(connectedClient5.getUcid()), is(CONNECTION_TYPE_SAME_PERSON));
-        assertThat(connectionPage.getDirectConnectionScore(connectedClient5.getUcid()), is("1"));
+        String client5Name = String.format("%s %s", connectedClient5.getFirstName(), connectedClient5.getLastName());
+        assertThat(connectionPage.getDirectConnectionType(client5Name), is(CONNECTION_TYPE_SAME_PERSON));
+        assertThat(connectionPage.getDirectConnectionScore(client5Name), is("1"));
+        assertThat(connectionPage.getDirectConnectionPayoutId(client5Name), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
+        assertThat(connectionPage.getDirectConnectionIpAddress(client5Name), is(CONNECTION_SEARCH_DATA_IP1));
+        assertThat(connectionPage.getDirectConnectionDevice(client5Name), is(CONNECTION_SEARCH_DATA_DEVICE));
+        assertThat(connectionPage.getDirectConnectionNameBirth(client5Name), is(CONNECTION_SEARCH_DATA_NAME_BIRTH));
+        assertThat(connectionPage.getDirectConnectionSession(client5Name), is(CONNECTION_SEARCH_DATA_SESSION));
+        assertThat(connectionPage.getDirectConnectionDigital(client5Name), is(CONNECTION_SEARCH_DATA_DIGITAL));
         assertThat(
-                connectionPage.getDirectConnectionPayoutId(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
-        assertThat(
-                connectionPage.getDirectConnectionIpAddress(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_IP1));
-        assertThat(
-                connectionPage.getDirectConnectionDevice(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_DEVICE));
-        assertThat(
-                connectionPage.getDirectConnectionNameBirth(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_NAME_BIRTH));
-        assertThat(
-                connectionPage.getDirectConnectionSession(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_SESSION));
-        assertThat(
-                connectionPage.getDirectConnectionDigital(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_DIGITAL));
-        assertThat(
-                connectionPage.getDirectConnectionDocumentNumber(connectedClient5.getUcid()),
+                connectionPage.getDirectConnectionDocumentNumber(client5Name),
                 is(CONNECTION_SEARCH_DATA_DOCUMENT_HIDDEN));
         assertThat(
-                connectionPage.getDirectConnectionEmailAddress(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_EMAIL_HIDDEN));
-        assertThat(
-                connectionPage.getDirectConnectionPhoneNumber(connectedClient5.getUcid()),
-                is(CONNECTION_SEARCH_DATA_PHONE_HIDDEN));
-        assertThat(connectionPage.getDirectConnectionFraud(connectedClient5.getUcid()), is(GAP_TRADING.getName()));
-        assertThat(connectionPage.getDirectConnectionType(connectedClient1.getUcid()), is(CONNECTION_TYPE_SAME_PERSON));
-        assertThat(connectionPage.getDirectConnectionScore(connectedClient1.getUcid()), is("1"));
-        assertThat(
-                connectionPage.getDirectConnectionPayoutId(connectedClient1.getUcid()),
-                is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
+                connectionPage.getDirectConnectionEmailAddress(client5Name), is(CONNECTION_SEARCH_DATA_EMAIL_HIDDEN));
+        assertThat(connectionPage.getDirectConnectionPhoneNumber(client5Name), is(CONNECTION_SEARCH_DATA_PHONE_HIDDEN));
+        assertThat(connectionPage.getDirectConnectionFraud(client5Name), is(GAP_TRADING.getName()));
+        String client1Name = String.format("%s %s", connectedClient1.getFirstName(), connectedClient1.getLastName());
+        assertThat(connectionPage.getDirectConnectionType(client1Name), is(CONNECTION_TYPE_SAME_PERSON));
+        assertThat(connectionPage.getDirectConnectionScore(client1Name), is("1"));
+        assertThat(connectionPage.getDirectConnectionPayoutId(client1Name), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
     }
 
     @Test
     @AllureId("518")
     @DisplayName("Verify CPA and IB overview can be opened from the card")
     void connectionSearchTest4() {
-        connectionPage.clickNodeByTitle(connectedClient3.getUcid());
+        connectionPage.clickNodeByUcid(connectedClient3.getUcid());
         connectionPage.clickCardCpa();
         assertThat(ibCpaOverviewPage.getOverviewTitle(), is("CPA overview"));
         ibCpaOverviewPage.clickCloseDrawerButton();
@@ -362,9 +340,9 @@ class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("526")
     @DisplayName("Verify zoom functionality")
     void connectionSearchTest5() {
-        assertThat(connectionPage.getZoomValue(), is("56%"));
-        connectionPage.clickZoomInButton();
         assertThat(connectionPage.getZoomValue(), is("60%"));
+        connectionPage.clickZoomInButton();
+        assertThat(connectionPage.getZoomValue(), is("70%"));
         connectionPage.clickZoomValue();
         assertThat(
                 connectionPage.getZoomPresetOptions(),
@@ -375,20 +353,20 @@ class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("520")
     @DisplayName("Verify connection attribute card")
     void connectionSearchTest6() {
-        connectionPage.clickExpandNodeByTitle(connectedClient3.getUcid());
+        connectionPage.clickExpandNodeByUcid(connectedClient3.getUcid());
         connectionPage.clickNodeAttributeByName(connectedClient3.getUcid(), CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID);
         assertThat(connectionPage.getConnectionCardAttributeName(), is(CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID));
-        assertThat(connectionPage.getConnectionCardAttributeClient(), containsString(connectedClient3.getUcid()));
+        assertThat(
+                connectionPage.getConnectionCardAttributeClient(),
+                is(String.format("%s %s", connectedClient3.getFirstName(), connectedClient3.getLastName())));
         assertThat(connectionPage.getConnectionCardAttributeValue(), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
-        assertThat(
-                connectionPage.getConnectionMatch(connectedClient5.getUcid()), is(CONNECTION_TYPE_RELATION_TYPE_EXACT));
-        assertThat(
-                connectionPage.getConnectionValue(connectedClient5.getUcid()), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
-        assertThat(connectionPage.getConnectionFraud(connectedClient5.getUcid()), is(GAP_TRADING.getName()));
-        assertThat(
-                connectionPage.getConnectionMatch(connectedClient1.getUcid()), is(CONNECTION_TYPE_RELATION_TYPE_EXACT));
-        assertThat(
-                connectionPage.getConnectionValue(connectedClient1.getUcid()), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
+        String client5Name = String.format("%s %s", connectedClient5.getFirstName(), connectedClient5.getLastName());
+        assertThat(connectionPage.getConnectionMatch(client5Name), is(CONNECTION_TYPE_RELATION_TYPE_EXACT));
+        assertThat(connectionPage.getConnectionValue(client5Name), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
+        assertThat(connectionPage.getConnectionFraud(client5Name), is(GAP_TRADING.getName()));
+        String client1Name = String.format("%s %s", connectedClient1.getFirstName(), connectedClient1.getLastName());
+        assertThat(connectionPage.getConnectionMatch(client1Name), is(CONNECTION_TYPE_RELATION_TYPE_EXACT));
+        assertThat(connectionPage.getConnectionValue(client1Name), is(CONNECTION_SEARCH_DATA_CARD_NUMBER));
     }
 
     @Test
@@ -396,7 +374,7 @@ class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Verify connection table")
     void connectionSearchTest7() {
         investigationPage.navigateToClient(connectedClient6.getUcid());
-        resolvePage.clickInvestigateButtonIfPresented();
+        resolvePage.openResolveSuspicious();
         connectionPage.navigate(client.getUcid());
 
         connectionPage.openConnectionTable();
@@ -405,7 +383,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         var connectionScore = "1";
         List<String> row1Data = List.of(
                 "2",
-                String.format("%s ", connectedClient4.getUcid()),
+                String.format("%s %s", connectedClient4.getFirstName(), connectedClient4.getLastName()),
                 connectedClient4.getUserId().toString(),
                 CONNECTION_TYPE_INDIRECT,
                 connectionScore,
@@ -417,7 +395,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                 connectedCrmTbUser4.registrationDate);
         List<String> row2Data = List.of(
                 "3",
-                String.format("%s ", connectedClient5.getUcid()),
+                String.format("%s %s", connectedClient5.getFirstName(), connectedClient5.getLastName()),
                 connectedClient5.getUserId().toString(),
                 CONNECTION_TYPE_INDIRECT,
                 connectionScore,
@@ -445,7 +423,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                 connectedCrmTbUser5.registrationDate);
         List<String> row3Data = List.of(
                 "1",
-                String.format("%s ", connectedClient2.getUcid()),
+                String.format("%s %s", connectedClient2.getFirstName(), connectedClient2.getLastName()),
                 connectedClient2.getUserId().toString(),
                 CONNECTION_TYPE_SAME_PERSON,
                 connectionScore,
@@ -457,7 +435,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                 connectedCrmTbUser2.registrationDate);
         List<String> row4Data = List.of(
                 "1",
-                String.format("%s ", connectedClient1.getUcid()),
+                String.format("%s %s", connectedClient1.getFirstName(), connectedClient1.getLastName()),
                 connectedClient1.getUserId().toString(),
                 CONNECTION_TYPE_SAME_PERSON,
                 connectionScore,
@@ -469,7 +447,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                 connectedCrmTbUser1.registrationDate);
         List<String> row5Data = List.of(
                 "2",
-                String.format("%s ", connectedClient3.getUcid()),
+                String.format("%s %s", connectedClient3.getFirstName(), connectedClient3.getLastName()),
                 connectedClient3.getUserId().toString(),
                 CONNECTION_TYPE_INDIRECT,
                 connectionScore,
@@ -477,11 +455,9 @@ class ConnectionSearchTest extends TestBaseWeb {
                 CONNECTION_SEARCH_DATA_CARD_NUMBER,
                 "",
                 POTENTIAL_ABUSE,
-                formatter.format(trade.getProfit()),
+                formatter.format(trade.getProfitUsd()),
                 "1 deal",
                 String.format("+%s", formatter.format(deposit.getAmountUsd())),
-                String.format(
-                        "-%s", formatter.format(withdrawal.getAmountUsd().subtract(withdrawal.getReversedAmountUsd()))),
                 String.format("CPA %s", connectedCrmTbUser3.cpaId),
                 String.format("IB %s", relation.getDirectIbRebateAccount()),
                 connectedCrmTbUser3.registrationDate,
@@ -489,7 +465,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                 trade.getCloseTime().split(" ")[1].substring(0, 5));
         List<String> row6Data = List.of(
                 "3",
-                String.format("%s ", connectedClient6.getUcid()),
+                String.format("%s %s", connectedClient6.getFirstName(), connectedClient6.getLastName()),
                 connectedClient6.getUserId().toString(),
                 CONNECTION_TYPE_INDIRECT,
                 connectionScore,

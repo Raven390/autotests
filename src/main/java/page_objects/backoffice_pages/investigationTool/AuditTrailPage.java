@@ -53,7 +53,7 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailItemV2 = page.locator("//div[@class='v-audit-trail-v2-item__card']");
         this.auditTrailItemHeader = page.locator("//div[@class='v-investigation-tools-trail-card__header']");
         this.auditTrailItemComment = page.locator("//div[@class='v-investigation-tools-trail-card__comment']");
-        this.auditTrailItemHeaderV2 = page.locator("//*[@class='v-audit-trail-v2-content__header']");
+        this.auditTrailItemHeaderV2 = page.locator("//*[contains(@class,'v-audit-trail-v2-content__header')]");
         this.auditTrailItemDetails = page.locator("//div[@class='v-investigation-tools-trail-card__details']/span");
         this.auditTrailItemDetailsV2 = page.locator("//div[@class='v-audit-trail-v2-content__attributes']");
         this.auditTrailItemTime = page.locator("//div[@class='v-timeline-item__time']");

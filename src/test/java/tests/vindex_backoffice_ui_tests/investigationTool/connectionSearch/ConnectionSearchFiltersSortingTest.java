@@ -536,7 +536,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
                         connectedClient4.getUserId().toString(),
                         connectedClient2.getUserId().toString(),
                         connectedClient1.getUserId().toString()));
-        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Change sorting to:Ascending"));
+        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Sorted:Descending"));
         connectionPage.clickTotalPnlHeader();
         assertThat(
                 "Verify sorting",
@@ -548,7 +548,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
                         connectedClient6.getUserId().toString(),
                         connectedClient3.getUserId().toString(),
                         connectedClient5.getUserId().toString()));
-        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Remove sorting"));
+        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Sorted:Ascending"));
         connectionPage.clickTotalPnlHeader();
         assertThat(
                 "Verify sorting",
@@ -582,8 +582,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
                         connectedClient6.getUserId().toString(),
                         connectedClient4.getUserId().toString(),
                         connectedClient5.getUserId().toString()));
-        assertThat(
-                "Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Change sorting to:Oldest → Newest"));
+        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Sorted:Newest → Oldest"));
         connectionPage.clickLastLoginHeader();
         assertThat(
                 "Verify sorting",
@@ -595,7 +594,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
                         connectedClient2.getUserId().toString(),
                         connectedClient3.getUserId().toString(),
                         connectedClient1.getUserId().toString()));
-        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Remove sorting"));
+        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Sorted:Oldest → Newest"));
         connectionPage.clickLastLoginHeader();
         assertThat(
                 "Verify sorting",
@@ -627,12 +626,12 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         assertThat(
                 "Verify Medium preset",
                 connectionPage.getScoreToInitialFilterCurrentRange(),
-                is("Current range: 0.55 - 0.74"));
+                is("Current range: 0.2 - 0.74"));
         connectionPage.clickConnectionScoreFilterPresetByText("High");
         assertThat(
                 "Verify High preset",
                 connectionPage.getScoreToInitialFilterCurrentRange(),
-                is("Current range: 0.75 - 1"));
+                is("Current range: 0.2 - 1"));
     }
 
     @AfterAll
