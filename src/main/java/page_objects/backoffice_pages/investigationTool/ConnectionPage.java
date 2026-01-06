@@ -161,8 +161,9 @@ public class ConnectionPage extends AbstractPage {
             GRAPH_NODE_DIRECT_CONNECTIONS_SECTION,
             GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME,
             GRAPH_NODE_VALUE_BY_TITLE);
-    private static final String GRAPH_NODE_CONTAINER_BY_TITLE =
-            "//div[contains(@class,'v-graph-node-v2__title-text') and contains(text(),'%s')]/ancestor::div[@class='graph-block-container undefined']";
+    private static final String GRAPH_NODE_TITLE_BY_UCID = "//div[@data-qa='connections__node__%s__title']";
+    private static final String GRAPH_NODE_CONTAINER_BY_UCID =
+            String.format("%s/ancestor::div[@class='graph-block-container undefined']", GRAPH_NODE_TITLE_BY_UCID);
     private static final String CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME =
             "//span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
     private static final String CARD_BRAND_VALUE = String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Brand");
@@ -850,30 +851,30 @@ public class ConnectionPage extends AbstractPage {
     }
 
     @Step("Get status by node title")
-    public String getStatusByNodeTitle(String title) {
-        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+    public String getStatusByNodeUcid(String ucid) {
+        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_UCID, ucid))
                 .locator(graphNodeStatus)
                 .textContent();
     }
 
     @Step("Get order by node title")
-    public String getOrderByNodeTitle(String title) {
-        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+    public String getOrderByNodeUcid(String ucid) {
+        return page.locator(String.format(GRAPH_NODE_CONTAINER_BY_UCID, ucid))
                 .evaluate("el => getComputedStyle(el).getPropertyValue('--graph-block-order')")
                 .toString();
     }
 
     @Step("Click expand node by title")
-    public void clickExpandNodeByTitle(String title) {
-        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
+    public void clickExpandNodeByUcid(String ucid) {
+        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_UCID, ucid))
                 .locator(graphNodeExpand)
                 .click();
     }
 
     @Step("Get node attributes by title")
-    public List<String> getNodeAttributesByTitle(String title) {
-        Locator attributes = page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title))
-                .locator(graphNodeAttributes);
+    public List<String> getNodeAttributesByUcid(String ucid) {
+        Locator attributes =
+                page.locator(String.format(GRAPH_NODE_CONTAINER_BY_UCID, ucid)).locator(graphNodeAttributes);
         List<String> list = new ArrayList<>();
         for (int i = 0; i < attributes.count(); i++) {
             list.add(attributes.nth(i).textContent());
@@ -882,8 +883,8 @@ public class ConnectionPage extends AbstractPage {
     }
 
     @Step("Click node by title")
-    public void clickNodeByTitle(String title) {
-        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, title)).click();
+    public void clickNodeByUcid(String ucid) {
+        page.locator(String.format(GRAPH_NODE_TITLE_BY_UCID, ucid)).click();
     }
 
     @Step("Get card client name")
@@ -1098,8 +1099,8 @@ public class ConnectionPage extends AbstractPage {
     }
 
     @Step("Click node attribute by name")
-    public void clickNodeAttributeByName(String clientName, String attribute) {
-        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_TITLE, clientName))
+    public void clickNodeAttributeByName(String ucid, String attribute) {
+        page.locator(String.format(GRAPH_NODE_CONTAINER_BY_UCID, ucid))
                 .locator(graphNodeAttributes)
                 .getByText(attribute)
                 .click();

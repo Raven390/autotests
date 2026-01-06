@@ -44,7 +44,6 @@ class AuditTrailTest extends TestBaseWeb {
     private static PaymentEventsObject paymentEventsObject1;
     private static RuleAlert alert;
     private static ClientHelper client;
-    private static final String TIME_PATTERN = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$";
     private static final User user = autotestUserOne();
 
     @BeforeEach
@@ -103,7 +102,10 @@ class AuditTrailTest extends TestBaseWeb {
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));
         AuditTrailItemV2 item = auditTrailItems.getFirst();
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Comment added"));
+        assertThat(
+                "Verify audit trail item header",
+                item.getHeader(),
+                equalTo(String.format("Comment added%n%s %s", user.getFirstName(), user.getLastName())));
         assertThat("Verify audit trail item details", item.getDetails(), equalTo("Test comment added action type"));
     }
 
@@ -122,7 +124,10 @@ class AuditTrailTest extends TestBaseWeb {
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));
         AuditTrailItemV2 item = auditTrailItems.getFirst();
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Investigation started"));
+        assertThat(
+                "Verify audit trail item header",
+                item.getHeader(),
+                equalTo(String.format("Investigation started%n%s %s", user.getFirstName(), user.getLastName())));
     }
 
     @Test
@@ -146,7 +151,12 @@ class AuditTrailTest extends TestBaseWeb {
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 4 audit trail items", auditTrailItems, hasSize(4));
         AuditTrailItemV2 item = auditTrailItems.get(1);
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Investigation completed"));
+        assertThat(
+                "Verify audit trail item header",
+                item.getHeader(),
+                equalTo(String.format(
+                        "Investigation completed%n%s %s resolved 1 trading alert",
+                        user.getFirstName(), user.getLastName())));
         assertThat(
                 "Verify audit trail item details",
                 item.getDetails(),
@@ -171,14 +181,13 @@ class AuditTrailTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 3 audit trail items", auditTrailItems, hasSize(3));
+        String header = String.format("Restriction management%n%s %s", user.getFirstName(), user.getLastName());
         assertThat(
                 "Verify audit trail items",
                 auditTrailItems,
                 hasItems(
-                        new AuditTrailItemV2(
-                                "Restriction management", "Test cancellation requested action type\nLogin CRM"),
-                        new AuditTrailItemV2(
-                                "Restriction management", "Test restriction requested action type\nLogin CRM")));
+                        new AuditTrailItemV2(header, "Test cancellation requested action type\nLogin CRM"),
+                        new AuditTrailItemV2(header, "Test restriction requested action type\nLogin CRM")));
     }
 
     @Test
@@ -208,12 +217,18 @@ class AuditTrailTest extends TestBaseWeb {
         assertThat("Assert that there are 3 audit trail items", auditTrailItems, hasSize(3));
         var firstEvent = auditTrailItems.get(0);
         var secondEvent = auditTrailItems.get(1);
-        assertThat("Verify audit trail item header", firstEvent.getHeader(), equalTo("Withdrawal decision"));
+        assertThat(
+                "Verify audit trail item header",
+                firstEvent.getHeader(),
+                equalTo(String.format("Withdrawal decision%n%s %s", user.getFirstName(), user.getLastName())));
         assertThat(
                 "Verify audit trail item details",
                 firstEvent.getDetails(),
                 equalTo("Test withdrawal request decision action type\n123.45 EUR"));
-        assertThat("Verify audit trail item header", secondEvent.getHeader(), equalTo("Withdrawal Review"));
+        assertThat(
+                "Verify audit trail item header",
+                secondEvent.getHeader(),
+                equalTo(String.format("Withdrawal Review%n123.45 EUR withdrawal %s  Crypto", account.account)));
         cleanPaymentGateData(
                 client.getUcid(),
                 client.getUserId(),
