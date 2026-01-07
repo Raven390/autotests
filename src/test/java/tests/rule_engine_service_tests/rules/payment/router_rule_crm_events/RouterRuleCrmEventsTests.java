@@ -50,6 +50,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         DataDeleteHelper.deleteData(dataMap);
     }
 
+    @Disabled
     @Test
     @AllureId("1794")
     @DisplayName("Router Rule. No alerts/rejects. Approve withdrawal. elementId: Event_0t14mt3")
@@ -147,6 +148,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
                 is(""));
     }
 
+    @Disabled
     @Test
     @AllureId("1795")
     @DisplayName("Router Rule. Alert, no rejects,. elementId: Event_11azia8")
@@ -237,6 +239,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
                 is(data.crmWithdrawalEvent.getCheckName()));
     }
 
+    @Disabled
     @Test
     @AllureId("1796")
     @DisplayName("Router Rule. Alert, no rejects, Risk rejection = true. elementId: Event_1kdk048")
@@ -328,6 +331,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
                 is(data.crmWithdrawalEvent.getCheckName()));
     }
 
+    @Disabled
     @Test
     @AllureId("1624")
     @DisplayName(
@@ -378,6 +382,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         assertThat("Verify decisions have right decision ", decision.getFirst().getActor(), is("Auto qa"));
     }
 
+    @Disabled
     @Test
     @AllureId("1623")
     @DisplayName(

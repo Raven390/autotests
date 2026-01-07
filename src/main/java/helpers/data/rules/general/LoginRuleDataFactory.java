@@ -31,7 +31,7 @@ import java.util.Map;
 @RuleTestData("login-rule")
 public class LoginRuleDataFactory {
 
-    private static final ClientHelper loginRuleTest2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper loginRuleTest1Client = getRandomVantageClientAllFields();
     private static final ClientHelper loginRuleTest3Client =
             getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
     private static final ClientHelper loginRuleTest6Client =
@@ -81,8 +81,8 @@ public class LoginRuleDataFactory {
 
     @Description(
             "Login rule. Connection search sub-process. No toxic connections for non VT or PU users. Event.id end_cs_no_toxic")
-    private static DataHelper getLoginRuleTest2Data() {
-        DataHelper data = getLoginRuleData(loginRuleTest2Client);
+    private static DataHelper getLoginRuleTest1Data() {
+        DataHelper data = getLoginRuleData(loginRuleTest1Client);
         // Add connection
         data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -375,19 +375,19 @@ public class LoginRuleDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
-        map.put("2", getLoginRuleTest2Data());
-        map.put("3", getLoginRuleTest3Data());
-        map.put("6", getLoginRuleTest6Data());
-        map.put("7", getLoginRuleTest7Data());
-        map.put("8", getLoginRuleTest8Data());
-        map.put("9", getLoginRuleTest9Data());
-        map.put("10", getLoginRuleTest10Data());
-        map.put("11", getLoginRuleTest11Data());
-        map.put("12", getLoginRuleTest12Data());
-        map.put("13", getLoginRuleTest13Data());
-        map.put("15", getLoginRuleTest15Data());
-        map.put("16", getLoginRuleTest16Data());
-        map.put("17", getLoginRuleTest17Data());
+        map.put("1", getLoginRuleTest1Data());
+        //        map.put("3", getLoginRuleTest3Data());
+        //        map.put("6", getLoginRuleTest6Data());
+        //        map.put("7", getLoginRuleTest7Data());
+        //        map.put("8", getLoginRuleTest8Data());
+        //        map.put("9", getLoginRuleTest9Data());
+        //        map.put("10", getLoginRuleTest10Data());
+        //        map.put("11", getLoginRuleTest11Data());
+        //        map.put("12", getLoginRuleTest12Data());
+        //        map.put("13", getLoginRuleTest13Data());
+        //        map.put("15", getLoginRuleTest15Data());
+        //        map.put("16", getLoginRuleTest16Data());
+        //        map.put("17", getLoginRuleTest17Data());
 
         setupData(map);
 

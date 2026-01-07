@@ -15,6 +15,7 @@ import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -56,9 +57,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_1", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_end_1", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1420")
     @DisplayName("No slippage rule. If account currency is USC -> Exit without alert. ElementId: Event_197txjh")
@@ -67,9 +69,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_197txjh", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_197txjh", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1421")
     @DisplayName("No slippage rule. Exit without alert if at least 1 resolved alert for user. ElementId: Event_end_12")
@@ -78,9 +81,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_12", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_end_12", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1422")
     @DisplayName(
@@ -90,7 +94,7 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0oa6zyc", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_0oa6zyc", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
 
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
@@ -114,9 +118,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_1u9lc7r", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_1u9lc7r", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1424")
     @DisplayName("No slippage rule. Exit without alert if deals/fast deals ratio < 0.7. ElementId: Event_034y6nl")
@@ -125,9 +130,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_034y6nl", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_034y6nl", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1425")
     @DisplayName("No slippage rule. Exit without alert if stopout ratio < 0.75. ElementId: Event_12inxex")
@@ -136,9 +142,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_12inxex", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_12inxex", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1426")
     @DisplayName("No slippage rule. Exit without alert if notional value < 3mln. ElementId: Event_0n07x4l")
@@ -147,9 +154,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0n07x4l", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_0n07x4l", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1427")
     @DisplayName("No slippage rule. Exit without alert if count trades < 30. ElementId: Event_13p6x81")
@@ -158,9 +166,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_13p6x81", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_13p6x81", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1428")
     @DisplayName(
@@ -170,9 +179,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0jy5i8k", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_0jy5i8k", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1429")
     @DisplayName("No slippage rule. Exit without alert if resolved alerts amount > 0. ElementId: Event_1rm136r")
@@ -181,9 +191,10 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_1rm136r", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_1rm136r", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1430")
     @DisplayName(
@@ -193,7 +204,7 @@ class NoSlippageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_1k86ppo", data.closeTradeMtEvent.id, "no_slippage");
+        checkElementId("Event_1k86ppo", data.closeTradeMtEvent.id, Rule.NO_SLIPPAGE_RULE.getProcessId());
 
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");

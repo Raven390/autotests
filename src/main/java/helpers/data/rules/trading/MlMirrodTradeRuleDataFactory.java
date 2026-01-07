@@ -84,7 +84,7 @@ public class MlMirrodTradeRuleDataFactory {
         return data;
     }
 
-    public static Map<String, DataHelper> setupMlMirrorTradeRuleData() throws InterruptedException {
+    public static Map<String, DataHelper> setupMlMirrorTradeRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map

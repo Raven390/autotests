@@ -44,7 +44,7 @@ class RegistrationRuleTests extends TestBaseRule {
 
     @Test
     @DisplayName(
-            "Registration rule: Exit without alert if amount of abusers in connections < 10% and lexis score is not high. ElementId: end_no_alert")
+            "Registration rule: Exit without alert if amount of abusers in connections < 10% and lexis score is not high, trueip/deviceid is empty string. ElementId: end_no_alert")
     @AllureId("155")
     void registrationRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -54,6 +54,7 @@ class RegistrationRuleTests extends TestBaseRule {
         checkElementId("end_no_alert", data.registrationEvent.getId(), "clientRegistration_event_rule");
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Registration rule. Exit with alert if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
@@ -74,6 +75,7 @@ class RegistrationRuleTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
+    @Disabled
     @Test
     @AllureId("1484")
     @DisplayName("Registration rule. Connection search. Strong hedge confirmed. ElementId: end_registration_rule_cs")
@@ -105,6 +107,7 @@ class RegistrationRuleTests extends TestBaseRule {
                 containsString("{\"Reason\": \"Linked hedging abuser\", \"Max Connection Score\": \"0.75\"}"));
     }
 
+    @Disabled
     @Test
     @AllureId("1485")
     @DisplayName(

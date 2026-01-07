@@ -153,12 +153,12 @@ public class MirrorTradingOpenTradeEventDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
-        //        map.put("1", getMirrorTradingOpenTradeEventRuleTest1Data());
-        //        map.put("2", getMirrorTradingOpenTradeEventRuleTest2Data());
-        //        map.put("3", getMirrorTradingOpenTradeEventRuleTest3Data());
-        //        map.put("4", getMirrorTradingOpenTradeEventRuleTest4Data());
-        //        map.put("5", getMirrorTradingOpenTradeEventRuleTest5Data());
-        //        map.put("6", getMirrorTradingOpenTradeEventRuleTest6Data());
+        map.put("1", getMirrorTradingOpenTradeEventRuleTest1Data());
+        map.put("2", getMirrorTradingOpenTradeEventRuleTest2Data());
+        map.put("3", getMirrorTradingOpenTradeEventRuleTest3Data());
+        map.put("4", getMirrorTradingOpenTradeEventRuleTest4Data());
+        map.put("5", getMirrorTradingOpenTradeEventRuleTest5Data());
+        map.put("6", getMirrorTradingOpenTradeEventRuleTest6Data());
         map.put("7", getMirrorTradingOpenTradeEventRuleTest7Data());
 
         setupData(map);

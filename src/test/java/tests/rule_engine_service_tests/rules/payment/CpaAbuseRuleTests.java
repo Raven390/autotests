@@ -10,6 +10,7 @@ import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeOld;
+import helpers.data.enums.Rule;
 import io.qameta.allure.*;
 import java.util.HashMap;
 import java.util.List;
@@ -46,9 +47,9 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void cpaAbuseRuleExitEventEnd1Test() throws Exception {
         DataHelper data = dbDataMap.get("1");
 
-        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event1", data.crmWithdrawalEvent.getId(), "clientCPAWithdrawal");
+        checkElementId("Event1", data.crmWithdrawalEventV2.getId(), Rule.CPA_ABUSE_PAYMENT.getProcessId());
     }
 
     @Disabled

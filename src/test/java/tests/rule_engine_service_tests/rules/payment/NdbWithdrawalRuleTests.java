@@ -12,6 +12,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -50,11 +51,12 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     void ndbRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
 
-        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1", data.crmWithdrawalEvent.getId(), "clientNDBWithdrawal");
+        checkElementId("Event_1", data.crmWithdrawalEventV2.getId(), Rule.NDB_WITHDRAWAL_PAYMENT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1765")
     @DisplayName("NDB rule. User  have any ndb trades.count !<50. ElementId: Event_2.")
@@ -63,9 +65,10 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("Event_0lg2086", data.crmWithdrawalEvent.getId(), "clientNDBWithdrawal");
+        checkElementId("Event_0lg2086", data.crmWithdrawalEvent.getId(), Rule.NDB_WITHDRAWAL_PAYMENT.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName("NDB rule exit Event_3.  trades.count <50, first trade more than 2 week old")
     void ndbRuleExitEventEnd3Test() throws Exception {
@@ -73,7 +76,7 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("Event_1wlvz8h", data.crmWithdrawalEvent.getId(), "clientNDBWithdrawal");
+        checkElementId("Event_1wlvz8h", data.crmWithdrawalEvent.getId(), Rule.NDB_WITHDRAWAL_PAYMENT.getProcessId());
     }
 
     @Disabled

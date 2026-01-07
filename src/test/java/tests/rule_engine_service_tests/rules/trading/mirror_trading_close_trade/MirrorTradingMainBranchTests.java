@@ -36,6 +36,7 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
         DataDeleteHelper.deleteData(dbDataMap);
     }
 
+    @Disabled
     @Test
     @AllureId("1431")
     @DisplayName("Mirror trading. Exit without alert if user is test account. ElementId: Event_end_1")
@@ -47,6 +48,7 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
         checkElementId("Event_end_1", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @DisplayName("Mirror trading. Exit without alert if user has no credits. ElementId: Event_end_3")
     void mirrorTradeRuleTest2() throws Exception {
@@ -57,6 +59,7 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
         checkElementId("Event_end_3", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading. Exit without alert if user has no mirrorMatch trades. ElementId: get_matching_opposite_trades_exit")

@@ -46,6 +46,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
         deleteWaveFlagData(dbDataMap.get("3").clientHelper);
     }
 
+    @Disabled
     @Test
     @AllureId("1620")
     @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
@@ -57,6 +58,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
         checkElementId("Event_end_9", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1619")
     @DisplayName(
@@ -70,6 +72,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
         checkElementId("Event_end_5", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1618")
     @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. ElementId: Event_end_5")

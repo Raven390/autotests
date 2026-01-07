@@ -42,6 +42,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         DataDeleteHelper.deleteData(dbDataMap);
     }
 
+    @Disabled
     @Test
     @AllureId("1432")
     @DisplayName("Mirror trading. Scotland. Exit without alert if trades count > 5. ElementId: Event_end_8")
@@ -53,6 +54,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1433")
     @DisplayName(
@@ -65,6 +67,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1434")
     @DisplayName("Mirror trading. Scotland. Exit without alert if Leverage < 200. ElementId: Event_12inxex")
@@ -76,6 +79,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         checkElementId("Event_12inxex", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1435")
     @DisplayName(

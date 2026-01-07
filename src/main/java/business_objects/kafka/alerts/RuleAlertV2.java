@@ -205,5 +205,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("Floating profit USD")
         private String floatingProfitUSD;
+
+        @JsonProperty("Internal hedge time")
+        private String internalHedgeTime;
     }
 }

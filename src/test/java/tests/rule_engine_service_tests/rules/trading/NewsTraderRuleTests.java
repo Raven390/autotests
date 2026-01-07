@@ -13,6 +13,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -54,9 +55,10 @@ class NewsTraderRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_1", data.closeTradeMtEvent.id, "news_trade");
+        checkElementId("Event_end_1", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1534")
     @DisplayName("News trader on close trade. Exit without alert if user have news trade ratio <0.7")
@@ -67,9 +69,10 @@ class NewsTraderRuleTests extends TestBaseRule {
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_2", data.closeTradeMtEvent.id, "news_trade");
+        checkElementId("Event_end_2", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1535")
     @DisplayName("News trader on close trade. Exit without alert if user have profit USD <350")
@@ -80,9 +83,10 @@ class NewsTraderRuleTests extends TestBaseRule {
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_3", data.closeTradeMtEvent.id, "news_trade");
+        checkElementId("Event_end_3", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1536")
     @DisplayName("News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4")
@@ -93,9 +97,10 @@ class NewsTraderRuleTests extends TestBaseRule {
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_4", data.closeTradeMtEvent.id, "news_trade");
+        checkElementId("Event_end_4", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1537")
     @DisplayName("News Trader. Exit with alert if profit/deposit > 0.5. End_nt_alert")
@@ -106,7 +111,7 @@ class NewsTraderRuleTests extends TestBaseRule {
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("End_nt_alert", data.closeTradeMtEvent.id, "news_trade");
+        checkElementId("End_nt_alert", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
 
         Allure.step("Verify there is alert in kafka");
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "News Trading");

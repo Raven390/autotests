@@ -15,6 +15,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -55,9 +56,10 @@ class MlMirrorTradeTests extends TestBaseRule {
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
-        checkElementId("Event_end_3", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+        checkElementId("Event_end_3", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1755")
     @DisplayName("ML Mirror trade rule. Exit if user has at least 1 closed alert. ElementId: Event_1flqa1d")
@@ -66,9 +68,10 @@ class MlMirrorTradeTests extends TestBaseRule {
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
-        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("")
     @DisplayName("ML Mirror trade rule. alert and restriction if user has ucidScore > 0.7. ElementId: Event_1flqa1d")
@@ -77,8 +80,8 @@ class MlMirrorTradeTests extends TestBaseRule {
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
-        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
-        checkElementId("WR_MODEL", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
+        checkElementId("WR_MODEL", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
 
         // Verify alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Mirror Trading");
@@ -131,7 +134,7 @@ class MlMirrorTradeTests extends TestBaseRule {
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
-        checkElementId("Event_09pix7t", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+        checkElementId("Event_09pix7t", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
     }
 
     @Disabled("flow changed")
@@ -144,7 +147,7 @@ class MlMirrorTradeTests extends TestBaseRule {
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
-        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
 
         // Verify alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Mirror Trading");

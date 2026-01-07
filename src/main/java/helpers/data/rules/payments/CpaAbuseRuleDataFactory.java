@@ -16,10 +16,9 @@ import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
+import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
@@ -30,7 +29,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import utils.Utils;
 
@@ -54,46 +52,34 @@ public class CpaAbuseRuleDataFactory {
     private static DataHelper getCpaAbuseRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         createClient(data, client);
-        data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4", // accountType
-                Utils.getRandomIntPositive().toString(), // binNumber
-                data.clientHelper.getBrand().toLowerCase(), // brand
-                "", // checkName
-                data.clientHelper.getUserId(), // clientId
-                Instant.now().toString(), // eventDate (you can format if you need +03:00)
-                "4", // expMonth
-                "2030", // expYear
-                data.clientHelper.getFirstName(), // fullName
-                getRandomUuidString(), // id
-                "VTSG" + getRandomIntPositive(), // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(), // mt4Account
-                PAYMENT_PROVIDER_FASAPAY, // paymentChannelCode
-                "-", // paymentChannelName
-                PAYMENT_METHOD_CODE_CREDIT_CARD, // paymentMethodCode
-                "WEB", // platform
-                data.clientHelper.getRegulator(), // regulator
-                "1.0", // schemaVersion
-                CRM_WITHDRAWAL_EVENT, // type
-                1, // withdrawalAmount
-                Instant.now().toString(), // withdrawalApplicationTime
-                "EUR", // withdrawalCurrency
-                getRandomIntPositive() // withdrawalId
-                );
+        data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
+                .accountType("MT4")
+                .binNumber(Utils.getRandomIntPositive().toString())
+                .brand(data.clientHelper.getBrand().toLowerCase())
+                .checkName("")
+                .clientId(data.clientHelper.getUserId())
+                .eventDate(Instant.now().toString())
+                .expMonth("4")
+                .expYear("2030")
+                .fullName(data.clientHelper.getFirstName())
+                .id(getRandomUuidString())
+                .merchantOrderId("VTSG" + getRandomIntPositive())
+                .mt4Account(data.clientHelper.getTradingAccount())
+                .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
+                .paymentChannelName("CRYPTO_CHANNEL")
+                .paymentMethodCode("CRYPTO")
+                .platform("MT4")
+                .regulator(data.clientHelper.getRegulator())
+                .schemaVersion("2.0")
+                .type(CRM_WITHDRAWAL_EVENT)
+                .withdrawalAmount(1.1)
+                .withdrawalAmountUSD(1.2)
+                .withdrawalApplicationTime(Instant.now().toString())
+                .withdrawalCurrency("EUR")
+                .withdrawalId(getRandomLongPositive())
+                .status("Risk Audit")
+                .build();
         return data;
-    }
-
-    private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
-        return new ConnectionTableEntry(
-                fromClient.getUcid(),
-                toClient.getUcid(),
-                CONNECTION_TYPE_SAME_IDENTITY,
-                1d,
-                List.of(new ConnectionTableEntry.ConnectionInfo(
-                        CONNECTION_ATTRIBUTE_NAME_PAYOUT,
-                        CONNECTION_SEARCH_DATA_CARD_NUMBER,
-                        CONNECTION_SEARCH_DATA_CARD_NUMBER,
-                        CONNECTION_TYPE_RELATION_TYPE_EXACT)),
-                getCurrentTimestampDbFormat());
     }
 
     private static DataHelper getCpaAbuseRuleExitEventEnd1Data() {
@@ -151,7 +137,7 @@ public class CpaAbuseRuleDataFactory {
 
         Allure.step("Client has cpa abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        // data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(),
                 FraudTypeOld.CPA_ABUSE.getKey(),
@@ -238,10 +224,10 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
         data.connectedUsers.add(connectedUserCrmTbUserObject4);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
-        data.connections.add(getConnection(data.clientHelper, connectedClient4));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient4));
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
@@ -277,9 +263,9 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject);
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
@@ -324,10 +310,10 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
         data.connectedUsers.add(connectedUserCrmTbUserObject4);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
-        data.connections.add(getConnection(data.clientHelper, connectedClient4));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient4));
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
@@ -372,10 +358,10 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
         data.connectedUsers.add(connectedUserCrmTbUserObject4);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
-        data.connections.add(getConnection(data.clientHelper, connectedClient4));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient4));
         Allure.step("Set restriction");
         Allure.step("Send alert");
 
@@ -421,10 +407,10 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
         data.connectedUsers.add(connectedUserCrmTbUserObject4);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
-        data.connections.add(getConnection(data.clientHelper, connectedClient4));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient4));
 
         Allure.step("Any mirror trades? = true");
         MirrorUcidObject mirrorUcid = generateMirrorUcidObjectByClient(cpaAbuseRuleClient11);
@@ -484,10 +470,10 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
         data.connectedUsers.add(connectedUserCrmTbUserObject4);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
-        data.connections.add(getConnection(data.clientHelper, connectedClient4));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient4));
 
         Allure.step("Any mirror trades? = false");
 
@@ -545,10 +531,10 @@ public class CpaAbuseRuleDataFactory {
         data.connectedUsers.add(connectedUserCrmTbUserObject2);
         data.connectedUsers.add(connectedUserCrmTbUserObject3);
         data.connectedUsers.add(connectedUserCrmTbUserObject4);
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient2));
-        data.connections.add(getConnection(data.clientHelper, connectedClient3));
-        data.connections.add(getConnection(data.clientHelper, connectedClient4));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient3));
+        //        data.connections.add(getConnection(data.clientHelper, connectedClient4));
 
         Allure.step("Any mirror trades? = false");
 

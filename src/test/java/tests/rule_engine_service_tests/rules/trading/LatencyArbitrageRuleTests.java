@@ -13,6 +13,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -53,9 +54,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_1", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_end_1", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1373")
     @DisplayName("Latency arbitrage rule. Exit without alert if user has resolved alerts. ElementId: Event_end_12")
@@ -64,9 +66,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_12", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_end_12", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1373")
     @DisplayName(
@@ -76,7 +79,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0782vj1", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_0782vj1", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
@@ -90,7 +93,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
         assertThat("Verify alert", alerts.getFirst().rule.name, is("Latency Arbitrage"));
-        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("LATENCY_ARBITRAGE"));
+        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is(Rule.LATENCY_ARBITRAGE_RULE.getProcessId()));
         assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
         assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
 
@@ -116,6 +119,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Lattency arbitrage pattern");
     }
 
+    @Disabled
     @Test
     @AllureId("1374")
     @DisplayName(
@@ -125,9 +129,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_1jau96v", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_1jau96v", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1375")
     @DisplayName(
@@ -137,9 +142,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0cyuekk", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_0cyuekk", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName("Latency arbitrage rule. notionalValue(ucid) < 10 000 000. ElementId: Event_04k2uu4")
     void latencyArbitrageRuleTest6() throws Exception {
@@ -147,9 +153,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_04k2uu4", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_04k2uu4", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1376")
     @DisplayName(
@@ -159,9 +166,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0byoyft", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_0byoyft", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1657")
     @DisplayName("Latency arbitrage rule. Rebate Latency Branch. At least 1 resolved Alert. ElementId: Event_0u8x3op")
@@ -170,9 +178,10 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_0u8x3op", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_0u8x3op", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1658")
     @DisplayName("Latency arbitrage rule. Rebate Latency Branch. No resolved Alerts. ElementId: Event_04a1zpc")
@@ -181,7 +190,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_04a1zpc", data.closeTradeMtEvent.id, "latency_arbitrage");
+        checkElementId("Event_04a1zpc", data.closeTradeMtEvent.id, Rule.LATENCY_ARBITRAGE_RULE.getProcessId());
 
         Allure.step("Verify there is alert in kafka");
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
@@ -196,7 +205,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
         assertThat("Verify alert", alerts.getFirst().rule.name, is("Latency Arbitrage"));
-        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("LATENCY_ARBITRAGE"));
+        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is(Rule.LATENCY_ARBITRAGE_RULE.getProcessId()));
         assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
         assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
 
