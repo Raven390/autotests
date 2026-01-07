@@ -35,7 +35,7 @@ class CustomRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setupData() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupCustomRuleData();

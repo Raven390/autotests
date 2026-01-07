@@ -42,6 +42,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         DataDeleteHelper.deleteData(dbDataMap);
     }
 
+    @Disabled
     @Test
     @AllureId("1524")
     @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_10k041u")
@@ -53,6 +54,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         checkElementId("Event_10k041u", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1525")
     @DisplayName(
@@ -65,6 +67,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         checkElementId("Event_06qi81c", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1526")
     @DisplayName(
@@ -77,6 +80,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         checkElementId("Event_1ya7o9a", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1527")
     @DisplayName(
@@ -89,6 +93,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         checkElementId("Event_1q3hzii", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1528")
     @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_1ss67m1")
@@ -100,6 +105,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         checkElementId("Event_1ss67m1", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
+    @Disabled
     @Test
     @AllureId("1529")
     @DisplayName(

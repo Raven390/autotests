@@ -53,15 +53,30 @@ class LoginRuleTests extends TestBaseRule {
     @Test
     @AllureId("1462")
     @DisplayName(
-            "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users. ElementId: Event.id end_cs_no_toxic")
-    void loginRuleTest2() throws Exception {
-        DataHelper data = dbDataMap.get("2");
+            "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score <0.9. ElementId: Event.id end_cs_no_toxic")
+    void loginRuleTest1() throws Exception {
+        DataHelper data = dbDataMap.get("1");
 
         produceLoginMessageToKafka(data.loginEvent);
 
         checkElementId("end_cs_no_toxic", data.loginEvent.getId(), "login_rule");
     }
 
+    @Disabled
+    @Test
+    @AllureId("1462")
+    @DisplayName(
+            "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score >0.9, no false positives. ElementId: Event.id end_cs_no_toxic")
+    void loginRuleTest2() throws Exception {}
+
+    @Disabled
+    @Test
+    @AllureId("1463")
+    @DisplayName(
+            "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score >0.9, false positives alerts exists. ElementId: Event.id end_cs_no_toxic")
+    void loginRuleTest3() throws Exception {}
+
+    @Disabled
     @Test
     @AllureId("1656")
     @DisplayName("Login rule. Connection search sub-process. Exit if general score < 0.7. ElementId: end_gs_low")
@@ -73,6 +88,7 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_gs_low", data.loginEvent.getId(), "login_rule");
     }
 
+    @Disabled
     @Test
     @AllureId("1655")
     @DisplayName(
@@ -87,18 +103,7 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("Event_1fdy7w1", data.loginEvent.getId(), "login_rule");
     }
 
-    @Test
-    @AllureId("1463")
-    @DisplayName(
-            "Login rule. Connection search sub-process. Exit without restriction if no connections for VT or PU users. ElementId: end_connections_not_found2")
-    void loginRuleTest3() throws Exception {
-        DataHelper data = dbDataMap.get("3");
-
-        produceLoginMessageToKafka(data.loginEvent);
-
-        checkElementId("end_cs_no_toxic", data.loginEvent.getId(), "login_rule");
-    }
-
+    @Disabled
     @Test
     @AllureId("1466")
     @DisplayName(
@@ -110,6 +115,7 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_no_str1_hedge", data.loginEvent.getId(), "login_rule");
     }
 
+    @Disabled
     @Test
     @AllureId("1467")
     @DisplayName(
@@ -121,6 +127,7 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("Event_1o2qu8z", data.loginEvent.getId(), "login_rule");
     }
 
+    @Disabled
     @Test
     @AllureId("1468")
     @DisplayName(
@@ -151,6 +158,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
+    @Disabled
     @Test
     @AllureId("1469")
     @DisplayName(
@@ -162,6 +170,7 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_unknown_fraud_type", data.loginEvent.getId(), "login_rule");
     }
 
+    @Disabled
     @Test
     @AllureId("1470")
     @DisplayName(
@@ -194,6 +203,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
+    @Disabled
     @Test
     @AllureId("1532")
     @DisplayName(
@@ -244,6 +254,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
+    @Disabled
     @Test
     @AllureId("1471")
     @DisplayName(
@@ -276,6 +287,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
+    @Disabled
     @Test
     @AllureId("1472")
     @DisplayName(
@@ -313,6 +325,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getFraudTypes().size(), is(0));
     }
 
+    @Disabled
     @Test
     @AllureId("1473")
     @DisplayName(

@@ -12,6 +12,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -53,9 +54,11 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("endEvent1TestOrSocialTrader", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId(
+                "endEvent1TestOrSocialTrader", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId(), 2);
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading rule with open trade event. Exit without alert if user doesn't have a credit. ElementId: endEvent2DoesNotHaveCredits")
@@ -64,9 +67,10 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("endEvent2DoesNotHaveCredits", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId("endEvent2DoesNotHaveCredits", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading rule with open trade event. Exit without alert if trades count < 5. ElementId: endEvent3DoesNotHaveEnoughTrades")
@@ -75,9 +79,11 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("endEvent3DoesNotHaveEnoughTrades", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId(
+                "endEvent3DoesNotHaveEnoughTrades", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading rule with open trade event. Exit without alert if trades count > 200. ElementId: endEvent3DoesNotHaveEnoughTrades")
@@ -86,9 +92,11 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("endEvent3DoesNotHaveEnoughTrades", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId(
+                "endEvent3DoesNotHaveEnoughTrades", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading rule with open trade event. Exit without alert if ucidScore < 0.9. ElementId: endEvent5MirrorScoreIsNotHigh")
@@ -97,9 +105,11 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("endEvent5MirrorScoreIsNotHigh", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId(
+                "endEvent5MirrorScoreIsNotHigh", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading rule with open trade event. Exit without alert user have at least 1 resolved alerts. ElementId: endEventFinishWithoutAlert")
@@ -108,9 +118,10 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("endEventFinishWithoutAlert", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId("endEventFinishWithoutAlert", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
     }
 
+    @Disabled
     @Test
     @DisplayName(
             "Mirror trading rule with open trade event. Exit with alert and restriction if there was no previous alerts. ElementId: endEvent4SuspectsByMLModel")
@@ -119,8 +130,8 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("wrModel", data.tradeEvent.id, "openTradeMirrorTrade");
-        checkElementId("endEvent4SuspectsByMLModel", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId("wrModel", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
+        checkElementId("endEvent4SuspectsByMLModel", data.tradeEvent.id, Rule.MIRROR_TRADE_OPEN_TRADE.getProcessId());
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));

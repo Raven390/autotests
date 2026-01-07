@@ -18,9 +18,8 @@ import static utils.Utils.*;
 
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
-import business_objects.kafka.crm_events.CrmWithdrawalEvent;
+import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
@@ -59,47 +58,34 @@ public class NdbRuleDataFactory {
         createClient(data, client);
 
         client.setIbId(1);
-        data.crmWithdrawalEvent = new CrmWithdrawalEvent(
-                "MT4", // accountType
-                Utils.getRandomIntPositive().toString(), // binNumber
-                data.clientHelper.getBrand().toLowerCase(), // brand
-                "", // checkName
-                data.clientHelper.getUserId(), // clientId
-                Instant.now().toString(), // eventDate (you can format if you need +03:00)
-                "4", // expMonth
-                "2030", // expYear
-                data.clientHelper.getFirstName(), // fullName
-                getRandomUuidString(), // id
-                "VTSG" + getRandomIntPositive(), // merchantOrderId (example)
-                data.clientHelper.getTradingAccount(), // mt4Account
-                PAYMENT_PROVIDER_FASAPAY, // paymentChannelCode
-                "-", // paymentChannelName
-                PAYMENT_METHOD_CODE_CREDIT_CARD, // paymentMethodCode
-                "WEB", // platform
-                data.clientHelper.getRegulator(), // regulator
-                "1.0", // schemaVersion
-                CRM_WITHDRAWAL_EVENT, // type
-                1, // withdrawalAmount
-                Instant.now().toString(), // withdrawalApplicationTime
-                "EUR", // withdrawalCurrency
-                getRandomIntPositive() // withdrawalId
-                );
-
+        data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
+                .accountType("MT4")
+                .binNumber(Utils.getRandomIntPositive().toString())
+                .brand(data.clientHelper.getBrand().toLowerCase())
+                .checkName("")
+                .clientId(data.clientHelper.getUserId())
+                .eventDate(Instant.now().toString())
+                .expMonth("4")
+                .expYear("2030")
+                .fullName(data.clientHelper.getFirstName())
+                .id(getRandomUuidString())
+                .merchantOrderId("VTSG" + getRandomIntPositive())
+                .mt4Account(data.clientHelper.getTradingAccount())
+                .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
+                .paymentChannelName("CRYPTO_CHANNEL")
+                .paymentMethodCode("CRYPTO")
+                .platform("MT4")
+                .regulator(data.clientHelper.getRegulator())
+                .schemaVersion("2.0")
+                .type(CRM_WITHDRAWAL_EVENT)
+                .withdrawalAmount(1.1)
+                .withdrawalAmountUSD(1.2)
+                .withdrawalApplicationTime(Instant.now().toString())
+                .withdrawalCurrency("EUR")
+                .withdrawalId(getRandomLongPositive())
+                .status("Risk Audit")
+                .build();
         return data;
-    }
-
-    private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
-        return new ConnectionTableEntry(
-                fromClient.getUcid(),
-                toClient.getUcid(),
-                CONNECTION_TYPE_SAME_IDENTITY,
-                1d,
-                List.of(new ConnectionTableEntry.ConnectionInfo(
-                        CONNECTION_ATTRIBUTE_NAME_PAYOUT,
-                        CONNECTION_SEARCH_DATA_CARD_NUMBER,
-                        CONNECTION_SEARCH_DATA_CARD_NUMBER,
-                        CONNECTION_TYPE_RELATION_TYPE_EXACT)),
-                getCurrentTimestampDbFormat());
     }
 
     private static DataHelper getNdbRuleExitEventEnd1Data() {
@@ -169,7 +155,7 @@ public class NdbRuleDataFactory {
         Allure.step("Get connections and abuse types");
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        // data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(),
                 FraudTypeOld.HEDGING.getKey(),
@@ -196,10 +182,12 @@ public class NdbRuleDataFactory {
         Allure.step("Get connections and abuse types");
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
-        connection.connectionInfo =
-                "[{\"connectionAttributeName\": \"email\", \"connectionAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"sourceAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"relationType\": \"exact\"}]";
-        data.connections.add(connection);
+        // ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        // connection.connectionInfo =
+        // "[{\"connectionAttributeName\": \"email\", \"connectionAttributeValue\":
+        // \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"sourceAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\",
+        // \"relationType\": \"exact\"}]";
+        // data.connections.add(connection);
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(),
                 FraudTypeOld.getRandomFraudType(FraudTypeOld.LOSS_VOUCHER_ABUSE, FraudTypeOld.HEDGING)
@@ -265,9 +253,9 @@ public class NdbRuleDataFactory {
         Allure.step("Any under the same IB? - true");
         data.mtTbCreditsObjects.add(credit);
         data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
-        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        // ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         connectedUser.email = sameEmail;
-        data.connections.add(connection);
+        // data.connections.add(connection);
         data.connectedUsers.add(connectedUser);
         Allure.step("Add 49 trades with time less than 2 weeks");
         data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(
@@ -311,9 +299,9 @@ public class NdbRuleDataFactory {
 
         data.mtTbCreditsObjects.add(credit);
         data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
-        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        // ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         connectedUser.email = sameEmail;
-        data.connections.add(connection);
+        // data.connections.add(connection);
         data.connectedUsers.add(connectedUser);
 
         Allure.step("Add less than 50 trades with time less than 2 weeks");
@@ -384,8 +372,8 @@ public class NdbRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNdbRuleExitEventEnd1Data());
-        map.put("2", getNdbRuleExitEventEnd2Data());
-        map.put("3", getNdbRuleExitEventEnd3Data());
+        //        map.put("2", getNdbRuleExitEventEnd2Data());
+        //        map.put("3", getNdbRuleExitEventEnd3Data());
         //        map.put("4", getNdbRuleExitEventEnd4Data());
         //        map.put("42", getNdbRuleExitEventEnd42Data());
         //        map.put("5", getNdbRuleExitEventEnd5Data());

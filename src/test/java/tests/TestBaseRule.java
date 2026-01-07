@@ -309,6 +309,19 @@ public class TestBaseRule {
     }
 
     @Step("Check {elementId} presented in rule path")
+    public static void checkElementId(String elementId, String eventId, String bpmnProcessId, int retries) {
+        try {
+            checkElementId(elementId, eventId, bpmnProcessId);
+        } catch (Exception e) {
+            if (retries > 0) {
+                checkElementId(elementId, eventId, bpmnProcessId, retries - 1);
+            } else {
+                throw new RuntimeException("Failed to check elementId " + elementId + " in rule path", e);
+            }
+        }
+    }
+
+    @Step("Check {elementId} presented in rule path")
     public static void checkElementId(String elementId, String eventId, String bpmnProcessId) {
 
         // Wait until runId appears in zeebe_rules_started
@@ -373,8 +386,14 @@ public class TestBaseRule {
     @Step("Check {elementId} NOT presented in rule path")
     public static void checkElementIdNotPresent(String elementId, String eventId, String bpmnProcessId)
             throws Exception {
+        checkElementIdNotPresent(elementId, eventId, bpmnProcessId, 30);
+    }
+
+    @Step("Check {elementId} NOT presented in rule path with timeout {timeout}s")
+    public static void checkElementIdNotPresent(String elementId, String eventId, String bpmnProcessId, int timeout)
+            throws Exception {
         // Wait until runId appears in zeebe_rules_started
-        ZeebeRulesStarted started = await().atMost(30, TimeUnit.SECONDS)
+        ZeebeRulesStarted started = await().atMost(timeout, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(
                         () -> {
@@ -398,7 +417,7 @@ public class TestBaseRule {
 
         // Try to wait until the elementId appears and expect a timeout (meaning it never appeared)
         try {
-            await().atMost(30, TimeUnit.SECONDS)
+            await().atMost(timeout, TimeUnit.SECONDS)
                     .pollInterval(1, TimeUnit.SECONDS)
                     .until(() -> {
                         List<ZeebeRulesElements> list = getObjectsFromDB(

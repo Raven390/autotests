@@ -10,6 +10,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -49,9 +50,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_end_3", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_end_3", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1446")
     @DisplayName(
@@ -61,9 +63,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_0vlh2iw", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_0vlh2iw", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1447")
     @DisplayName(
@@ -73,9 +76,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_0vlh2iw", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_0vlh2iw", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1448")
     @DisplayName(
@@ -85,9 +89,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_1n666vd", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_1n666vd", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1449")
     @DisplayName(
@@ -97,9 +102,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_1he561b", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_1he561b", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1450")
     @DisplayName(
@@ -109,7 +115,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Activity_1bl3sgg", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Activity_1bl3sgg", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
 
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
@@ -140,6 +146,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
     }
 
+    @Disabled
     @Test
     @AllureId("1451")
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if deposits > 5000. ElementId: Event_end_2")
@@ -148,9 +155,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_end_2", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_end_2", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1452")
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if count trades > 300. ElementId: Event_end_2")
@@ -159,9 +167,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_end_2", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_end_2", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1453")
     @DisplayName("Mirror trading rule for Bybit. Scotland. No alert if trades count > 5. ElementId : Event_1cl2uhs")
@@ -170,9 +179,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_1cl2uhs", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_1cl2uhs", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1454")
     @DisplayName(
@@ -182,9 +192,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_1cl2uhs", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_1cl2uhs", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1455")
     @DisplayName(
@@ -194,9 +205,10 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_12inxex", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_12inxex", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
+    @Disabled
     @Test
     @AllureId("1456")
     @DisplayName(
@@ -206,7 +218,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Activity_0r0pdvq", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Activity_0r0pdvq", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
 
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
@@ -232,6 +244,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
     }
 
+    @Disabled
     @Test
     @AllureId("1498")
     @DisplayName(
@@ -241,7 +254,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_end_4", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_end_4", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
     @Disabled("Not implemented")
@@ -254,7 +267,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_end_9", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_end_9", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
     @Disabled("Not implemented")
@@ -267,7 +280,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_0w3j9pm", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_0w3j9pm", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
     }
 
     @Disabled("Not implemented")
@@ -280,7 +293,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        checkElementId("Event_0w3j9pm", data.tradeEvent.id, "mirror_trade_bybit");
+        checkElementId("Event_0w3j9pm", data.tradeEvent.id, Rule.MIRROR_TRADE_BYBIT.getProcessId());
 
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");

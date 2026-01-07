@@ -105,6 +105,10 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
                 "Verify alert. attributes",
                 alerts.getFirst().getAttributes().getServerIdNegativeLeg(),
                 is(data.internalHedgeEvent.getNegativeLeg().getServerId().toString()));
+        assertThat(
+                "Verify alert. attributes",
+                alerts.getFirst().getAttributes().getInternalHedgeTime(),
+                is(notNullValue()));
 
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Suspicion of an Internal Hedge");
     }

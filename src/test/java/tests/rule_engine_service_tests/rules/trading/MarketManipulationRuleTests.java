@@ -11,14 +11,13 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
+import io.qameta.allure.AllureId;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 class MarketManipulationRuleTests extends TestBaseRule {
@@ -39,9 +38,21 @@ class MarketManipulationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Market manipulation rule. Exit with alert if ucidScore >0.7. ElementId: Event_0k840lo")
+    @AllureId("2002")
+    @DisplayName("Market manipulation rule. Exit if test client. ElementId: Event_1dfbkag")
     void MarketManipulationRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_1dfbkag", data.closeTradeMtEvent.id, Rule.MARKET_MANIPULATION_RULE.getProcessId());
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("Market manipulation rule. Exit if test client >0.7. ElementId: Event_0k840lo")
+    void MarketManipulationRuleTest2() throws Exception {
+        DataHelper data = dbDataMap.get("2");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 

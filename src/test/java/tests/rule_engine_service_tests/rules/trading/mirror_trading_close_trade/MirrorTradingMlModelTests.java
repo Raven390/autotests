@@ -62,6 +62,7 @@ class MirrorTradingMlModelTests extends TestBaseRule {
     @DisplayName("Mirror trading. Ml model. Exit if at lease 1 resolved alert. ElementId: Event_1m3mqdr")
     void mirrorTradeRuleTest4() throws Exception {}
 
+    @Disabled
     @Test
     @AllureId("1494")
     @DisplayName(

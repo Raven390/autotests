@@ -9,9 +9,9 @@ import business_objects.kafka.CustomEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.FraudType;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class CustomRuleDataFactory {
         DataHelper data = getCustomRuleData(customRuleTest1Client);
         data.customEvent.setClientId(data.clientHelper.getUserId().toString());
         data.customEvent.setBrand(data.clientHelper.getBrand());
-        data.customEvent.setFraudType("HEDGING");
+        data.customEvent.setFraudType(FraudType.HEDGING.getCode());
         data.customEvent.setAlert(
                 "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
         data.customEvent.setRestriction("WR");
@@ -65,7 +65,7 @@ public class CustomRuleDataFactory {
         DataHelper data = getCustomRuleData(customRuleTest2Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
         data.customEvent.setTradingAccount(data.clientHelper.getTradingAccount().toString());
-        data.customEvent.setFraudType("HEDGING");
+        data.customEvent.setFraudType(FraudType.HEDGING.getCode());
         data.customEvent.setAlert(
                 "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order').");
         data.customEvent.setRestriction("WR");
@@ -77,7 +77,7 @@ public class CustomRuleDataFactory {
         DataHelper data = getCustomRuleData(customRuleTest3Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
         data.customEvent.setTradingAccount(data.clientHelper.getTradingAccount().toString());
-        data.customEvent.setFraudType("HEDGING");
+        data.customEvent.setFraudType(FraudType.HEDGING.getCode());
         return data;
     }
 
@@ -100,7 +100,7 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    public static Map<String, DataHelper> setupCustomRuleData() throws IOException, InterruptedException {
+    public static Map<String, DataHelper> setupCustomRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list

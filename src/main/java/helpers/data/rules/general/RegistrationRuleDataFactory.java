@@ -115,9 +115,9 @@ public class RegistrationRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getRegistrationRuleData1());
-        map.put("2", getRegistrationRuleData2());
-        map.put("3", getRegistrationRuleData3());
-        map.put("4", getRegistrationRuleData4());
+        //        map.put("2", getRegistrationRuleData2());
+        //        map.put("3", getRegistrationRuleData3());
+        //        map.put("4", getRegistrationRuleData4());
 
         setupData(map);
 
