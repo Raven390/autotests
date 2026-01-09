@@ -2,7 +2,6 @@ package helpers.data.rules.payments.router_rule_crm_events;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -99,9 +98,6 @@ public class RouterRuleCrmEventsDataFactory {
         map.put("3", getRouterRuleTest3Data());
         map.put("4", getRouterRuleTest4Data());
         map.put("5", getRouterRuleTest5Data());
-
-        setupData(map);
-
         return map;
     }
 }

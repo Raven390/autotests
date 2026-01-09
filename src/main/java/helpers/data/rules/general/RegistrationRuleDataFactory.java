@@ -7,7 +7,6 @@ import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -115,11 +114,9 @@ public class RegistrationRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getRegistrationRuleData1());
-        //        map.put("2", getRegistrationRuleData2());
-        //        map.put("3", getRegistrationRuleData3());
-        //        map.put("4", getRegistrationRuleData4());
-
-        setupData(map);
+        map.put("2", getRegistrationRuleData2());
+        map.put("3", getRegistrationRuleData3());
+        map.put("4", getRegistrationRuleData4());
 
         return map;
     }

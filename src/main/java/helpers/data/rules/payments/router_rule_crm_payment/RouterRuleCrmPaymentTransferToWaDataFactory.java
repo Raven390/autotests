@@ -2,7 +2,6 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.CRM_TRANSFER_TO_WA_EVENT;
 
@@ -16,12 +15,12 @@ import java.util.UUID;
 import utils.Utils;
 
 public class RouterRuleCrmPaymentTransferToWaDataFactory {
-    private static final ClientHelper routerRuleClient1 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient2 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient3 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient1 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient2 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient3 = getRandomVantageClientAllFields();
 
     @Description("Create data for Router rule")
-    private static DataHelper getRouterRuleData(ClientHelper client) {
+    private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         createClient(data, client);
         UUID id = UUID.randomUUID();
@@ -51,36 +50,33 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
         return data;
     }
 
-    private static DataHelper getRouterRuleTest1Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient1);
+    private static DataHelper getTest1Data() {
+        DataHelper data = getRuleData(testClient1);
         data.transferToWaEvent.setCheckName("Crypto_Risk");
         data.transferToWaEvent.setTransferAmount(1d);
         return data;
     }
 
-    private static DataHelper getRouterRuleTest2Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient2);
+    private static DataHelper getTest2Data() {
+        DataHelper data = getRuleData(testClient2);
         data.transferToWaEvent.setCheckName("Crypto_Risk");
         data.transferToWaEvent.setTransferAmount(1d);
         return data;
     }
 
-    private static DataHelper getRouterRuleTest3Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient3);
+    private static DataHelper getTest3Data() {
+        DataHelper data = getRuleData(testClient3);
         data.transferToWaEvent.setTransferAmount(1d);
         return data;
     }
 
-    public static Map<String, DataHelper> setupRouterRuleData() {
+    public static Map<String, DataHelper> setupRouterRuleShadowModeTransferToWaData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getRouterRuleTest1Data());
-        map.put("2", getRouterRuleTest2Data());
-        map.put("3", getRouterRuleTest3Data());
-
-        setupData(map);
-
+        map.put("1", getTest1Data());
+        map.put("2", getTest2Data());
+        map.put("3", getTest3Data());
         return map;
     }
 }

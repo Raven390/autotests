@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingWebHedgeDataFactory.setupMirrorTradingWebHedgeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -9,7 +11,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -31,15 +32,15 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingWebHedgeRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Disabled
@@ -48,6 +49,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
     @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_10k041u")
     void mirrorTradeRuleTest18() throws Exception {
         DataHelper data = dbDataMap.get("18");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -61,6 +63,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
             "Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
     void mirrorTradeRuleTest19() throws Exception {
         DataHelper data = dbDataMap.get("19");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -74,6 +77,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
             "Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_1ya7o9a")
     void mirrorTradeRuleTest20() throws Exception {
         DataHelper data = dbDataMap.get("20");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -87,6 +91,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
             "Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_1q3hzii")
     void mirrorTradeRuleTest21() throws Exception {
         DataHelper data = dbDataMap.get("21");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -99,6 +104,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
     @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest22() throws Exception {
         DataHelper data = dbDataMap.get("22");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -112,6 +118,7 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
             "Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest23() throws Exception {
         DataHelper data = dbDataMap.get("23");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 

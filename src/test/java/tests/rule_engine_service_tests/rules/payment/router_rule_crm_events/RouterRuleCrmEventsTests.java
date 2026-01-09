@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_events;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_events.RouterRuleCrmEventsDataFactory.setupRouterRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.*;
@@ -20,7 +22,6 @@ import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecu
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.payment_gate.Decision;
 import io.qameta.allure.*;
@@ -39,15 +40,15 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupRouterRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Disabled
@@ -56,6 +57,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @DisplayName("Router Rule. No alerts/rejects. Approve withdrawal. elementId: Event_0t14mt3")
     void routerRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
@@ -154,6 +156,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @DisplayName("Router Rule. Alert, no rejects,. elementId: Event_11azia8")
     void routerRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         data.crmWithdrawalEvent.setCheckName("Checkname");
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
@@ -245,6 +248,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @DisplayName("Router Rule. Alert, no rejects, Risk rejection = true. elementId: Event_1kdk048")
     void routerRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
+        setupData(data);
 
         data.crmWithdrawalEvent.setCheckName("Checkname");
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
@@ -338,6 +342,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
             "Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = true. ElementId:Event_0dvxfab")
     void routerRuleTest4() throws Exception {
         DataHelper data = dataMap.get("4");
+        setupData(data);
 
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
@@ -389,6 +394,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
             "Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = false. ElementId:Event_1gdl5i3")
     void routerRuleTest5() throws Exception {
         DataHelper data = dataMap.get("5");
+        setupData(data);
 
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 

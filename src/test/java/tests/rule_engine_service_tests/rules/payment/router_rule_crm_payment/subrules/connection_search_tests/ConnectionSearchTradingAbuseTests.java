@@ -1,11 +1,11 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules.connection_search_tests;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.rules.payments.router_rule_crm_payment.connection_search.ConnectionSearchTradingAbuseDataFactory.setupConnectionSearchTradingAbuseRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -26,15 +26,15 @@ class ConnectionSearchTradingAbuseTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupConnectionSearchTradingAbuseRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test

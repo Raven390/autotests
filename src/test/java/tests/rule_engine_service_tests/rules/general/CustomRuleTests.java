@@ -3,6 +3,8 @@ package tests.rule_engine_service_tests.rules.general;
 import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesRequest.getAbuseTypes;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.general.CustomRuleDataFactory.setupCustomRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -13,7 +15,6 @@ import static utils.Constants.*;
 
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.kafka.alerts.RuleAlertV2;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -35,15 +36,15 @@ class CustomRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupCustomRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -52,6 +53,7 @@ class CustomRuleTests extends TestBaseRule {
     @DisplayName("Custom rule. ucid -> fraud type + restriction + alert")
     void customRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceCustomMessageToKafka(data.customEvent);
 
@@ -102,6 +104,7 @@ class CustomRuleTests extends TestBaseRule {
     @DisplayName("Custom rule. trading account + server -> fraud type + restriction + alert")
     void customRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceCustomMessageToKafka(data.customEvent);
 
@@ -117,6 +120,7 @@ class CustomRuleTests extends TestBaseRule {
     @DisplayName("Custom rule. trading account + server -> fraud type")
     void customRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceCustomMessageToKafka(data.customEvent);
 
@@ -133,6 +137,7 @@ class CustomRuleTests extends TestBaseRule {
     @DisplayName("Custom rule. trading account + server -> restriction")
     void customRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         produceCustomMessageToKafka(data.customEvent);
 
@@ -149,6 +154,7 @@ class CustomRuleTests extends TestBaseRule {
     @DisplayName("Custom rule. trading account + server -> alert")
     void customRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         produceCustomMessageToKafka(data.customEvent);
 

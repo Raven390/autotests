@@ -12,7 +12,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.addAlert;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.ShortToxicityInserter.insertShortToxicityOrdersData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -273,9 +272,6 @@ public class LatencyArbitrageRuleDataFactory {
         map.put("7", getLatencyArbitrageRuleTest7Data());
         map.put("8", getLatencyArbitrageRuleTest8Data());
         map.put("9", getLatencyArbitrageRuleTest9Data());
-
-        setupData(map);
-
         return map;
     }
 }

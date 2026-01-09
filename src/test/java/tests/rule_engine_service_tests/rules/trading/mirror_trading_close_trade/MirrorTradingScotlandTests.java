@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingScotlandDataFactory.setupMirrorTradingScotlandRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -9,7 +11,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -31,15 +32,15 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingScotlandRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Disabled
@@ -48,6 +49,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     @DisplayName("Mirror trading. Scotland. Exit without alert if trades count > 5. ElementId: Event_end_8")
     void mirrorTradeRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -61,6 +63,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
             "Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. ElementId: Event_end_8")
     void mirrorTradeRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -73,6 +76,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     @DisplayName("Mirror trading. Scotland. Exit without alert if Leverage < 200. ElementId: Event_12inxex")
     void mirrorTradeRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -86,6 +90,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
             "Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
     void mirrorTradeRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 

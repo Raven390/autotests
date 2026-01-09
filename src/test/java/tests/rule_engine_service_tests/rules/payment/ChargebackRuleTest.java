@@ -5,6 +5,8 @@ import static business_objects.db.payment_gate.payment_details.PaymentDetailsObj
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.*;
 import static helpers.data.rules.payments.ChargebackRuleDataFactory.setupChargebackData;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -22,7 +24,6 @@ import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.ClientHelper;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeStatus;
 import helpers.database.DbName;
@@ -39,15 +40,15 @@ class ChargebackRuleTest {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws Exception {
+    static void setup() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupChargebackData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test
@@ -56,6 +57,7 @@ class ChargebackRuleTest {
             "Chargeback rule test. client have no data. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. Event_1tc5so6")
     void chargeback1Test() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
@@ -80,6 +82,7 @@ class ChargebackRuleTest {
             "Chargeback rule test. client have no deposits for card(profile) in event. callback.data.charge.attributes.status != 'approved' No Chargeback fraud. Event_1en3mz7")
     void chargeback2Test() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
@@ -95,6 +98,7 @@ class ChargebackRuleTest {
             "Chargeback rule test. client have deposits. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. Event_1en3mz7")
     void chargeback3Test() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
@@ -110,6 +114,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client have no deposits for card(profile) in event. callback.data.charge.attributes.status =! 'approved' Chargeback fraud. ")
     void chargeback4Test() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
 
@@ -127,6 +133,7 @@ class ChargebackRuleTest {
             "Chargeback rule test. client have no deposits for card(profile) in event. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. ")
     void chargeback5Test() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
@@ -142,6 +149,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits >5000, 3 cards, no connections. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback6Test() throws Exception {
         DataHelper data = dbDataMap.get("6");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -226,6 +235,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits <5000, 4 cards, no connections. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback7Test() throws Exception {
         DataHelper data = dbDataMap.get("7");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -310,6 +321,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback8Test() throws Exception {
         DataHelper data = dbDataMap.get("8");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -394,6 +407,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback9Test() throws Exception {
         DataHelper data = dbDataMap.get("9");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -479,6 +494,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback10Test() throws Exception {
         DataHelper data = dbDataMap.get("10");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -565,6 +582,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback11Test() throws Exception {
         DataHelper data = dbDataMap.get("11");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -660,6 +679,8 @@ class ChargebackRuleTest {
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback12Test() throws Exception {
         DataHelper data = dbDataMap.get("12");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -756,6 +777,8 @@ class ChargebackRuleTest {
             "Chargeback rule test.cardholder/KYC name similarity is == 1. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster. Is 3d. No not FTD and no Open Trades.")
     void chargeback13Test() throws Exception {
         DataHelper data = dbDataMap.get("13");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -789,6 +812,8 @@ class ChargebackRuleTest {
             "card is is 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster. Is 3d. No not FTD and no Open Trades.")
     void chargeback14Test() throws Exception {
         DataHelper data = dbDataMap.get("14");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -822,6 +847,8 @@ class ChargebackRuleTest {
             "Score 0. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.  not FTD and no Open Trades.")
     void chargeback15Test() throws Exception {
         DataHelper data = dbDataMap.get("15");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -855,6 +882,8 @@ class ChargebackRuleTest {
             "Score 0. FTD with Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.")
     void chargeback16Test() throws Exception {
         DataHelper data = dbDataMap.get("16");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -888,6 +917,8 @@ class ChargebackRuleTest {
             "Score 0. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.")
     void chargeback17Test() throws Exception {
         DataHelper data = dbDataMap.get("17");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -921,6 +952,8 @@ class ChargebackRuleTest {
             "Score 0. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1. Chargeback fraud Card not used by known fraudster.")
     void chargeback18Test() throws Exception {
         DataHelper data = dbDataMap.get("18");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
@@ -1011,6 +1044,8 @@ class ChargebackRuleTest {
     @DisplayName("Chargeback fraud Card was used by known fraudster. No segment. no Open Trades. card not 3dS.")
     void chargeback19Test() throws Exception {
         DataHelper data = dbDataMap.get("19");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
@@ -1102,6 +1137,8 @@ class ChargebackRuleTest {
     @DisplayName("Chargeback fraud Card was used by known fraudster. No segment. Open Trades. card not 3dS. end 202")
     void chargeback20Test() throws Exception {
         DataHelper data = dbDataMap.get("20");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
@@ -1194,6 +1231,8 @@ class ChargebackRuleTest {
             "Chargeback Segment 'Very High'. Score > 0. fraud Card was used by known fraudster. No segment. Open Trades. card not 3dS. 204")
     void chargeback21Test() throws Exception {
         DataHelper data = dbDataMap.get("21");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
         addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
@@ -1286,6 +1325,8 @@ class ChargebackRuleTest {
             "Chargeback Segment 'Ultra'. Score = 0. fraud Card was used by known fraudster. No segment. Open Trades. card not 3dS. 102")
     void chargeback22Test() throws Exception {
         DataHelper data = dbDataMap.get("22");
+        setupData(data);
+
         addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
@@ -1319,6 +1360,7 @@ class ChargebackRuleTest {
     @DisplayName("Chargeback Chargeback. Client have previous alerts from the rule")
     void chargeback23Test() throws Exception {
         DataHelper data = dbDataMap.get("23");
+        setupData(data);
 
         // create previous alert
         ClientHelper client1 = data.clientHelper;

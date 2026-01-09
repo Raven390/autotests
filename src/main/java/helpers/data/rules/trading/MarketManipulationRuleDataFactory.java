@@ -9,7 +9,6 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -80,7 +79,6 @@ public class MarketManipulationRuleDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getMarketManipulationRuleTest1Data());
         map.put("2", getMarketManipulationRuleTest2Data());
-        setupData(map);
         return map;
     }
 }

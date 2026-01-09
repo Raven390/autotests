@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingMlModelDataFactory.setupMirrorTradingMLModelRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -9,7 +11,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -31,15 +32,15 @@ class MirrorTradingMlModelTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingMLModelRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Disabled
@@ -69,6 +70,7 @@ class MirrorTradingMlModelTests extends TestBaseRule {
             "Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. ElementId: Event_1m3mqdr")
     void mirrorTradeRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 

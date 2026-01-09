@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.rules.payments.router_rule_crm_payment.EnoughTradesDataFactory.setupEnoughTradesRuleData;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static helpers.database.PaymentGateHelper.getPaymentRuleExecution;
@@ -11,7 +12,6 @@ import static tests.TestBaseRule.produceWithdrawalMessageV2ToCrmPaymentTopic;
 
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -25,15 +25,15 @@ class EnoughTradesRuleTest {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws Exception {
+    static void setup() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupEnoughTradesRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test

@@ -1,6 +1,8 @@
 package tests.rule_engine_service_tests.rules.payment;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.data.rules.payments.NdbRuleDataFactory.setupNdbRuleData;
 import static helpers.database.DbHelper.getObjectsFromDB;
@@ -10,7 +12,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import helpers.database.DbName;
@@ -34,15 +35,15 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws Exception {
+    static void setup() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupNdbRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test
@@ -50,6 +51,7 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule. User don't have any ndb. Element id: Event_1")
     void ndbRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -62,6 +64,7 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule. User  have any ndb trades.count !<50. ElementId: Event_2.")
     void ndbRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
@@ -73,6 +76,7 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_3.  trades.count <50, first trade more than 2 week old")
     void ndbRuleExitEventEnd3Test() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
@@ -84,6 +88,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_4_1. Linked fraud - LVA")
     void ndbRuleExitEventEnd4_1Test() throws Exception {
         DataHelper data = dbDataMap.get("41");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -138,6 +144,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_4_2. Linked fraud - Hedging")
     void ndbRuleExitEventEnd4_2Test() throws Exception {
         DataHelper data = dbDataMap.get("42");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -189,6 +197,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_5. Linked fraud - other")
     void ndbRuleExitEventEnd5Test() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -236,6 +246,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
             "NDB rule exit Event_6. Linked active accounts not with same email AND NDB from the last 1 week? = false")
     void ndbRuleExitEventEnd6Test() throws Exception {
         DataHelper data = dbDataMap.get("6");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -257,6 +269,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_7. Any under the same IB? = true")
     void ndbRuleExitEventEnd7Test() throws Exception {
         DataHelper data = dbDataMap.get("7");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -307,6 +321,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_8. Lexis registration score high? = false")
     void ndbRuleExitEventEnd8Test() throws Exception {
         DataHelper data = dbDataMap.get("8");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -328,6 +344,8 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     @DisplayName("NDB rule exit Event_9. Lexis registration score high? = true")
     void ndbRuleExitEventEnd9Test() throws Exception {
         DataHelper data = dbDataMap.get("9");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");

@@ -4,6 +4,8 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_payment.connection_search.ConnectionSearchDataFactory.setupConnectionSearchRuleData;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.DbHelper.startSshTunnel;
@@ -13,7 +15,6 @@ import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import helpers.data.ClientHelper;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import helpers.database.DbName;
@@ -35,23 +36,75 @@ class ConnectionSearchTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupConnectionSearchRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
+    }
+
+    @Test
+    @AllureId("1829")
+    @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is 'cash%'")
+    void connectionSearchRuleTest1() throws Exception {
+        DataHelper data = dataMap.get("1");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementIdNotPresent(
+                "check_chargeback_ratio",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2008")
+    @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is '0'")
+    void connectionSearchRuleTest2() throws Exception {
+        DataHelper data = dataMap.get("2");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementIdNotPresent(
+                "check_chargeback_ratio",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("1830")
+    @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is '00'")
+    void connectionSearchRuleTest3() throws Exception {
+        DataHelper data = dataMap.get("3");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementIdNotPresent(
+                "check_chargeback_ratio",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
     @Test
     @AllureId("1829")
     @DisplayName(
             "Connection Search in router rule. Exit without alert if Connection Search rule suspended a WD <= 3 days. ElementId: end_101")
-    void connectionSearchRuleTest1() throws Exception {
-        DataHelper data = dataMap.get("1");
+    void connectionSearchRuleTest4() throws Exception {
+        DataHelper data = dataMap.get("4");
+        setupData(data);
 
         // create previous alert
         ClientHelper client1 = data.clientHelper;
@@ -79,8 +132,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @AllureId("1830")
     @DisplayName(
             "Connection Search in router rule. Approve withdrawal if user has no connections(by deposits). ElementId: end_102")
-    void connectionSearchRuleTest2() throws Exception {
-        DataHelper data = dataMap.get("2");
+    void connectionSearchRuleTest5() throws Exception {
+        DataHelper data = dataMap.get("5");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -94,8 +148,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @AllureId("1830")
     @DisplayName(
             "Connection Search in router rule. Approve withdrawal if user has no connections(by deposits and withdrawals. ElementId: end_102")
-    void connectionSearchRuleTest3() throws Exception {
-        DataHelper data = dataMap.get("3");
+    void connectionSearchRuleTest6() throws Exception {
+        DataHelper data = dataMap.get("6");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -109,8 +164,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @AllureId("1831")
     @DisplayName(
             "Connection Search in router rule. Total deposits among connected UCIDs <= 500 USD. ElementId: end_103")
-    void connectionSearchRuleTest4() throws Exception {
-        DataHelper data = dataMap.get("4");
+    void connectionSearchRuleTest7() throws Exception {
+        DataHelper data = dataMap.get("7");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -124,8 +180,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @AllureId("1832")
     @DisplayName(
             "Connection Search in router rule. Total withdrawals among connected UCIDs <= 500 USD. ElementId: end_104")
-    void connectionSearchRuleTest5() throws Exception {
-        DataHelper data = dataMap.get("5");
+    void connectionSearchRuleTest8() throws Exception {
+        DataHelper data = dataMap.get("8");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -138,8 +195,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @Test
     @AllureId("1833")
     @DisplayName("Connection Search in router rule. At least one rule finished with alert= false. ElementId: end_105")
-    void connectionSearchRuleTest6() throws Exception {
-        DataHelper data = dataMap.get("6");
+    void connectionSearchRuleTest9() throws Exception {
+        DataHelper data = dataMap.get("9");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -155,8 +213,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @AllureId("1834")
     @DisplayName(
             "Connection Search in router rule. at least one rule finished with alert= true. ElementId: Event_1v8iqld")
-    void connectionSearchRuleTest7() throws Exception {
-        DataHelper data = dataMap.get("7");
+    void connectionSearchRuleTest10() throws Exception {
+        DataHelper data = dataMap.get("10");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -171,8 +230,9 @@ class ConnectionSearchTests extends TestBaseRule {
     @Test
     @AllureId("1834")
     @DisplayName("Connection Search in router rule. Payment method never used before for WD. ElementId: Event_1v8iqld")
-    void connectionSearchRuleTest8() throws Exception {
-        DataHelper data = dataMap.get("8");
+    void connectionSearchRuleTest11() throws Exception {
+        DataHelper data = dataMap.get("11");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 

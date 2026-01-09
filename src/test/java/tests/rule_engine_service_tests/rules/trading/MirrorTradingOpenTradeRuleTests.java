@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.MirrorTradingOpenTradeEventDataFactory.setupMirrorTradingOpenTradeEventRuleData;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,7 +12,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -33,15 +34,15 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingOpenTradeEventRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -51,6 +52,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit without alert if user is test or social trader user. ElementId: endEvent1TestOrSocialTrader")
     void mirrorTradingOpenTradeEventRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -64,6 +66,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit without alert if user doesn't have a credit. ElementId: endEvent2DoesNotHaveCredits")
     void mirrorTradingOpenTradeEventRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -76,6 +79,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit without alert if trades count < 5. ElementId: endEvent3DoesNotHaveEnoughTrades")
     void mirrorTradingOpenTradeEventRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -89,6 +93,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit without alert if trades count > 200. ElementId: endEvent3DoesNotHaveEnoughTrades")
     void mirrorTradingOpenTradeEventRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -102,6 +107,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit without alert if ucidScore < 0.9. ElementId: endEvent5MirrorScoreIsNotHigh")
     void mirrorTradingOpenTradeEventRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -115,6 +121,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit without alert user have at least 1 resolved alerts. ElementId: endEventFinishWithoutAlert")
     void mirrorTradingOpenTradeEventRuleTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -127,6 +134,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
             "Mirror trading rule with open trade event. Exit with alert and restriction if there was no previous alerts. ElementId: endEvent4SuspectsByMLModel")
     void mirrorTradingOpenTradeEventRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 

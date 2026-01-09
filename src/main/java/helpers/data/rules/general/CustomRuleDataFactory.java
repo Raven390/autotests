@@ -2,7 +2,6 @@ package helpers.data.rules.general;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 
 import business_objects.kafka.CustomEvent;
@@ -109,9 +108,6 @@ public class CustomRuleDataFactory {
         map.put("3", getCustomRuleTest3Data());
         map.put("4", getCustomRuleTest4Data());
         map.put("5", getCustomRuleTest5Data());
-
-        setupData(map);
-
         return map;
     }
 }

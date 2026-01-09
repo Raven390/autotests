@@ -3,7 +3,6 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
@@ -90,9 +89,6 @@ public class WithdrawalIntegrityDataFactory {
         map.put("2", getWithdrawalIntegrityCheckTest2Data());
         map.put("3", getWithdrawalIntegrityCheckTest3Data());
         map.put("4", getWithdrawalIntegrityCheckTest4Data());
-
-        setupData(map);
-
         return map;
     }
 }

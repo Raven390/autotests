@@ -93,11 +93,32 @@ public class CrmWithdrawalEventV2 {
     @JsonProperty("eWallet")
     private EWallet eWallet;
 
+    @JsonProperty("localBankTransfer")
+    private LocalBankTransfer localBankTransfer;
+
+    @JsonProperty("crypto")
+    private Crypto crypto;
+
     @Getter
     @Setter
     @Builder
     public static class EWallet {
         private String accountName;
         private String accountNumber;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class LocalBankTransfer {
+        private String accountName;
+        private String accountNumber;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class Crypto {
+        private String walletAddress;
     }
 }

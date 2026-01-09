@@ -9,7 +9,6 @@ import static business_objects.db.clickhouse.data_science_test.connection_table.
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -1764,9 +1763,6 @@ public class ChargebackRuleDataFactory {
         map.put("21", getChargebackTest21Data());
         map.put("22", getChargebackTest22Data());
         map.put("23", getChargebackTest23Data());
-
-        setupData(map);
-
         return map;
     }
 }

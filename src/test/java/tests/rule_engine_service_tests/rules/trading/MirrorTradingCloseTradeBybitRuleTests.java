@@ -1,6 +1,8 @@
 package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.MirrorTradingCloseTradeEventBybitRuleDataFactory.setupMirrorTradingCloseTradeBybitRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -8,7 +10,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -31,15 +32,15 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingCloseTradeBybitRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test
@@ -47,6 +48,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if user has no credits. ElementId: Event_end_3")
     void mirrorTradeBybitRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -60,6 +62,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. ML model. Exit without alert if trades amount < 10. ElementId: Event_0vlh2iw")
     void mirrorTradeBybitRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -73,6 +76,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. ML model. Exit without alert if trades amount > 200. ElementId: Event_0vlh2iw")
     void mirrorTradeBybitRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -86,6 +90,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. ML model. Exit without alert if mirror score < 0.9. ElementId: Event_1n666vd")
     void mirrorTradeBybitRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -99,6 +104,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. ML model. Exit without alertif user has no resolved alerts. ElementId: Event_1he561b")
     void mirrorTradeBybitRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -112,6 +118,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. ML model. Exit with alert if resolved alerts amount for user = 0. ElementId: Flow_1ijudon")
     void mirrorTradeBybitRuleTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -152,6 +159,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if deposits > 5000. ElementId: Event_end_2")
     void mirrorTradeBybitRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -164,6 +172,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if count trades > 300. ElementId: Event_end_2")
     void mirrorTradeBybitRuleTest8() throws Exception {
         DataHelper data = dbDataMap.get("8");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -176,6 +185,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
     @DisplayName("Mirror trading rule for Bybit. Scotland. No alert if trades count > 5. ElementId : Event_1cl2uhs")
     void mirrorTradeBybitRuleTest9() throws Exception {
         DataHelper data = dbDataMap.get("9");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -189,6 +199,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Scotland. No alert if profit/(deposit+credit) < 0.6. ElementId: Event_1cl2uhs")
     void mirrorTradeBybitRuleTest10() throws Exception {
         DataHelper data = dbDataMap.get("10");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -202,6 +213,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Scotland. Exit without alert if leverage < 200. ElementId: Event_12inxex")
     void mirrorTradeBybitRuleTest11() throws Exception {
         DataHelper data = dbDataMap.get("11");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -215,6 +227,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Scotland. Exit with alert if leverage > 200 and no resolved alerts. ElementId: Event_end_4")
     void mirrorTradeBybitRuleTest12() throws Exception {
         DataHelper data = dbDataMap.get("12");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -251,6 +264,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Scotland. Exit without alert if leverage > 200 and > 0 resolved alerts. ElementId: Event_end_4")
     void mirrorTradeBybitRuleTest13() throws Exception {
         DataHelper data = dbDataMap.get("13");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -264,6 +278,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Waves. Exit without alert if there is no pattern. ElementId: Event_end_9")
     void mirrorTradeBybitRuleTest14() throws Exception {
         DataHelper data = dbDataMap.get("14");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -277,6 +292,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Waves. Exit without alert if there is pattern and resolved alerts>0. ElementId: Event_0w3j9pm")
     void mirrorTradeBybitRuleTest15() throws Exception {
         DataHelper data = dbDataMap.get("15");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 
@@ -290,6 +306,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
             "Mirror trading rule for Bybit. Waves. Exit with alert if there is pattern and resolved alerts amount = 0. ElementId: Event_0w3j9pm")
     void mirrorTradeBybitRuleTest16() throws Exception {
         DataHelper data = dbDataMap.get("16");
+        setupData(data);
 
         produceTradeMessageToKafka(data.tradeEvent);
 

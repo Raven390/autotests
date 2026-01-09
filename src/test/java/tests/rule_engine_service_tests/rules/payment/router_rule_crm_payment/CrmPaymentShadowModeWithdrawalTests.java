@@ -3,11 +3,15 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.api.PaymentGateHelper.sendRiskApproveDecision;
 import static helpers.api.PaymentGateHelper.sendRiskRejectDecision;
+import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.asserts.AcknowledgeAssertsHelper.assertAcknowledge;
 import static helpers.asserts.AlertsAssertsHelper.assertRiskWithdrawalAlert;
 import static helpers.asserts.PaymentGateAssertsHelper.*;
 import static helpers.asserts.WithdrawalApprovalAssertsHelper.assertWithdrawalApproval;
-import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmPaymentShadowModeFactory.setupRouterRuleData;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.Restriction.LOGIN_CRM;
+import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmPaymentShadowModeFactory.setupRouterRuleShadowModeWithdrawalData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static utils.Constants.*;
@@ -16,7 +20,6 @@ import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -37,15 +40,15 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
-        dataMap = setupRouterRuleData();
+        dataMap = setupRouterRuleShadowModeWithdrawalData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test
@@ -53,6 +56,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     @DisplayName("Router Rule shadow mode. Withdrawal Manual Approve")
     void routerRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
@@ -101,6 +105,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     @DisplayName("Router Rule shadow mode. Withdrawal Manual Reject")
     void routerRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -124,6 +129,9 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     @DisplayName("Router Rule shadow mode. Withdrawal Auto approve")
     void routerRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
+        setupData(data);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), LOGIN_CRM.getCode(), "Mirror trade pattern");
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 

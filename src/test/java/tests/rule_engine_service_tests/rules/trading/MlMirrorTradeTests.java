@@ -3,6 +3,8 @@ package tests.rule_engine_service_tests.rules.trading;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.getRestrictionsByUcid;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
 import static helpers.data.rules.trading.MlMirrodTradeRuleDataFactory.setupMlMirrorTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,7 +15,6 @@ import static utils.Constants.*;
 import business_objects.api.mitigation_service.GetRestrictionResponseBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlertV2;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -37,15 +38,15 @@ class MlMirrorTradeTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMlMirrorTradeRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test
@@ -53,6 +54,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     @DisplayName("ML Mirror trade rule. Exit if user has no credits. ElementId: Event_1flqa1d")
     void MlMirrorTradeRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
@@ -65,6 +67,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     @DisplayName("ML Mirror trade rule. Exit if user has at least 1 closed alert. ElementId: Event_1flqa1d")
     void MlMirrorTradeRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
@@ -77,6 +80,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     @DisplayName("ML Mirror trade rule. alert and restriction if user has ucidScore > 0.7. ElementId: Event_1flqa1d")
     void MlMirrorTradeRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
@@ -131,6 +135,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     @DisplayName("ML Mirror trade rule. Exit if user has ucidScore < 0.7. ElementId: Event_09pix7t")
     void MlMirrorTradeRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
@@ -144,6 +149,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     @DisplayName("ML Mirror trade rule. alert and restriction if user has ucidScore > 0.7. ElementId: Event_1flqa1d")
     void MlMirrorTradeRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 

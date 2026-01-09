@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.WaveFlagInserter.deleteWaveFlagData;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingWavesDataFactory.setupMirrorTradingWavesRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,7 +12,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -33,15 +34,15 @@ class MirrorTradingWavesTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingWavesRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
         deleteWaveFlagData(dbDataMap.get("2").clientHelper);
         deleteWaveFlagData(dbDataMap.get("3").clientHelper);
     }
@@ -52,6 +53,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
     @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
     void mirrorTradeRuleTest14() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -64,8 +66,8 @@ class MirrorTradingWavesTests extends TestBaseRule {
     @DisplayName(
             "Mirror trading. Waves. Exit without alerts if previously at least 1 resolved alert. ElementId: Event_end_5")
     void mirrorTradeRuleTest15() throws Exception {
-
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -77,8 +79,8 @@ class MirrorTradingWavesTests extends TestBaseRule {
     @AllureId("1618")
     @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. ElementId: Event_end_5")
     void mirrorTradeRuleTest16() throws Exception {
-
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 

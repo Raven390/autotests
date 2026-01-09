@@ -8,7 +8,6 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -288,9 +287,6 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         map.put("14", getMirrorTradingCloseTradeBybitTest14Data());
         map.put("15", getMirrorTradingCloseTradeBybitTest15Data());
         map.put("16", getMirrorTradingCloseTradeBybitTest16Data());
-
-        setupData(map);
-
         return map;
     }
 }

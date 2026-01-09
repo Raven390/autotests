@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.Rule.MIRROR_TRADE_INTERNAL_HEDGE;
 import static helpers.data.rules.trading.MirrorTradingInternalHedgeRuleDataFactory.setupMirrorTradingInternalHedgeRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
@@ -11,7 +13,6 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 import business_objects.kafka.alerts.RuleAlertV2;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -32,15 +33,15 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws Exception {
+    static void setup() throws Exception {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingInternalHedgeRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -50,6 +51,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
             "Mirror trade internal hedge. Exit without alert if (Is deal profit of the positive leg > 50$?) = false. ElementId: EVENT_END_NO_ALERT")
     void mirrorTradeInternalHedgeTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceInternalHedgeMessageToKafka(data.internalHedgeEvent);
 
@@ -63,6 +65,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
             "Mirror trade internal hedge. Exit with alert if (Is deal profit of the positive leg > 50$?) = true. ElementId: EVENT_END_WITH_ALERT")
     void mirrorTradeInternalHedgeTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceInternalHedgeMessageToKafka(data.internalHedgeEvent);
 

@@ -2,12 +2,13 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.su
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
 import static helpers.data.rules.payments.router_rule_crm_payment.WithdrawalNotificationDataFactory.setupWithdrawalNotificationRuleData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.*;
 import java.io.IOException;
@@ -26,15 +27,15 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupWithdrawalNotificationRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test
@@ -43,6 +44,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
             "Withdrawal notification check in Router rule. Exit without alert if check name is empty and no restriction. ElementId: Event_end_2")
     void withdrawalNotificationRule1Test() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -56,6 +58,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
             "Withdrawal notification check in Router rule. Exit without alert if check name is null and no restriction. ElementId: Event_end_2")
     void withdrawalNotificationRule2Test() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -69,6 +72,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
             "Withdrawal notification rule. Exit with alert if check name is not empty and WR restriction exists. ElementId: Event_1gdl5i3")
     void withdrawalNotificationRule3Test() throws Exception {
         DataHelper data = dataMap.get("3");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -82,6 +86,8 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
             "Withdrawal notification rule. Exit with alert if check name is not empty and WR restriction not exists. ElementId: Event_1gdl5i3")
     void withdrawalNotificationRule4Test() throws Exception {
         DataHelper data = dataMap.get("4");
+        setupData(data);
+
         setRestrictionAPIGeneral(data.clientHelper.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);

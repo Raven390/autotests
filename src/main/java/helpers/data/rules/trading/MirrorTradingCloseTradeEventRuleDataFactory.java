@@ -14,7 +14,6 @@ import static business_objects.db.data_science.ucid_general_score.UcidGeneralSco
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.*;
 import static helpers.data.DataHelper.addAlert;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.MaxUsedLeverageInserter.insertMaxUsedLeverageData;
 import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.database.DbHelper.*;
@@ -322,9 +321,6 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         map.put("21", getMirrorTradingCloseTradeTest21Data());
         map.put("22", getMirrorTradingCloseTradeTest22Data());
         map.put("23", getMirrorTradingCloseTradeTest23Data());
-
-        setupData(map);
-
         return map;
     }
 }

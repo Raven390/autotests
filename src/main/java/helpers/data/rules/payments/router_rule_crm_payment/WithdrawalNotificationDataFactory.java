@@ -2,7 +2,6 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
@@ -89,9 +88,6 @@ public class WithdrawalNotificationDataFactory {
         map.put("2", getWithdrawalNotificationTest2Data());
         map.put("3", getWithdrawalNotificationTest3Data());
         map.put("4", getWithdrawalNotificationTest4Data());
-
-        setupData(map);
-
         return map;
     }
 }
