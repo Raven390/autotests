@@ -3,6 +3,8 @@ package tests.rule_engine_service_tests.rules.general;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
 import static helpers.api.RestrictionHelper.addCancelledRestriction;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.general.LoginRuleDataFactory.setupLoginRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -14,7 +16,6 @@ import static utils.Constants.SUITE_RULE_ENGINE_RULES_TESTS;
 
 import business_objects.api.abuse_registry.GetStatusResponseBody;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudType;
 import io.qameta.allure.Allure;
@@ -38,15 +39,15 @@ class LoginRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupLoginRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -56,6 +57,7 @@ class LoginRuleTests extends TestBaseRule {
             "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score <0.9. ElementId: Event.id end_cs_no_toxic")
     void loginRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceLoginMessageToKafka(data.loginEvent);
 
@@ -82,6 +84,7 @@ class LoginRuleTests extends TestBaseRule {
     @DisplayName("Login rule. Connection search sub-process. Exit if general score < 0.7. ElementId: end_gs_low")
     void loginRuleTest16() throws Exception {
         DataHelper data = dbDataMap.get("16");
+        setupData(data);
 
         produceLoginMessageToKafka(data.loginEvent);
 
@@ -95,6 +98,7 @@ class LoginRuleTests extends TestBaseRule {
             "Login rule. Connection search sub-process. Exit if has WR that 24OP removed and current <= previous average generalScore. ElementId: Event_1fdy7w1")
     void loginRuleTest17() throws Exception {
         DataHelper data = dbDataMap.get("17");
+        setupData(data);
 
         addCancelledRestriction(data.clientHelper, "GENERAL", "13");
 
@@ -111,6 +115,7 @@ class LoginRuleTests extends TestBaseRule {
     void loginRuleTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");
         produceLoginMessageToKafka(data.loginEvent);
+        setupData(data);
 
         checkElementId("end_no_str1_hedge", data.loginEvent.getId(), "login_rule");
     }
@@ -123,6 +128,7 @@ class LoginRuleTests extends TestBaseRule {
     void loginRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
         produceLoginMessageToKafka(data.loginEvent);
+        setupData(data);
 
         checkElementId("Event_1o2qu8z", data.loginEvent.getId(), "login_rule");
     }
@@ -134,6 +140,7 @@ class LoginRuleTests extends TestBaseRule {
             "Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and no bonus restriction. ElementId: end_cs_abuse")
     void loginRuleTest8() throws Exception {
         DataHelper data = dbDataMap.get("8");
+        setupData(data);
 
         produceLoginMessageToKafka(data.loginEvent);
 
@@ -166,6 +173,7 @@ class LoginRuleTests extends TestBaseRule {
     void loginRuleTest9() throws Exception {
         DataHelper data = dbDataMap.get("9");
         produceLoginMessageToKafka(data.loginEvent);
+        setupData(data);
 
         checkElementId("end_unknown_fraud_type", data.loginEvent.getId(), "login_rule");
     }
@@ -178,6 +186,7 @@ class LoginRuleTests extends TestBaseRule {
     void loginRuleTest10() throws Exception {
         DataHelper data = dbDataMap.get("10");
         produceLoginMessageToKafka(data.loginEvent);
+        setupData(data);
 
         checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
@@ -211,6 +220,7 @@ class LoginRuleTests extends TestBaseRule {
     void loginRuleTest15() throws Exception {
         DataHelper data = dbDataMap.get("15");
         produceLoginMessageToKafka(data.loginEvent);
+        setupData(data);
 
         checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
@@ -262,6 +272,7 @@ class LoginRuleTests extends TestBaseRule {
     void loginRuleTest11() throws Exception {
         DataHelper data = dbDataMap.get("11");
         produceLoginMessageToKafka(data.loginEvent);
+        setupData(data);
 
         checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
@@ -294,6 +305,7 @@ class LoginRuleTests extends TestBaseRule {
             "Login rule. Connection search sub-process. Exit without restriction if user has model score> 0.7 and fraud type is CPA. ElementId: end_no_mitigation")
     void loginRuleTest12() throws Exception {
         DataHelper data = dbDataMap.get("12");
+        setupData(data);
 
         produceLoginMessageToKafka(data.loginEvent);
 
@@ -332,6 +344,7 @@ class LoginRuleTests extends TestBaseRule {
             "Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and has bonus restriction. ElementId: end_hedge_ald_no_bonus")
     void loginRuleTest13() throws Exception {
         DataHelper data = dbDataMap.get("13");
+        setupData(data);
 
         // add  bonus restriction
         Integer restrictionId = postRestriction(data.clientHelper, "GENERAL", "14").id;

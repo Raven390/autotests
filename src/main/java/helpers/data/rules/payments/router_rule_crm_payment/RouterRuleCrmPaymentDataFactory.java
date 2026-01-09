@@ -4,7 +4,6 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEn
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -294,27 +293,24 @@ public class RouterRuleCrmPaymentDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        //        map.put("1", getRouterRuleTest1Data());
-        //        map.put("2", getRouterRuleTest2Data());
-        //        map.put("3", getRouterRuleTest3Data());
-        //        map.put("4", getRouterRuleTest4Data());
-        //        map.put("5", getRouterRuleTest5Data());
-        //        map.put("6", getRouterRuleTest6Data());
-        //        map.put("7", getRouterRuleTest7Data());
-        //        map.put("8", getRouterRuleTest8Data());
-        //        map.put("9", getRouterRuleTest9Data());
-        //        map.put("10", getRouterRuleTest10Data());
-        //        map.put("11", getRouterRuleTest11Data());
-        //        map.put("12", getRouterRuleTest12Data());
-        //        map.put("13", getRouterRuleTest13Data());
-        //        map.put("14", getRouterRuleTest14Data());
-        //        map.put("15", getRouterRuleTest15Data());
+        map.put("1", getRouterRuleTest1Data());
+        map.put("2", getRouterRuleTest2Data());
+        map.put("3", getRouterRuleTest3Data());
+        map.put("4", getRouterRuleTest4Data());
+        map.put("5", getRouterRuleTest5Data());
+        map.put("6", getRouterRuleTest6Data());
+        map.put("7", getRouterRuleTest7Data());
+        map.put("8", getRouterRuleTest8Data());
+        map.put("9", getRouterRuleTest9Data());
+        map.put("10", getRouterRuleTest10Data());
+        map.put("11", getRouterRuleTest11Data());
+        map.put("12", getRouterRuleTest12Data());
+        map.put("13", getRouterRuleTest13Data());
+        map.put("14", getRouterRuleTest14Data());
+        map.put("15", getRouterRuleTest15Data());
         map.put("16", getRouterRuleTest16Data());
         map.put("17", getRouterRuleTest17Data());
         map.put("18", getRouterRuleTest18Data());
-
-        setupData(map);
-
         return map;
     }
 }

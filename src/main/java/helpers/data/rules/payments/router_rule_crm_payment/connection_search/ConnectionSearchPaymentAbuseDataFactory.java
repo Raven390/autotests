@@ -3,7 +3,6 @@ package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.*;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -23,28 +22,28 @@ import java.util.Map;
 import utils.Utils;
 
 public class ConnectionSearchPaymentAbuseDataFactory {
-    private static final ClientHelper connectionSearchRuleClient1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient2 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient2_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient3 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient3_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient4 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient4_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient5 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient5_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient6 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient6_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient7 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient7_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient8 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient8_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient9 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient9_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient10 = getRandomVantageClientAllFields();
-    private static final ClientHelper connectionSearchRuleClient10_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client2 = getRandomVantageClientAllFields();
+    private static final ClientHelper client2_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client3 = getRandomVantageClientAllFields();
+    private static final ClientHelper client3_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client4 = getRandomVantageClientAllFields();
+    private static final ClientHelper client4_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client5 = getRandomVantageClientAllFields();
+    private static final ClientHelper client5_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client6 = getRandomVantageClientAllFields();
+    private static final ClientHelper client6_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client7 = getRandomVantageClientAllFields();
+    private static final ClientHelper client7_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client8 = getRandomVantageClientAllFields();
+    private static final ClientHelper client8_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client9 = getRandomVantageClientAllFields();
+    private static final ClientHelper client9_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client10 = getRandomVantageClientAllFields();
+    private static final ClientHelper client10_1 = getRandomVantageClientAllFields();
 
     @Description("Create data for Connection search rule")
-    private static DataHelper getConnectionSearchPaymentAbuseRuleData(ClientHelper client) {
+    private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
@@ -79,8 +78,8 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest1Data() {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient1);
+    private static DataHelper getTest1Data() {
+        DataHelper data = getRuleData(client1);
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
@@ -90,9 +89,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest2Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient2);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient2_1);
+    private static DataHelper getTest2Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client2);
+        DataHelper data2 = getRuleData(client2_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
 
@@ -104,9 +103,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest3Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient3);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient3_1);
+    private static DataHelper getTest3Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client3);
+        DataHelper data2 = getRuleData(client3_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, HEDGING);
@@ -119,9 +118,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest4Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient4);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient4_1);
+    private static DataHelper getTest4Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client4);
+        DataHelper data2 = getRuleData(client4_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.55);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
@@ -134,9 +133,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest5Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient5);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient5_1);
+    private static DataHelper getTest5Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client5);
+        DataHelper data2 = getRuleData(client5_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
@@ -149,9 +148,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest6Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient6);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient6_1);
+    private static DataHelper getTest6Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client6);
+        DataHelper data2 = getRuleData(client6_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.6);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
@@ -168,9 +167,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest7Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient7);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient7_1);
+    private static DataHelper getTest7Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client7);
+        DataHelper data2 = getRuleData(client7_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.8);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
@@ -187,9 +186,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest8Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient8);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient8_1);
+    private static DataHelper getTest8Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client8);
+        DataHelper data2 = getRuleData(client8_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.6);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
@@ -205,9 +204,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest9Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient9);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient9_1);
+    private static DataHelper getTest9Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client9);
+        DataHelper data2 = getRuleData(client9_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.8);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
@@ -223,9 +222,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchPaymentAbuseTest10Data() throws IOException, InterruptedException {
-        DataHelper data = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient10);
-        DataHelper data2 = getConnectionSearchPaymentAbuseRuleData(connectionSearchRuleClient10_1);
+    private static DataHelper getTest10Data() throws IOException, InterruptedException {
+        DataHelper data = getRuleData(client10);
+        DataHelper data2 = getRuleData(client10_1);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.6);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
@@ -242,19 +241,16 @@ public class ConnectionSearchPaymentAbuseDataFactory {
             throws IOException, InterruptedException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
-        map.put("1", getConnectionSearchPaymentAbuseTest1Data());
-        map.put("2", getConnectionSearchPaymentAbuseTest2Data());
-        map.put("3", getConnectionSearchPaymentAbuseTest3Data());
-        map.put("4", getConnectionSearchPaymentAbuseTest4Data());
-        map.put("5", getConnectionSearchPaymentAbuseTest5Data());
-        map.put("6", getConnectionSearchPaymentAbuseTest6Data());
-        map.put("7", getConnectionSearchPaymentAbuseTest7Data());
-        map.put("8", getConnectionSearchPaymentAbuseTest8Data());
-        map.put("9", getConnectionSearchPaymentAbuseTest9Data());
-        map.put("10", getConnectionSearchPaymentAbuseTest10Data());
-
-        setupData(map);
-
+        map.put("1", getTest1Data());
+        map.put("2", getTest2Data());
+        map.put("3", getTest3Data());
+        map.put("4", getTest4Data());
+        map.put("5", getTest5Data());
+        map.put("6", getTest6Data());
+        map.put("7", getTest7Data());
+        map.put("8", getTest8Data());
+        map.put("9", getTest9Data());
+        map.put("10", getTest10Data());
         return map;
     }
 }

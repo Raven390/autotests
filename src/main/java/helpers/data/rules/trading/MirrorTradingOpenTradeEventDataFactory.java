@@ -10,7 +10,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.*;
 import static utils.Utils.*;
 
@@ -160,9 +159,6 @@ public class MirrorTradingOpenTradeEventDataFactory {
         map.put("5", getMirrorTradingOpenTradeEventRuleTest5Data());
         map.put("6", getMirrorTradingOpenTradeEventRuleTest6Data());
         map.put("7", getMirrorTradingOpenTradeEventRuleTest7Data());
-
-        setupData(map);
-
         return map;
     }
 }

@@ -1,13 +1,14 @@
 package tests.rule_engine_service_tests.rules.payment;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.CpaAbuseRuleDataFactory.setupCpaAbuseRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Rule;
@@ -30,15 +31,15 @@ class CpaAbuseRuleTests extends TestBaseRule {
     String ruleEventType = "Withdrawal";
 
     @BeforeAll
-    static void setupData() throws Exception {
+    static void setup() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupCpaAbuseRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test
@@ -46,6 +47,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("916")
     void cpaAbuseRuleExitEventEnd1Test() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -58,6 +60,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1125")
     void cpaAbuseRuleExitEvent2Test() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("User do not have cpaId number");
@@ -86,6 +90,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1126")
     void cpaAbuseRuleExitEvent3Test() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("User do not have cpaId number");
@@ -114,6 +120,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("917")
     void cpaAbuseRuleExitEventEnd4Test() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
+
         Allure.step("Produce withdrawal event to crm-events topic");
         // TODO add event
 
@@ -166,6 +174,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1126")
     void cpaAbuseRuleExitEvent5p1Test() throws Exception {
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("User do not have cpaId number");
@@ -194,6 +204,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1127")
     void cpaAbuseRuleExitEvent5p2Test() throws Exception {
         DataHelper data = dbDataMap.get("6");
+        setupData(data);
+
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("User do not have cpaId number");
@@ -223,6 +235,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("921")
     void cpaAbuseRuleExitEventEnd6Test() throws Exception {
         DataHelper data = dbDataMap.get("7");
+        setupData(data);
+
         Allure.step("Produce withdrawal event to crm-events topic");
         // TODO add event
 
@@ -276,6 +290,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("921")
     void cpaAbuseRuleExitEventEnd7p1Test() throws Exception {
         DataHelper data = dbDataMap.get("8");
+        setupData(data);
+
         Allure.step("Produce withdrawal event to crm-events topic");
         // TODO add event
 
@@ -301,6 +317,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1128")
     void cpaAbuseRuleExitEventEnd7p2Test() throws Exception {
         DataHelper data = dbDataMap.get("9");
+        setupData(data);
+
         Allure.step("Produce withdrawal event to crm-events topic");
         // TODO add event
 
@@ -326,6 +344,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("929")
     void cpaAbuseRuleExitEventEnd8Test() throws Exception {
         DataHelper data = dbDataMap.get("10");
+        setupData(data);
+
         Allure.step("Produce withdrawal event to crm-events topic");
         // TODO add event
 
@@ -351,6 +371,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1130")
     void cpaAbuseRuleExitEventEnd8p2Test() throws Exception {
         DataHelper data = dbDataMap.get("11");
+        setupData(data);
+
         Allure.step("Produce withdrawal event to crm-events topic");
         // TODO add event
 
@@ -376,6 +398,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("929")
     void cpaAbuseRuleExitEventEnd9p1Test() throws Exception {
         DataHelper data = dbDataMap.get("12");
+        setupData(data);
+
         Allure.step("Produce registration event to crm-events topic");
         // TODO add event
 
@@ -428,6 +452,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AllureId("1131")
     void cpaAbuseRuleExitEventEnd9p2Test() throws Exception {
         DataHelper data = dbDataMap.get("13");
+        setupData(data);
+
         Allure.step("Produce registration event to crm-events topic");
         // TODO add event
 

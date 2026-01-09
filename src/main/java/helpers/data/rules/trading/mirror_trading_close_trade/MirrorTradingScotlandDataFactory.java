@@ -8,7 +8,6 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.MaxUsedLeverageInserter.insertMaxUsedLeverageData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
@@ -129,9 +128,6 @@ public class MirrorTradingScotlandDataFactory {
         map.put("2", getMirrorTradingScotlandTest2Data());
         map.put("3", getMirrorTradingScotlandTest3Data());
         map.put("4", getMirrorTradingScotlandTest4Data());
-
-        setupData(map);
-
         return map;
     }
 }

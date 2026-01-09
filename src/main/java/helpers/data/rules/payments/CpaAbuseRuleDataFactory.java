@@ -6,7 +6,6 @@ import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectF
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.*;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -575,21 +574,19 @@ public class CpaAbuseRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
-        //        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
-        //        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
-        //        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
-        //        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
-        //        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
-        //        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
-        //        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
-        //        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
-        //        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
-        //        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
-        //        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
-        //        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
+        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
+        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
+        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
+        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
+        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
+        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
+        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
+        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
+        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
+        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
+        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
+        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
 
-        // Loop through the list with data and insert all the data into the according tables
-        setupData(map);
         return map;
     }
 }

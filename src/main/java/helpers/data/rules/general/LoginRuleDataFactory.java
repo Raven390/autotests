@@ -9,7 +9,6 @@ import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -376,20 +375,18 @@ public class LoginRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
         map.put("1", getLoginRuleTest1Data());
-        //        map.put("3", getLoginRuleTest3Data());
-        //        map.put("6", getLoginRuleTest6Data());
-        //        map.put("7", getLoginRuleTest7Data());
-        //        map.put("8", getLoginRuleTest8Data());
-        //        map.put("9", getLoginRuleTest9Data());
-        //        map.put("10", getLoginRuleTest10Data());
-        //        map.put("11", getLoginRuleTest11Data());
-        //        map.put("12", getLoginRuleTest12Data());
-        //        map.put("13", getLoginRuleTest13Data());
-        //        map.put("15", getLoginRuleTest15Data());
-        //        map.put("16", getLoginRuleTest16Data());
-        //        map.put("17", getLoginRuleTest17Data());
-
-        setupData(map);
+        map.put("3", getLoginRuleTest3Data());
+        map.put("6", getLoginRuleTest6Data());
+        map.put("7", getLoginRuleTest7Data());
+        map.put("8", getLoginRuleTest8Data());
+        map.put("9", getLoginRuleTest9Data());
+        map.put("10", getLoginRuleTest10Data());
+        map.put("11", getLoginRuleTest11Data());
+        map.put("12", getLoginRuleTest12Data());
+        map.put("13", getLoginRuleTest13Data());
+        map.put("15", getLoginRuleTest15Data());
+        map.put("16", getLoginRuleTest16Data());
+        map.put("17", getLoginRuleTest17Data());
 
         return map;
     }

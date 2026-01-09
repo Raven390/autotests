@@ -8,7 +8,6 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.NbdComment.getRandomNbdComment;
 import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
@@ -372,18 +371,15 @@ public class NdbRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNdbRuleExitEventEnd1Data());
-        //        map.put("2", getNdbRuleExitEventEnd2Data());
-        //        map.put("3", getNdbRuleExitEventEnd3Data());
-        //        map.put("4", getNdbRuleExitEventEnd4Data());
-        //        map.put("42", getNdbRuleExitEventEnd42Data());
-        //        map.put("5", getNdbRuleExitEventEnd5Data());
-        //        map.put("6", getNdbRuleExitEventEnd6Data());
-        //        map.put("7", getNdbRuleExitEventEnd7Data());
-        //        map.put("8", getNdbRuleExitEventEnd8Data());
-        //        map.put("9", getNdbRuleExitEventEnd9Data());
-
-        // Loop through the list with data and insert all the data into the according tables
-        setupData(map);
+        map.put("2", getNdbRuleExitEventEnd2Data());
+        map.put("3", getNdbRuleExitEventEnd3Data());
+        map.put("4", getNdbRuleExitEventEnd4Data());
+        map.put("42", getNdbRuleExitEventEnd42Data());
+        map.put("5", getNdbRuleExitEventEnd5Data());
+        map.put("6", getNdbRuleExitEventEnd6Data());
+        map.put("7", getNdbRuleExitEventEnd7Data());
+        map.put("8", getNdbRuleExitEventEnd8Data());
+        map.put("9", getNdbRuleExitEventEnd9Data());
         return map;
     }
 }

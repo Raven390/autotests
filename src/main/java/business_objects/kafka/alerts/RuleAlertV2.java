@@ -155,6 +155,9 @@ public class RuleAlertV2 {
         @JsonProperty("Shared unique identifier")
         private String sharedUniqueIdentifier;
 
+        @JsonProperty("Verified by other client")
+        private String verifiedByOtherClient;
+
         @JsonProperty("Open trades")
         private String openTrades;
 

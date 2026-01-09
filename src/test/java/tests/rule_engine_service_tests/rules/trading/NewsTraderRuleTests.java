@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.NewsTraderRuleDataFactory.setupNewsTraderCloseTradeRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -11,7 +13,6 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.Allure;
@@ -35,15 +36,15 @@ class NewsTraderRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupNewsTraderCloseTradeRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -52,6 +53,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     @DisplayName("News trader on close trade. Exit without alert if user is test or social trader user")
     void mirrorTradingOpenTradeEventRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -65,6 +67,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     void mirrorTradingOpenTradeEventRuleTest2() throws Exception {
         Allure.step("generate test data where ...");
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
@@ -79,6 +82,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     void mirrorTradingOpenTradeEventRuleTest3() throws Exception {
         Allure.step("generate test data where ...");
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
@@ -93,6 +97,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     void mirrorTradingOpenTradeEventRuleTest4() throws Exception {
         Allure.step("generate test data where News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4");
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
@@ -107,6 +112,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     void mirrorTradingOpenTradeEventRuleTest5() throws Exception {
         Allure.step("generate test data where News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4");
         DataHelper data = dbDataMap.get("5");
+        setupData(data);
 
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);

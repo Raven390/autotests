@@ -1,11 +1,12 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_payment.MirrorTradeDataFactory.setupMirrorTradeRuleData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -26,15 +27,15 @@ class MirrorTradeTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupMirrorTradeRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test
@@ -43,6 +44,7 @@ class MirrorTradeTests extends TestBaseRule {
             "Mirror trade in router rule. Exit without alert if mirror trade flag is false. ElementId: Event_1gdl5i3")
     void mirrorTradeRule1Test() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -55,6 +57,7 @@ class MirrorTradeTests extends TestBaseRule {
     @DisplayName("Mirror trade in router rule. Exit with alert if mirror trade flag is true. ElementId: Event_1waht3m")
     void mirrorTradeRule2Test() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 

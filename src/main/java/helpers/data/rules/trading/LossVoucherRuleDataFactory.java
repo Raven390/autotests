@@ -7,7 +7,6 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -151,8 +150,6 @@ public class LossVoucherRuleDataFactory {
         map.put("2", getLossVoucherRuleExitEventEnd2Data());
         map.put("3", getLossVoucherRuleExitEventEnd3Data());
 
-        // Loop through the list with data and insert all the data into the according tables
-        setupData(map);
         return map;
     }
 }

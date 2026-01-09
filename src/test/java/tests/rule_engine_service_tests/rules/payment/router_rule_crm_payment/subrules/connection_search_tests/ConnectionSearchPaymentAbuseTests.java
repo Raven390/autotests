@@ -1,6 +1,8 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules.connection_search_tests;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_payment.connection_search.ConnectionSearchPaymentAbuseDataFactory.setupConnectionSearchPaymentRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -8,7 +10,6 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 import business_objects.kafka.alerts.RuleAlertV2;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -31,15 +32,15 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setup() throws IOException, InterruptedException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupConnectionSearchPaymentRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test
@@ -48,6 +49,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
             "Connection Search in router rule. Exit if no matching connections. ElementId: end_connections_not_found2")
     void connectionSearchPaymentAbuseTest1() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -70,6 +72,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     @DisplayName("Connection Search in router rule. Exit if no toxic account linked. ElementId: end_cs_no_abuse")
     void connectionSearchPaymentAbuseTest2() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -92,6 +95,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     @DisplayName("Connection Search in router rule. Exit if unknown fraud type. ElementId: end_unknown_FT")
     void connectionSearchPaymentAbuseTest3() throws Exception {
         DataHelper data = dataMap.get("3");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -114,6 +118,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     @DisplayName("Connection Search in router rule. Exit without alert. ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest4() throws Exception {
         DataHelper data = dataMap.get("4");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -136,6 +141,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     @DisplayName("Connection Search in router rule. Exit with alert with strong + confirmed. ElementId: Event_0yh59iy")
     void connectionSearchPaymentAbuseTest5() throws Exception {
         DataHelper data = dataMap.get("5");
+        setupData(data);
 
         data.crmWithdrawalEventV2.setPaymentMethodCode("CRYPTO2");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -197,6 +203,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
             "Connection Search in router rule. Exit with alert with medium confirmed + 0.6 connect(pnl > 2000 or sumWithdrawalsStrPotConnections > 4000). ElementId: Event_0yh59iy")
     void connectionSearchPaymentAbuseTest6() throws Exception {
         DataHelper data = dataMap.get("6");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -220,6 +227,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
             "Connection Search in router rule. Exit with alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_0yh59iy")
     void connectionSearchPaymentAbuseTest7() throws Exception {
         DataHelper data = dataMap.get("7");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -243,6 +251,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
             "Connection Search in router rule. Exit without alert with medium confirmed + 0.6 connect(pnl < 2000 or sumWithdrawalsStrPotConnections < 4000). ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest8() throws Exception {
         DataHelper data = dataMap.get("8");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -266,6 +275,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
             "Connection Search in router rule. Exit without alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest9() throws Exception {
         DataHelper data = dataMap.get("9");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -288,6 +298,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     @DisplayName("Connection Search in router rule. Exit without alert with medium potential. ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest10() throws Exception {
         DataHelper data = dataMap.get("10");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 

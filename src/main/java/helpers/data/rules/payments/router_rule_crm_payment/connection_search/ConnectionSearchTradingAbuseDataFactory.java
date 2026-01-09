@@ -2,7 +2,6 @@ package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.CRM_WITHDRAWAL_EVENT;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
@@ -19,10 +18,10 @@ import java.util.Map;
 import utils.Utils;
 
 public class ConnectionSearchTradingAbuseDataFactory {
-    private static final ClientHelper connectionSearchRuleClient1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client1 = getRandomVantageClientAllFields();
 
     @Description("Create data for Connection search rule")
-    private static DataHelper getConnectionSearchTradingRuleData(ClientHelper client) {
+    private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
@@ -56,9 +55,8 @@ public class ConnectionSearchTradingAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getConnectionSearchTradingAbuseTest1Data() {
-        DataHelper data = getConnectionSearchTradingRuleData(connectionSearchRuleClient1);
-
+    private static DataHelper getTest1Data() {
+        DataHelper data = getRuleData(client1);
         return data;
     }
 
@@ -66,10 +64,7 @@ public class ConnectionSearchTradingAbuseDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getConnectionSearchTradingAbuseTest1Data());
-
-        setupData(map);
-
+        map.put("1", getTest1Data());
         return map;
     }
 }

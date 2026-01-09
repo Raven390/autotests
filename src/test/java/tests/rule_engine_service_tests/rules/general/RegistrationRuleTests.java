@@ -2,6 +2,8 @@ package tests.rule_engine_service_tests.rules.general;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.general.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -10,7 +12,6 @@ import static utils.Constants.*;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -31,15 +32,15 @@ class RegistrationRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws Exception {
+    static void setup() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupRegistrationRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dbDataMap);
+    static void teardown() throws Exception {
+        deleteData(dbDataMap);
     }
 
     @Test
@@ -48,6 +49,7 @@ class RegistrationRuleTests extends TestBaseRule {
     @AllureId("155")
     void registrationRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
+        setupData(data);
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
@@ -61,6 +63,7 @@ class RegistrationRuleTests extends TestBaseRule {
     @AllureId("156")
     void registrationRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
+        setupData(data);
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
@@ -81,6 +84,7 @@ class RegistrationRuleTests extends TestBaseRule {
     @DisplayName("Registration rule. Connection search. Strong hedge confirmed. ElementId: end_registration_rule_cs")
     void registrationRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
+        setupData(data);
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
@@ -114,6 +118,7 @@ class RegistrationRuleTests extends TestBaseRule {
             "Registration rule. Connection search. Medium hedge potential, ln risk rating = low. ElementId: end_no_alert")
     void registrationRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
+        setupData(data);
 
         produceRegistrationEventToKafka(data.registrationEvent);
 

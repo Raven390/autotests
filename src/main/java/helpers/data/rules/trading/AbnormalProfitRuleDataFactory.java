@@ -4,7 +4,6 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -80,9 +79,6 @@ public class AbnormalProfitRuleDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getAbnormalProfitRuleExitEventEnd1Data());
         map.put("2", getAbnormalProfitRuleExitEventEnd2Data());
-
-        // Loop through the list with data and insert all the data into the according tables
-        setupData(map);
         return map;
     }
 }

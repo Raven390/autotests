@@ -9,7 +9,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.addAlert;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
@@ -119,9 +118,6 @@ public class MirrorTradingWavesDataFactory {
         map.put("1", getMirrorTradingWavesTest1Data());
         map.put("2", getMirrorTradingWavesTest2Data());
         map.put("3", getMirrorTradingWavesTest3Data());
-
-        setupData(map);
-
         return map;
     }
 }

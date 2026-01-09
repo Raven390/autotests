@@ -5,7 +5,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.CRM_WITHDRAWAL_EVENT;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
@@ -137,9 +136,6 @@ public class Scotland4DataFactory {
         map.put("2", getScotland4Test2Data());
         map.put("3", getScotland4Test3Data());
         map.put("4", getScotland4Test4Data());
-
-        setupData(map);
-
         return map;
     }
 }

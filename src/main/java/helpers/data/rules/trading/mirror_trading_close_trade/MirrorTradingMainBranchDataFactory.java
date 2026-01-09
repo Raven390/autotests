@@ -8,7 +8,6 @@ import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactor
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getRandomUuidString;
@@ -98,9 +97,6 @@ public class MirrorTradingMainBranchDataFactory {
         map.put("3", getMirrorTradingMainBranchTest3Data());
         map.put("4", getMirrorTradingMainBranchTest4Data());
         map.put("5", getMirrorTradingMainBranchTest5Data());
-
-        setupData(map);
-
         return map;
     }
 }

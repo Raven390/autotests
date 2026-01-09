@@ -84,6 +84,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import utils.Utils;
 
 public class DataHelper {
 
@@ -320,6 +321,31 @@ public class DataHelper {
         data.lnSessionParsedObject.setDeviceId(data.clientHelper.getDeviceId());
         data.payoutTableEntries.add(payoutTableEntryForConnectionSearch(data.clientHelper, payoutId));
         data.payoutTableEntries.add(payoutTableEntryForConnectionSearch(connectedClient, payoutId));
+    }
+
+    public static void setupAttrConnectionDocumentAttribute(DataHelper data, ClientHelper connectedClient) {
+
+        if (data.connections == null) {
+            data.connections = new ArrayList<>();
+        }
+        if (data.documentTableEntries == null) {
+            data.documentTableEntries = new ArrayList<>();
+        }
+
+        String documentId = Utils.getRandomUuidString();
+        // add connection with connected client
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "document";
+        connectionInfo1.connectionAttributeValue = documentId;
+        connectionInfo1.sourceAttributeValue = documentId;
+        connectionInfo1.relationType = "exact";
+
+        connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1));
+        connection.connectionScore = 1d;
+        data.connections.add(connection);
+
+        data.documentTableEntries.add(documentTableEntryForConnectionSearch((data.clientHelper)));
     }
 
     public static void addConnectionByDeviceAttribute(DataHelper data, ClientHelper clientTo) {

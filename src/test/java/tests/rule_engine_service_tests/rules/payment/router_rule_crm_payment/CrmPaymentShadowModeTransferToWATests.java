@@ -2,11 +2,15 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.api.PaymentGateHelper.*;
+import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.asserts.AcknowledgeAssertsHelper.assertAcknowledge;
 import static helpers.asserts.AlertsAssertsHelper.assertRiskTransferToWaAlert;
 import static helpers.asserts.PaymentGateAssertsHelper.*;
 import static helpers.asserts.WithdrawalApprovalAssertsHelper.assertWithdrawalApproval;
-import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmPaymentTransferToWaDataFactory.setupRouterRuleData;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.Restriction.*;
+import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmPaymentTransferToWaDataFactory.setupRouterRuleShadowModeTransferToWaData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.*;
 import static utils.Constants.*;
@@ -15,7 +19,6 @@ import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -36,15 +39,15 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
-        dataMap = setupRouterRuleData();
+        dataMap = setupRouterRuleShadowModeTransferToWaData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test
@@ -52,6 +55,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     @DisplayName("Router Rule transfer to wallet. Transfer manual Approve")
     void routerRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
@@ -101,6 +105,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     @DisplayName("Router Rule transfer to wallet. Transfer manual Reject")
     void routerRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
 
@@ -126,6 +131,9 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     @DisplayName("Router Rule transfer to wallet. Transfer Auto approve")
     void routerRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
+        setupData(data);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), LOGIN_CRM.getCode(), "Mirror trade pattern");
 
         produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
 
@@ -135,7 +143,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
                 Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
         checkElementId(
-                "Activity_197u1ti",
+                "exit_from_payment_branch_for_transfer_to_wa",
                 data.transferToWaEvent.getId().toString(),
                 Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }

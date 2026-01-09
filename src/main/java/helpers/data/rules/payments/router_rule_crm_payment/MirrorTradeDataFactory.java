@@ -2,7 +2,6 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -74,9 +73,6 @@ public class MirrorTradeDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getMirrorTradeTest1Data());
         map.put("2", getMirrorTradeTest2Data());
-
-        setupData(map);
-
         return map;
     }
 }

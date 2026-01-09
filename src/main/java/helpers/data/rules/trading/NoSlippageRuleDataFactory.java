@@ -11,7 +11,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.oz_trades.OzTradesTableEntryFactory.generateOzTradesTableEntryByClient;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.EURUSD;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
@@ -237,9 +236,6 @@ public class NoSlippageRuleDataFactory {
         map.put("10", getNoSlippageRuleTest10Data());
         map.put("11", getNoSlippageRuleTest11Data());
         map.put("12", getNoSlippageRuleTest12Data());
-
-        setupData(map);
-
         return map;
     }
 }

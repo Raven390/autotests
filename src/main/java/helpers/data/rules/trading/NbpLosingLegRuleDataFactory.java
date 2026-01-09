@@ -6,7 +6,6 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClients;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static utils.Utils.*;
 
@@ -154,7 +153,6 @@ public class NbpLosingLegRuleDataFactory {
         map.put("3v1", getNbpLosingLegExit3v1Data());
         map.put("3v2", getNbpLosingLegExit3v2Data());
         map.put("4", getNbpLosingLegExit4Data());
-        setupData(map);
         return map;
     }
 }

@@ -4,7 +4,6 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataSetupHelper.setupData;
 import static utils.Utils.*;
 
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
@@ -66,7 +65,6 @@ public class NbpWinningLegRuleDataFactory {
         map.put("1", getNbpWinningLegExit1Data());
         map.put("2", getNbpWinningLegExit2Data());
         map.put("3", getNbpWinningLegExit3Data());
-        setupData(map);
         return map;
     }
 }

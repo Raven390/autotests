@@ -1,11 +1,12 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_payment.WithdrawalIntegrityDataFactory.setupWithdrawalIntegrityCheckRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 
-import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
@@ -27,15 +28,15 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupWithdrawalIntegrityCheckRuleData();
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
-        DataDeleteHelper.deleteData(dataMap);
+    static void teardown() throws Exception {
+        deleteData(dataMap);
     }
 
     @Test
@@ -43,6 +44,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 100. elementId: end_102")
     void WithdrawalIntegrityCheckRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -59,6 +61,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 50000. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -75,6 +78,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     @DisplayName("Withdrawal Integrity check in Router rule. general score > 0.9. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -92,6 +96,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
             "Withdrawal Integrity check in Router rule. Withdrawal Integrity check. general score < 0.9. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest4() throws Exception {
         DataHelper data = dataMap.get("4");
+        setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 

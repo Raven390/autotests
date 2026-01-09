@@ -15,6 +15,11 @@ import helpers.database.DbName;
 import java.util.Map;
 
 public class DataSetupHelper {
+
+    public static void setupData(DataHelper data) {
+        setupData(Map.of("data", data));
+    }
+
     public static void setupData(Map<String, DataHelper> map) {
         startSshTunnel();
         for (DataHelper data : map.values()) {
