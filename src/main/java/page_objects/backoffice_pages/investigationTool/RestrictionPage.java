@@ -28,9 +28,7 @@ import java.util.List;
 import page_objects.backoffice_pages.AbstractPage;
 
 public class RestrictionPage extends AbstractPage {
-
     private final Locator restrictionTab;
-
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
     private final Locator activitySection;
@@ -48,6 +46,9 @@ public class RestrictionPage extends AbstractPage {
     private final Locator inactiveAccountLabel;
     private final Locator restrictionOption;
     private final Locator restrictionOptionsContainer;
+    private final Locator worseTradingEmptyRestrictionsButton;
+    private final Locator worseTradingAppliedRestrictionsButton;
+    private final Locator worseTradingTabApplyButton;
 
     private static final String RESTRICTION_ITEM_BY_NAME_PATTERN =
             "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
@@ -66,6 +67,19 @@ public class RestrictionPage extends AbstractPage {
             ACTIVE_RESTRICTION_BY_NAME + "/descendant::button[contains(@data-qa,'control__remove')]";
     private static final String RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME =
             ACTIVE_RESTRICTION_BY_NAME + "/descendant::span[contains(text(),'account')]/ancestor::button";
+    private static final String WT_ACCOUNT_ROW_BY_ACCOUNT_ID_PATTERN =
+            "//*[@data-qa='restrictions__wt_drawer__account__%s']";
+    private static final String WT_ACCOUNT_LEVEL_BUTTON_IN_ROW =
+            "//*[@data-qa='restrictions__wt_drawer__account__level']";
+    private static final String WT_LEVEL_OPTION_BY_LABEL_PATTERN =
+            "//*[@data-qa='select-popup']//span[contains(@class,'g-select-list__option-default-label') and normalize-space(text())='%s']";
+    private static final String WT_DRAWER_COMMENT_TEXTAREA =
+            "//*[@data-qa='restrictions__wt_drawer__comment']//textarea";
+    private static final String RESTRICTIONS_LIST_CONTAINER = "//*[@data-qa='restrictions__list']";
+    private static final String WORSE_TRADING_RESTRICTION_IN_LIST = RESTRICTIONS_LIST_CONTAINER
+            + "//*[contains(@class,'v-trading-env-restrictions-item__name') and normalize-space(text())='Worse trading']";
+    private static final String WT_ACCOUNT_LEVEL_TEXT_IN_ROW =
+            "button[data-qa='restrictions__wt_drawer__account__level'] .g-select-control__option-text";
 
     public RestrictionPage(Page page) {
         super(page);
@@ -90,6 +104,11 @@ public class RestrictionPage extends AbstractPage {
                 .first();
         this.restrictionOption = page.locator("//span[@class='g-select-list__option-default-label']");
         this.restrictionOptionsContainer = page.locator("//div[@class='v-list-select__list-container']");
+        this.worseTradingAppliedRestrictionsButton =
+                page.locator("//button[@data-qa='restrictions__manage_wt_button']");
+        this.worseTradingEmptyRestrictionsButton =
+                page.locator("//button[@data-qa='restrictions__empty_view__open_wt_drawer']");
+        this.worseTradingTabApplyButton = page.locator("//button[@data-qa='restrictions__wt_drawer__submit']");
     }
 
     public void navigate(String ucid) {
@@ -335,6 +354,81 @@ public class RestrictionPage extends AbstractPage {
         applyRestrictionButton.click();
         commentInput.fill(comment);
         applyChangesButton.click();
+    }
+
+    @Step("Open worse trading applied restrictions tab")
+    public void openWorseTradingAppliedRestrictionsTab() {
+        worseTradingAppliedRestrictionsButton.click();
+    }
+
+    @Step("Open worse trading empty restrictions tab")
+    public void openWorseTradingEmptyRestrictionsTab() {
+        worseTradingEmptyRestrictionsButton.click();
+    }
+
+    @Step("Set WT level '{levelLabel}' for account '{accountId}' in WT drawer")
+    public void setWorseTradingLevelForAccount(String accountId, String levelLabel) {
+        Locator row = page.locator(String.format(WT_ACCOUNT_ROW_BY_ACCOUNT_ID_PATTERN, accountId));
+        row.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+
+        Locator levelButton = row.locator(WT_ACCOUNT_LEVEL_BUTTON_IN_ROW);
+        levelButton.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        levelButton.click();
+
+        Locator popup = page.locator("[data-qa='select-popup']");
+        popup.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+
+        Locator option = page.locator(String.format(WT_LEVEL_OPTION_BY_LABEL_PATTERN, levelLabel));
+        option.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        option.click();
+
+        popup.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+    }
+
+    @Step("Get WT current level for account '{accountId}' in WT drawer")
+    public String getWorseTradingLevelForAccount(String accountId) {
+        Locator row = page.locator(String.format(WT_ACCOUNT_ROW_BY_ACCOUNT_ID_PATTERN, accountId));
+        row.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+
+        Locator levelText = row.locator(WT_ACCOUNT_LEVEL_TEXT_IN_ROW);
+        levelText.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+
+        return levelText.textContent().trim();
+    }
+
+    @Step("Apply worse trading with comment: {comment}")
+    public void applyWorseTrading(String comment) {
+        page.locator(WT_DRAWER_COMMENT_TEXTAREA).waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        page.locator(WT_DRAWER_COMMENT_TEXTAREA).fill(comment);
+
+        worseTradingTabApplyButton.click();
+    }
+
+    @Step("Apply worse trading")
+    public void applyWorseTrading() {
+        applyWorseTrading("Autotest comment");
+    }
+
+    @Step("Wait for 'Worse trading' restriction to appear in restrictions list (timeout {timeoutMs} ms)")
+    public boolean waitForWorseTradingAppearRestrictionInList(int timeoutMs) {
+        try {
+            page.locator(WORSE_TRADING_RESTRICTION_IN_LIST)
+                    .waitFor(new Locator.WaitForOptions().setState(VISIBLE).setTimeout(timeoutMs));
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    @Step("Wait for 'Worse trading' restriction to appear in restrictions list (timeout {timeoutMs} ms)")
+    public boolean waitForWorseTradingDisappearRestrictionInList(int timeoutMs) {
+        try {
+            page.locator(WORSE_TRADING_RESTRICTION_IN_LIST)
+                    .waitFor(new Locator.WaitForOptions().setState(HIDDEN).setTimeout(timeoutMs));
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     @Step("check that the manage restriction button is disabled")

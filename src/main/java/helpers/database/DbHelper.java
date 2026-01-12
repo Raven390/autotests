@@ -7,12 +7,15 @@ import static utils.Utils.writeLog;
 import io.qameta.allure.Step;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -146,11 +149,43 @@ public class DbHelper {
             return Long.parseLong(((String) value).trim());
         }
 
+        // BigInteger targets
+        if (targetType.equals(BigInteger.class)) {
+            switch (value) {
+                case BigInteger bigInteger -> {
+                    return value;
+                }
+                case BigDecimal bd -> {
+                    return bd.toBigIntegerExact();
+                }
+                case Number n -> {
+                    // best-effort for integral numbers
+                    if (value instanceof Byte
+                            || value instanceof Short
+                            || value instanceof Integer
+                            || value instanceof Long) {
+                        return BigInteger.valueOf(n.longValue());
+                    }
+                    // for Float/Double this is lossy; consider forbidding it
+                    return BigInteger.valueOf(n.longValue());
+                }
+                case String s -> {
+                    String t = s.trim();
+                    return t.isEmpty() ? null : new BigInteger(t);
+                }
+                default -> {}
+            }
+        }
+
         // Date/time targets
         if (targetType.equals(LocalDate.class) && value instanceof Date) {
             return ((Date) value).toLocalDate();
         } else if (targetType.equals(LocalDateTime.class) && value instanceof Timestamp) {
             return ((Timestamp) value).toLocalDateTime();
+        } else if (targetType.equals(OffsetDateTime.class) && value instanceof Timestamp) {
+            return ((Timestamp) value).toInstant().atOffset(ZoneOffset.UTC);
+        } else if (targetType.equals(OffsetDateTime.class) && value instanceof Date) {
+            return ((Date) value).toInstant().atOffset(ZoneOffset.UTC);
         }
 
         // UUID target from String
@@ -195,26 +230,84 @@ public class DbHelper {
             return String.valueOf(value);
         }
 
+        // Enum targets (from String / Number / etc.)
+        if (targetType.isEnum()) {
+            if (value instanceof String s) {
+                String t = s.trim();
+                if (t.isEmpty()) return null;
+
+                @SuppressWarnings("unchecked")
+                Class<? extends Enum> enumType = (Class<? extends Enum>) targetType;
+
+                // 1) try custom fromValue(String) if exists (like your RestrictionStatus)
+                try {
+                    var m = targetType.getMethod("fromValue", String.class);
+                    Object r = m.invoke(null, t);
+                    if (r != null) return r;
+                } catch (NoSuchMethodException ignored) {
+                    // no fromValue, continue
+                } catch (ReflectiveOperationException e) {
+                    throw new IllegalArgumentException("Failed to convert String to enum via fromValue: " + t, e);
+                }
+
+                // 2) fallback: Enum.valueOf (expects enum constant name)
+                try {
+                    return Enum.valueOf(enumType, t);
+                } catch (IllegalArgumentException e) {
+                    // 3) fallback: match by toString() (covers enums where DB stores @JsonValue)
+                    for (Object c : targetType.getEnumConstants()) {
+                        if (String.valueOf(c).equals(t)) return c;
+                    }
+                    throw new IllegalArgumentException(
+                            "Unknown enum value '" + t + "' for enum " + targetType.getName(), e);
+                }
+            }
+
+            // optional: numeric -> enum ordinal
+            if (value instanceof Number n) {
+                int ord = n.intValue();
+                Object[] constants = targetType.getEnumConstants();
+                if (ord < 0 || ord >= constants.length) {
+                    throw new IllegalArgumentException(
+                            "Enum ordinal out of range: " + ord + " for " + targetType.getName());
+                }
+                return constants[ord];
+            }
+        }
+
         throw new IllegalArgumentException(String.format(
                 "Cannot convert value of type %s to type %s", value.getClass().getName(), targetType.getName()));
     }
 
     private static <T> Map<String, Field> mapDbColumnsToFields(ResultSet resultSet, Class<T> className)
             throws SQLException {
+
         Map<String, Field> fieldMappings = new HashMap<>();
         ResultSetMetaData metaData = resultSet.getMetaData();
 
-        for (int i = 1; i <= metaData.getColumnCount(); i++) {
-            String columnName = metaData.getColumnName(i);
+        List<Field> fields = getAllFields(className);
 
-            for (Field field : className.getDeclaredFields()) {
-                if (field.getName().equalsIgnoreCase(columnName.replace("_", ""))) {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            String columnName = metaData.getColumnLabel(i); // <-- важно
+
+            String normalizedColumn = columnName.replace("_", "");
+
+            for (Field field : fields) {
+                if (field.getName().equalsIgnoreCase(normalizedColumn)) {
                     fieldMappings.put(columnName, field);
                     break;
                 }
             }
         }
         return fieldMappings;
+    }
+
+    private static List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<>();
+        for (Class<?> c = type; c != null && c != Object.class; c = c.getSuperclass()) {
+            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        }
+        return fields;
     }
 
     @Step("Insert objects: {objects}")
