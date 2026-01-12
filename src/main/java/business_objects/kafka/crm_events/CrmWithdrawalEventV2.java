@@ -57,6 +57,9 @@ public class CrmWithdrawalEventV2 {
     @JsonProperty("paymentMethodCode")
     private String paymentMethodCode;
 
+    @JsonProperty("paymentTypeName")
+    private String paymentTypeName;
+
     @JsonProperty("platform")
     private String platform;
 

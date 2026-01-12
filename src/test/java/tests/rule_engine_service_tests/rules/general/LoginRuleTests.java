@@ -188,7 +188,9 @@ class LoginRuleTests extends TestBaseRule {
         produceLoginMessageToKafka(data.loginEvent);
         setupData(data);
 
-        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
+        checkElementId("WR_MM", data.loginEvent.getId(), "login_rule");
+        checkElementId("FT_MM", data.loginEvent.getId(), "login_rule");
+        checkElementId("Flow_19cxhf8", data.loginEvent.getId(), "login_rule");
 
         // Verify restrictions
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked MM Abuser");

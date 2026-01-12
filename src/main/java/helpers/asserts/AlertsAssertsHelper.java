@@ -1,15 +1,45 @@
 package helpers.asserts;
 
+import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static utils.Constants.*;
 
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.backoffice_db.alert_fallback.AlertFallbackObject;
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
+import helpers.database.DbName;
 import io.qameta.allure.Step;
 import java.util.List;
 
 public class AlertsAssertsHelper {
+
+    public static void assertThatAlertNotFailed(String ucid, String rulename) throws Exception {
+        int failedAlerts = 0;
+        int parsedAlerts = 0;
+        int count = 0;
+
+        do {
+            List<AlertFallbackObject> dbAlertsFailed = getObjectsFromDB(
+                    DbName.POSTGRES,
+                    BO_ALERT_FALLBACK_TABLE_NAME,
+                    "alert_raw LIKE '%" + ucid + "%' and alert_raw LIKE '%" + rulename + "%'",
+                    AlertFallbackObject.class);
+            failedAlerts = dbAlertsFailed.size();
+
+            List<Alert> dbAlertsParsed = getObjectsFromDB(
+                    DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("clientUcid = '%s'", ucid), Alert.class);
+            parsedAlerts = dbAlertsParsed.size();
+            Thread.sleep(5000);
+        } while ((parsedAlerts == 0 || failedAlerts > 0) && count++ < 50);
+
+        assertNotEquals(0, parsedAlerts);
+        assertEquals(0, failedAlerts);
+    }
 
     @Step("Assert risk withdrawal alert")
     public static void assertRiskWithdrawalAlert(DataHelper data, List<RuleAlertV2> alerts) {

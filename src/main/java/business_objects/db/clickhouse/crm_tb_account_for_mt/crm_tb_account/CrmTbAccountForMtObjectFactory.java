@@ -38,7 +38,7 @@ public class CrmTbAccountForMtObjectFactory {
                 "2022-11-16 05:30:00", // createTimeUtc
                 "2022-11-16", // createDate
                 "2022-11-16", // createDateUtc
-                ACCOUNT_STATUS_INACTIVE, // accountStatus
+                ACCOUNT_STATUS_ACTIVE, // accountStatus
                 "2024-11-16 05:30:00", // last login
                 "2024-11-16 05:30:00", // lastLoginUtc
                 "2024-11-16 05:30:00", // lastOrder
