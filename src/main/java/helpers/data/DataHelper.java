@@ -53,6 +53,7 @@ import business_objects.db.clickhouse.dict_is_test.DictIsTestObject;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionObject;
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
+import business_objects.db.clickhouse.mt___symbol_session.MtSymbolSessionObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
 import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
@@ -85,8 +86,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 import utils.Utils;
 
+@Getter
+@Setter
 public class DataHelper {
 
     public ClientHelper clientHelper;
@@ -104,6 +109,7 @@ public class DataHelper {
     public List<ClientFraudTypes> clientFraudTypes;
     public List<ClientCardsObject> clientCards;
     public List<SegmentationTableObject> segmentObjects;
+    private List<MtSymbolSessionObject> mtSymbolSessionObjects;
     public List<CrmBpCallbacksObject> callbacksObjects;
     public CrmTbAccountObject crmTbAccountObject;
     public CrmTbAccountForMtObject crmTbAccountForMtObject;

@@ -15,7 +15,8 @@ public enum Rule {
     NO_SLIPPAGE_RULE("No slippage rule", "no_slippage"),
     NEWS_TRADE_RULE("News trade rule", "news_trade"),
     MIRROR_TRADE_ML("ML Mirror Trade", "ml_mirror_trade"),
-    MIRROR_TRADE_OPEN_TRADE("Mirror trade on open trade event rule", "openTradeMirrorTrade");
+    MIRROR_TRADE_OPEN_TRADE("Mirror trade on open trade event rule", "openTradeMirrorTrade"),
+    GAP_TRADING("Gap trading rule", "gap_trade");
 
     private final String name;
     private final String processId;

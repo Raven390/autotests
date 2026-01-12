@@ -19,6 +19,14 @@ public class DataDeleteHelper {
 
     public static void deleteData(Map<String, DataHelper> map) throws Exception {
         for (DataHelper data : map.values()) {
+            if (data.getMtSymbolSessionObjects() != null) {
+                data.getMtSymbolSessionObjects()
+                        .forEach(session -> deleteEntryFromDb(
+                                MT_SYMBOL_SESSION_TABLE_NAME,
+                                String.format(
+                                        "symbol = '%s' and source_id_st = %s",
+                                        session.getSymbol(), session.getSourceIdSt())));
+            }
             if (data.crmTbUserObject != null) {
                 deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format(DELETE_BY_USER_ID, data.crmTbUserObject.userId));
             }

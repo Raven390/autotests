@@ -131,6 +131,10 @@ public class DataSetupHelper {
                 insertDepositTypeData();
                 data.crmTbDepositObjects.forEach(deposit -> insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit));
             }
+            if (data.getMtSymbolSessionObjects() != null) {
+                data.getMtSymbolSessionObjects()
+                        .forEach(session -> insertObjectToDb(MT_SYMBOL_SESSION_TABLE_NAME, session));
+            }
             if (data.crmTbDepositTypeObjects != null) {
                 data.crmTbDepositTypeObjects.forEach(type -> insertObjectToDb(CRM_DEPOSIT_TYPE_TABLE_NAME, type));
             }
