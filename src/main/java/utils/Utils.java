@@ -145,6 +145,16 @@ public class Utils {
     }
 
     /**
+     * Converts a timestamp in milliseconds to ISO 8601 format with milliseconds and Z timezone indicator.
+     * Example: 2025-08-01T07:16:56.099Z
+     *
+     * @return formatted date-time string
+     */
+    public static String convertTimestampToIsoFormatLocal() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+    }
+
+    /**
      * Returns a random ISO 8601 UTC date-time string between now minus 365 days and now.
      * Example: 2025-05-20T14:30:00Z
      */

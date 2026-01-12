@@ -119,6 +119,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE =
             "Router rule. Withdrawal integrity check ";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule ";
+    public static final String STORY_RULE_ENGINE_GAP_TRADING_RULE = "Gap trading rule ";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE =
             "Mirror trade with open trade event rule ";
     public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE =
@@ -218,6 +219,7 @@ public class Constants {
     public static final String CRM_BONUS_TABLE_NAME = "consolidated.crm___tb_bonus";
     public static final String CRM_TB_CREDIT_CARD_TABLE_NAME = "consolidated.crm___tb_credit_card";
     public static final String CRM_DEPOSIT_TABLE_NAME = "consolidated.crm___tb_deposit";
+    public static final String MT_SYMBOL_SESSION_TABLE_NAME = "consolidated.mt___symbol_session";
     public static final String CRM_DEPOSIT_TYPE_TABLE_NAME = "consolidated.crm___tb_deposit_type";
     public static final String CRM_DEPOSIT_CHANNEL_TABLE_NAME = "consolidated.crm___tb_deposit_channel";
     public static final String CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME = "consolidated.crm___tb_account_for_mt";
