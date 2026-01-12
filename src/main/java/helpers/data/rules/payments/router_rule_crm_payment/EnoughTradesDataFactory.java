@@ -2196,10 +2196,14 @@ public class EnoughTradesDataFactory {
                 generatePaymentRuleExecutionsObject(paymentEventsObject1);
         paymentRuleExecutionsObject1.setRuleEndId(112);
         paymentRuleExecutionsObject1.setRuleId(3);
+        PaymentDecisionsObject paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
+        paymentDecisionsObject1.setDecisionCode(1);
+        paymentDecisionsObject1.setDecisionType("payment");
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
         insertObjectToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, paymentRuleExecutionsObject1);
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1));
 
         return data;
     }

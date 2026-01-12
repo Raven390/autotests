@@ -32,7 +32,7 @@ public class AlertsAssertsHelper {
             failedAlerts = dbAlertsFailed.size();
 
             List<Alert> dbAlertsParsed = getObjectsFromDB(
-                    DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("clientUcid = '%s'", ucid), Alert.class);
+                    DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s'", ucid), Alert.class);
             parsedAlerts = dbAlertsParsed.size();
             Thread.sleep(5000);
         } while ((parsedAlerts == 0 || failedAlerts > 0) && count++ < 50);
