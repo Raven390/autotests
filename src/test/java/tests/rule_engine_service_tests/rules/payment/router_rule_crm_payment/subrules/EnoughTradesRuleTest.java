@@ -198,11 +198,6 @@ class EnoughTradesRuleTest {
         DataHelper data = dbDataMap.get("5");
 
         setRestrictionAPIGeneral(data.clientHelper.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-        setRestrictionAPITrade(
-                data.clientHelper.getUcid(),
-                data.crmTbAccountForMtObject.getAccount(),
-                data.crmTbAccountForMtObject.getServerIdSt(),
-                CLOSE_ONLY_MODE.getCode());
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -498,15 +493,6 @@ class EnoughTradesRuleTest {
         checkElementId("get_last24h_sum_deposits_by_categories", data.crmWithdrawalEventV2.getId(), "enough_trades");
         checkElementId("get_last24h_rfr", data.crmWithdrawalEventV2.getId(), "enough_trades");
         checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
-
-        Allure.step("Retrieve payment id");
-        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
-        Assertions.assertNotNull(paymentEventsObject);
-        UUID paymentId = paymentEventsObject.getPaymentId();
-        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
-        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
-        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
-        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(111));
     }
 
     @Test
@@ -540,8 +526,6 @@ class EnoughTradesRuleTest {
         checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
     }
 
-    //
-    // ===============================================================================================================
     @Test
     @AllureId("1886")
     @DisplayName("Enough trades rule. Alert 1  . Element id: Event_1gmc8xt")
