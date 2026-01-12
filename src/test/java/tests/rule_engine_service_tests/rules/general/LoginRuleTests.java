@@ -2,7 +2,7 @@ package tests.rule_engine_service_tests.rules.general;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
 import static helpers.api.RestrictionHelper.addCancelledRestriction;
-import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.asserts.RestrictionsAssertsHelper.*;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.general.LoginRuleDataFactory.setupLoginRuleData;
@@ -18,6 +18,7 @@ import business_objects.api.abuse_registry.GetStatusResponseBody;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudType;
+import helpers.data.enums.Rule;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -45,7 +46,7 @@ class LoginRuleTests extends TestBaseRule {
         dbDataMap = setupLoginRuleData();
     }
 
-    @AfterAll
+    // @AfterAll
     static void teardown() throws Exception {
         deleteData(dbDataMap);
         stopSshTunnel();
@@ -61,7 +62,7 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        checkElementId("end_cs_no_toxic", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_cs_no_toxic", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
     }
 
     @Disabled
@@ -88,7 +89,7 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        checkElementId("end_gs_low", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_gs_low", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
     }
 
     @Disabled
@@ -104,7 +105,7 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        checkElementId("Event_1fdy7w1", data.loginEvent.getId(), "login_rule");
+        checkElementId("Event_1fdy7w1", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
     }
 
     @Disabled
@@ -117,7 +118,7 @@ class LoginRuleTests extends TestBaseRule {
         produceLoginMessageToKafka(data.loginEvent);
         setupData(data);
 
-        checkElementId("end_no_str1_hedge", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_no_str1_hedge", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
     }
 
     @Disabled
@@ -130,10 +131,9 @@ class LoginRuleTests extends TestBaseRule {
         produceLoginMessageToKafka(data.loginEvent);
         setupData(data);
 
-        checkElementId("Event_1o2qu8z", data.loginEvent.getId(), "login_rule");
+        checkElementId("Event_1o2qu8z", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
     }
 
-    @Disabled
     @Test
     @AllureId("1468")
     @DisplayName(
@@ -144,10 +144,43 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked Hedging Abuser");
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Login rule. Linked Hedging Abuser");
+        checkNoBonusRestrictionApplied(data.clientHelper, "Login rule. Linked Hedging Abuser");
+
+        // add check for FT_HEDGE
+        GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
+        assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat(abuserStatus.getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getCreatedAt(), notNullValue());
+        assertThat(abuserStatus.getUpdatedAt(), notNullValue());
+        assertThat(abuserStatus.getComment(), is("Linked hedging abuser"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getCode(), is("HEDGING"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getName(), is("Hedging"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getComment(), is("Linked hedging abuser"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getDescription(), is(FraudType.HEDGING.getDescription()));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeCode(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
+    }
+
+    @Test
+    @AllureId("1469")
+    @DisplayName(
+            "Login rule. Connection search sub-process. Exit without restriction if user has model score > 0.7 and fraud type is unknown. ElementId: end_unknown_fraud_type")
+    void loginRuleTest9() throws Exception {
+        DataHelper data = dbDataMap.get("9");
+        setupData(data);
+
+        produceLoginMessageToKafka(data.loginEvent);
+
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
+
+        // Verify restriction
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Login rule. Linked Hedging Abuser");
+        checkBonusRestrictionNotExists(data.clientHelper, "Login rule. Linked Hedging Abuser");
 
         // add check for FT_HEDGE
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -167,19 +200,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1469")
-    @DisplayName(
-            "Login rule. Connection search sub-process. Exit without restriction if user has model score > 0.7 and fraud type is unknown. ElementId: end_unknown_fraud_type")
-    void loginRuleTest9() throws Exception {
-        DataHelper data = dbDataMap.get("9");
-        produceLoginMessageToKafka(data.loginEvent);
-        setupData(data);
-
-        checkElementId("end_unknown_fraud_type", data.loginEvent.getId(), "login_rule");
-    }
-
-    @Disabled
-    @Test
     @AllureId("1470")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit with restriction if user has model score > 0.7 and fraud type is Market manipulation. ElementId: end_cs_abuse")
@@ -188,9 +208,7 @@ class LoginRuleTests extends TestBaseRule {
         produceLoginMessageToKafka(data.loginEvent);
         setupData(data);
 
-        checkElementId("WR_MM", data.loginEvent.getId(), "login_rule");
-        checkElementId("FT_MM", data.loginEvent.getId(), "login_rule");
-        checkElementId("Flow_19cxhf8", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restrictions
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked MM Abuser");
@@ -224,7 +242,7 @@ class LoginRuleTests extends TestBaseRule {
         produceLoginMessageToKafka(data.loginEvent);
         setupData(data);
 
-        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restrictions
         Allure.step("Get client restrictions");
@@ -276,7 +294,7 @@ class LoginRuleTests extends TestBaseRule {
         produceLoginMessageToKafka(data.loginEvent);
         setupData(data);
 
-        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restrictions
         Allure.step("Get client restrictions");
@@ -311,7 +329,7 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        checkElementId("end_no_mitigation", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_no_mitigation", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify alerts
         assertThat(
@@ -353,7 +371,7 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        checkElementId("end_hedge_ald_no_bonus", data.loginEvent.getId(), "login_rule");
+        checkElementId("end_hedge_ald_no_bonus", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restriction is bonus restriction with code 14
         Allure.step("Get client restrictions");

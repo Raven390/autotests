@@ -1,27 +1,29 @@
 package helpers.data.rules.general;
 
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
-import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.ClientFactory.*;
+import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.DataHelper.*;
 import static helpers.data.enums.FraudType.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.kafka.crm_events.LoginEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.*;
-import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +39,8 @@ public class LoginRuleDataFactory {
             getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
     private static final ClientHelper loginRuleTest7Client =
             getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-    private static final ClientHelper loginRuleTest8Client =
-            getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-    private static final ClientHelper loginRuleTest9Client =
-            getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+    private static final ClientHelper loginRuleTest8Client = getRandomVantageClient();
+    private static final ClientHelper loginRuleTest9Client = getRandomVantageClient();
     private static final ClientHelper loginRuleTest10Client =
             getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
     private static final ClientHelper loginRuleTest11Client =
@@ -78,8 +78,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. No toxic connections for non VT or PU users. Event.id end_cs_no_toxic")
     private static DataHelper getLoginRuleTest1Data() {
         DataHelper data = getLoginRuleData(loginRuleTest1Client);
         // Add connection
@@ -97,8 +95,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. No connections for VT or PU users. Event.id end_connections_not_found2")
     private static DataHelper getLoginRuleTest3Data() {
         DataHelper data = getLoginRuleData(loginRuleTest3Client);
         // Add connection
@@ -118,8 +114,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score<0.7, user is mirror trader without connections. Event.id end_no_str1_hedge")
     private static DataHelper getLoginRuleTest6Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest6Client);
         // Add connection
@@ -149,8 +143,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score> 0.7, user is mirror trader with strong connections. Event.id Event_1o2qu8z")
     private static DataHelper getLoginRuleTest7Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest7Client);
 
@@ -176,7 +168,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description("Login rule. Strong connection with HEDGING fraud. Event.id end_cs_abuse")
     private static DataHelper getLoginRuleTest8Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest8Client);
 
@@ -185,8 +176,8 @@ public class LoginRuleDataFactory {
                 getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
         addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         // add abuse
-        insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
-        addFraudsForClient(data.connectedClientHelpers.get(0), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
+        insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
+        addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
         // Add second connection with abuse type no equal to hedging
         ClientHelper connectedClient2 =
@@ -201,8 +192,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score> 0.7, fraud type is uknown. Event.id end_unknown_fraud_type")
     private static DataHelper getLoginRuleTest9Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest9Client);
 
@@ -211,15 +200,26 @@ public class LoginRuleDataFactory {
         addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         // add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
-        addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(MONEY_LAUNDRY), FraudTypeStatus.CONFIRMED);
+        addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
+
+        // Add second connection with abuse type no equal to hedging
+        ClientHelper connectedClient2 =
+                getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+        addConnectionByEmailPhoneAttribute(data, connectedClient2, 1d);
+        // add abuse
+        insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(1));
+        addFraudsForClient(data.connectedClientHelpers.get(1), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
         // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
+
+        CrmTbDepositEntity deposit = generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setCreateTime(OffsetDateTime.parse("2026-01-01T01:01:01.111Z"));
+        deposit.setCreateTimeUtc(OffsetDateTime.parse("2026-01-01T01:01:01.111Z"));
+        data.crmTbDepositObjects = List.of(deposit);
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score> 0.7, fraud type is Market manipulation. end_cs_abuse.id end_unknown_fraud_type")
     private static DataHelper getLoginRuleTest10Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest10Client);
 
@@ -236,8 +236,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score> 0.7, fraud type is Bonus abuser and toxic account linked. end_cs_abuse.id")
     private static DataHelper getLoginRuleTest15Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest15Client);
 
@@ -254,8 +252,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_cs_abuse")
     private static DataHelper getLoginRuleTest11Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest11Client);
 
@@ -272,8 +268,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_no_mitigation")
     private static DataHelper getLoginRuleTest12Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest12Client);
 
@@ -290,8 +284,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Strong connection with HEDGING fraud and has bonus restriction. Event.id end_hedge_ald_no_bonus")
     private static DataHelper getLoginRuleTest13Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest13Client);
 
@@ -317,7 +309,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description("Login rule. Connection search sub-process. Exit if general score < 0.7. ElementId: end_gs_low")
     private static DataHelper getLoginRuleTest16Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest16Client);
 
@@ -343,8 +334,6 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @Description(
-            "Login rule. Connection search sub-process. Exit if has WR that 24OP removed and current <= previous average generalScore. ElementId: Event_1fdy7w1")
     private static DataHelper getLoginRuleTest17Data() throws IOException, InterruptedException {
         DataHelper data = getLoginRuleData(loginRuleTest17Client);
 
