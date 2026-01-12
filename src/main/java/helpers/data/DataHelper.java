@@ -28,6 +28,7 @@ import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.client_cards.ClientCardsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.cost_payment_fee.CostPaymentFee;
 import business_objects.db.clickhouse.crm_bp_callbacks.CrmBpCallbacksObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
@@ -97,6 +98,7 @@ public class DataHelper {
     public LnSessionParsedObject lnSessionParsedObjectLogin;
     public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
+    public List<CostPaymentFee> costPaymentFees;
     public CloseTradeMtEvent closeTradeEvent;
     public TradeEvent tradeEvent;
     public List<ClientFraudTypes> clientFraudTypes;

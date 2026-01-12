@@ -114,6 +114,15 @@ public class DataSetupHelper {
                 data.crmTbWithdrawalObjects.forEach(
                         withdrawal -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal));
             }
+            if (data.costPaymentFees != null) {
+                data.costPaymentFees.forEach(cf -> {
+                    deleteObjectFromDb(
+                            COST_PAYMENT_FEE_TABLE_NAME,
+                            String.format("category = '%s' and country = '%s'", cf.getCategory(), cf.getCountry()));
+                    insertObjectToDb(COST_PAYMENT_FEE_TABLE_NAME, cf);
+                });
+            }
+
             if (data.crmTbWithdrawalTypeObjects != null) {
                 data.crmTbWithdrawalTypeObjects.forEach(
                         withdrawalType -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE, withdrawalType));
