@@ -46,10 +46,14 @@ public class OpenPositions extends AbstractPage {
     static final String TABLE_ROW_LOCATOR = "*[contains(@class, 'v-body-row')]";
     private static final String DEAL_TYPE_TEXT_LOCATOR =
             "*[contains(@class, 'v-trading-tab-open-positions__deal-type')]";
+    static final String TABLE_CELL_PATTERN = "*[contains(@data-qa ,'trading_open_positions__table__rows')";
+    private static final String COMMISSION_CELL_LOCATOR = TABLE_CELL_PATTERN + "and contains(@data-qa ,'commission')]";
+    private static final String METHOD_CELL_LOCATOR = TABLE_CELL_PATTERN + "and contains(@data-qa ,'method')]";
+    private static final String COMMENT_CELL_LOCATOR = TABLE_CELL_PATTERN + "and contains(@data-qa ,'comment')]";
 
     public OpenPositions(Page page) {
         super(page);
-        this.openPositionTab = page.locator(".g-radio-button__option-control[value=\"Open positions\"]");
+        this.openPositionTab = page.locator(".g-radio-button__option-control[value='Open positions']");
 
         this.accountColumnHeader = page.locator("//" + ACCOUNT_ROW_HEADER);
         this.typeColumnHeader = page.locator("//" + TYPE_ROW_HEADER);
@@ -195,10 +199,10 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkCommissionCellValue(String account, String commission) {
-        Allure.step("Check platform in account cell");
+        Allure.step("CCheck commission value in commission cell");
         super.waitForPageToLoad();
         String locator = "//" + TABLE_CELL_LOCATOR + "//*[text()='" + account + "']/ancestor::" + TABLE_ROW_LOCATOR
-                + "/" + TABLE_CELL_LOCATOR + "[9]";
+                + "/" + COMMISSION_CELL_LOCATOR;
         page.locator(locator).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals(
                 commission + " USD",
@@ -210,10 +214,10 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkMethodCellValue(String account, String method) {
-        Allure.step("Check platform in account cell");
+        Allure.step("Check method value in method cell");
         super.waitForPageToLoad();
         String locator = "//" + TABLE_CELL_LOCATOR + "//*[text()='" + account + "']/ancestor::" + TABLE_ROW_LOCATOR
-                + "/" + TABLE_CELL_LOCATOR + "[10]";
+                + "/" + METHOD_CELL_LOCATOR;
         page.locator(locator).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals(
                 method, page.locator(locator + "/descendant::" + PRIMARY_TEXT).textContent());
@@ -224,10 +228,10 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkCommentCellValue(String account, String comment) {
-        Allure.step("Check platform in account cell");
+        Allure.step("Check comment in comment cell");
         super.waitForPageToLoad();
         String locator = "//" + TABLE_CELL_LOCATOR + "//*[text()='" + account + "']/ancestor::" + TABLE_ROW_LOCATOR
-                + "/" + TABLE_CELL_LOCATOR + "[11]";
+                + "/" + COMMENT_CELL_LOCATOR;
         page.locator(locator).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals(
                 comment, page.locator(locator + "/descendant::" + PRIMARY_TEXT).textContent());
@@ -249,13 +253,12 @@ public class OpenPositions extends AbstractPage {
         openColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         tpslColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        srColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         methodColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commentColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         filterButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals(
-                22,
+                20,
                 page.locator("//" + TABLE_ROW_LOCATOR + "//" + TABLE_CELL_LOCATOR)
                         .count());
     }
