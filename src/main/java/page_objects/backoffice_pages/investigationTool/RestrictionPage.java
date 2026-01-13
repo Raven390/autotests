@@ -88,7 +88,8 @@ public class RestrictionPage extends AbstractPage {
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
         this.activitySection = page.locator(".v-accounts-list-item__activity");
         this.tooltip = page.locator(".g-tooltip__content");
-        this.openRestrictionsDrawerButton = page.locator("//span[text()='Apply restrictions' or text()=' Manage']");
+        this.openRestrictionsDrawerButton =
+                page.locator("//span[text()='Apply restrictions' or text()=' Manage restrictions']");
         this.addRestrictionButton = page.locator("//div[@class='v-list-select']/descendant::button");
         this.applyRestrictionButton = page.locator("//span[text()='Apply']/parent::button[not(@disabled)]");
         this.commentInput = page.locator("//textarea");

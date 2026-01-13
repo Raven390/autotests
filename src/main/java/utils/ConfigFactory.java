@@ -585,16 +585,16 @@ public class ConfigFactory {
         @Key("passwordAutotestPT")
         String passwordPaymentUser();
 
-        @Key("emailPaymentUser")
+        @Key("emailPaymentUserOld")
         String emailPaymentUser();
 
-        @Key("idPaymentUser")
+        @Key("idPaymentUserOld")
         String idPaymentUser();
 
-        @Key("idPaymentSeniorUser")
+        @Key("idPaymentSeniorUserOld")
         String idPaymentSeniorUser();
 
-        @Key("emailPaymentSeniorUser")
+        @Key("emailPaymentSeniorUserOld")
         String emailPaymentSeniorUser();
 
         @Key("idFirstLogin")
