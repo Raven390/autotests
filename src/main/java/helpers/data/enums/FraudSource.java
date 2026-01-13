@@ -7,11 +7,11 @@ import java.util.List;
 
 public enum FraudSource {
     VINDEX("Vindex", List.of(1, 2)),
-    RA_RAISE("RA raise", List.of(1, 2)),
-    ADDITIONAL_REVIEW("Additional review", List.of(1)),
+    RA_RAISE("RA Raise", List.of(1, 2)),
+    ADDITIONAL_REVIEW("Additional Review", List.of(1)),
     INSIGHT("Insight", List.of(1)),
     FRONTEND("Frontend", List.of(1, 2)),
-    POST_MONITORING("Post monitoring", List.of(2));
+    POST_MONITORING("Post Monitoring", List.of(2));
 
     private final String displayName;
     private final List<Integer> type;
