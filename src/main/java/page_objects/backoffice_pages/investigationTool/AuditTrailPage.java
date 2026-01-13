@@ -2,6 +2,8 @@ package page_objects.backoffice_pages.investigationTool;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
@@ -87,8 +89,8 @@ public class AuditTrailPage extends AbstractPage {
 
     @Step("Find record in audit trail")
     public void findRecord(String actionComment) {
-        String comment = auditTrailItem.first().locator(auditTrailItemComment).textContent();
-        assertEquals(actionComment, comment);
+        String comment = auditTrailItemDetailsV2.first().innerText();
+        assertThat("Check first audit item details is as expected", comment, is(actionComment));
     }
 
     @Step("Wait for page to load")

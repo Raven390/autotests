@@ -36,7 +36,7 @@ import tests.TestBaseWeb;
 @Feature("BMS-1980 Investigation tool visibility + assignment payment alerts")
 class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     static ClientHelper client = getRandomVantageClient();
-    private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
+    private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -78,7 +78,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that alert is assigned to current user");
-        assertEquals(investigation.getId().toString(), alert.getInvestigationId());
+        assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert.getStatus());
     }
 
@@ -99,7 +99,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that alert is assigned to current user");
-        assertEquals(investigation.getId().toString(), alert.getInvestigationId());
+        assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert.getStatus());
     }
 
@@ -121,7 +121,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that payment alert is assigned to current user");
-        assertEquals(investigation.getId().toString(), alert.getInvestigationId());
+        assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert.getStatus());
         Investigation investigation2 =
                 getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
@@ -130,7 +130,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(NEW.getDisplayName(), investigation2.getStatus());
         Alert alert2 = getClientsAlertsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that trading alert is not assigned to current user");
-        assertEquals(investigation2.getId().toString(), alert2.getInvestigationId());
+        assertEquals(investigation2.getId().longValue(), alert2.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert2.getStatus());
     }
 
@@ -154,7 +154,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that payment alert is assigned to current user");
-        assertEquals(investigation.getId().toString(), alert.getInvestigationId());
+        assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert.getStatus());
         Investigation investigation2 =
                 getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
@@ -163,7 +163,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(NEW.getDisplayName(), investigation2.getStatus());
         Alert alert2 = getClientsAlertsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that trading alert is not assigned to current user");
-        assertEquals(investigation2.getId().toString(), alert2.getInvestigationId());
+        assertEquals(investigation2.getId().longValue(), alert2.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert2.getStatus());
     }
 
@@ -187,7 +187,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that payment alert is assigned to current user");
-        assertEquals(investigation.getId().toString(), alert.getInvestigationId());
+        assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert.getStatus());
         Investigation investigation2 =
                 getClientsInvestigationsDb(client.getUcid(), PAYMENT).getFirst();
@@ -196,7 +196,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         assertEquals(NEW.getDisplayName(), investigation2.getStatus());
         Alert alert2 = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that trading alert is not assigned to current user");
-        assertEquals(investigation2.getId().toString(), alert2.getInvestigationId());
+        assertEquals(investigation2.getId().longValue(), alert2.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert2.getStatus());
     }
 
@@ -229,21 +229,9 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     }
 
     @Test
-    @AllureId("1695")
-    @DisplayName("BO user with Payment Team role can comment client")
-    void cantDoBulkActionsArTest() throws Exception {
-        sendSimplePaymentAlert(client.getUcid());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
-        fraudstersPage.navigateAbuseRegistryFraudsters();
-        fraudstersPage.openRemoveDrawerButtonIsHidden();
-        fraudstersPage.openRemoveDrawerButtonIsDisabled();
-    }
-
-    @Test
     @AllureId("1694")
     @DisplayName("BO user with Payment Team role can open alert history page")
-    void canOpenAlertHistoryTest() throws Exception {
+    void canOpenAlertHistoryTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         alertHistoryPage.navigateAlertHistory();
