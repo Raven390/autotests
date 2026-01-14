@@ -312,18 +312,12 @@ public class DbHelper {
 
     @Step("Insert objects: {objects}")
     public static <T> void insertObjectsToDb(String tableName, List<T> objects) {
-        executeWithRetry(() -> {
-            insertObjectsToDb(DbName.CLICKHOUSE, tableName, objects);
-            return null;
-        });
+        insertObjectsToDb(DbName.CLICKHOUSE, tableName, objects);
     }
 
     @Step("Insert objects: {objects}")
     public static <T> void insertObjectsToDbSlow(String tableName, List<T> objects) {
-        executeWithRetry(() -> {
-            insertObjectsToDbSlow(DbName.CLICKHOUSE, tableName, objects);
-            return null;
-        });
+        insertObjectsToDbSlow(DbName.CLICKHOUSE, tableName, objects);
     }
 
     @Step("Insert objects: {objects} to {dbName}")
@@ -350,32 +344,24 @@ public class DbHelper {
 
     @Step("Insert single object: {object}")
     public static <T> void insertObjectToDb(String tableName, T object) {
-        executeWithRetry(() -> {
-            insertObjectToDb(DbName.CLICKHOUSE, tableName, object);
-            return null;
-        });
+        insertObjectToDb(DbName.CLICKHOUSE, tableName, object);
     }
 
     @Step("Insert single object: {object} to {dbName}")
     public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) {
-        executeWithRetry(() -> {
-            try (Connection connection = createConnection(dbName)) {
-                insertSingleObject(connection, tableName, object);
-            }
-            return null;
-        });
+        if (object != null) {
+            executeWithRetry(() -> {
+                try (Connection connection = createConnection(dbName)) {
+                    insertSingleObject(connection, tableName, object);
+                }
+                return null;
+            });
+        }
     }
 
     @Step("Delete {where} from {tableName}")
-    public static void deleteEntryFromDb(String tableName, String where) {
-        executeWithRetry(() -> {
-            deleteEntryFromDb(DbName.CLICKHOUSE, tableName, where);
-            return null;
-        });
-    }
-
     public static void deleteObjectFromDb(String tableName, String where) {
-        deleteEntryFromDb(tableName, where);
+        deleteObjectFromDb(DbName.CLICKHOUSE, tableName, where);
     }
 
     @Step("Delete entries from {tableName} in {dbName} where {columnName} matches the provided values")
@@ -426,7 +412,7 @@ public class DbHelper {
     }
 
     @Step("Delete {where} from {tableName} in {dbName}")
-    public static void deleteEntryFromDb(DbName dbName, String tableName, String where) throws Exception {
+    public static void deleteObjectFromDb(DbName dbName, String tableName, String where) {
         if (where == null || where.trim().isEmpty()) {
             throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
         }

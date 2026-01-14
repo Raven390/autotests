@@ -214,5 +214,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("1st deposit")
         private String firstDeposit;
+
+        @JsonProperty("Ticket ID")
+        private String ticketId;
     }
 }

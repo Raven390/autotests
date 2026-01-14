@@ -9,7 +9,7 @@ import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertBy
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -192,8 +192,8 @@ public class TradingInfoOperationsTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws SQLException {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(
                 MT4_TRADES_COERCED_TABLE_NAME,
                 String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);

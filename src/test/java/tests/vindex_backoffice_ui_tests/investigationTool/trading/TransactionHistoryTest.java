@@ -285,107 +285,107 @@ public class TransactionHistoryTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
 
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_DEPOSIT_TABLE_NAME,
                 String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit1.getTransferId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_DEPOSIT_TABLE_NAME,
                 String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit2.getTransferId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_DEPOSIT_TABLE_NAME,
                 String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit3.getTransferId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_DEPOSIT_TABLE_NAME,
                 String.format("ucid = '%s' AND transfer_id='%d'", client2.getUcid(), deposit23.getTransferId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CLICKHOUSE_CRM_TB_WITHDRAWAL,
                 String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal1.getTransferId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CLICKHOUSE_CRM_TB_WITHDRAWAL,
                 String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal2.getTransferId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CLICKHOUSE_CRM_TB_WITHDRAWAL,
                 String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal3.getTransferId()));
 
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME,
                 String.format(
                         "source_id_st = %d AND id = %d",
                         crmTbWithdrawAccountObject.sourceIdSt, crmTbWithdrawAccountObject.id));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_TB_CREDIT_CARD_TABLE_NAME,
                 String.format(
                         "source_id_st = %d AND user_id = %d AND id = %d",
                         cardObject.sourceIdSt, cardObject.userId, cardObject.id));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_TB_CREDIT_CARD_TABLE_NAME,
                 String.format(
                         "source_id_st = %d AND user_id = %d AND id = %d",
                         cardObject2.sourceIdSt, cardObject2.userId, cardObject2.id));
 
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
 
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject2.getPaymentId().toString()));
 
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
                 String.format(
                         "payment_id='%s'", paymentEventsObject3.getPaymentId().toString()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE,
                 String.format("client_id = '%s'", client1.getUserId()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format("ucid = '%s'", client1.getUcid()));
 
         closeAlert(crmTbUser.ucid);
-        deleteEntryFromDb(DbName.POSTGRES, VE_VERIFICATION_HISTORY, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(DbName.POSTGRES, VE_VERIFICATION_HISTORY, String.format("ucid = '%s'", client1.getUcid()));
     }
 
     @Test

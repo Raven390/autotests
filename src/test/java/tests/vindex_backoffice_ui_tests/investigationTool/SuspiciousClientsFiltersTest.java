@@ -233,8 +233,8 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser1.ucid));
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser2.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser1.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser2.ucid));
         closeAlert(crmTbUser1.ucid);
         closeAlert(crmTbUser2.ucid);
     }

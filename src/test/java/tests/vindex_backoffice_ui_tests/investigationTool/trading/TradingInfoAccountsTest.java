@@ -77,7 +77,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         cleanMt5CoercedTableByUcid(MT5_DEALS_COERCED_TABLE_NAME, crmTbUser.ucid);
         closeAlert(crmTbUser.ucid);
     }

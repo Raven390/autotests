@@ -67,21 +67,21 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
     @AfterEach
     void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client.getUcid());
-        deleteEntryFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account2.account));
-        deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", ibRelation.getUcid()));
-        deleteEntryFromDb(S3_DIM_CLIENT, String.format("ucid = '%s'", s3Dim.getUcid()));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position1.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position2.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account2.account));
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", ibRelation.getUcid()));
+        deleteObjectFromDb(S3_DIM_CLIENT, String.format("ucid = '%s'", s3Dim.getUcid()));
+        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid()));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position1.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position2.getUcid()));
+        deleteObjectFromDb(
                 DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", deduction.getUcid()));
         closeAlert(crmTbUser.ucid);
         cleanCrmUserTableByClient(crmTbUser.ucid);

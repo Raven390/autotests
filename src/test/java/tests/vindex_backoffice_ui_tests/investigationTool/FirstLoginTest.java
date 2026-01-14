@@ -1,7 +1,7 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import static business_objects.ui.user.UserFactory.firstLoginUser;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,9 +26,9 @@ public class FirstLoginTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws Exception {
-        deleteEntryFromDb(POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(POSTGRES, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(POSTGRES, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
+        deleteObjectFromDb(POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteObjectFromDb(POSTGRES, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteObjectFromDb(POSTGRES, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
         List<BackofficeUser> usersList = getObjectsFromDB(
                 POSTGRES, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class);
         assertThat(usersList, empty());
@@ -53,8 +53,8 @@ public class FirstLoginTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws Exception {
-        deleteEntryFromDb(POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(POSTGRES, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(POSTGRES, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
+        deleteObjectFromDb(POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteObjectFromDb(POSTGRES, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteObjectFromDb(POSTGRES, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
     }
 }

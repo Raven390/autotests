@@ -4,7 +4,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.BoHelper.*;
 import static helpers.database.CleanTableHelper.cleanUserAudit;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
@@ -40,7 +40,7 @@ class AuditTrailAlertCounterTest extends TestBaseWeb {
 
     @AfterAll
     static void clean() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
         deleteUserBO(client.getUcid());
         cleanUserAudit(client.getUcid());

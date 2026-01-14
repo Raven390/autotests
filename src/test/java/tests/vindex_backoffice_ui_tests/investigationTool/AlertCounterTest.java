@@ -50,17 +50,17 @@ class AlertCounterTest extends TestBaseWeb {
 
     @AfterAll
     static void clean() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser1.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser1.ucid));
         closeAlert(crmTbUser1.ucid);
         deleteUserBO(client1.getUcid());
         cleanUserAudit(client1.getUcid());
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser2.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser2.ucid));
         closeAlert(crmTbUser2.ucid);
         deleteUserBO(client2.getUcid());
         cleanUserAudit(client2.getUcid());
         ArHelper.deleteUserFromAbuseRegistry(client2.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser3.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser3.ucid));
         closeAlert(crmTbUser3.ucid);
         deleteUserBO(client3.getUcid());
         cleanUserAudit(client3.getUcid());

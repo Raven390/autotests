@@ -10,7 +10,7 @@ import static helpers.data.enums.Currency.USD;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.ArHelper.waitForClientToChangeStatus;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -72,7 +72,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
     static void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
     }
 
     @AfterEach

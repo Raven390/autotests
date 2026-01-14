@@ -1,5 +1,6 @@
 package helpers.asserts;
 
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -127,5 +128,31 @@ public class AlertsAssertsHelper {
         assertThat("Timestamp should not be null", alerts.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Ucid should match client's ucid", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
         assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is("TRADING"));
+    }
+
+    public static void checkTradingAlert(
+            DataHelper data,
+            List<RuleAlertV2> alerts,
+            String expectedReasonPrefix,
+            String expectedFraudType,
+            String expectedTrigger,
+            String alertRuleName)
+            throws Exception {
+        assertThat("Alerts list should contain exactly 1 item", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        assertThat("Verify alert ", alert.getUcid(), is(data.getClientHelper().getUcid()));
+        assertThat(
+                "Verify alert ",
+                alert.getServerId(),
+                is(data.getClientHelper().getServerId().toString()));
+        assertThat(
+                "Verify alert ", alert.getAccount(), is(data.getClientHelper().getTradingAccount()));
+        assertThat("Verify alert ", alert.getType(), is(TRADING.getDisplayName()));
+        assertThat("Verify alert reason", alert.getReason(), startsWith(expectedReasonPrefix));
+        assertThat("Verify alert triggerCreatedTime", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert fraudType", alert.getFraudType(), is(expectedFraudType));
+        assertThat("Verify alert trigger", alert.getTrigger(), is(expectedTrigger));
+
+        assertThatAlertNotFailed(alert.getUcid(), alertRuleName);
     }
 }

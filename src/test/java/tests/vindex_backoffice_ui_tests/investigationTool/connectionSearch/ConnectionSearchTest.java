@@ -165,7 +165,7 @@ class ConnectionSearchTest extends TestBaseWeb {
 
     @AfterAll
     static void tearDown() throws Exception {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_USER_TABLE_NAME,
                 String.format(
                         "ucid IN ('%s', '%s', '%s', '%s', '%s', '%s')",
@@ -175,7 +175,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                         connectedClient3.getUcid(),
                         connectedClient4.getUcid(),
                         connectedClient5.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CONNECTIONS_TABLE_NAME,
                 String.format(
                         "user_from IN ('%s', '%s', '%s', '%s')",
@@ -183,7 +183,7 @@ class ConnectionSearchTest extends TestBaseWeb {
                         connectedClient1.getUcid(),
                         connectedClient2.getUcid(),
                         connectedClient3.getUcid()));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid IN ('%s')", connectedClient3.getUcid()));
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid IN ('%s')", connectedClient3.getUcid()));
         deleteUserFromAbuseRegistry(connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid());
         cleanUserRestrictionGeneral(connectedClient1.getUcid());
         closeAlert(client.getUcid());
@@ -191,9 +191,9 @@ class ConnectionSearchTest extends TestBaseWeb {
         closeAlert(connectedClient4.getUcid());
         closeAlert(connectedClient6.getUcid());
         closeAlert(connectedClient5.getUcid());
-        deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", connectedClient3.getUcid()));
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
+        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", connectedClient3.getUcid()));
     }
 
     @BeforeEach

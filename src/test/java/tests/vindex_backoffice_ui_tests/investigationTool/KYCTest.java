@@ -40,17 +40,17 @@ class KYCTest extends TestBaseWeb {
 
     @BeforeEach
     void beforeEach() {
-        deleteEntryFromDb(CRM_TB_ID_PROOF_TABLE_NAME, DELETE_WHERE);
-        deleteEntryFromDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, DELETE_WHERE);
-        deleteEntryFromDb(CRM_TB_KYC_FILES_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_TB_ID_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_TB_KYC_FILES_TABLE_NAME, DELETE_WHERE);
     }
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, DELETE_WHERE);
-        deleteEntryFromDb(CRM_TB_ID_PROOF_TABLE_NAME, DELETE_WHERE);
-        deleteEntryFromDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, DELETE_WHERE);
-        deleteEntryFromDb(CRM_TB_KYC_FILES_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_TB_ID_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_TB_ADDRESS_PROOF_TABLE_NAME, DELETE_WHERE);
+        deleteObjectFromDb(CRM_TB_KYC_FILES_TABLE_NAME, DELETE_WHERE);
     }
 
     @Test

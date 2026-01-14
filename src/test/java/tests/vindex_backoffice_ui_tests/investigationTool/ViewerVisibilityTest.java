@@ -192,12 +192,12 @@ class ViewerVisibilityTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_USER_TABLE_NAME,
                 String.format(
                         "ucid IN ('%s', '%s', '%s')",
                         client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CONNECTIONS_TABLE_NAME,
                 String.format(
                         "user_from IN ('%s', '%s', '%s')",
@@ -207,7 +207,7 @@ class ViewerVisibilityTest extends TestBaseWeb {
         deleteUserBO(connectedClient1.getUcid());
         deleteUserBO(connectedClient2.getUcid());
         ArHelper.deleteUserFromAbuseRegistry(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 }

@@ -97,7 +97,7 @@ class GetFastTradesTests extends TestBaseApi {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
     }
 
     @Test

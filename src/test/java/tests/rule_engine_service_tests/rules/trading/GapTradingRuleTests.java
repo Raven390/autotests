@@ -1,11 +1,16 @@
 package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.AlertsAssertsHelper.checkTradingAlert;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.GapTradingRuleDataFactory.setupGapTradingRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
+import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
@@ -14,6 +19,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
@@ -28,7 +34,7 @@ class GapTradingRuleTests extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupGapTradingRuleData();
@@ -44,43 +50,90 @@ class GapTradingRuleTests extends TestBaseRule {
     @AllureId("2018")
     @DisplayName("Gap trading rule. Exit without alert if user is test or social trader user. ElementId: endEvent1")
     void gapTradingOpenTradeEventRuleTest1() throws Exception {
-        DataHelper data = dbDataMap.get("1");
-
-        produceTradeMessageToKafka(data.tradeEvent);
-
-        checkElementId("endEvent1", data.tradeEvent.id, Rule.GAP_TRADING.getProcessId(), 2);
+        runGapTradingRuleTest("1", "endEvent1");
     }
 
     @Test
     @AllureId("2017")
     @DisplayName("Gap trading rule. Exit without alert if market does not close in 30 min. ElementId: endEvent2")
     void gapTradingOpenTradeEventRuleTest2() throws Exception {
-        DataHelper data = dbDataMap.get("2");
-
-        produceTradeMessageToKafka(data.tradeEvent);
-
-        checkElementId("endEvent2", data.tradeEvent.id, Rule.GAP_TRADING.getProcessId(), 2);
+        runGapTradingRuleTest("2", "endEvent2");
     }
 
     @Test
     @AllureId("2019")
     @DisplayName("Gap trading rule. Exit without alert if user has no open trades. ElementId: endEvent3")
     void gapTradingOpenTradeEventRuleTest3() throws Exception {
-        DataHelper data = dbDataMap.get("3");
-
-        produceTradeMessageToKafka(data.tradeEvent);
-
-        checkElementId("endEvent3", data.tradeEvent.id, Rule.GAP_TRADING.getProcessId(), 2);
+        runGapTradingRuleTest("3", "endEvent3");
     }
 
     @Test
     @AllureId("2020")
     @DisplayName("Gap trading rule. Exit without alert if leverage is low. ElementId: endEvent4")
     void gapTradingOpenTradeEventRuleTest4() throws Exception {
-        DataHelper data = dbDataMap.get("4");
+        runGapTradingRuleTest("4", "endEvent4");
+    }
 
-        produceTradeMessageToKafka(data.tradeEvent);
+    @Test
+    @AllureId("2036")
+    @DisplayName("Gap trading rule. Exit without alert if growth is low. ElementId: endEvent5")
+    void gapTradingOpenTradeEventRuleTest5() throws Exception {
+        runGapTradingRuleTest("5", "endEvent5");
+    }
 
-        checkElementId("endEvent4", data.tradeEvent.id, Rule.GAP_TRADING.getProcessId(), 2);
+    @Test
+    @AllureId("2037")
+    @DisplayName("Gap trading rule. Exit without alert if equity is not enough. ElementId: endEvent6")
+    void gapTradingOpenTradeEventRuleTest6() throws Exception {
+        runGapTradingRuleTest("6", "endEvent6");
+    }
+
+    @Test
+    @AllureId("2038")
+    @DisplayName(
+            "Gap trading rule. Exit without alert if account isn't running near its daily peak exposure. ElementId: endEvent7")
+    void gapTradingOpenTradeEventRuleTest7() throws Exception {
+        runGapTradingRuleTest("7", "endEvent7");
+    }
+
+    @Test
+    @AllureId("2039")
+    @DisplayName(
+            "Gap trading rule. Exit without alert if trades aren't represented by one symbol for >80%. ElementId: endEvent8")
+    void gapTradingOpenTradeEventRuleTest8() throws Exception {
+        runGapTradingRuleTest("8", "endEvent8");
+    }
+
+    @Test
+    @AllureId("2037")
+    @DisplayName("Gap trading rule. Exit with alert. ElementId: endEvent")
+    void gapTradingOpenTradeEventRuleTestAlert() throws Exception {
+        runGapTradingRuleTest("alert", "endEvent");
+
+        DataHelper data = dbDataMap.get("alert");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.getClientHelper(), "Gap trading");
+        checkTradingAlert(
+                data,
+                alerts,
+                "Client has open trades with " + data.getTradeEvent().symbol + " after market close at ",
+                "GAP_TRADING",
+                "Open trade",
+                "Gap trading");
+
+        RuleAlertV2 alert = alerts.getFirst();
+        assertThat(
+                "Attributes.tradeId should match tradeEvent.tradeId",
+                alert.getAttributes().getTicketId(),
+                is(String.valueOf(data.getTradeEvent().getTradeId())));
+    }
+
+    private void runGapTradingRuleTest(String dataKey, String expectedElementId) throws Exception {
+
+        DataHelper data = dbDataMap.get(dataKey);
+        setupData(data);
+
+        produceTradeMessageToKafka(data.getTradeEvent());
+
+        checkElementId(expectedElementId, data.getTradeEvent().getId(), Rule.GAP_TRADING.getProcessId(), 2);
     }
 }

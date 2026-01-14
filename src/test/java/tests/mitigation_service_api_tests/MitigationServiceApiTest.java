@@ -115,7 +115,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         CleanTableHelper.cleanUserRestrictionTradingEnv(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(byBitClient.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", byBitClient.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", byBitClient.getUcid()));
     }
 
     @Test

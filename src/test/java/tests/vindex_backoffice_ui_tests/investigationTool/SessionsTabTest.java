@@ -32,7 +32,7 @@ import tests.TestBaseWeb;
 public class SessionsTabTest extends TestBaseWeb {
 
     public void deleteLexis(ClientHelper client) {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 LEXIS_NEXIS_TABLE_NAME, "user_id=" + client.getUserId() + " AND brand='" + client.getBrand() + "'");
     }
 

@@ -63,16 +63,16 @@ class RemoveRestrictionsAfterDeductionRespondedTest extends TestBaseWeb {
     @AfterEach
     void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client.getUcid());
-        deleteEntryFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position1.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position2.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position1.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position2.getUcid()));
+        deleteObjectFromDb(
                 DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", deduction.getUcid()));
         closeAlert(crmTbUser.ucid);
         cleanCrmUserTableByClient(crmTbUser.ucid);
@@ -160,7 +160,7 @@ class RemoveRestrictionsAfterDeductionRespondedTest extends TestBaseWeb {
         AccountDeductionRequestResponse response =
                 new AccountDeductionRequestResponse(request.getTimestamp(), request.getMessageId(), "Success", null);
         Allure.step("delete all responces from DB that send by automation");
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME,
                 String.format("message_id = '%s'", request.getMessageId()));

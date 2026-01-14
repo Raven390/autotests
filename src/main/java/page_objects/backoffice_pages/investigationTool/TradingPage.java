@@ -2,7 +2,7 @@ package page_objects.backoffice_pages.investigationTool;
 
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -1737,11 +1737,11 @@ public class TradingPage extends AbstractPage {
     }
 
     public void deleteAccountDeals(int accountNumber) throws SQLException {
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "account =" + accountNumber);
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "account =" + accountNumber);
     }
 
     public void deleteClientDeals(String ucid) throws SQLException, InterruptedException {
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + ucid + "'");
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + ucid + "'");
         Thread.sleep(1000);
     }
 

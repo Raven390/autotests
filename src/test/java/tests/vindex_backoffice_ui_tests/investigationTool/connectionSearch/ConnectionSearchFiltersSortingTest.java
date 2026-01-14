@@ -636,7 +636,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws Exception {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_USER_TABLE_NAME,
                 String.format(
                         "ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
@@ -647,7 +647,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
                         connectedClient4.getUcid(),
                         connectedClient5.getUcid(),
                         connectedClient6.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CONNECTIONS_TABLE_NAME,
                 String.format(
                         "user_from IN ('%s', '%s', '%s', '%s', '%s')",
@@ -656,7 +656,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
                         connectedClient2.getUcid(),
                         connectedClient3.getUcid(),
                         connectedClient4.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 MT4_TRADES_COERCED_TABLE_NAME,
                 String.format(
                         "ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",

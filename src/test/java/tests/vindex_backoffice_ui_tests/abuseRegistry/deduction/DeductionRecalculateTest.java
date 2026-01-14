@@ -64,21 +64,21 @@ public class DeductionRecalculateTest extends TestBaseWeb {
     @AfterEach
     void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client.getUcid());
-        deleteEntryFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account2.account));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account2.account));
+        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid()));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid()));
+        deleteObjectFromDb(
                 MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", mtMt4TradesCoercedObject.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", mtMt4TradesCoercedObject2.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", deduction.getUcid()));
         closeAlert(crmTbUser.ucid);
         cleanCrmUserTableByClient(crmTbUser.ucid);
