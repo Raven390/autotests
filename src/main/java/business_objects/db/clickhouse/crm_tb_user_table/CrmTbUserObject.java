@@ -3,7 +3,13 @@ package business_objects.db.clickhouse.crm_tb_user_table;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
 import java.util.Objects;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Builder
 public class CrmTbUserObject {
     // Declare variables
     public int userId;
