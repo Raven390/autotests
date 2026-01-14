@@ -7,9 +7,15 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEn
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnection;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
+import static helpers.api.VerificationServiceHelper.putProfileStatus;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
-import static helpers.database.DbHelper.startSshTunnel;
+import static helpers.data.DataHelper.*;
+import static helpers.data.enums.VerificationStatus.VERIFIED;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
 import static utils.Utils.*;
 
 import business_objects.db.clickhouse.client_cards.ClientCardsObject;
@@ -21,6 +27,9 @@ import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
+import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
 import business_objects.kafka.crm_events.CallbackEvent.*;
 import helpers.data.ClientHelper;
@@ -31,9 +40,11 @@ import io.qameta.allure.Description;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import utils.Utils;
 
 public class ChargebackRuleDataFactory {
 
@@ -60,6 +71,10 @@ public class ChargebackRuleDataFactory {
     private static final ClientHelper chargebackRuleClient21 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient22 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient23 = getRandomVantageClientAllFields();
+    private static final ClientHelper chargebackRuleClient24 = getRandomVantageClientAllFields();
+    private static final ClientHelper chargebackRuleClient25 = getRandomVantageClientAllFields();
+    private static final ClientHelper chargebackRuleClient26 = getRandomVantageClientAllFields();
+    private static final ClientHelper chargebackRuleClient27 = getRandomVantageClientAllFields();
     private static Attributes attributes;
     private static Charge charge;
     private static CallbackData callbackData;
@@ -115,8 +130,8 @@ public class ChargebackRuleDataFactory {
         CrmTbDepositEntity deposit0 = generateCrmTbDepositEntityByClient(data.clientHelper);
         deposit0.setStatus("Pending");
         deposit0.setOrderNumber(callbackData.getOrderId());
-        deposit0.setOrderNumber(callbackData.getOrderId());
-        data.crmTbDepositObjects = List.of(deposit0);
+        data.crmTbDepositObjects = new ArrayList<>();
+        data.crmTbDepositObjects.add(deposit0);
 
         return data;
     }
@@ -131,6 +146,18 @@ public class ChargebackRuleDataFactory {
     private static DataHelper getChargebackTest1Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient1);
         data.callbackEvent = callbackEvent;
+
+        PaymentEventsObject paymentEventsObject1 = generatePaymentEventsObject(data.clientHelper);
+        PaymentDetailsObject paymentDetailsObject1 =
+                generatePaymentDetailsObject(paymentEventsObject1, data.clientHelper);
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject1 =
+                generatePaymentRuleExecutionsObject(paymentEventsObject1);
+        paymentRuleExecutionsObject1.setRuleEndId(201);
+        paymentRuleExecutionsObject1.setRuleId(4);
+
+        data.paymentDetailsObjects = List.of(paymentDetailsObject1);
+        data.paymentEventsObjects = List.of(paymentEventsObject1);
+        data.paymentRuleExecutionsObjects = List.of(paymentRuleExecutionsObject1);
         return data;
     }
 
@@ -200,37 +227,37 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        // set deposits
-        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects.add(deposit1);
-        data.crmTbDepositObjects.add(deposit2);
-        data.crmTbDepositObjects.add(deposit3);
-        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
-        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1700.01)));
-        data.crmTbDepositObjects.forEach(
-                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
-                .id(wdTypeId)
-                .sourceIdSt(sourceId)
-                .category(2)
-                .name(catName)
-                .lastUpdated(getCurrentTimestampDbFormat())
-                .build();
-        data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
-                .id(pcId)
-                .sourceIdSt(sourceId)
-                .channelId(pcId)
-                .typeId(wdTypeId)
-                .name(catName)
-                .isMobileChannel(0)
-                .lastUpdated(getCurrentTimestampDbFormat())
-                .build();
-        data.crmTbDepositChannelObjects = List.of(dChannel);
+        //        // set deposits
+        //        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        //        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        //        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        //        data.crmTbDepositObjects.add(deposit1);
+        //        data.crmTbDepositObjects.add(deposit2);
+        //        data.crmTbDepositObjects.add(deposit3);
+        //        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
+        //        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
+        //        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
+        //        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1700.01)));
+        //        data.crmTbDepositObjects.forEach(
+        //                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        //        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+        //                .id(wdTypeId)
+        //                .sourceIdSt(sourceId)
+        //                .category(2)
+        //                .name(catName)
+        //                .lastUpdated(getCurrentTimestampDbFormat())
+        //                .build();
+        //        data.crmTbDepositTypeObjects = List.of(dType);
+        //        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+        //                .id(pcId)
+        //                .sourceIdSt(sourceId)
+        //                .channelId(pcId)
+        //                .typeId(wdTypeId)
+        //                .name(catName)
+        //                .isMobileChannel(0)
+        //                .lastUpdated(getCurrentTimestampDbFormat())
+        //                .build();
+        //        data.crmTbDepositChannelObjects = List.of(dChannel);
 
         // set ticks
         RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
@@ -245,6 +272,20 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3);
+
+        // add decline score
+        CrmBpCallbacksObject callback1 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback2 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback3 = generateCrmBpCallbacksObject(data.clientHelper);
+        callback3.setIsFraudDeclined((short) 1);
+        callback3.setBusinessOrderId(callbackEvent.getBusinessOrderId());
+
+        data.callbacksObjects = List.of(callback1, callback2, callback3);
+        data.callbacksObjects.forEach(c -> c.setPaymentProfileKey(basePaymentProfile));
+        data.callbacksObjects.forEach(c -> c.setStatus("declined"));
+
+        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects.getFirst().setEntry(0);
 
         return data;
     }
@@ -1581,7 +1622,7 @@ public class ChargebackRuleDataFactory {
         CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
         CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
         CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedClientHelpers = List.of(connectedClient3);
+        data.connectedClientHelpers = List.of(connectedClient, connectedClient3);
         data.connectedUsers = List.of(
                 connectedUserCrmTbUserObject1,
                 connectedUserCrmTbUserObject2,
@@ -1594,7 +1635,17 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard5 = clientCard1;
+        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
+        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setUcid(connectedClient.getUcid());
+        clientCard5.setId(Utils.getRandomLongPositive());
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
 
         // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
@@ -1611,6 +1662,17 @@ public class ChargebackRuleDataFactory {
                 .build();
 
         data.segmentObjects = List.of(segment);
+
+        // add decline score
+        CrmBpCallbacksObject callback1 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback2 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback3 = generateCrmBpCallbacksObject(data.clientHelper);
+        callback3.setIsFraudDeclined((short) 1);
+        callback3.setBusinessOrderId(callbackEvent.getBusinessOrderId());
+
+        data.callbacksObjects = List.of(callback1, callback2, callback3);
+        data.callbacksObjects.forEach(c -> c.setPaymentProfileKey(basePaymentProfile));
+        data.callbacksObjects.forEach(c -> c.setStatus("declined"));
 
         return data;
     }
@@ -1710,7 +1772,12 @@ public class ChargebackRuleDataFactory {
         // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
-        data.clientCards = List.of(clientCard1, clientCard2);
+        ClientCardsObject clientCard3 = clientCard1;
+        clientCard3.setId(Utils.getRandomLongPositive());
+        clientCard3.setUcid("vantage-123");
+        clientCard3.setExpiryYear(2040);
+
+        data.clientCards = List.of(clientCard1, clientCard2, clientCard3);
 
         // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
@@ -1733,6 +1800,393 @@ public class ChargebackRuleDataFactory {
 
     private static DataHelper getChargebackTest23Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient23);
+        return data;
+    }
+
+    private static DataHelper getChargebackTest24Data() throws IOException {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient24);
+
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
+        data.ratesUsdCurrentObjects = List.of(tick);
+
+        // set client connections
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
+        connection1.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "name+dateofbirth";
+        connectionInfo1.connectionAttributeValue = "test";
+        connectionInfo1.sourceAttributeValue = "test";
+        connectionInfo1.relationType = "exact";
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
+        connection2.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "document";
+        connectionInfo2.connectionAttributeValue = "test";
+        connectionInfo2.sourceAttributeValue = "test";
+        connectionInfo2.relationType = "exact";
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        ClientHelper connectedClient3 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
+        connection3.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo3 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo3.connectionAttributeName = "payout";
+        connectionInfo3.connectionAttributeValue = "test";
+        connectionInfo3.sourceAttributeValue = "test";
+        connectionInfo3.relationType = "exact";
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        data.connections = List.of(connection1, connection2, connection3);
+        ClientHelper connectedClient4 = getRandomVantageClientAllFields();
+        ClientHelper connectedClient5 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
+        CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
+        CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
+        data.connectedClientHelpers = List.of(connectedClient, connectedClient3);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
+
+        // set client cards
+        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard5 = clientCard1;
+        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
+        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setUcid(connectedClient.getUcid());
+        clientCard5.setId(Utils.getRandomLongPositive());
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+
+        // add decline score
+        CrmBpCallbacksObject callback1 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback2 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback3 = generateCrmBpCallbacksObject(data.clientHelper);
+        callback3.setIsFraudDeclined((short) 1);
+        callback3.setBusinessOrderId(callbackEvent.getBusinessOrderId());
+
+        data.callbacksObjects = List.of(callback1, callback2, callback3);
+        data.callbacksObjects.forEach(c -> c.setPaymentProfileKey(basePaymentProfile));
+        data.callbacksObjects.forEach(c -> c.setStatus("declined"));
+
+        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects.getFirst().setEntry(0);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
+        String paymentProfileKey = cardFirstSixDigits + "***"
+                + cardLastFourDigits
+                + "_"
+                + cardExpiration.substring(0, 2)
+                + "/20" + cardExpiration.substring(2);
+
+        putProfileStatus(VERIFIED, paymentProfileKey, paymentProfileKey, data.connectedClientHelpers.getFirst());
+        return data;
+    }
+
+    private static DataHelper getChargebackTest25Data() throws IOException {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient25);
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
+        data.ratesUsdCurrentObjects = List.of(tick);
+
+        // set client connections
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
+        connection1.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "name+dateofbirth";
+        connectionInfo1.connectionAttributeValue = "test";
+        connectionInfo1.sourceAttributeValue = "test";
+        connectionInfo1.relationType = "exact";
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
+        connection2.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "document";
+        connectionInfo2.connectionAttributeValue = "test";
+        connectionInfo2.sourceAttributeValue = "test";
+        connectionInfo2.relationType = "exact";
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        ClientHelper connectedClient3 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
+        connection3.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo3 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo3.connectionAttributeName = "payout";
+        connectionInfo3.connectionAttributeValue = "test";
+        connectionInfo3.sourceAttributeValue = "test";
+        connectionInfo3.relationType = "exact";
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        data.connections = List.of(connection1, connection2, connection3);
+        ClientHelper connectedClient4 = getRandomVantageClientAllFields();
+        ClientHelper connectedClient5 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
+        CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
+        CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
+        data.connectedClientHelpers = List.of(connectedClient, connectedClient3);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
+
+        // set client cards
+        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard5 = clientCard1;
+        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
+        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setUcid(connectedClient.getUcid());
+        clientCard5.setId(Utils.getRandomLongPositive());
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
+        String paymentProfileKey = cardFirstSixDigits + "***"
+                + cardLastFourDigits
+                + "_"
+                + cardExpiration.substring(0, 2)
+                + "/20" + cardExpiration.substring(2);
+
+        putProfileStatus(VERIFIED, paymentProfileKey, paymentProfileKey, data.connectedClientHelpers.getFirst());
+        return data;
+    }
+
+    private static DataHelper getChargebackTest26Data() throws IOException {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient26);
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
+        data.ratesUsdCurrentObjects = List.of(tick);
+
+        // set client connections
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
+        connection1.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "name+dateofbirth";
+        connectionInfo1.connectionAttributeValue = "test";
+        connectionInfo1.sourceAttributeValue = "test";
+        connectionInfo1.relationType = "exact";
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
+        connection2.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "document";
+        connectionInfo2.connectionAttributeValue = "test";
+        connectionInfo2.sourceAttributeValue = "test";
+        connectionInfo2.relationType = "exact";
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        ClientHelper connectedClient3 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
+        connection3.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo3 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo3.connectionAttributeName = "payout";
+        connectionInfo3.connectionAttributeValue = "test";
+        connectionInfo3.sourceAttributeValue = "test";
+        connectionInfo3.relationType = "exact";
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        data.connections = List.of(connection1, connection2, connection3);
+        ClientHelper connectedClient4 = getRandomVantageClientAllFields();
+        ClientHelper connectedClient5 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
+        CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
+        CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
+        data.connectedClientHelpers = List.of(connectedClient, connectedClient3);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
+
+        // set client cards
+        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard5 = clientCard1;
+        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
+        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setUcid(connectedClient.getUcid());
+        clientCard5.setId(Utils.getRandomLongPositive());
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Ultra High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
+        String paymentProfileKey = cardFirstSixDigits + "***"
+                + cardLastFourDigits
+                + "_"
+                + cardExpiration.substring(0, 2)
+                + "/20" + cardExpiration.substring(2);
+
+        putProfileStatus(VERIFIED, paymentProfileKey, paymentProfileKey, data.connectedClientHelpers.getFirst());
+
+        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects.getFirst().setEntry(0);
+        return data;
+    }
+
+    private static DataHelper getChargebackTest27Data() throws IOException {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient27);
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
+        data.ratesUsdCurrentObjects = List.of(tick);
+
+        // set client connections
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
+        connection1.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "name+dateofbirth";
+        connectionInfo1.connectionAttributeValue = "test";
+        connectionInfo1.sourceAttributeValue = "test";
+        connectionInfo1.relationType = "exact";
+        connection1.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
+        connection2.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "document";
+        connectionInfo2.connectionAttributeValue = "test";
+        connectionInfo2.sourceAttributeValue = "test";
+        connectionInfo2.relationType = "exact";
+        connection2.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
+        ClientHelper connectedClient3 = getRandomVantageClientAllFields();
+        ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
+        connection3.connectionScore = 0.8;
+        ConnectionTableEntry.ConnectionInfo connectionInfo3 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo3.connectionAttributeName = "payout";
+        connectionInfo3.connectionAttributeValue = "test";
+        connectionInfo3.sourceAttributeValue = "test";
+        connectionInfo3.relationType = "exact";
+        connection3.connectionInfo =
+                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
+        data.connections = List.of(connection1, connection2, connection3);
+        ClientHelper connectedClient4 = getRandomVantageClientAllFields();
+        ClientHelper connectedClient5 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
+        CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
+        CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
+        data.connectedClientHelpers = List.of(connectedClient, connectedClient3);
+        data.connectedUsers = List.of(
+                connectedUserCrmTbUserObject1,
+                connectedUserCrmTbUserObject2,
+                connectedUserCrmTbUserObject3,
+                connectedUserCrmTbUserObject4,
+                connectedUserCrmTbUserObject5);
+
+        // set client cards
+        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard5 = clientCard1;
+        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
+        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setUcid(connectedClient.getUcid());
+        clientCard5.setId(Utils.getRandomLongPositive());
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Very High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
+        String paymentProfileKey = cardFirstSixDigits + "***"
+                + cardLastFourDigits
+                + "_"
+                + cardExpiration.substring(0, 2)
+                + "/20" + cardExpiration.substring(2);
+
+        putProfileStatus(VERIFIED, paymentProfileKey, paymentProfileKey, data.connectedClientHelpers.getFirst());
+
         return data;
     }
 
@@ -1763,6 +2217,10 @@ public class ChargebackRuleDataFactory {
         map.put("21", getChargebackTest21Data());
         map.put("22", getChargebackTest22Data());
         map.put("23", getChargebackTest23Data());
+        map.put("24", getChargebackTest24Data());
+        map.put("25", getChargebackTest25Data());
+        map.put("26", getChargebackTest26Data());
+        map.put("27", getChargebackTest27Data());
         return map;
     }
 }

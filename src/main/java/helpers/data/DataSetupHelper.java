@@ -6,6 +6,7 @@ import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.DbName.POSTGRES;
 import static utils.Constants.*;
 import static utils.Utils.*;
 import static utils.Utils.writeLog;
@@ -202,6 +203,18 @@ public class DataSetupHelper {
             }
             if (data.ratesUsdCurrentObjects != null) {
                 data.ratesUsdCurrentObjects.forEach(rate -> insertObjectToDb(RATES_USD_CURRENT, rate));
+            }
+            if (data.paymentEventsObjects != null) {
+                data.paymentEventsObjects.forEach(
+                        pEvent -> insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, pEvent));
+            }
+            if (data.paymentDetailsObjects != null) {
+                data.paymentDetailsObjects.forEach(
+                        pDetail -> insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, pDetail));
+            }
+            if (data.paymentRuleExecutionsObjects != null) {
+                data.paymentRuleExecutionsObjects.forEach(pExecution ->
+                        insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, pExecution));
             }
             if (data.ucidGeneralScore != null) {
                 insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScore);

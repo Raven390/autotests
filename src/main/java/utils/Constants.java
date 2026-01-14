@@ -41,6 +41,8 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MARKET_CLOSE = "Clickhouse api. Get market close";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BALANCE_ORDERS = "Clickhouse api. Get balance orders";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CHARGEBACK_SCORE =
+            "Clickhouse api. Get chargeback score";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BONUSES = "Clickhouse api. Get bonuses";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT_TRADING_ACCOUNTS =
@@ -110,6 +112,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_IN_ROUTER_RULE =
             "Router rule. Withdrawal notification branch.";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_IN_ROUTER_RULE = "Router rule. Mirror trade branch";
+    public static final String STORY_RULE_ENGINE_ENOUGH_TRADES_IN_ROUTER_RULE = "Router rule. Enough trades branch";
     public static final String STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE =
             "Router rule. Connection search branch";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_TRANSFER_TO_WA = "Router rule. Transfer to wa";
@@ -127,6 +130,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event ";
     public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event ";
     public static final String STORY_RULE_ENGINE_CUSTOM_RULE = "Custom rule ";
+    public static final String STORY_RULE_ENGINE_CHARGEBACK_RULE = "Chargeback rule ";
     public static final String STORY_PAYMENT_GATE_GET_DECISIONS = "Get decisions request";
     public static final String STORY_PAYMENT_GATE_POST_DECISIONS = "Post decisions request";
     public static final String STORY_PAYMENT_GATE_POST_TEMP_DECISIONS = "Post temp decisions request";

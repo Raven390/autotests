@@ -65,6 +65,9 @@ import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsOb
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
+import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
 import business_objects.kafka.CustomEvent;
 import business_objects.kafka.InternalHedgeEvent;
@@ -122,6 +125,9 @@ public class DataHelper {
     public List<CrmTbDepositEntity> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
     public List<Mt5DealsCoercedObject> mt5DealsCoercedObjects;
+    public List<PaymentEventsObject> paymentEventsObjects;
+    public List<PaymentDetailsObject> paymentDetailsObjects;
+    public List<PaymentRuleExecutionsObject> paymentRuleExecutionsObjects;
     public List<RatesUsdCurrentObject> ratesUsdCurrentObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
     public MirrorLoginObject aggrMirrorAccountsByTrades;

@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static tests.TestBaseRule.*;
+import static utils.Constants.*;
 
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
@@ -20,12 +21,19 @@ import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.*;
 
+@Feature(FEATURE_RULE_ENGINE_SERVICE)
+@Story(STORY_RULE_ENGINE_ENOUGH_TRADES_IN_ROUTER_RULE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
 class EnoughTradesRuleTest {
 
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();

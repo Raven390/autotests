@@ -211,5 +211,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("Internal hedge time")
         private String internalHedgeTime;
+
+        @JsonProperty("1st deposit")
+        private String firstDeposit;
     }
 }

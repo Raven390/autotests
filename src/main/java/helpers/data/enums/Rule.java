@@ -17,7 +17,8 @@ public enum Rule {
     MIRROR_TRADE_ML("ML Mirror Trade", "ml_mirror_trade"),
     MIRROR_TRADE_OPEN_TRADE("Mirror trade on open trade event rule", "openTradeMirrorTrade"),
     GAP_TRADING("Gap trading rule", "gap_trade"),
-    LOGIN_RULE("Login rule", "login_rule");
+    LOGIN_RULE("Login rule", "login_rule"),
+    CHARGEBACK("Chargeback", "chargeback");
 
     private final String name;
     private final String processId;

@@ -26,15 +26,23 @@ import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeStatus;
+import helpers.data.enums.Rule;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.*;
 
+@Feature(FEATURE_RULE_ENGINE_SERVICE)
+@Story(STORY_RULE_ENGINE_CHARGEBACK_RULE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
 class ChargebackRuleTest {
 
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
@@ -46,7 +54,7 @@ class ChargebackRuleTest {
         dbDataMap = setupChargebackData();
     }
 
-    @AfterAll
+    // @AfterAll
     static void teardown() throws Exception {
         deleteData(dbDataMap);
     }
@@ -54,17 +62,17 @@ class ChargebackRuleTest {
     @Test
     @AllureId("1948")
     @DisplayName(
-            "Chargeback rule test. client have no data. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. Event_1tc5so6")
+            "Chargeback rule test. client have rule end ALERT for rule 4. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. Event_1tc5so6")
     void chargeback1Test() throws Exception {
         DataHelper data = dbDataMap.get("1");
         setupData(data);
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_106", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -73,7 +81,7 @@ class ChargebackRuleTest {
         PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(4));
-        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(106));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(101));
     }
 
     @Test
@@ -86,10 +94,19 @@ class ChargebackRuleTest {
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(4));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(101));
     }
 
     @Test
@@ -102,10 +119,10 @@ class ChargebackRuleTest {
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
     }
 
     @Test
@@ -121,10 +138,10 @@ class ChargebackRuleTest {
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("get_rate", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("get_rate", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
     }
 
     @Test
@@ -137,10 +154,10 @@ class ChargebackRuleTest {
 
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("get_rate", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("get_rate", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
     }
 
     @Test
@@ -155,14 +172,15 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("set_score_1", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        // not reachable now
+        // checkElementId("set_score_1", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -181,7 +199,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -190,7 +208,7 @@ class ChargebackRuleTest {
                 alert.getMerchantOrderId(),
                 is(data.callbackEvent.getCallback().getData().getOrderId()));
         assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
-        assertThat("Verify alert ", alert.getReason(), is("1st deposit and no open trades"));
+        assertThat("Verify alert ", alert.getReason(), is("Multi-condition match"));
         assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
         assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
         assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
@@ -223,10 +241,9 @@ class ChargebackRuleTest {
         assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
 
         // alert/attribute
-        assertThat("Verify alert attributes", alert.getAttributes().getOpenTrades(), is("No"));
-        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
-        assertThat("Verify alert attributes", alert.getAttributes().getFirstDepositNoOpenTrades(), is("No"));
-        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
+        assertThat("Verify alert attributes", alert.getAttributes().getOpenTrades(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFirstDeposit(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(2));
     }
 
     @Test
@@ -241,14 +258,14 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("set_score_1", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("set_score_1", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -267,7 +284,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -327,14 +344,14 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("set_score_1", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("set_score_1", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -353,7 +370,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -413,14 +430,14 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("incr_score", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("incr_score", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -439,7 +456,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -500,14 +517,14 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("incr_score2", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("incr_score2", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -526,7 +543,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -588,14 +605,14 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("incr_score3", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("incr_score3", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -614,7 +631,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -685,14 +702,14 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("incr_score4", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end_209", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("incr_score4", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end_209", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -711,7 +728,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -783,10 +800,10 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_104", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_104", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -802,7 +819,7 @@ class ChargebackRuleTest {
         assertThat("Verify amount of decisions in DB", decision.size(), is(0));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
     }
 
@@ -818,10 +835,10 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_105", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_105", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -837,7 +854,7 @@ class ChargebackRuleTest {
         assertThat("Verify amount of decisions in DB", decision.size(), is(0));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
     }
 
@@ -853,10 +870,10 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_1tc5so6", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_1tc5so6", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -872,7 +889,7 @@ class ChargebackRuleTest {
         assertThat("Verify amount of decisions in DB", decision.size(), is(0));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
     }
 
@@ -888,10 +905,10 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_1tc5so6", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_1tc5so6", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -907,7 +924,7 @@ class ChargebackRuleTest {
         assertThat("Verify amount of decisions in DB", decision.size(), is(0));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
     }
 
@@ -923,10 +940,10 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_106", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_106", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -942,7 +959,7 @@ class ChargebackRuleTest {
         assertThat("Verify amount of decisions in DB", decision.size(), is(0));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
     }
 
@@ -958,13 +975,13 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_0nx74ci", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_0nx74ci", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -983,7 +1000,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -1051,13 +1068,13 @@ class ChargebackRuleTest {
         addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_203", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_203", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -1076,7 +1093,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -1144,13 +1161,13 @@ class ChargebackRuleTest {
         addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_202", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_202", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -1169,7 +1186,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -1233,18 +1250,18 @@ class ChargebackRuleTest {
         DataHelper data = dbDataMap.get("21");
         setupData(data);
 
-        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
-        addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_204", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), "chargeback");
-        checkElementId("send_alert", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_204", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -1263,7 +1280,7 @@ class ChargebackRuleTest {
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
         // alert root
@@ -1305,9 +1322,9 @@ class ChargebackRuleTest {
         assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
 
         // alert/attribute
-        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is(nullValue()));
         assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
-        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(2));
         assertThat(
                 "Verify alert attributes",
                 alert.getAttributes().getPaymentProfile(),
@@ -1332,10 +1349,10 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("end_102", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("end_102", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -1351,7 +1368,7 @@ class ChargebackRuleTest {
         assertThat("Verify amount of decisions in DB", decision.size(), is(0));
 
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
     }
 
@@ -1380,12 +1397,101 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), "chargeback");
-        checkElementId("process_instance_key", data.callbackEvent.getId(), "chargeback");
-        checkElementId("put_rule_execution", data.callbackEvent.getId(), "chargeback");
-        checkElementId("end", data.callbackEvent.getId(), "chargeback");
+        checkElementId("Event_1en3mz7", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
         // check alert
-        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Chargeback");
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("2042")
+    @DisplayName("Chargeback Chargeback. Branch 10, segment ultra or very high, score>0. Element_id: end_207")
+    void chargeback24Test() throws Exception {
+        DataHelper data = dbDataMap.get("24");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_207", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert ", alerts.getFirst().getReason(), is("Card verified by other client"));
+    }
+
+    @Test
+    @AllureId("2043")
+    @DisplayName("Chargeback Chargeback. Branch 10, segment ultra or very high, score0. Element_id: end_103")
+    void chargeback25Test() throws Exception {
+        DataHelper data = dbDataMap.get("25");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_103", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("2044")
+    @DisplayName(
+            "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades >0. Element_id: end_205")
+    void chargeback26Test() throws Exception {
+        DataHelper data = dbDataMap.get("26");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_205", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert ", alerts.getFirst().getReason(), is("Card verified by other client"));
+    }
+
+    @Test
+    @AllureId("2045")
+    @DisplayName(
+            "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades =0. Element_id: end_206")
+    void chargeback27Test() throws Exception {
+        DataHelper data = dbDataMap.get("27");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_206", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert ", alerts.getFirst().getReason(), is("Card verified by other client"));
     }
 }

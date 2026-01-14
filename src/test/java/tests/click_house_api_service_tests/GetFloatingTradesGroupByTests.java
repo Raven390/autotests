@@ -32,7 +32,7 @@ import tests.TestBaseApi;
 @Tag(TAG_MANUAL)
 @Disabled
 @Muted
-class GetFloatingTradesGroupBy extends TestBaseApi {
+class GetFloatingTradesGroupByTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by with all params (200)")
