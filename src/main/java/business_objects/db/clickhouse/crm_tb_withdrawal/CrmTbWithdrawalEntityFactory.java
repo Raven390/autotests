@@ -36,7 +36,7 @@ public class CrmTbWithdrawalEntityFactory {
                 .reversedAmount(BigDecimal.valueOf(amount))
                 .reversedAmountUsd(BigDecimal.valueOf(amount))
                 .currency("USD")
-                .statusId(5)
+                .statusId(7)
                 .status("Complete")
                 .statusGroup("Success")
                 .paymentTypeId(1)

@@ -4,8 +4,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.DbHelper.*;
 import static helpers.database.OperationsHelper.cleanUserPaymentsDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -40,6 +39,8 @@ class PaymentProfilesListTest extends TestBaseWeb {
     private static CrmTbDepositEntity deposit;
     private static CrmTbDepositEntity deposit2;
     private static CrmTbWithdrawalEntity withdrawal1;
+    private static CrmTbWithdrawalEntity withdrawalPending;
+    private static CrmTbDepositEntity depositPending;
 
     @BeforeAll
     static void setup() {
@@ -75,14 +76,32 @@ class PaymentProfilesListTest extends TestBaseWeb {
         withdrawal1.setAmountUsd(BigDecimal.valueOf(101.01));
         withdrawal1.setReversedAmount(BigDecimal.ZERO);
         withdrawal1.setReversedAmountUsd(BigDecimal.ZERO);
-        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1));
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit2);
+        withdrawalPending = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        withdrawalPending.setPaymentProfile("Card" + getRandomIntPositive());
+        withdrawalPending.setPaymentProfileKey("Card" + getRandomIntPositive());
+        withdrawalPending.setPaymentType("Card");
+        withdrawalPending.setPaymentChannel("USDT(BEP20)-CPS");
+        withdrawalPending.setPaymentFamily("LBT");
+        withdrawalPending.setIsDel(0);
+        withdrawalPending.setStatusGroup("Pending");
+        withdrawalPending.setStatusId(9);
+        depositPending = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        depositPending.setPaymentProfile("V-Wallet " + getRandomIntPositive());
+        depositPending.setPaymentProfileKey(depositPending.getPaymentProfile());
+        depositPending.setPaymentType("V-Wallet");
+        depositPending.setPaymentFamily("V-Wallet");
+        depositPending.setIsDel(0);
+        depositPending.setStatusGroup("Pending");
+        depositPending.setStatusId(6);
+        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawalPending));
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit, deposit2, depositPending));
     }
 
     @AfterAll
     static void teardown() throws Exception {
         cleanUserPaymentsDb(client.getUcid());
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 
     @Test
@@ -96,7 +115,7 @@ class PaymentProfilesListTest extends TestBaseWeb {
         paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.clickPaymentProfilesTabButton();
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
-        assertThat("Verify payment profiles is not empty", paymentProfilesList.size(), equalTo(2));
+        assertThat("Verify payment profiles is not empty", paymentProfilesList.size(), equalTo(3));
         PaymentsPage.PaymentFamilyBlock lbtPaymentFamily = paymentProfilesList.stream()
                 .filter(x -> x.header().contains("LBT"))
                 .findFirst()
@@ -105,13 +124,19 @@ class PaymentProfilesListTest extends TestBaseWeb {
                 "Verify LBT payment family header ",
                 lbtPaymentFamily.header(),
                 equalTo(String.format(
-                        "LBT%d profile %d USD %.2f USD No connections", 1, 0, withdrawal1.getAmountUsd())));
+                        "LBT%d profiles %d USD %.2f USD No connections", 2, 0, withdrawal1.getAmountUsd())));
         assertThat(
                 "Verify LBT payment profiles",
                 lbtPaymentFamily.rowDataList().getFirst(),
                 equalTo(String.format(
                         "%sNot verified%d USDNo deposits%.2f USD1 withdrawal0 clientsConnected",
                         withdrawal1.getPaymentProfile(), 0, withdrawal1.getAmountUsd())));
+        assertThat(
+                "Verify LBT payment profiles with pending status",
+                lbtPaymentFamily.rowDataList().getLast(),
+                equalTo(String.format(
+                        "%sNot verified0 USDNo deposits0 USDNo withdrawals0 clientsConnected",
+                        withdrawalPending.getPaymentProfile())));
 
         PaymentsPage.PaymentFamilyBlock cryptoPaymentFamily = paymentProfilesList.stream()
                 .filter(x -> x.header().contains("Crypto"))
@@ -141,5 +166,19 @@ class PaymentProfilesListTest extends TestBaseWeb {
                 equalTo(String.format(
                         "%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected",
                         deposit2.getPaymentProfile(), deposit2.getAmountUsd(), 1, 0)));
+        PaymentsPage.PaymentFamilyBlock vWalletPaymentFamily = paymentProfilesList.stream()
+                .filter(x -> x.header().contains("V-Wallet"))
+                .findFirst()
+                .get();
+        assertThat(
+                "Verify V-Wallet payment family header",
+                vWalletPaymentFamily.header(),
+                equalTo("V-Wallet1 profile 0 USD 0 USD No connections"));
+        assertThat(
+                "Verify V-Wallet payment profiles with pending status",
+                vWalletPaymentFamily.rowDataList().getFirst(),
+                equalTo(String.format(
+                        "%sNot verified0 USDNo deposits0 USDNo withdrawals0 clientsConnected",
+                        depositPending.getPaymentProfile())));
     }
 }
