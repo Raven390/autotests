@@ -14,6 +14,7 @@ import helpers.data.enums.FraudTypeStatus;
 import io.qameta.allure.Allure;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import page_objects.backoffice_pages.AbstractPage;
 
 public class FraudstersPage extends AbstractPage {
@@ -60,6 +61,9 @@ public class FraudstersPage extends AbstractPage {
     private static final String FRAUD_STATUS_PATTERN =
             "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')  or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[contains(@data-qa,'fraud_type_selector__dropdown__item__submenu__%s:%s')]";
     private static final String FRAUD_SOURCE_PATTERN = "//button[@data-qa='buttons_list__item__%s']";
+
+    public static final String FRAUD_TYPE_SELECTOR_STATUS =
+            "//*[@data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__item_%s__%s']";
 
     public FraudstersPage(Page page) {
         super(page);
@@ -217,6 +221,18 @@ public class FraudstersPage extends AbstractPage {
         page.locator(element).hover();
         page.locator(element).hover();
         String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
+        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        page.locator(subelement).click();
+    }
+
+    public void addSelectedFraud(FraudType fraud, FraudTypeStatus status) {
+        String element = String.format(fraudDropoutListElementLocatorPattern, fraud.getName());
+        page.locator(element).hover();
+        page.locator(element).hover();
+        String subelement = String.format(
+                FRAUD_TYPE_SELECTOR_STATUS,
+                fraud.getCode(),
+                status.getDisplayName().toLowerCase(Locale.ROOT));
         page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         page.locator(subelement).click();
     }
