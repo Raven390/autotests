@@ -43,6 +43,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_CREDITS = CONFIG.clickhouseGetCreditsPath();
     public static final String CLICKHOUSE_API_GET_BONUSES = CONFIG.clickhouseGetBonusesPath();
     public static final String CLICKHOUSE_API_GET_CREDIT_EQUITY = CONFIG.clickhouseGetCreditEquityRatio();
+    public static final String CLICKHOUSE_API_GET_FREE_MARGIN = CONFIG.clickhouseGetFreeMargin();
     public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY =
             CONFIG.clickhouseGetFloatingTradesGroupBy();
     public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES =
@@ -313,6 +314,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetCreditEquityRatio")
         String clickhouseGetCreditEquityRatio();
+
+        @Key("clickhouseGetFreeMargin")
+        String clickhouseGetFreeMargin();
 
         @Key("clickhouseGetFloatingTradesGroupBy")
         String clickhouseGetFloatingTradesGroupBy();
