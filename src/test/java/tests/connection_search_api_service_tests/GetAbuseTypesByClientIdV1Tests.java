@@ -140,21 +140,21 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
     @AfterAll
     static void deleteConnectionTableEntry() throws Exception {
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry11.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry12.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry13.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry21.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry22.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry23.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry3.userFrom));
-        deleteEntryFromDb(
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry11.userFrom));
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry12.userFrom));
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry13.userFrom));
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry21.userFrom));
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry22.userFrom));
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry23.userFrom));
+        deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry3.userFrom));
+        deleteObjectFromDb(
                 CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryStatus1.userFrom));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryStatus2.userFrom));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud11.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.getUcid()));
+        deleteObjectFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud11.getUcid()));
+        deleteObjectFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.getUcid()));
+        deleteObjectFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.getUcid()));
+        deleteObjectFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.getUcid()));
 
         List<String> clientUcids = new java.util.ArrayList<>(List.of());
         for (CrmTbUserObject client : clientsDB) {

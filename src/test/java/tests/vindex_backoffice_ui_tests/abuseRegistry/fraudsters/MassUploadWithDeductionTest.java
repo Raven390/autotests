@@ -109,10 +109,10 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
         deleteUserFromAbuseRegistry(client4.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client4.getUcid()));
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client4.getUcid()));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client1.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client4.getUcid()));
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client4.getUcid()));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
     }
 
     @Test

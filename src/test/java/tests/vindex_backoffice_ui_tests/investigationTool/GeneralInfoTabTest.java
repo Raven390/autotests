@@ -457,7 +457,7 @@ class GeneralInfoTabTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws SQLException {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }
 }

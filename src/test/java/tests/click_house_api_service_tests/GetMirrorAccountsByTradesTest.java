@@ -3,7 +3,7 @@ package tests.click_house_api_service_tests;
 import static business_objects.api.clickhouse_api_service.get_mirror_accounts_by_trades.GetMirrorAccountsByTradesRequest.getMirrorAccountsByTrades;
 import static business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObjectFactory.generateMirrorTradesByAccount;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -46,7 +46,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = '%s'", data1.login_1));
+        deleteObjectFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = '%s'", data1.login_1));
     }
 
     @Test

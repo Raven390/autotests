@@ -31,7 +31,7 @@
 // import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 // import static helpers.data.enums.Restriction.LOGIN_CRM;
 // import static helpers.database.BoHelper.closeAlert;
-// import static helpers.database.DbHelper.deleteEntryFromDb;
+// import static helpers.database.DbHelper.deleteObjectFromDb;
 // import static helpers.database.DbHelper.insertObjectToDb;
 // import static org.hamcrest.MatcherAssert.assertThat;
 // import static org.hamcrest.Matchers.*;
@@ -63,7 +63,7 @@
 //
 //    @AfterEach
 //    public void teardown() throws SQLException {
-//        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+//        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
 //        closeAlert(client.getUcid());
 //    }
 //

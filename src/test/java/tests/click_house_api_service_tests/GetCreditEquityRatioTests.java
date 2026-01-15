@@ -3,7 +3,7 @@ package tests.click_house_api_service_tests;
 import static business_objects.api.clickhouse_api_service.get_credit_equity_ratio.GetCreditEquityRequest.getCreditEquity;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -45,7 +45,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", data1.account));
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", data1.account));
     }
 
     @Test

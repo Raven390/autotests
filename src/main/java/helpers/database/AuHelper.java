@@ -1,6 +1,6 @@
 package helpers.database;
 
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,7 +18,7 @@ public class AuHelper {
     public static void cleanClientAudit(String... ucid) throws Exception {
         String ucids = Arrays.stream(ucid).map(u -> "'" + u + "'").collect(Collectors.joining(", "));
         String condition = "ucid IN (" + ucids + ")";
-        deleteEntryFromDb(DbName.POSTGRES, AUDIT_EVENT_TABLE, condition);
+        deleteObjectFromDb(DbName.POSTGRES, AUDIT_EVENT_TABLE, condition);
     }
 
     public static void checkRestrictionApplyAudit(String ucid) throws Exception {

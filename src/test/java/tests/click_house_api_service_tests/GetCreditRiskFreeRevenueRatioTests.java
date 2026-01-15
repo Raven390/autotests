@@ -5,7 +5,7 @@ import static business_objects.db.clickhouse.aggr_credit_risk_free_revenue_ratio
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -60,7 +60,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 

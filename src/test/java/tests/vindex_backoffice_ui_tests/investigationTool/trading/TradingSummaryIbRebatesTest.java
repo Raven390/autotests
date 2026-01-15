@@ -60,7 +60,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
 
     @AfterEach
     public void teardownEach() {
-        deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
     }
 
     @Order(1)
@@ -164,7 +164,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
-        deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
     }
 }

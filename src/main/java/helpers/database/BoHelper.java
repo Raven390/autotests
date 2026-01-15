@@ -2,7 +2,7 @@ package helpers.database;
 
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbName.POSTGRES;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
@@ -88,15 +88,15 @@ public class BoHelper {
                 String investigationIds = investigations.stream()
                         .map(inv -> String.valueOf(inv.getId()))
                         .collect(Collectors.joining(","));
-                deleteEntryFromDb(
+                deleteObjectFromDb(
                         POSTGRES,
                         BO_INVESTIGATION_HISTORY_TABLE_NAME,
                         "investigation_id IN (" + investigationIds + ")");
             }
-            deleteEntryFromDb(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
-            deleteEntryFromDb(POSTGRES, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
-            deleteEntryFromDb(POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
-            deleteEntryFromDb(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
+            deleteObjectFromDb(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
+            deleteObjectFromDb(POSTGRES, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
+            deleteObjectFromDb(POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
+            deleteObjectFromDb(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
         } catch (Exception e) {
             writeLog(NO_SUCH_CLIENT_IN_BO);
         }
@@ -109,7 +109,7 @@ public class BoHelper {
     @Step("Delete user's frauds from BO")
     public static void cleanUserFraudsBo(String ucid) throws Exception {
 
-        deleteEntryFromDb(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
+        deleteObjectFromDb(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
     }
 
     @Step("Check that user have record about fraud in db")

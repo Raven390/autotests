@@ -119,7 +119,7 @@ class BatchDeductionEquityValidationTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteUserFromAbuseRegistry(client.getUcid());
     }
 

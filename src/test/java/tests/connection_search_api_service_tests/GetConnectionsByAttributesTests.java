@@ -278,20 +278,20 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
                 connectionTableEntryByNameBirth.userFrom,
                 connectionTableEntryBySessionId.userFrom);
         // Delete data from attributes tables
-        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
-        deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
-        deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
-        deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
-        deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntryFiltration.email));
-        deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId));
-        deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
-        deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntryIp.digitalId));
-        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
-        deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
-        deleteEntryFromDb(
+        deleteObjectFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
+        deleteObjectFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
+        deleteObjectFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip));
+        deleteObjectFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
+        deleteObjectFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
+        deleteObjectFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntryFiltration.email));
+        deleteObjectFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId));
+        deleteObjectFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
+        deleteObjectFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntryIp.digitalId));
+        deleteObjectFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
+        deleteObjectFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
+        deleteObjectFromDb(
                 WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntryFrom.webSessionId));
-        deleteEntryFromDb(MT_CID_TABLE_NAME, String.format("mt_cid = '%s'", mtCidTableEntryFrom.getMtCid()));
+        deleteObjectFromDb(MT_CID_TABLE_NAME, String.format("mt_cid = '%s'", mtCidTableEntryFrom.getMtCid()));
     }
 
     @Test

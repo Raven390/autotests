@@ -1,6 +1,6 @@
 package helpers.database;
 
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
@@ -27,10 +27,10 @@ public class ArHelper {
             String condition = String.format(WHERE_CONDITION, ucids);
 
             deleteDeductions(ucidList);
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, condition);
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, condition);
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, condition);
-            deleteEntryFromDb(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, condition);
+            deleteObjectFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, condition);
+            deleteObjectFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, condition);
+            deleteObjectFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, condition);
+            deleteObjectFromDb(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, condition);
 
         } catch (NoSuchElementException e) {
             writeLog(NO_SUCH_CLIENT_IN_AR);
@@ -62,11 +62,11 @@ public class ArHelper {
                     String whereMessageId = String.format(
                             "message_id IN ('%s')",
                             messageIds.stream().map(String::valueOf).collect(Collectors.joining("', '")));
-                    deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_REQUEST_TABLE_NAME, whereMessageId);
-                    deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, whereMessageId);
+                    deleteObjectFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_REQUEST_TABLE_NAME, whereMessageId);
+                    deleteObjectFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, whereMessageId);
                 }
             }
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, condition);
+            deleteObjectFromDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, condition);
         } catch (NoSuchElementException e) {
             writeLog(NO_SUCH_CLIENT_IN_AR);
         }
@@ -97,7 +97,7 @@ public class ArHelper {
                     String whereMessageId = String.format(
                             "message_id IN ('%s')",
                             messageIds.stream().map(String::valueOf).collect(Collectors.joining(", ")));
-                    deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, whereMessageId);
+                    deleteObjectFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, whereMessageId);
                     return messageIds;
                 }
             }

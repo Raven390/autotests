@@ -1,6 +1,6 @@
 package helpers.data.rules;
 
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
 import static utils.Utils.writeLog;
@@ -93,12 +93,12 @@ public class WaveFlagInserter {
 
     public static void deleteWaveFlagData(ClientHelper client) {
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
             writeLog(e.getMessage());
         }
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 }

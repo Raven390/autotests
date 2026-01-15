@@ -100,8 +100,8 @@ class PaymentProfilesListTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         cleanUserPaymentsDb(client.getUcid());
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 
     @Test

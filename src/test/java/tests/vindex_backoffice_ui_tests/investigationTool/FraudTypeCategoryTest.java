@@ -304,14 +304,14 @@ class FraudTypeCategoryTest extends TestBaseWeb {
     @AfterAll
     static void teardown() {
         // Cleanup Trading client
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
         try {
-            deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
+            deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
@@ -319,14 +319,14 @@ class FraudTypeCategoryTest extends TestBaseWeb {
         deleteUserBO(tradingCrmUser.ucid);
 
         // Cleanup Payment client
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
         try {
-            deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
+            deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
@@ -334,14 +334,14 @@ class FraudTypeCategoryTest extends TestBaseWeb {
         deleteUserBO(paymentCrmUser.ucid);
 
         // Cleanup Dual client
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }
         try {
-            deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
+            deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }

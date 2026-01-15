@@ -160,12 +160,12 @@ class ConnectionSearchBatchOperationsPaymentsTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CRM_USER_TABLE_NAME,
                 String.format(
                         "ucid IN ('%s', '%s', '%s')",
                         client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid()));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 CONNECTIONS_TABLE_NAME,
                 String.format(
                         "user_from IN ('%s', '%s', '%s')",

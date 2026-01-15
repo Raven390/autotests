@@ -199,7 +199,7 @@ public class ConnectionSearch {
         cleanUserFraudsBo(ucid7);
         cleanUserFraudsBo(ucid8);
         cleanUserFraudsBo(ucid9);
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 "consolidated.connection_table",
                 "user_to in (" + ucid1 + ", " + ucid2 + ", " + ucid3 + ", " + ucid4 + ", " + ucid5 + ", " + ucid6 + ", "
                         + ucid7 + ", " + ucid8 + ", " + ucid9 + ", " + ucid10 + ")");

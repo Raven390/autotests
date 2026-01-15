@@ -7,7 +7,7 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static java.util.function.Function.identity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -152,18 +152,18 @@ class IllegalProfitCalculationTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws SQLException {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 MT4_TRADES_COERCED_TABLE_NAME,
                 String.format("account = '%s' OR account = '%s'", account1.account, account2.account));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 MT_ACCOUNT_TABLE_NAME,
                 String.format("account = '%s' OR account = '%s'", account1.account, account2.account));
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
     }
 
     @AfterEach
     void afterEach() throws Exception {
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.POSTGRES,
                 BO_ILLEGAL_TRADES_TABLE_NAME,
                 String.format(

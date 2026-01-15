@@ -46,7 +46,7 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
 
     @AfterEach
     public void teardownEach() {
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 
     @Test

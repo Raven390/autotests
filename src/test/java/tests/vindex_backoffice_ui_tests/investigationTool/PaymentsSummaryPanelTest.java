@@ -104,7 +104,7 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(S3_FACT_CPA_COMMISSIONS, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT4_TRADES_TABLE_NAME, CLIENT_UCID_WHERE);
@@ -416,7 +416,7 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT4_TRADES_TABLE_NAME, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
 
         Allure.step("Prepare DB data for test user");
         var trade1 = generateTradeByClient(client);
@@ -483,7 +483,7 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(S3_FACT_CPA_COMMISSIONS, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
 
         Allure.step("Prepare DB data for test user");
         var trade1 = generateTradeByClient(client);
@@ -641,8 +641,8 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-2765 Payments summary Cost efficiency panel")
     @DisplayName("Payments summary Cost efficiency panel")
     void paymentsSummaryCostEfficiencyPanelTest() {
-        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
         var historyMetrics = generateS3FactLoginMetricsClientZero(client);
         historyMetrics.setDailyCoreSpreadRevenuePe(100.11);
         historyMetrics.setDailyCoreSpreadRevenueOz(200.22);
@@ -689,8 +689,8 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-2765 Payments summary Rewards panel")
     @DisplayName("Payments summary Rewards panel")
     void paymentsSummaryRewardsPanelTest() {
-        deleteEntryFromDb(MT_CREDITS_TABLE_NAME, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(MT_CREDITS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(S3_FACT_CPA_COMMISSIONS, CLIENT_UCID_WHERE);
         var credit = generateCreditsByClient(client);
         credit.amountUsd = 644.34;
@@ -727,7 +727,7 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-2765 Payments summary IB rebates panel")
     @DisplayName("Payments summary IB rebates panel")
     void paymentsSummaryIBRebatesPanelTest() {
-        deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
         MtBalanceOrdersObject balanceOrderEarnedAsIb = generateMtBalanceOrderByAccount(accountRebates);
         balanceOrderEarnedAsIb.setComment("rebates earned");
         balanceOrderEarnedAsIb.setAmountUsd(2345.67);

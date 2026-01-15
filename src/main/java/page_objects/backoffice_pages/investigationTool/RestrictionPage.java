@@ -1,7 +1,7 @@
 package page_objects.backoffice_pages.investigationTool;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -295,11 +295,11 @@ public class RestrictionPage extends AbstractPage {
                 ClientGeneralRestriction.class);
         for (ClientGeneralRestriction i : restrictionList) {
             String idString = i.getId().toString();
-            deleteEntryFromDb(
+            deleteObjectFromDb(
                     POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
-            deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
-            deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
-            deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
+            deleteObjectFromDb(POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
+            deleteObjectFromDb(POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
+            deleteObjectFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
         }
     }
 
@@ -330,7 +330,7 @@ public class RestrictionPage extends AbstractPage {
     @Deprecated
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'");
+        deleteObjectFromDb(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'");
     }
 
     public void isPageLoaded() {

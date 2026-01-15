@@ -361,7 +361,7 @@ class AlertsV2Test extends TestBaseWeb {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         helpers.database.BoHelper.closeAlert(crmTbUser.ucid);
     }
 }

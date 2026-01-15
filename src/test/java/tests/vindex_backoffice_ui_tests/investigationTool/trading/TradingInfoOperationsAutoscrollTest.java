@@ -80,8 +80,8 @@ class TradingInfoOperationsAutoscrollTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws SQLException {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(
                 MT4_TRADES_COERCED_TABLE_NAME,
                 String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);

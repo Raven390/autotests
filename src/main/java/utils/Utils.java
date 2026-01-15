@@ -25,10 +25,7 @@ import helpers.database.DbName;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -145,13 +142,23 @@ public class Utils {
     }
 
     /**
-     * Converts a timestamp in milliseconds to ISO 8601 format with milliseconds and Z timezone indicator.
+     * Returns current time in ISO 8601 format with milliseconds and Z timezone indicator.
      * Example: 2025-08-01T07:16:56.099Z
      *
      * @return formatted date-time string
      */
-    public static String convertTimestampToIsoFormatLocal() {
+    public static String getLocalTimeIsoFormat() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+    }
+
+    /**
+     * Returns UTC time in ISO 8601 format with milliseconds and Z timezone indicator.
+     * Example: 2025-08-01T07:16:56.099Z
+     *
+     * @return formatted date-time string
+     */
+    public static String getUtcTimeIsoFormat() {
+        return OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
     }
 
     /**

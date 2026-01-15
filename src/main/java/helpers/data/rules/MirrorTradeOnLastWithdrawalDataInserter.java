@@ -1,6 +1,6 @@
 package helpers.data.rules;
 
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
 
@@ -101,8 +101,8 @@ public class MirrorTradeOnLastWithdrawalDataInserter {
     }
 
     public static void deleteData(ClientHelper client) {
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 }

@@ -9,10 +9,10 @@ public class MtSymbolSessionObjectFactory {
 
     private MtSymbolSessionObjectFactory() {}
 
-    public static MtSymbolSessionObject generateMtSymbolSessionObjectByClient(
+    public static MtSymbolSession generateMtSymbolSessionObjectByClient(
             ClientHelper client, String symbol, String trade) {
 
-        return new MtSymbolSessionObject(
+        return new MtSymbolSession(
                 symbol,
                 client.getServerId(),
                 dayIndex(OffsetDateTime.now(ZoneOffset.UTC).getDayOfWeek()),

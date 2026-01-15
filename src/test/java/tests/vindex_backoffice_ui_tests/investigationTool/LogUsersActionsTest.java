@@ -443,10 +443,10 @@ public class LogUsersActionsTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws SQLException {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(CRM_TB_KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(CRM_TB_ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_TB_KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_TB_ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }
 }

@@ -143,10 +143,11 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
     static void teardown() throws Exception {
         cleanUserPaymentsDb(client.getUcid());
         cleanUserPaymentsDb(client2.getUcid());
-        deleteEntryFromDb(DbName.CLICKHOUSE, CRM_TB_CREDIT_CARD_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
+                DbName.CLICKHOUSE, CRM_TB_CREDIT_CARD_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
+        deleteObjectFromDb(
                 DbName.CLICKHOUSE, CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
-        deleteEntryFromDb(
+        deleteObjectFromDb(
                 DbName.CLICKHOUSE, CLIENT_PAYMENT_INFO_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
     }
 

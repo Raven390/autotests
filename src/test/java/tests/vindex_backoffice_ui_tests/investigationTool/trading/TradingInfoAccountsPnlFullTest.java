@@ -129,9 +129,9 @@ class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT4_TRADES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(MT4_TRADES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         cleanMt5CoercedTableByUcid(MT5_DEALS_COERCED_TABLE_NAME, crmTbUser.ucid);
         closeAlert(crmTbUser.ucid);
     }

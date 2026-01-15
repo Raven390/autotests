@@ -96,9 +96,9 @@ class SummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(CRM_USER_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, CLIENT_UCID_WHERE);
     }
 
     @Test
@@ -219,7 +219,7 @@ class SummaryPanelTest extends TestBaseWeb {
     @DisplayName("Clients summary panel Withdrawals")
     void clientSummaryWithdrawalsTest() {
         deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, CLIENT_UCID_WHERE);
 
         CrmTbWithdrawalEntity crmTbWithdrawal1 = generateCrmTbWithdrawalEntityByClient(client);
         crmTbWithdrawal1.setStatusId(16);

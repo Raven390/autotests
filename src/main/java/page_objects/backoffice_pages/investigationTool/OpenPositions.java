@@ -1,6 +1,6 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.*;
@@ -74,9 +74,9 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void openPositionsClean(String ucid) {
-        deleteEntryFromDb(MT4_TRADES_TABLE_NAME, "ucid = '" + ucid + "'");
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, "ucid = '" + ucid + "'");
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, "ucid = '" + ucid + "'");
+        deleteObjectFromDb(MT4_TRADES_TABLE_NAME, "ucid = '" + ucid + "'");
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, "ucid = '" + ucid + "'");
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "ucid = '" + ucid + "'");
     }
 
     public void navigateOpenPositions(String ucid) {

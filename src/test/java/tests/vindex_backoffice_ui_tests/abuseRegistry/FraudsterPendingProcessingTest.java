@@ -6,7 +6,7 @@ import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -95,7 +95,7 @@ class FraudsterPendingProcessingTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteUserFromAbuseRegistry(client.getUcid());
     }
 

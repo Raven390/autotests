@@ -126,11 +126,11 @@ class ClientBulkSearchTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = %d", mtAccount1.account));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = %d", mtAccount1Additional.account));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = %d", mtAccount2.account));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = %d", mtAccount1.account));
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = %d", mtAccount1Additional.account));
+        deleteObjectFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = %d", mtAccount2.account));
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
         closeAlert(client1.getUcid());
     }

@@ -6,7 +6,7 @@ import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOr
 import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -60,10 +60,10 @@ class ByBitUiDifferencesTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+            deleteObjectFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
             writeLog("Account deletion failed");
         }

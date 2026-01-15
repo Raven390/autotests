@@ -73,7 +73,7 @@ class VerificationDocumentsTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(CRM_FILES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_FILES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 }

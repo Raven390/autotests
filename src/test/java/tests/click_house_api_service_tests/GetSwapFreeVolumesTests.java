@@ -67,8 +67,8 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     static void teardown() throws Exception {
         cleanCrmUserTableByClient(client1.getUcid(), client2.getUcid(), client3.getUcid());
         cleanMt5CoercedTableByComment(deal1.getComment(), deal2.getComment());
-        // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
-        // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client2.getTradingAccount()));
+        // deleteObjectFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
+        // deleteObjectFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client2.getTradingAccount()));
     }
 
     @Test

@@ -20,7 +20,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.CleanTableHelper.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -335,7 +335,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
     @AfterAll
     static void deleteConnectionTableEntry() throws Exception {
         // Delete data from connections table
-        // deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'",
+        // deleteObjectFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'",
         // connectionTableEntryByDocument.userFrom));
 
         // Delete data from attributes tables
@@ -351,14 +351,16 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         cleanSessionIdTableByClient(userFromSessionId.getUcid(), userToSessionId.getUcid());
         cleanWebSessionIdTableByClient(userFromWebSessionId.getWebSessionId(), userToWebSessionId.getWebSessionId());
         cleanDepositsTableByUcid(userFromDeviceId.getDeviceId(), userToDeviceId.getDeviceId());
-        deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
-        deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry2.payout));
-        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
-        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry2.accIdNum));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry2.phoneNum));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntryStatusConfirmed.phoneNum));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntryStatusPotential.phoneNum));
+        deleteObjectFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
+        deleteObjectFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry2.payout));
+        deleteObjectFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
+        deleteObjectFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry2.accIdNum));
+        deleteObjectFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
+        deleteObjectFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry2.phoneNum));
+        deleteObjectFromDb(
+                PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntryStatusConfirmed.phoneNum));
+        deleteObjectFromDb(
+                PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntryStatusPotential.phoneNum));
         // Delete data from fraud type table
         cleanBoFraudTypesTableByUcid(
                 userFromEmail.getUcid(),

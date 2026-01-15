@@ -73,9 +73,9 @@ class GetAbuseTypesTests extends TestBaseApi {
     static void delete() throws Exception {
         cleanFraudTypeTableByClient(fraud1.getUcid(), fraud2.getUcid(), fraud3.getUcid());
         deleteUserFromAbuseRegistry(client.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteUserFromAbuseRegistry(client2.getUcid());
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
     }
 
     @Test

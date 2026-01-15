@@ -128,8 +128,8 @@ class AutoChangingHoldingTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client.getUcid());
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 
     @Test
