@@ -58,6 +58,7 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FAST_TRADES = "Clickhouse api. Get fast trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY =
             "Clickhouse api. Get floating trades group by";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FREE_MARGIN = "Clickhouse api. Get free margin";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS =
             "Clickhouse api. Get lexis nexis data by client request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS_DATA =
