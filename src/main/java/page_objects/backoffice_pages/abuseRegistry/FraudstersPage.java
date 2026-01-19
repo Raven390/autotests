@@ -9,6 +9,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.enums.FraudSubtype;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
 import io.qameta.allure.Allure;
@@ -56,6 +57,10 @@ public class FraudstersPage extends AbstractPage {
     private final Locator uploadByIdButton;
     private final Locator uploadByAccountButton;
 
+    private static final String FRAUD_SUBTYPE_FORMAT =
+            "//*[(@class='v-menuitem') and contains(@data-qa, '_fraud_type_selector__submenu_')]/*[text()='%s']";
+    private static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
+    private static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT = "//*[@class='v-sub-menu']/*[text()='%s']";
     private static final String FRAUD_BY_TEXT_PATTERN =
             "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content') or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[text()='%s']";
     private static final String FRAUD_STATUS_PATTERN =
@@ -372,5 +377,16 @@ public class FraudstersPage extends AbstractPage {
             page.getByRole(AriaRole.OPTION).getByText(i).click();
         }
         restrictionApplyButton.click();
+    }
+
+    public void addFraud(FraudType fraud, FraudTypeStatus status, FraudSubtype subtype) {
+        addFraudButton.click();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
+        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName()))
+                .hover();
+        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName()))
+                .hover();
+        page.locator(FRAUD_SUBTYPE_FORMAT.formatted(subtype.getName())).click();
     }
 }

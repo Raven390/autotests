@@ -85,6 +85,12 @@ public class ResolvePage extends AbstractPage {
     private final Locator addRestrictionButton;
     private final Locator cleanRestrictionListButton;
     private final Locator confirmFinishPaymentInvestigationButton;
+
+    // No-deduction "Select fraud account" UI
+    private final Locator noDeductionFraudAccountSelect;
+    private final Locator noDeductionCheckboxList;
+    private final Locator noDeductionSaveAsFraudButton;
+
     // Rejection reasons UI
     private final Locator rejectionReasonSelects;
     private final Locator rejectionReasonItems;
@@ -184,6 +190,15 @@ public class ResolvePage extends AbstractPage {
         this.dropdownOptions = page.locator("//span[@class='g-select-list__option-default-label']");
         this.addRestrictionButton =
                 page.locator("//div[contains(@data-qa,'restrictions_selector')]/descendant::button[not(@data-qa)]");
+
+        // No-deduction "Select fraud account" UI (A/B blocks)
+        this.noDeductionFraudAccountSelect =
+                page.locator("[data-qa='client_resolving_drawer__suggested_deduction__no_deduction__select']");
+        this.noDeductionCheckboxList =
+                page.locator("[data-qa='client_resolving_drawer__suggested_deduction__no_deduction__checkbox_list']");
+        this.noDeductionSaveAsFraudButton =
+                page.locator("[data-qa='client_resolving_drawer__suggested_deduction__no_deduction__confirm']");
+
         // Rejection reasons UI
         this.rejectionReasonSelects = page.locator("[data-qa='select-popup']");
         this.rejectionReasonInput = page.locator(".v-rejection-reason-input");
@@ -733,5 +748,28 @@ public class ResolvePage extends AbstractPage {
     public Boolean isInfoIconVisibleForFraudType(String fraudType) {
         return page.locator(String.format(INFO_ICON_BY_FRAUD_TYPE_PATTERN, fraudType))
                 .isVisible();
+    }
+
+    @Step("Click select fraud account (no-deduction) dropdown")
+    public void clickNoDeductionFraudAccountSelect() {
+        noDeductionFraudAccountSelect.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        noDeductionFraudAccountSelect.click();
+        noDeductionCheckboxList.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Select fraud account checkbox (no-deduction) for account: {account}")
+    public void clickNoDeductionFraudAccountCheckbox(String account) {
+        noDeductionCheckboxList.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        Locator checkbox =
+                noDeductionCheckboxList.locator(String.format("input.g-checkbox__control[value='%s']", account));
+        checkbox.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        checkbox.scrollIntoViewIfNeeded();
+        checkbox.click(new Locator.ClickOptions().setForce(true));
+    }
+
+    @Step("Click 'Save as fraud' button (no-deduction)")
+    public void clickSaveAsFraud() {
+        noDeductionSaveAsFraudButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        noDeductionSaveAsFraudButton.click();
     }
 }
