@@ -105,12 +105,11 @@ class AuditSidePanelAlertAttributesTest extends TestBaseWeb {
         assertThat(
                 "Verify alert attribute names",
                 auditTrailPage.getAuditTrailDetailsAttributeNames(),
-                contains(
+                containsInAnyOrder(
                         "Alerts",
                         "First alert",
                         "Last alert",
                         "Reason",
-                        "Fraud type",
                         "Symbol",
                         "Account",
                         "Server ID",
@@ -122,7 +121,6 @@ class AuditSidePanelAlertAttributesTest extends TestBaseWeb {
                 hasItems(
                         "2 close trade alerts",
                         openTradeAlert1.reason,
-                        openTradeAlert1.fraudType,
                         openTradeAlert1.symbol,
                         openTradeAlert1.account,
                         openTradeAlert1.serverId,

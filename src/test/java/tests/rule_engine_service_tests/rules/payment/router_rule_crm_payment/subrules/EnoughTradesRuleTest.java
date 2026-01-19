@@ -4,13 +4,14 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.api.RestrictionHelper.setRestrictionAPITrade;
 import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
+import static helpers.data.enums.FraudType.EXCHANGER;
 import static helpers.data.enums.Restriction.*;
 import static helpers.data.rules.payments.router_rule_crm_payment.EnoughTradesDataFactory.setupEnoughTradesRuleData;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static helpers.database.PaymentGateHelper.getPaymentRuleExecution;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static tests.TestBaseRule.*;
 import static utils.Constants.*;
 
@@ -552,6 +553,24 @@ class EnoughTradesRuleTest {
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(202));
+
+        // Verify alert kafka
+        Allure.step("Get alerts kafka messages");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlertV2 alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlertV2.class);
+        assertThat("Verify alert id not null", alert.getAlertId(), notNullValue());
+        assertThat("Verify timestamp not null", alert.getTimestamp(), notNullValue());
+        assertThat("Verify ucid is correct", alert.getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.getRule(), notNullValue());
+        assertThat("Verify rule ver not null", alert.getRule().getVer(), notNullValue());
+        assertThat("Verify rule name is correct", alert.getRule().getName(), equalTo("Enough Trades"));
+        assertThat("Verify rule trigger is correct", alert.getTrigger(), equalTo("Withdrawal"));
+        assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
+        assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
     }
 
     @Test
@@ -573,6 +592,24 @@ class EnoughTradesRuleTest {
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(203));
+
+        // Verify alert kafka
+        Allure.step("Get alerts kafka messages");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlertV2 alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlertV2.class);
+        assertThat("Verify alert id not null", alert.getAlertId(), notNullValue());
+        assertThat("Verify timestamp not null", alert.getTimestamp(), notNullValue());
+        assertThat("Verify ucid is correct", alert.getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.getRule(), notNullValue());
+        assertThat("Verify rule ver not null", alert.getRule().getVer(), notNullValue());
+        assertThat("Verify rule name is correct", alert.getRule().getName(), equalTo("Enough Trades"));
+        assertThat("Verify rule trigger is correct", alert.getTrigger(), equalTo("Withdrawal"));
+        assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
+        assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
     }
 
     @Test
@@ -593,5 +630,23 @@ class EnoughTradesRuleTest {
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(202));
+
+        // Verify alert kafka
+        Allure.step("Get alerts kafka messages");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlertV2 alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlertV2.class);
+        assertThat("Verify alert id not null", alert.getAlertId(), notNullValue());
+        assertThat("Verify timestamp not null", alert.getTimestamp(), notNullValue());
+        assertThat("Verify ucid is correct", alert.getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.getRule(), notNullValue());
+        assertThat("Verify rule ver not null", alert.getRule().getVer(), notNullValue());
+        assertThat("Verify rule name is correct", alert.getRule().getName(), equalTo("Enough Trades"));
+        assertThat("Verify rule trigger is correct", alert.getTrigger(), equalTo("Withdrawal"));
+        assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
+        assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
     }
 }

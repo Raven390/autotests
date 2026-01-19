@@ -78,6 +78,9 @@ public class RuleAlertV2 {
     @AllArgsConstructor
     public static class Rule {
 
+        @JsonProperty("trigger")
+        private String trigger;
+
         @JsonProperty("ver")
         private String ver;
 
@@ -214,6 +217,12 @@ public class RuleAlertV2 {
 
         @JsonProperty("1st deposit")
         private String firstDeposit;
+
+        @JsonProperty("Payment cost")
+        private String paymentCost;
+
+        @JsonProperty("Deposits")
+        private String deposits;
 
         @JsonProperty("Ticket ID")
         private String ticketId;

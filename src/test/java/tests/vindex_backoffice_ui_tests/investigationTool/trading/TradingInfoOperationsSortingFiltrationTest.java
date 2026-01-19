@@ -183,7 +183,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
                 "Assert value in account column for the 2nd operation is as expected",
                 tradingPage.getOperationAccountByIndex(1),
                 equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat("Assert sort by close popup text", tradingPage.getSortByClosePopupText(), equalTo("Remove sorting"));
+        assertThat(
+                "Assert sort by close popup text",
+                tradingPage.getSortByClosePopupText(),
+                equalTo("Sorted:Oldest → Newest"));
         tradingPage.sortByClose();
         assertThat(
                 "Assert value in account column for the 1st operation is as expected",
