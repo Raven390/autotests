@@ -199,6 +199,7 @@ class AuditTrailTest extends TestBaseWeb {
         paymentEventsObject1 = setupDataPGS();
         RuleAlert withdrawalAlert =
                 generateWithdrawalNotificationAlertWithPaymentId(client, paymentEventsObject1.getPaymentId());
+        withdrawalAlert.rule.name = "WithDrawal review";
         kafka.produceMessage(
                 withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();

@@ -69,8 +69,8 @@ public class TradingWithdrawalsTest extends TestBaseWeb {
         withdrawalData1.add("3031915");
         withdrawalData1.add("MT5");
         withdrawalData1.add("Big_Amount");
-        withdrawalData1.add("Risk Audit");
-
+        withdrawalData1.add("Risk audit");
+        withdrawalAlert1.rule.name = "WitHdrawal review";
         List<RuleAlert> withdrawalAlertList = List.of(withdrawalAlert1);
         for (RuleAlert withdrawalAlert : withdrawalAlertList) {
             kafka.produceMessage(
