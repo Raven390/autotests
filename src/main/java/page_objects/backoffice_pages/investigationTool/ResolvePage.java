@@ -143,9 +143,9 @@ public class ResolvePage extends AbstractPage {
                 "//button[contains(@data-qa,'complete_investigation_button') or contains(@data-qa,'apply_changes_button')]");
         this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Fraud management");
         this.commentInput = page.locator(".v-drawer-section-layout textarea");
-        this.withdrawalList = page.locator(".v-withdrawals-list-with-rejections__list");
+        this.withdrawalList = page.locator(".v-withdrawals-list__list-item");
         this.approveAllwithdrawalsButton =
-                page.locator(".v-rejection-decision-input button").nth(0);
+                page.locator("[data-qa='client_resolving_drawer__withdrawals_list__approve_all']");
         this.rejectAllwithdrawalsButton =
                 page.locator(".v-rejection-decision-input .g-button").nth(1);
         this.successToast = page.locator(".g-toast__container").first();

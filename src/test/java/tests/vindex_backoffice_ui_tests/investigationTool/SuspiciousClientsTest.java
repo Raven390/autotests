@@ -47,8 +47,8 @@ class SuspiciousClientsTest extends TestBaseWeb {
         RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid, "transferToWA");
         RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid, "withdrawalFromWA");
         PaymentAlertMessageV2 alertPayment1 = generatePaymentAlertByUcidByTrigger(crmTbUser3.ucid, "Registration");
-        PaymentAlertMessageV2 alertPayment2 = generatePaymentAlertByUcidByTrigger(crmTbUser4.ucid, "transferToWA");
-        PaymentAlertMessageV2 alertPayment3 = generatePaymentAlertByUcidByTrigger(crmTbUser5.ucid, "withdrawalFromWA");
+        PaymentAlertMessageV2 alertPayment2 = generatePaymentAlertByUcidByTrigger(crmTbUser4.ucid, "transfertowA");
+        PaymentAlertMessageV2 alertPayment3 = generatePaymentAlertByUcidByTrigger(crmTbUser5.ucid, "withdrawalFromwA");
         kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(alert2.alertId, objectMapper.writeValueAsString(alert2), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(
