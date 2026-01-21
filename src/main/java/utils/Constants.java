@@ -126,7 +126,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_GAP_TRADING_RULE = "Gap trading rule ";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE =
             "Mirror trade with open trade event rule ";
-    public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE =
+    public static final String STORY_RULE_ENGINE_NEWS_TRADER_CLOSE_TRADE_EVENT_RULE =
             "News Trader with close trade event rule ";
     public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event ";
     public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event ";

@@ -8,6 +8,7 @@ import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactor
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
@@ -15,7 +16,9 @@ import static utils.Utils.*;
 
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.mt___mt5_deals_coerced_dd.Mt5DealsCoercedDdFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
@@ -26,6 +29,7 @@ import io.qameta.allure.Step;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,9 @@ import java.util.Map;
 public class NewsTraderRuleDataFactory {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
+    private static final ClientHelper client21 = getRandomVantageClientAllFields();
+    private static final ClientHelper client22 = getRandomVantageClientAllFields();
+    private static final ClientHelper client23 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
     private static final ClientHelper client4 = getRandomVantageClientAllFields();
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
@@ -73,7 +80,8 @@ public class NewsTraderRuleDataFactory {
         return data;
     }
 
-    @Description("News Trader. Scotland. Exit without alert if news deals < 0.7. Event_end_2")
+    @Description(
+            "News Trader. Scotland. Exit without alert if news deals < 0.7. profitTotal/profitNews=0.5 Event_end_5")
     private static DataHelper getNewsTraderCloseTradeTest2Data() {
         DataHelper data = getNewsTraderRuleData(client2);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
@@ -87,6 +95,81 @@ public class NewsTraderRuleDataFactory {
         newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
+        return data;
+    }
+
+    @Description(
+            "News Trader. Scotland. Exit without alert if news deals < 0.7. profitTotal/profitNews< 0.6 leverage < 50")
+    private static DataHelper getNewsTraderCloseTradeTest21Data() {
+        DataHelper data = getNewsTraderRuleData(client21);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
+        newsDeals.forEach(deal -> deal.setProfitUsd(40.0));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 60d, 5d, 4d, getCurrentTimestampDbFormat()))));
+
+        return data;
+    }
+
+    @Description(
+            "News Trader. Scotland. Exit without alert if news deals < 0.7.  profitTotal/profitNews< 0.6 leverage > 50. ucidScore < 0.7.")
+    private static DataHelper getNewsTraderCloseTradeTest22Data() {
+        DataHelper data = getNewsTraderRuleData(client22);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
+        newsDeals.forEach(deal -> deal.setProfitUsd(40.0));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 300d, 5d, 4d, getCurrentTimestampDbFormat()))));
+
+        UcidGeneralScore score = generateUcidGeneralScoreObject(data.clientHelper, 0.6, 0.6);
+        data.ucidGeneralScores = List.of(score);
+
+        return data;
+    }
+
+    @Description(
+            "News Trader. Scotland. Exit without alert if news deals < 0.7.  profitTotal/profitNews< 0.6 leverage > 50. ucidScore < 0.7.")
+    private static DataHelper getNewsTraderCloseTradeTest23Data() {
+        DataHelper data = getNewsTraderRuleData(client23);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
+        newsDeals.forEach(deal -> deal.setProfitUsd(40.0));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 300d, 5d, 4d, getCurrentTimestampDbFormat()))));
+
+        UcidGeneralScore score = generateUcidGeneralScoreObject(data.clientHelper, 0.8, 0.8);
+        data.ucidGeneralScores = List.of(score);
+
         return data;
     }
 
@@ -159,6 +242,9 @@ public class NewsTraderRuleDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getNewsTraderCloseTradeTest1Data());
         map.put("2", getNewsTraderCloseTradeTest2Data());
+        map.put("21", getNewsTraderCloseTradeTest21Data());
+        map.put("22", getNewsTraderCloseTradeTest22Data());
+        map.put("23", getNewsTraderCloseTradeTest23Data());
         map.put("3", getNewsTraderCloseTradeTest3Data());
         map.put("4", getNewsTraderCloseTradeTest4Data());
         map.put("5", getNewsTraderCloseTradeTest5Data());
