@@ -1,9 +1,11 @@
 package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.FraudType.NEWS_TRADER;
 import static helpers.data.rules.trading.NewsTraderRuleDataFactory.setupNewsTraderCloseTradeRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -11,8 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
-import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
 import io.qameta.allure.Allure;
@@ -27,7 +28,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
-@Story(STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE)
+@Story(STORY_RULE_ENGINE_NEWS_TRADER_CLOSE_TRADE_EVENT_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
@@ -51,7 +52,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     @Test
     @AllureId("1533")
     @DisplayName("News trader on close trade. Exit without alert if user is test or social trader user")
-    void mirrorTradingOpenTradeEventRuleTest1() throws Exception {
+    void newsTradingCloseTradeEventRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
         setupData(data);
 
@@ -60,11 +61,11 @@ class NewsTraderRuleTests extends TestBaseRule {
         checkElementId("Event_end_1", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
-    @Disabled
     @Test
     @AllureId("1534")
-    @DisplayName("News trader on close trade. Exit without alert if user have news trade ratio <0.7")
-    void mirrorTradingOpenTradeEventRuleTest2() throws Exception {
+    @DisplayName(
+            "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews=0.5 Event_end_5")
+    void newsTradingCloseTradeEventRuleTest2() throws Exception {
         Allure.step("generate test data where ...");
         DataHelper data = dbDataMap.get("2");
         setupData(data);
@@ -72,14 +73,59 @@ class NewsTraderRuleTests extends TestBaseRule {
         Allure.step("send test event to kafka");
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        checkElementId("Event_end_2", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
+        checkElementId("Event_end_5", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
-    @Disabled
+    @Test
+    @AllureId("2071")
+    @DisplayName(
+            "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews< 0.6 leverage < 50. Event_end_6")
+    void newsTradingCloseTradeEventRuleTest21() throws Exception {
+        Allure.step("generate test data where ...");
+        DataHelper data = dbDataMap.get("21");
+        setupData(data);
+
+        Allure.step("send test event to kafka");
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_end_6", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2072")
+    @DisplayName(
+            "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews< 0.6 leverage > 50. ucidScore < 0.7. Event_end_7")
+    void newsTradingCloseTradeEventRuleTest22() throws Exception {
+        Allure.step("generate test data where ...");
+        DataHelper data = dbDataMap.get("22");
+        setupData(data);
+
+        Allure.step("send test event to kafka");
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_end_7", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2073")
+    @DisplayName(
+            "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews< 0.6 leverage > 50. ucidScore > 0.7. get_trades_gr_by")
+    void newsTradingCloseTradeEventRuleTest23() throws Exception {
+        Allure.step("generate test data where ...");
+        DataHelper data = dbDataMap.get("23");
+        setupData(data);
+
+        Allure.step("send test event to kafka");
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("get_general_score", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
+        checkElementId("get_trades_gr_by", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
+    }
+
     @Test
     @AllureId("1535")
     @DisplayName("News trader on close trade. Exit without alert if user have profit USD <350")
-    void mirrorTradingOpenTradeEventRuleTest3() throws Exception {
+    void newsTradingCloseTradeEventRuleTest3() throws Exception {
         Allure.step("generate test data where ...");
         DataHelper data = dbDataMap.get("3");
         setupData(data);
@@ -90,11 +136,10 @@ class NewsTraderRuleTests extends TestBaseRule {
         checkElementId("Event_end_3", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
-    @Disabled
     @Test
     @AllureId("1536")
     @DisplayName("News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4")
-    void mirrorTradingOpenTradeEventRuleTest4() throws Exception {
+    void newsTradingCloseTradeEventRuleTest4() throws Exception {
         Allure.step("generate test data where News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4");
         DataHelper data = dbDataMap.get("4");
         setupData(data);
@@ -105,11 +150,10 @@ class NewsTraderRuleTests extends TestBaseRule {
         checkElementId("Event_end_4", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
     }
 
-    @Disabled
     @Test
     @AllureId("1537")
     @DisplayName("News Trader. Exit with alert if profit/deposit > 0.5. End_nt_alert")
-    void mirrorTradingOpenTradeEventRuleTest5() throws Exception {
+    void newsTradingCloseTradeEventRuleTest5() throws Exception {
         Allure.step("generate test data where News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4");
         DataHelper data = dbDataMap.get("5");
         setupData(data);
@@ -119,37 +163,23 @@ class NewsTraderRuleTests extends TestBaseRule {
 
         checkElementId("End_nt_alert", data.closeTradeMtEvent.id, Rule.NEWS_TRADE_RULE.getProcessId());
 
-        Allure.step("Verify there is alert in kafka");
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "News Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().timestamp,
-                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
-        assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
+        // Verify alert kafka
+        Allure.step("Get alerts kafka messages");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlertV2 alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlertV2.class);
+        assertThat("Verify alert id not null", alert.getAlertId(), notNullValue());
+        assertThat("Verify timestamp not null", alert.getTimestamp(), notNullValue());
+        assertThat("Verify ucid is correct", alert.getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.getRule(), notNullValue());
+        assertThat("Verify rule ver not null", alert.getRule().getVer(), notNullValue());
+        assertThat("Verify rule name is correct", alert.getRule().getName(), equalTo("News Trading"));
+        assertThat("Verify rule trigger is correct", alert.getTrigger(), equalTo("Close Trade"));
+        assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(NEWS_TRADER.getCode()));
+        assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
 
-        assertThat("Verify alert", alerts.getFirst().rule.name, is("News Trading"));
-        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("NEWS_TRADER"));
-        assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
-        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
-
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("News trading pattern"));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().rule.attributes.ticketId,
-                is(String.valueOf(data.closeTradeMtEvent.tradeId)));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().rule.attributes.account,
-                is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "News Trading");
 
         // Verify restriction
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "News trading pattern");

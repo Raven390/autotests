@@ -108,11 +108,15 @@ public class DataDeleteHelper {
                         String.format("server_id = %s and account = %s", deal.getServerId(), deal.getAccount())));
             }
             if (data.getMt5DealsCoercedDdObjects() != null) {
-                data.getMt5DealsCoercedDdObjects()
-                        .forEach(deal -> deleteObjectFromDb(
-                                MT5_DEALS_COERCED_DD_TABLE_NAME,
-                                String.format(
-                                        "server_id = %s and account = %s", deal.getServerId(), deal.getAccount())));
+                try {
+                    data.getMt5DealsCoercedDdObjects()
+                            .forEach(deal -> deleteObjectFromDb(
+                                    MT5_DEALS_COERCED_DD_TABLE_NAME,
+                                    String.format(
+                                            "server_id = %s and account = %s", deal.getServerId(), deal.getAccount())));
+                } catch (Exception e) {
+                    writeLog("Exception in deleteData: " + e.getMessage());
+                }
             }
             if (data.mtMt5PositionsObjects != null) {
                 data.mtMt5PositionsObjects.forEach(position -> deleteObjectFromDb(
