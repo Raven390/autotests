@@ -41,6 +41,8 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MARKET_CLOSE = "Clickhouse api. Get market close";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BALANCE_ORDERS = "Clickhouse api. Get balance orders";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MARKET_MANIPULATOR_FLAG =
+            "Clickhouse api. Get market manipulator flag";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CHARGEBACK_SCORE =
             "Clickhouse api. Get chargeback score";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BONUSES = "Clickhouse api. Get bonuses";
