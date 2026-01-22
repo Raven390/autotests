@@ -147,8 +147,8 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Login rule. Linked Hedging Abuser");
-        checkNoBonusRestrictionApplied(data.clientHelper, "Login rule. Linked Hedging Abuser");
+        checkManualWithdrawalRestrictionApplied(data, "Login rule. Linked Hedging Abuser");
+        checkNoBonusRestrictionApplied(data, "Login rule. Linked Hedging Abuser");
 
         // add check for FT_HEDGE
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -179,8 +179,8 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Login rule. Linked Hedging Abuser");
-        checkBonusRestrictionNotExists(data.clientHelper, "Login rule. Linked Hedging Abuser");
+        checkManualWithdrawalRestrictionApplied(data, "Login rule. Linked Hedging Abuser");
+        checkBonusRestrictionNotExists(data, "Login rule. Linked Hedging Abuser");
 
         // add check for FT_HEDGE
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -211,7 +211,7 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_cs_abuse", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
         // Verify restrictions
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked MM Abuser");
+        checkManualWithdrawalRestrictionApplied(data, "Linked MM Abuser");
 
         // add check for MARKET_MANIPULATION
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -264,7 +264,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat("Verify restriction", clientGeneralRestrictions.getFirst().getStatus(), equalTo("APPLIED"));
 
         // Check restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked Bonus Abuser");
+        checkManualWithdrawalRestrictionApplied(data, "Linked Bonus Abuser");
 
         // add check for bonus
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -301,7 +301,7 @@ class LoginRuleTests extends TestBaseRule {
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         // Check restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked Chargeback Abuser");
+        checkManualWithdrawalRestrictionApplied(data, "Linked Chargeback Abuser");
         // add check for CHARGEBACK
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
@@ -366,14 +366,14 @@ class LoginRuleTests extends TestBaseRule {
         DataHelper data = dbDataMap.get("13");
         setupData(data);
 
-        // add  bonus restriction
+        // add bonus restriction
         Integer restrictionId = postRestriction(data.clientHelper, "GENERAL", "14").id;
 
         produceLoginMessageToKafka(data.loginEvent);
 
         checkElementId("end_hedge_ald_no_bonus", data.loginEvent.getId(), Rule.LOGIN_RULE.getProcessId());
 
-        // Verify restriction is bonus restriction with code 14
+        // Verify restriction is a bonus restriction with code 14
         Allure.step("Get client restrictions");
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only restriction", clientGeneralRestrictions.size(), equalTo(1));

@@ -4,7 +4,9 @@ import static utils.Constants.*;
 
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public enum Restriction {
     ACCOUNT_CREATION_REVIEW(
             1,
@@ -141,36 +143,8 @@ public enum Restriction {
         this.codeName = name(); // <-- enum name
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getCodeName() {
-        return codeName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public boolean isBoVisibility() {
-        return boVisibility;
-    }
-
     public Long getIdLong() {
         return (long) id;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public static List<String> getVisibleRestrictionsList() {

@@ -92,7 +92,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
         assertThat(
                 "Verify alert",
                 alerts.getFirst().getServerId(),
-                is(data.internalHedgeEvent.getPositiveLeg().getServerId().toString()));
+                is(data.internalHedgeEvent.getPositiveLeg().getServerId()));
         assertThat("Verify alert", alerts.getFirst().getReason(), is("Suspicion of an Internal Hedge"));
         assertThat("Verify alert. rule", alerts.getFirst().getRule().getVer(), is("2.5.0"));
         assertThat("Verify alert. rule", alerts.getFirst().getRule().getName(), is("Mirror Trading"));
@@ -113,6 +113,6 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
                 alerts.getFirst().getAttributes().getInternalHedgeTime(),
                 is(notNullValue()));
 
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Suspicion of an Internal Hedge");
+        checkManualWithdrawalRestrictionApplied(data, "Suspicion of an Internal Hedge");
     }
 }

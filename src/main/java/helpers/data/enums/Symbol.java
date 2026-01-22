@@ -4,7 +4,9 @@ import static utils.Utils.writeLog;
 
 import java.util.Arrays;
 import java.util.Random;
+import lombok.Getter;
 
+@Getter
 public enum Symbol {
     AAPL("AAPL", "Apple Inc."),
     MSFT("MSFT", "Microsoft Corporation"),
@@ -73,14 +75,6 @@ public enum Symbol {
     Symbol(String symbolCode, String symbolName) {
         this.symbolCode = symbolCode;
         this.symbolName = symbolName;
-    }
-
-    public String getSymbolCode() {
-        return symbolCode;
-    }
-
-    public String getSymbolName() {
-        return symbolName;
     }
 
     @Override

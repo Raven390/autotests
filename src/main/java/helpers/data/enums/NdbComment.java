@@ -2,8 +2,10 @@ package helpers.data.enums;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import lombok.Getter;
 
-public enum NbdComment {
+@Getter
+public enum NdbComment {
     PROMO_NDB_CREDIT_IN("Promo-NDB-Credit In"),
     CREDIT_IN_NO_DEPOSIT_BONUS("Credit In - No Deposit Bonus"),
     CREDIT_IN_APAC_NO_DEP_BONUS("Credit in - APAC No Dep. Bonus"),
@@ -16,26 +18,22 @@ public enum NbdComment {
 
     private final String displayName;
 
-    NbdComment(String displayName) {
+    NdbComment(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     private static final SecureRandom random = new SecureRandom();
 
-    public static NbdComment getRandomNbdComment() {
-        NbdComment[] comment = values();
+    public static NdbComment getRandomNbdComment() {
+        NdbComment[] comment = values();
 
         return comment[random.nextInt(comment.length)];
     }
 
-    public static NbdComment getRandomNbdComment(NbdComment... fraudType) {
-        NbdComment comment;
+    public static NdbComment getRandomNbdComment(NdbComment... fraudType) {
+        NdbComment comment;
         do {
-            NbdComment[] comments = values();
+            NdbComment[] comments = values();
 
             comment = comments[random.nextInt(comments.length)];
         } while (Arrays.stream(fraudType).toList().contains(comment));

@@ -16,7 +16,7 @@ public class TradeEvent {
     public String id;
 
     @JsonProperty("serverId")
-    public int serverId;
+    public Integer serverId;
 
     @JsonProperty("tradingAccount")
     public long tradingAccount;

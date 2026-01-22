@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Reason {
     API("API"),
     CLIENT("Client"),
@@ -14,9 +17,5 @@ public enum Reason {
 
     Reason(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

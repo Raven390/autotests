@@ -1,5 +1,8 @@
 package helpers.data.enums.deduction;
 
+import lombok.Getter;
+
+@Getter
 public enum DeductionStatusApproval {
     AWAITING_APPROVAL("AWAITING_APPROVAL"),
     NOT_REQUIRED("NOT_REQUIRED"),
@@ -10,9 +13,5 @@ public enum DeductionStatusApproval {
 
     DeductionStatusApproval(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum InvestigationStatus {
     ACTIVE("ACTIVE"),
     COMPLETED("COMPLETED"),
@@ -9,9 +12,5 @@ public enum InvestigationStatus {
 
     InvestigationStatus(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

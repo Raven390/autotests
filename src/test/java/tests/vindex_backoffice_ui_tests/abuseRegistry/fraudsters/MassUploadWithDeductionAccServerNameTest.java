@@ -75,10 +75,10 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() throws Exception {
-        account1.currency = USD.getCode();
+        account1.currency = USD.getIsoCode();
         account2.account = getRandomIntPositive();
         account3.account = getRandomIntPositive();
-        account4.currency = USD.getCode();
+        account4.currency = USD.getIsoCode();
         account4.accountStatus = "Inactive";
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         var mtAccount2 = generateMtAccountByCrmTbAccount(account2);

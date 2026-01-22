@@ -1,5 +1,8 @@
 package helpers.data.enums.deduction;
 
+import lombok.Getter;
+
+@Getter
 public enum DeductionStatusOpenPositions {
     HOLDING("HOLDING"),
     NOT_HOLDING("NOT_HOLDING"),
@@ -9,9 +12,5 @@ public enum DeductionStatusOpenPositions {
 
     DeductionStatusOpenPositions(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

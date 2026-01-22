@@ -5,7 +5,9 @@ import static helpers.data.enums.FraudCategory.*;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public enum FraudType {
     HEDGING(
             "HEDGING",
@@ -150,26 +152,6 @@ public enum FraudType {
         this.description = description;
         this.isVisible = isVisible;
         this.category = category;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    public FraudCategory getCategory() {
-        return category;
     }
 
     @Override

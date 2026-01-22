@@ -1,18 +1,24 @@
-package business_objects.db.clickhouse.mt_mt5_deals_coerced;
+package business_objects.db.clickhouse.mt___mt5_deals_coerced_dd;
 
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Mt5DealsCoercedObject {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Mt5DealsCoercedDdObjectV2 {
 
     private String brand;
     private String regulator;
     private Integer userId;
     private String ucid;
-    private Integer account;
+    private Long account;
     private String platform;
     private Integer serverId;
     private String serverName;
@@ -24,7 +30,7 @@ public class Mt5DealsCoercedObject {
     private Integer action;
     private Integer entry;
     private Integer reason;
-    private Double contractSize;
+    private Long contractSize;
     private String time;
     private String timeUtc;
     private String symbol;
@@ -35,7 +41,7 @@ public class Mt5DealsCoercedObject {
     private Double rateUsdQuote;
     private Double rateUsdAcc;
     private Double price;
-    private Double volume;
+    private Long volume;
     private Double volumeLots;
     private Double notionalValueUsd;
     private Double profit;
@@ -56,113 +62,23 @@ public class Mt5DealsCoercedObject {
     private Integer isDeleted;
     private String lastUpdated;
     private String internalComment;
-
-    public Mt5DealsCoercedObject() {}
-
-    public Mt5DealsCoercedObject(
-            String brand,
-            String regulator,
-            Integer userId,
-            String ucid,
-            Integer account,
-            String platform,
-            Integer serverId,
-            String serverName,
-            String accountType,
-            String accountGroup,
-            String accountCurrency,
-            Long deal,
-            Long order,
-            Integer action,
-            Integer entry,
-            Integer reason,
-            Double contractSize,
-            String time,
-            String timeUtc,
-            String symbol,
-            String symbolUnderlying,
-            String baseCurrency,
-            String quoteCurrency,
-            Double rateUsdBase,
-            Double rateUsdQuote,
-            Double rateUsdAcc,
-            Double price,
-            Double volume,
-            Double volumeLots,
-            Double notionalValueUsd,
-            Double profit,
-            Double storage,
-            Double commission,
-            Double profitUsd,
-            Double storageUsd,
-            Double commissionUsd,
-            Long expertId,
-            Long positionId,
-            String comment,
-            Double sl,
-            Double tp,
-            Double priceGateway,
-            Double marketBid,
-            Double marketAsk,
-            Double rateProfit,
-            Integer isDeleted,
-            String lastUpdated,
-            String internalComment) {
-        this.brand = brand;
-        this.regulator = regulator;
-        this.userId = userId;
-        this.ucid = ucid;
-        this.account = account;
-        this.platform = platform;
-        this.serverId = serverId;
-        this.serverName = serverName;
-        this.accountType = accountType;
-        this.accountGroup = accountGroup;
-        this.accountCurrency = accountCurrency;
-        this.deal = deal;
-        this.order = order;
-        this.action = action;
-        this.entry = entry;
-        this.reason = reason;
-        this.contractSize = contractSize;
-        this.time = time;
-        this.timeUtc = timeUtc;
-        this.symbol = symbol;
-        this.symbolUnderlying = symbolUnderlying;
-        this.baseCurrency = baseCurrency;
-        this.quoteCurrency = quoteCurrency;
-        this.rateUsdBase = rateUsdBase;
-        this.rateUsdQuote = rateUsdQuote;
-        this.rateUsdAcc = rateUsdAcc;
-        this.price = price;
-        this.volume = volume;
-        this.volumeLots = volumeLots;
-        this.notionalValueUsd = notionalValueUsd;
-        this.profit = profit;
-        this.storage = storage;
-        this.commission = commission;
-        this.profitUsd = profitUsd;
-        this.storageUsd = storageUsd;
-        this.commissionUsd = commissionUsd;
-        this.expertId = expertId;
-        this.positionId = positionId;
-        this.comment = comment;
-        this.sl = sl;
-        this.tp = tp;
-        this.priceGateway = priceGateway;
-        this.marketBid = marketBid;
-        this.marketAsk = marketAsk;
-        this.rateProfit = rateProfit;
-        this.isDeleted = isDeleted;
-        this.lastUpdated = lastUpdated;
-        this.internalComment = internalComment;
-    }
+    private Integer isAbnormalTime;
+    private Integer leverage;
+    private Double balance;
+    private Double equity;
+    private Double margin;
+    private Double freeMargin;
+    private Double balanceUsd;
+    private Double equityUsd;
+    private Double marginUsd;
+    private Double freeMarginUsd;
+    private Double openPositionsNvUsd;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Mt5DealsCoercedObject that = (Mt5DealsCoercedObject) o;
+        Mt5DealsCoercedDdObjectV2 that = (Mt5DealsCoercedDdObjectV2) o;
         return Objects.equals(brand, that.brand)
                 && Objects.equals(regulator, that.regulator)
                 && Objects.equals(userId, that.userId)
@@ -210,7 +126,18 @@ public class Mt5DealsCoercedObject {
                 && Objects.equals(rateProfit, that.rateProfit)
                 && Objects.equals(isDeleted, that.isDeleted)
                 && Objects.equals(lastUpdated, that.lastUpdated)
-                && Objects.equals(internalComment, that.internalComment);
+                && Objects.equals(internalComment, that.internalComment)
+                && Objects.equals(isAbnormalTime, that.isAbnormalTime)
+                && Objects.equals(leverage, that.leverage)
+                && Objects.equals(balance, that.balance)
+                && Objects.equals(equity, that.equity)
+                && Objects.equals(margin, that.margin)
+                && Objects.equals(freeMargin, that.freeMargin)
+                && Objects.equals(balanceUsd, that.balanceUsd)
+                && Objects.equals(equityUsd, that.equityUsd)
+                && Objects.equals(marginUsd, that.marginUsd)
+                && Objects.equals(freeMarginUsd, that.freeMarginUsd)
+                && Objects.equals(openPositionsNvUsd, that.openPositionsNvUsd);
     }
 
     @Override
@@ -263,6 +190,17 @@ public class Mt5DealsCoercedObject {
                 rateProfit,
                 isDeleted,
                 lastUpdated,
-                internalComment);
+                internalComment,
+                isAbnormalTime,
+                leverage,
+                balance,
+                equity,
+                margin,
+                freeMargin,
+                balanceUsd,
+                equityUsd,
+                marginUsd,
+                freeMarginUsd,
+                openPositionsNvUsd);
     }
 }

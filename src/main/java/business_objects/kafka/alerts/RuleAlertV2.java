@@ -63,7 +63,7 @@ public class RuleAlertV2 {
     private String symbol;
 
     @JsonProperty("serverId")
-    private String serverId;
+    private Integer serverId;
 
     @JsonProperty("paymentEventId")
     private String paymentEventId;
@@ -217,12 +217,6 @@ public class RuleAlertV2 {
 
         @JsonProperty("1st deposit")
         private String firstDeposit;
-
-        @JsonProperty("Payment cost")
-        private String paymentCost;
-
-        @JsonProperty("Deposits")
-        private String deposits;
 
         @JsonProperty("Ticket ID")
         private String ticketId;

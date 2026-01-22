@@ -54,6 +54,7 @@ import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionObject;
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
 import business_objects.db.clickhouse.mt___mt5_deals_coerced_dd.Mt5DealsCoercedDd;
+import business_objects.db.clickhouse.mt___mt5_deals_coerced_dd.Mt5DealsCoercedDdObjectV2;
 import business_objects.db.clickhouse.mt___symbol_session.MtSymbolSession;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
@@ -126,7 +127,8 @@ public class DataHelper {
     public List<CrmTbDepositEntity> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
     public List<Mt5DealsCoercedObject> mt5DealsCoercedObjects;
-    private List<Mt5DealsCoercedDd> mt5DealsCoercedDdObjects;
+    public List<Mt5DealsCoercedDd> mt5DealsCoercedDdObjects;
+    public List<Mt5DealsCoercedDdObjectV2> mt5DealsCoercedDdObjectsV2;
     public List<PaymentEventsObject> paymentEventsObjects;
     public List<PaymentDetailsObject> paymentDetailsObjects;
     public List<PaymentRuleExecutionsObject> paymentRuleExecutionsObjects;

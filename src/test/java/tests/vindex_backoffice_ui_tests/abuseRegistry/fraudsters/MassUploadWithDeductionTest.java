@@ -63,7 +63,7 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() throws Exception {
-        account1.currency = USD.getCode();
+        account1.currency = USD.getIsoCode();
 
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
 

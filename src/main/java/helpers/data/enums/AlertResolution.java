@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum AlertResolution {
     CONFIRMED("CONFIRMED"),
     FALSE_POSITIVE("FALSE_POSITIVE"),
@@ -10,9 +13,5 @@ public enum AlertResolution {
 
     AlertResolution(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

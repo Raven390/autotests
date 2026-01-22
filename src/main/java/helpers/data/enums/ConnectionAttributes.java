@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ConnectionAttributes {
     EMAIL("email"),
     PAYOUT("payout"),

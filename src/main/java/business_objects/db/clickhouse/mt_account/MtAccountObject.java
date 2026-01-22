@@ -1,7 +1,11 @@
 package business_objects.db.clickhouse.mt_account;
 
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class MtAccountObject {
 
     public Integer sourceIdSt;

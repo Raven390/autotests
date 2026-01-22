@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Brand {
     PU_PRIME("PU Prime", "puprime"),
     MONETA("Moneta", "moneta"),
@@ -18,13 +21,5 @@ public enum Brand {
     Brand(String displayName, String ucidBrand) {
         this.displayName = displayName;
         this.ucidBrand = ucidBrand;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getUcidBrand() {
-        return ucidBrand;
     }
 }

@@ -78,7 +78,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() throws Exception {
-        account.currency = USD.getCode();
+        account.currency = USD.getIsoCode();
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
         coercedObject =
                 MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedBalance(client, 500.12, "Initial balance");
@@ -112,7 +112,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
         holdingDeduction1.setDeductionType("FULL_DEDUCTION");
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, holdingDeduction1);
 
-        account.currency = USD.getCode();
+        account.currency = USD.getIsoCode();
         MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
         coercedObject2 =
                 MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedBalance(client2, 500.12, "Initial balance");

@@ -4,6 +4,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingMlModelDataFactory.setupMirrorTradingMLModelRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -84,7 +85,7 @@ class MirrorTradingMlModelTests extends TestBaseRule {
                 alerts.getFirst().timestamp,
                 matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().type, is(TRADING.getDisplayName()));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
@@ -109,7 +110,7 @@ class MirrorTradingMlModelTests extends TestBaseRule {
                 is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "ML Model suspects the client of Mirror Trading");
+        checkManualWithdrawalRestrictionApplied(data, "ML Model suspects the client of Mirror Trading");
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));

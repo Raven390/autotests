@@ -4,7 +4,9 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public enum FraudSource {
     VINDEX("Vindex", List.of(1, 2)),
     RA_RAISE("RA Raise", List.of(1, 2)),
@@ -19,10 +21,6 @@ public enum FraudSource {
     FraudSource(String displayName, List<Integer> type) {
         this.displayName = displayName;
         this.type = type;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public List<Integer> getType() {

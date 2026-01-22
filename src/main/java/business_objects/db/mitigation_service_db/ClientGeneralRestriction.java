@@ -1,7 +1,13 @@
 package business_objects.db.mitigation_service_db;
 
 import java.util.Objects;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientGeneralRestriction {
 
     private Long id;
@@ -16,142 +22,6 @@ public class ClientGeneralRestriction {
     private String updatedAt;
     private String correlationType;
     private String correlationId;
-
-    public ClientGeneralRestriction() {}
-
-    public ClientGeneralRestriction(
-            Long id,
-            String ucid,
-            String regulator,
-            Long restrictionId,
-            String comment,
-            String status,
-            String cancellationReason,
-            String failReason,
-            String createdAt,
-            String updatedAt) {
-        this.id = id;
-        this.ucid = ucid;
-        this.regulator = regulator;
-        this.restrictionId = restrictionId;
-        this.comment = comment;
-        this.status = status;
-        this.cancellationReason = cancellationReason;
-        this.failReason = failReason;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public ClientGeneralRestriction(String ucid, String regulator, Long restrictionId, String comment, String status) {
-        this.ucid = ucid;
-        this.regulator = regulator;
-        this.restrictionId = restrictionId;
-        this.comment = comment;
-        this.status = status;
-    }
-
-    public ClientGeneralRestriction(String ucid, String regulator, Long restrictionId, String status) {
-        this.ucid = ucid;
-        this.regulator = regulator;
-        this.restrictionId = restrictionId;
-        this.status = status;
-    }
-
-    public String getCorrelationType() {
-        return correlationType;
-    }
-
-    public void setCorrelationType(String correlationType) {
-        this.correlationType = correlationType;
-    }
-
-    public String getCorrelationId() {
-        return correlationId;
-    }
-
-    public void setCorrelationId(String correlationId) {
-        this.correlationId = correlationId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUcid() {
-        return ucid;
-    }
-
-    public void setUcid(String ucid) {
-        this.ucid = ucid;
-    }
-
-    public String getRegulator() {
-        return regulator;
-    }
-
-    public void setRegulator(String regulator) {
-        this.regulator = regulator;
-    }
-
-    public Long getRestrictionId() {
-        return restrictionId;
-    }
-
-    public void setRestrictionId(Long restrictionId) {
-        this.restrictionId = restrictionId;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCancellationReason() {
-        return cancellationReason;
-    }
-
-    public void setCancellationReason(String cancellationReason) {
-        this.cancellationReason = cancellationReason;
-    }
-
-    public String getFailReason() {
-        return failReason;
-    }
-
-    public void setFailReason(String failReason) {
-        this.failReason = failReason;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     @Override
     public boolean equals(Object o) {

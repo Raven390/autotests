@@ -78,6 +78,7 @@ public class DataSetupHelper {
             insertObjectsToDb(CRM_BONUS_TABLE_NAME, data.crmTbBonusObjects);
             insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, data.mt5DealsCoercedObjects);
             insertObjectsToDb(MT5_DEALS_COERCED_DD_TABLE_NAME, data.getMt5DealsCoercedDdObjects());
+            insertObjectsToDb(MT5_DEALS_COERCED_DD_TABLE_NAME, data.getMt5DealsCoercedDdObjectsV2());
             insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, data.S3FactLoginMetricsObjects);
             insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, data.mtMt5PositionsObjects);
             insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, data.mtBalanceOrdersObjects);

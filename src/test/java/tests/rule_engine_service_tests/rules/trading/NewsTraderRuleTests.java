@@ -182,6 +182,6 @@ class NewsTraderRuleTests extends TestBaseRule {
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "News Trading");
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "News trading pattern");
+        checkManualWithdrawalRestrictionApplied(data, "News trading pattern");
     }
 }
