@@ -1,5 +1,8 @@
 package helpers.data.enums.deduction;
 
+import lombok.Getter;
+
+@Getter
 public enum DeductionEmailUi {
     NO_EMAIL_SENT("No email sent"),
     AWAITING_APPROVAL("Awaiting approval"),
@@ -11,9 +14,5 @@ public enum DeductionEmailUi {
 
     DeductionEmailUi(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

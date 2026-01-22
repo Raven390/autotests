@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum TicketType {
     BUY("Buy"),
     BALANCE("Balance"),
@@ -14,9 +17,5 @@ public enum TicketType {
 
     TicketType(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

@@ -4,6 +4,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.rules.trading.NoSlippageRuleDataFactory.setupNoSlippageRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -13,7 +14,6 @@ import static utils.Constants.*;
 import static utils.Utils.writeLog;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
 import helpers.data.enums.Rule;
@@ -105,14 +105,14 @@ class NoSlippageRuleTests extends TestBaseRule {
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
         writeLog("client ucid: " + data.clientHelper.getUcid());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().type, is(TRADING.getDisplayName()));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "No slippage pattern");
+        checkManualWithdrawalRestrictionApplied(data, "No slippage pattern");
     }
 
     @Test
@@ -227,7 +227,6 @@ class NoSlippageRuleTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "No slippage pattern");
+        checkManualWithdrawalRestrictionApplied(data, "No slippage pattern");
     }
 }

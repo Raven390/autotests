@@ -1,6 +1,6 @@
 package business_objects.db.clickhouse.mt_tb_credits;
 
-import static helpers.data.enums.NbdComment.getRandomNbdComment;
+import static helpers.data.enums.NdbComment.getRandomNbdComment;
 import static utils.Utils.*;
 
 import helpers.data.ClientHelper;

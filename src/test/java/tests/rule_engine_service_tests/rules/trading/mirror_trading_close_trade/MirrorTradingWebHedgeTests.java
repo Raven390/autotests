@@ -132,6 +132,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction is bonus restriction with code 13
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Mirror trade pattern");
+        checkManualWithdrawalRestrictionApplied(data, "Mirror trade pattern");
     }
 }

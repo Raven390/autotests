@@ -1,5 +1,8 @@
 package helpers.data.enums.deduction;
 
+import lombok.Getter;
+
+@Getter
 public enum DeductionType {
     PARTIAL_DEDUCTION("PARTIAL_DEDUCTION"),
     FULL_DEDUCTION("FULL_DEDUCTION"),
@@ -9,9 +12,5 @@ public enum DeductionType {
 
     DeductionType(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

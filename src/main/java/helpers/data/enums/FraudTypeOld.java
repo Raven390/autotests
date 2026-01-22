@@ -2,7 +2,9 @@ package helpers.data.enums;
 
 import java.util.Arrays;
 import java.util.Random;
+import lombok.Getter;
 
+@Getter
 public enum FraudTypeOld {
     HEDGING(1, "HEDGING", "Hedging"),
     LATENCY_ARBITRAGE(2, "LATENCY_ARBITRAGE", "Latency arbitrage"),
@@ -34,18 +36,6 @@ public enum FraudTypeOld {
         this.fraudTypeId = fraudTypeId;
         this.key = key;
         this.displayName = displayName;
-    }
-
-    public int getFraudTypeId() {
-        return fraudTypeId;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public static FraudTypeOld getById(int id) {

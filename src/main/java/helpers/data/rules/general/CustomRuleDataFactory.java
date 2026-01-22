@@ -24,6 +24,7 @@ public class CustomRuleDataFactory {
     private static final ClientHelper customRuleTest3Client = getRandomVantageClientAllFields();
     private static final ClientHelper customRuleTest4Client = getRandomVantageClientAllFields();
     private static final ClientHelper customRuleTest5Client = getRandomVantageClientAllFields();
+    private static final ClientHelper customRuleTest6Client = getRandomVantageClientAllFields();
 
     @Step("Create base test data for Custom rule")
     private static DataHelper getCustomRuleData(ClientHelper client) {
@@ -99,6 +100,17 @@ public class CustomRuleDataFactory {
         return data;
     }
 
+    @Description("Custom rule. trading account + server -> restriction")
+    private static DataHelper getCustomRuleTest6Data() {
+        DataHelper data = getCustomRuleData(customRuleTest6Client);
+        data.customEvent.setServerId(data.clientHelper.getServerId().toString());
+        data.customEvent.setTradingAccount(data.clientHelper.getTradingAccount().toString());
+        data.customEvent.setRestriction("WT");
+        data.customEvent.setMessage("WT comment");
+        data.customEvent.setLevel("LOW");
+        return data;
+    }
+
     public static Map<String, DataHelper> setupCustomRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -108,6 +120,7 @@ public class CustomRuleDataFactory {
         map.put("3", getCustomRuleTest3Data());
         map.put("4", getCustomRuleTest4Data());
         map.put("5", getCustomRuleTest5Data());
+        map.put("6", getCustomRuleTest6Data());
         return map;
     }
 }

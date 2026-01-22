@@ -51,8 +51,8 @@ class BatchDeductionEquityValidationTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws Exception {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        account.currency = EUR.getCode();
-        account2.currency = EUR.getCode();
+        account.currency = EUR.getIsoCode();
+        account2.currency = EUR.getIsoCode();
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
         MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
         mtAccount.balance = 1001d;

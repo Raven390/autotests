@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum VerificationStatus {
     NOT_VERIFIED("Not verified"),
     AWAITING_DOCUMENTS("Awaiting documents"),
@@ -10,9 +13,5 @@ public enum VerificationStatus {
 
     VerificationStatus(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

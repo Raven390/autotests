@@ -1,5 +1,8 @@
 package helpers.data.enums.deduction;
 
+import lombok.Getter;
+
+@Getter
 public enum AlertStatus {
     CLOSED("CLOSED"),
     OPEN("OPEN");
@@ -8,9 +11,5 @@ public enum AlertStatus {
 
     AlertStatus(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

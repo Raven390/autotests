@@ -4,6 +4,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingScotlandDataFactory.setupMirrorTradingScotlandRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -104,7 +105,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
                 alerts.getFirst().timestamp,
                 matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().type, is(TRADING.getDisplayName()));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
@@ -129,6 +130,6 @@ class MirrorTradingScotlandTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Mirror trade pattern");
+        checkManualWithdrawalRestrictionApplied(data, "Mirror trade pattern");
     }
 }

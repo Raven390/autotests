@@ -2,15 +2,17 @@ package tests.rule_engine_service_tests.rules.general;
 
 import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesRequest.getAbuseTypes;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.AlertsAssertsHelper.assertCustomRuleAlert;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.asserts.RestrictionsAssertsHelper.checkWorseTradingRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.Rule.CUSTOM_RULE;
 import static helpers.data.rules.general.CustomRuleDataFactory.setupCustomRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
@@ -57,39 +59,18 @@ class CustomRuleTests extends TestBaseRule {
 
         produceCustomMessageToKafka(data.customEvent);
 
-        checkElementId("setUcid", data.customEvent.getId(), "custom_rule");
-        checkElementId("setFraudType", data.customEvent.getId(), "custom_rule");
-        checkElementId("setRestriction", data.customEvent.getId(), "custom_rule");
-        checkElementId("setAlert", data.customEvent.getId(), "custom_rule");
-        checkElementId("endEvent", data.customEvent.getId(), "custom_rule");
+        checkElementId("setUcid", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setFraudType", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setAlert", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("endEvent", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, data.customEvent.getMessage());
+        checkManualWithdrawalRestrictionApplied(data, data.customEvent.getMessage());
 
         // Verify alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, data.customEvent.getSource());
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().getReason(),
-                is(
-                        "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order')."));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().getTimestamp(),
-                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().getAlertId(), is(data.customEvent.getId()));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().getTriggerCreatedTime(),
-                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().getFraudType(), is(data.customEvent.getFraudType()));
-        assertThat("Verify alert", alerts.getFirst().getTrigger(), is(data.customEvent.getType()));
-        assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().getType(), is("TRADING"));
-        assertThat("Verify alert", alerts.getFirst().getRule().getName(), is(data.customEvent.getSource()));
-        assertThat("Verify alert", alerts.getFirst().getRule().getVer(), notNullValue());
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getDetails(), is(""));
+        assertCustomRuleAlert(data, alerts);
 
         GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(
                 getAbuseTypes(List.of(data.clientHelper.getUcid())).body().string(), GetAbuseTypesResponse[].class);
@@ -108,11 +89,11 @@ class CustomRuleTests extends TestBaseRule {
 
         produceCustomMessageToKafka(data.customEvent);
 
-        checkElementId("getUcid", data.customEvent.getId(), "custom_rule");
-        checkElementId("setFraudType", data.customEvent.getId(), "custom_rule");
-        checkElementId("setRestriction", data.customEvent.getId(), "custom_rule");
-        checkElementId("setAlert", data.customEvent.getId(), "custom_rule");
-        checkElementId("endEvent", data.customEvent.getId(), "custom_rule");
+        checkElementId("getUcid", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setFraudType", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setAlert", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("endEvent", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
     }
 
     @Test
@@ -124,12 +105,12 @@ class CustomRuleTests extends TestBaseRule {
 
         produceCustomMessageToKafka(data.customEvent);
 
-        checkElementId("getUcid", data.customEvent.getId(), "custom_rule");
-        checkElementId("setFraudType", data.customEvent.getId(), "custom_rule");
-        checkElementId("endEvent", data.customEvent.getId(), "custom_rule");
+        checkElementId("getUcid", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setFraudType", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("endEvent", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
 
-        checkElementIdNotPresent("setRestriction", data.customEvent.getId(), "custom_rule");
-        checkElementIdNotPresent("setAlert", data.customEvent.getId(), "custom_rule");
+        checkElementIdNotPresent("setRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementIdNotPresent("setAlert", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
     }
 
     @Test
@@ -141,12 +122,12 @@ class CustomRuleTests extends TestBaseRule {
 
         produceCustomMessageToKafka(data.customEvent);
 
-        checkElementId("getUcid", data.customEvent.getId(), "custom_rule");
-        checkElementId("setRestriction", data.customEvent.getId(), "custom_rule");
-        checkElementId("endEvent", data.customEvent.getId(), "custom_rule");
+        checkElementId("getUcid", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("endEvent", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
 
-        checkElementIdNotPresent("setAlert", data.customEvent.getId(), "custom_rule");
-        checkElementIdNotPresent("setFraudType", data.customEvent.getId(), "custom_rule");
+        checkElementIdNotPresent("setAlert", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementIdNotPresent("setFraudType", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
     }
 
     @Test
@@ -158,11 +139,32 @@ class CustomRuleTests extends TestBaseRule {
 
         produceCustomMessageToKafka(data.customEvent);
 
-        checkElementId("getUcid", data.customEvent.getId(), "custom_rule");
-        checkElementId("setAlert", data.customEvent.getId(), "custom_rule");
-        checkElementId("endEvent", data.customEvent.getId(), "custom_rule");
+        checkElementId("getUcid", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("setAlert", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("endEvent", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
 
-        checkElementIdNotPresent("setFraudType", data.customEvent.getId(), "custom_rule");
-        checkElementIdNotPresent("setRestriction", data.customEvent.getId(), "custom_rule");
+        checkElementIdNotPresent("setFraudType", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementIdNotPresent("setWtRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2001")
+    @DisplayName("Custom rule. Apply WT restriction")
+    void customRuleTest6() throws Exception {
+        DataHelper data = dbDataMap.get("6");
+        setupData(data);
+
+        produceCustomMessageToKafka(data.customEvent);
+
+        checkElementId("getUcid", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("Activity_03k4o2g", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementId("endEvent", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+
+        checkElementIdNotPresent("setAlert", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementIdNotPresent("setFraudType", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+        checkElementIdNotPresent("setRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
+
+        // Verify restriction
+        checkWorseTradingRestrictionApplied(data, data.customEvent.getMessage());
     }
 }

@@ -1,7 +1,9 @@
 package helpers.data.enums;
 
 import java.util.Random;
+import lombok.Getter;
 
+@Getter
 public enum Country {
     AFGHANISTAN("Afghanistan", "AF"),
     ALBANIA("Albania", "AL"),
@@ -204,14 +206,6 @@ public enum Country {
     Country(String countryName, String countryCode) {
         this.countryName = countryName;
         this.countryCode = countryCode;
-    }
-
-    public String getCountryName() {
-        return countryName;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
     }
 
     public static String getRandomCountryString() {

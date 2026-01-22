@@ -50,7 +50,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() {
-        account1.currency = USD.getCode();
+        account1.currency = USD.getIsoCode();
 
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
 

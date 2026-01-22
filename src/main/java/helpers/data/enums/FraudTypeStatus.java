@@ -1,7 +1,9 @@
 package helpers.data.enums;
 
 import java.security.SecureRandom;
+import lombok.Getter;
 
+@Getter
 public enum FraudTypeStatus {
     CONFIRMED("CONFIRMED", "Confirmed"),
     POTENTIAL("POTENTIAL", "Potential"),
@@ -13,14 +15,6 @@ public enum FraudTypeStatus {
     FraudTypeStatus(String status, String displayName) {
         this.status = status;
         this.displayName = displayName;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public static FraudTypeStatus getRandomFraudStatusUi() {

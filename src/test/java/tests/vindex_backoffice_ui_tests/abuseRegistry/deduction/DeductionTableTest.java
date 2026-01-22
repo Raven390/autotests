@@ -47,7 +47,7 @@ class DeductionTableTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws Exception {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        account.currency = EUR.getCode();
+        account.currency = EUR.getIsoCode();
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
         insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
@@ -112,11 +112,12 @@ class DeductionTableTest extends TestBaseWeb {
                         "Approved",
                         client.getBrand(),
                         String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency),
-                        String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), USD.getCode()),
+                        String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), USD.getIsoCode()),
                         String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency),
-                        String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), USD.getCode()),
+                        String.format(
+                                "%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), USD.getIsoCode()),
                         String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency),
-                        String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), USD.getCode()),
+                        String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), USD.getIsoCode()),
                         deduction
                                 .getCreatedAt()
                                 .toLocalDateTime()

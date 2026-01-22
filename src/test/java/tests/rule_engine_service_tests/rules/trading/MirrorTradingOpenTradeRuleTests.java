@@ -4,6 +4,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.rules.trading.MirrorTradingOpenTradeEventDataFactory.setupMirrorTradingOpenTradeEventRuleData;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -162,13 +163,13 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
                 alerts.getFirst().rule.attributes.account,
                 is(String.valueOf(data.clientHelper.getTradingAccount())));
         assertThat("Verify ucid in alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().type, is(TRADING.getDisplayName()));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.tradeEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "ML Model suspects the client of Mirror Trading");
+        checkManualWithdrawalRestrictionApplied(data, "ML Model suspects the client of Mirror Trading");
     }
 }

@@ -3,6 +3,7 @@ package tests.rule_engine_service_tests.rules.trading;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.rules.trading.MirrorTradingCloseTradeEventBybitRuleDataFactory.setupMirrorTradingCloseTradeBybitRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -146,7 +147,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
                 alerts.getFirst().rule.attributes.account,
                 is(String.valueOf(data.clientHelper.getTradingAccount())));
         assertThat("Verify ucid in alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().type, is(TRADING.getDisplayName()));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.tradeEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);

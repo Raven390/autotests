@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Currency {
     AED("AED"),
     AFN("AFN"),
@@ -161,10 +164,6 @@ public enum Currency {
 
     Currency(String isoCode) {
         this.isoCode = isoCode;
-    }
-
-    public String getCode() {
-        return isoCode;
     }
 
     public String getDisplayName() {

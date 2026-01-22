@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Regulator {
     VFSC2("VFSC2"),
     VFSC("VFSC"),
@@ -15,9 +18,5 @@ public enum Regulator {
 
     Regulator(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

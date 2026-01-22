@@ -94,7 +94,7 @@ public class TransactionHistoryTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() throws Exception {
-        account1.currency = USD.getCode();
+        account1.currency = USD.getIsoCode();
         account2.account = client1.getTradingAccount2();
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         var mtAccount2 = generateMtAccountByCrmTbAccount(account2);

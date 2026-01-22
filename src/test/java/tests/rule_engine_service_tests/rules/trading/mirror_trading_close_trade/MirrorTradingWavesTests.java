@@ -4,6 +4,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.rules.WaveFlagInserter.deleteWaveFlagData;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingWavesDataFactory.setupMirrorTradingWavesRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -94,7 +95,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
                 alerts.getFirst().timestamp,
                 matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
         assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().type, is(TRADING.getDisplayName()));
         assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
@@ -123,6 +124,6 @@ class MirrorTradingWavesTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "The client hides the fraud inside several waves");
+        checkManualWithdrawalRestrictionApplied(data, "The client hides the fraud inside several waves");
     }
 }

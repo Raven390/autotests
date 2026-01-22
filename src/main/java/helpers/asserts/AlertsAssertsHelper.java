@@ -83,7 +83,7 @@ public class AlertsAssertsHelper {
         assertThat("Trigger should be 'Withdrawal'", alerts.getFirst().getTrigger(), is("Withdrawal"));
         assertThat("Timestamp should not be null", alerts.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Ucid should match client's ucid", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is("TRADING"));
+        assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is(TRADING.getDisplayName()));
     }
 
     @Step("Assert risk transfer alert")
@@ -127,7 +127,7 @@ public class AlertsAssertsHelper {
         assertThat("Trigger should be 'transferToWA'", alerts.getFirst().getTrigger(), is("transferToWA"));
         assertThat("Timestamp should not be null", alerts.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Ucid should match client's ucid", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is("TRADING"));
+        assertThat("Type should be 'TRADING'", alerts.getFirst().getType(), is(TRADING.getDisplayName()));
     }
 
     public static void checkTradingAlert(
@@ -142,9 +142,7 @@ public class AlertsAssertsHelper {
         RuleAlertV2 alert = alerts.getFirst();
         assertThat("Verify alert ", alert.getUcid(), is(data.getClientHelper().getUcid()));
         assertThat(
-                "Verify alert ",
-                alert.getServerId(),
-                is(data.getClientHelper().getServerId().toString()));
+                "Verify alert ", alert.getServerId(), is(data.getClientHelper().getServerId()));
         assertThat(
                 "Verify alert ", alert.getAccount(), is(data.getClientHelper().getTradingAccount()));
         assertThat("Verify alert ", alert.getType(), is(TRADING.getDisplayName()));
@@ -154,5 +152,54 @@ public class AlertsAssertsHelper {
         assertThat("Verify alert trigger", alert.getTrigger(), is(expectedTrigger));
 
         assertThatAlertNotFailed(alert.getUcid(), alertRuleName);
+    }
+
+    @Step("Assert Unlimited leverage alert")
+    public static void assertUnlimitedLeverageAlert(DataHelper data, List<RuleAlertV2> alerts) {
+        assertThat("Alerts list should contain exactly 1 item", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+
+        assertThat("assert alert", alert.getAlertId(), is(data.tradeEvent.id));
+        assertThat("assert alert", alert.getTimestamp(), is(notNullValue()));
+        assertThat("assert alert", alert.getType(), is(TRADING.getDisplayName()));
+        assertThat("assert alert", alert.getTriggerCreatedTime(), is(data.tradeEvent.eventDate));
+        assertThat("assert alert", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("assert alert", alert.getTrigger(), is("Close Trade"));
+        assertThat("assert alert", alert.getReason(), is("News trading pattern with Unlimited Leverage"));
+        assertThat("assert alert", alert.getAccount().longValue(), is(data.tradeEvent.tradingAccount));
+        assertThat("assert alert", alert.getServerId(), is(data.tradeEvent.serverId));
+        assertThat("assert alert", alert.getFraudType(), is("NEWS_TRADER"));
+        assertThat("assert alert", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("assert alert", alert.getRule().getName(), is("News Trading"));
+        assertThat("assert alert", alert.getAttributes().getTicketId(), is(String.valueOf(data.tradeEvent.tradeId)));
+    }
+
+    @Step("Assert Unlimited leverage alert")
+    public static void assertCustomRuleAlert(DataHelper data, List<RuleAlertV2> alerts) {
+        assertThat("Alerts list should contain exactly 1 item", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat(
+                "Verify alert",
+                alert.getReason(),
+                is(
+                        "Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order')."));
+        assertThat(
+                "Verify alert",
+                alert.getTimestamp(),
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alert.getAlertId(), is(data.customEvent.getId()));
+        assertThat(
+                "Verify alert",
+                alert.getTriggerCreatedTime(),
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alert.getFraudType(), is(data.customEvent.getFraudType()));
+        assertThat("Verify alert", alert.getTrigger(), is(data.customEvent.getType()));
+        assertThat("Verify alert", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alert.getType(), is(TRADING.getDisplayName()));
+        assertThat("Verify alert", alert.getRule().getName(), is(data.customEvent.getSource()));
+        assertThat("Verify alert", alert.getRule().getVer(), notNullValue());
+        assertThat("Verify alert", alert.getAttributes().getDetails(), is(""));
     }
 }

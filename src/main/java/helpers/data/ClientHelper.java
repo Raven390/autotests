@@ -11,6 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Data
+@Getter
+@Setter
 public class ClientHelper {
 
     private Integer userId;

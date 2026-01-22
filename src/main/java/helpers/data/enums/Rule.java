@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Rule {
     ROUTER_RULE("Router Rule for crm_payment topic", "router_rule_crm_payment"),
     ROUTER_RULE_TRANSFER_TO_WA("Router Rule for crm_payment topic", "router_rule_crm_payment_transfer_to_wa"),
@@ -18,7 +21,9 @@ public enum Rule {
     MIRROR_TRADE_OPEN_TRADE("Mirror trade on open trade event rule", "openTradeMirrorTrade"),
     GAP_TRADING("Gap trading rule", "gap_trade"),
     LOGIN_RULE("Login rule", "login_rule"),
-    CHARGEBACK("Chargeback", "chargeback");
+    CHARGEBACK("Chargeback", "chargeback"),
+    UNLIMITED_LEVERAGE("Unlimited Leverage Abuse", "unlimited_leverage"),
+    CUSTOM_RULE("Custom rule", "custom_rule");
 
     private final String name;
     private final String processId;
@@ -26,13 +31,5 @@ public enum Rule {
     Rule(String name, String processId) {
         this.name = name;
         this.processId = processId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getProcessId() {
-        return processId;
     }
 }

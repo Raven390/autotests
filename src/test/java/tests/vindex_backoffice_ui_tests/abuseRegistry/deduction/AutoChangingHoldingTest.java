@@ -81,18 +81,18 @@ class AutoChangingHoldingTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() throws Exception {
-        account1.currency = USD.getCode();
+        account1.currency = USD.getIsoCode();
         account2.account = getRandomIntPositive();
-        account2.currency = USD.getCode();
+        account2.currency = USD.getIsoCode();
         CrmTbAccountObject account3 = generateCrmTbAccountDataForUi(client);
         account3.account = getRandomIntPositive();
-        account3.currency = EUR.getCode();
+        account3.currency = EUR.getIsoCode();
         CrmTbAccountObject account4 = generateCrmTbAccountDataForUi(client);
         account4.account = getRandomIntPositive();
-        account4.currency = EUR.getCode();
+        account4.currency = EUR.getIsoCode();
         CrmTbAccountObject account5 = generateCrmTbAccountDataForUi(client);
         account5.account = getRandomIntPositive();
-        account5.currency = USD.getCode();
+        account5.currency = USD.getIsoCode();
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);
         mtAccount3 = generateMtAccountByCrmTbAccount(account3);

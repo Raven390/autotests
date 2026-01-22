@@ -2,10 +2,9 @@ package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
-/**
- * Status of the restriction
- */
+@Getter
 public enum RestrictionStatus {
     APPLY_REQUESTED("APPLY_REQUESTED"),
     APPLIED("APPLIED"),

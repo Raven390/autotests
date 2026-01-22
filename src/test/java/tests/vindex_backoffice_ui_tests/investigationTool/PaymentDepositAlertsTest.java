@@ -107,10 +107,10 @@ public class PaymentDepositAlertsTest extends TestBaseWeb {
     static void setup() {
         objectMapper.findAndRegisterModules();
         CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client);
-        account1.currency = USD.getCode();
+        account1.currency = USD.getIsoCode();
         CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(client);
         account2.account = getRandomIntPositive();
-        account2.currency = USD.getCode();
+        account2.currency = USD.getIsoCode();
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);
 

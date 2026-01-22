@@ -8,7 +8,7 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.enums.NbdComment.getRandomNbdComment;
+import static helpers.data.enums.NdbComment.getRandomNbdComment;
 import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.startSshTunnel;

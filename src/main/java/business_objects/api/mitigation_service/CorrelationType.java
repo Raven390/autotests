@@ -2,10 +2,9 @@ package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
-/**
- * Gets or Sets CorrelationType
- */
+@Getter
 public enum CorrelationType {
     INVESTIGATION("INVESTIGATION"),
     BATCH("BATCH"),

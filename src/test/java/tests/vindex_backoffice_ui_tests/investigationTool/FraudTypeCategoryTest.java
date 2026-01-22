@@ -6,6 +6,7 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.AlertType.TRADING;
 import static helpers.data.enums.Currency.USD;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
@@ -50,7 +51,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
     // Trading client data
     private static final ClientHelper tradingClient = getRandomVantageClientAllFields();
     private static final CrmTbUserObject tradingCrmUser = generateUserByClient(tradingClient);
-    private static final String ALERT_TYPE_TRADING = "TRADING";
+    private static final String ALERT_TYPE_TRADING = TRADING.getDisplayName();
     private static CrmTbAccountObject tradingAccount;
     private static MtAccountObject tradingMtAccount;
 
@@ -98,7 +99,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Setup Trading client
         tradingAccount = generateCrmTbAccountDataForUi(tradingClient);
-        tradingAccount.currency = USD.getCode();
+        tradingAccount.currency = USD.getIsoCode();
         tradingMtAccount = generateMtAccountByCrmTbAccount(tradingAccount);
         insertObjectToDb(CRM_USER_TABLE_NAME, tradingCrmUser);
         insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, tradingAccount);
@@ -106,7 +107,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Setup Payment client
         paymentAccount = generateCrmTbAccountDataForUi(paymentClient);
-        paymentAccount.currency = USD.getCode();
+        paymentAccount.currency = USD.getIsoCode();
         paymentMtAccount = generateMtAccountByCrmTbAccount(paymentAccount);
         insertObjectToDb(CRM_USER_TABLE_NAME, paymentCrmUser);
         insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, paymentAccount);
@@ -114,7 +115,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Setup Dual role client
         dualAccount = generateCrmTbAccountDataForUi(dualClient);
-        dualAccount.currency = USD.getCode();
+        dualAccount.currency = USD.getIsoCode();
         dualMtAccount = generateMtAccountByCrmTbAccount(dualAccount);
         insertObjectToDb(CRM_USER_TABLE_NAME, dualCrmUser);
         insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, dualAccount);

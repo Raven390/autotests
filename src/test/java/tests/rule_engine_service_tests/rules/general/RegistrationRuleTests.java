@@ -69,7 +69,7 @@ class RegistrationRuleTests extends TestBaseRule {
 
         checkElementId("End_registration_rule_alert1", data.registrationEvent.getId(), "clientRegistration_event_rule");
 
-        checkManualWithdrawalRestrictionApplied(data.clientHelper, "No alert. High Lexis score");
+        checkManualWithdrawalRestrictionApplied(data, "No alert. High Lexis score");
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));

@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum AlertType {
     TRADING("TRADING"),
     PAYMENT("PAYMENT");
@@ -8,9 +11,5 @@ public enum AlertType {
 
     AlertType(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }
