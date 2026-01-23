@@ -4,8 +4,7 @@ import static com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.ConfigFactory.ENTER_PAGE_E2E;
 import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
@@ -98,6 +97,8 @@ public class InvestigationPage extends AbstractPage {
     private final Locator countryCheckboxes;
     private final Locator assigneeCheckboxes;
     private final Locator assignButton;
+    private final Locator assignDrawerButton;
+    private final Locator assignDrawer;
     private final Locator commentButton;
     private final Locator closeToastButtom;
     private final Locator selectInvestigationTypeDropDown;
@@ -117,6 +118,14 @@ public class InvestigationPage extends AbstractPage {
             "//span[@class='g-select-list__option-default-label' and text()='%s']";
     public static final String HIGH_PRIORITY_LOCATOR =
             "//div[contains(@class,'v-suspicious-client-card__alerts-count') and contains(@class,'v-suspicious-client-card__alerts-count_isHighPriority')]";
+    private static final String ASSIGN_USER_HEADER =
+            "//div[@data-qa='drawer_header']/descendant::div[text()='Assign client investigation']";
+    private static final String ASSIGN_USER_INPUT = "//descendant::input[@placeholder='Unassigned']";
+    private static final String ASSIGN_USER_INPUT_LIST =
+            "//div[@class='g-popup__content v-assign-user-selector__popup']";
+    private static final String ASSIGN_USER_INPUT_LIST_ELEMENT = "//descendant::div[@class='v-assign-user-item']";
+    private static final String ASSIGN_USER_INPUT_COMMENT = "//descendant::textarea[@class='g-text-area__control']";
+    private static final String ASSIGN_USER_TO_ME_BUTTON = "//descendant::span[text()='Assign to me']";
     private final Locator unassignedSuspiciousClientsCounter;
     private final Locator mySuspiciousClientsCounter;
     private final Locator allSuspiciousClientsCounter;
@@ -220,6 +229,8 @@ public class InvestigationPage extends AbstractPage {
         this.assigneeCheckboxes =
                 page.locator("//label[contains(@data-qa,'suspicious_clients__filters__assignees__item')]");
         this.assignButton = page.locator("//button[@data-qa='investigation_tools__client_card_assign_button']");
+        this.assignDrawerButton = page.locator(".g-button__text").getByText("Assign");
+        this.assignDrawer = page.locator("//div[@data-qa='drawer_body']");
         this.commentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.selectInvestigationTypeDropDown = page.locator("//button[@data-qa='suspicious_clients__select_type']");
@@ -941,6 +952,55 @@ public class InvestigationPage extends AbstractPage {
         Locator clientCard = page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId));
         clientCard.hover();
         clientCard.locator(assignButton).click();
+    }
+
+    @Step("Click assign drawer button")
+    public void openAssignDrawer() {
+        assignDrawerButton.click();
+        assignDrawer.locator(ASSIGN_USER_HEADER).waitFor();
+    }
+
+    @Step("Assign drawer check buttons")
+    public void assignDrawerCheckButtons(
+            String meFullName, String seniorUserFullName, String seniorOtherTeamUserFullName) {
+        var input = assignDrawer.locator(ASSIGN_USER_INPUT);
+
+        input.click();
+        var userList = page.locator(ASSIGN_USER_INPUT_LIST);
+
+        var meElem = userList.locator(ASSIGN_USER_INPUT_LIST_ELEMENT + "[2]//div//div[text()='(Me)']");
+        meElem.waitFor();
+        meElem.click();
+        assertEquals(meFullName, input.getAttribute("value"));
+        input.click();
+
+        var seniorElem = userList.locator(
+                ASSIGN_USER_INPUT_LIST_ELEMENT + "//descendant::div[text()='" + seniorUserFullName + "']");
+        seniorElem.waitFor();
+        seniorElem.click();
+        assertEquals(seniorUserFullName, input.getAttribute("value"));
+        input.click();
+
+        assertThrows(TimeoutError.class, () -> userList.locator(ASSIGN_USER_INPUT_LIST_ELEMENT
+                        + "//descendant::div[text()='" + seniorOtherTeamUserFullName + "']")
+                .waitFor(new Locator.WaitForOptions().setTimeout(1000)));
+
+        var unassignElem = userList.locator(ASSIGN_USER_INPUT_LIST_ELEMENT + "[1]//div//div");
+        unassignElem.waitFor();
+        unassignElem.click();
+        assertEquals("", input.getAttribute("value"));
+
+        var assignToMeButton = assignDrawer.locator(ASSIGN_USER_TO_ME_BUTTON);
+        assignToMeButton.click();
+        assertEquals(meFullName, input.getAttribute("value"));
+        input.click();
+        unassignElem.waitFor();
+        unassignElem.click();
+        assertEquals("", input.getAttribute("value"));
+
+        var commentTextArea = assignDrawer.locator(ASSIGN_USER_INPUT_COMMENT);
+        commentTextArea.fill("test text");
+        assertEquals("test text", commentTextArea.textContent());
     }
 
     @Step("Verify client card with client id {clientId} is visible")
