@@ -31,6 +31,7 @@ public class MlMirrorTradeRuleDataFactory {
     private static final ClientHelper mirrorTradeMLModelClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradeMLModelClient3 = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradeMLModelClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper mirrorTradeMLModelClient5 = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
     private static DataHelper getMirrorTradingRuleData(ClientHelper client) {
@@ -139,6 +140,34 @@ public class MlMirrorTradeRuleDataFactory {
         return data;
     }
 
+    @Description(
+            "No server in account in event. ML Mirror trade rule. ML Mirror trade rule.  user has at least 1 closed alert currentPnl - lastPnl > min(5000, 0.8 * depositsUcid) not marked as hedger")
+    private static DataHelper getMirrorTradingMLModelTest5Data() {
+        DataHelper data = getMirrorTradingRuleData(mirrorTradeMLModelClient5);
+        data.mirrorScoreEvent.setAccount(null);
+        data.mirrorScoreEvent.setServerId(null);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.addAlert("Mirror Trading", "CLOSED");
+        data.boAlertsObjects.getFirst().setResolvedAt(getCurrentTimestampDbFormatMinusDays(2));
+        CrmTbDepositEntity deposit = generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(500));
+        data.crmTbDepositObjects = List.of(deposit);
+        Mt5DealsCoercedObject deal1 = generateTradeByClient(data.clientHelper);
+        deal1.setTime(getCurrentTimestampDbFormatMinusDays(1));
+        deal1.setProfitUsd(500d);
+        deal1.setSymbol("EURUSD");
+        Mt5DealsCoercedObject deal2 = generateTradeByClient(data.clientHelper);
+        deal2.setTime(getCurrentTimestampDbFormatMinusDays(1));
+        deal2.setProfitUsd(500d);
+        deal2.setSymbol("BLW");
+        Mt5DealsCoercedObject deal3 = generateTradeByClient(data.clientHelper);
+        deal3.setTime(getCurrentTimestampDbFormatMinusDays(3));
+        deal3.setProfitUsd(500d);
+        deal3.setSymbol("BLW");
+        data.mt5DealsCoercedObjects = List.of(deal1, deal2, deal3);
+        return data;
+    }
+
     public static Map<String, DataHelper> setupMlMirrorTradeRuleData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -147,6 +176,7 @@ public class MlMirrorTradeRuleDataFactory {
         map.put("2", getMirrorTradingMLModelTest2Data());
         map.put("3", getMirrorTradingMLModelTest3Data());
         map.put("4", getMirrorTradingMLModelTest4Data());
+        map.put("5", getMirrorTradingMLModelTest5Data());
         return map;
     }
 }
