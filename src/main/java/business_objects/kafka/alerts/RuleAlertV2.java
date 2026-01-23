@@ -220,5 +220,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("Ticket ID")
         private String ticketId;
+
+        @JsonProperty("Trigger")
+        private String trigger;
     }
 }

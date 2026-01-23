@@ -1,20 +1,24 @@
 package business_objects.kafka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class MirrorScoreEvent {
 
     // JSON example for reference:
     //    {
-    //             "type": "mirrorScore",
-    //            "id": "7c8a3c2b-2a5e-4cb5-9f84-67a21e4adf93",
-    //            "schemaVersion": "2.3",
-    //            "timestamp": 1734973200,
-    //            "actionTimeUtc": "2025-10-22T09:45:32Z",
-    //            "ucid": "vantage-6794350",
-    //            "countAction": 23,
-    //            "actionId": "MT5-CLOSE-1734973200-01",
-    //            "ucidScore": 1.33
+    //        "type": "mirrorScore",
+    //            "id": "9bc43e25-19b7-4b5f-a907-44877b677823",
+    //            "schemaVersion": "3.2",
+    //            "timestamp": 1768994134,
+    //            "actionTimeUtc": "2026-01-21T11:07:47Z",
+    //            "ucid": "vantage-3470414",
+    //            "account": 7167125, //optional
+    //            "countAction": 57,
+    //            "actionId": "1316775961",
+    //            "eventType": 8,
+    //            "ucidScore": 0.87
     //    }
 
     @JsonProperty("type")
@@ -43,6 +47,15 @@ public class MirrorScoreEvent {
 
     @JsonProperty("ucidScore")
     private Double ucidScore;
+
+    @JsonProperty("account")
+    private Long account;
+
+    @JsonProperty("server_id")
+    private Long serverId;
+
+    @JsonProperty("eventType")
+    private Long eventType;
 
     public MirrorScoreEvent(
             String type,

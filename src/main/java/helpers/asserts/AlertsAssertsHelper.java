@@ -16,6 +16,7 @@ import helpers.data.DataHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Step;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class AlertsAssertsHelper {
 
@@ -36,7 +37,10 @@ public class AlertsAssertsHelper {
                     DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s'", ucid), Alert.class);
             parsedAlerts = dbAlertsParsed.size();
             Thread.sleep(5000);
-        } while ((parsedAlerts == 0 || failedAlerts > 0) && count++ < 50);
+            Logger.getLogger("assertThatAlertNotFailed")
+                    .info("failedAlerts: " + failedAlerts + "\nparsedAlerts: " + parsedAlerts + " count: " + count
+                            + "");
+        } while ((parsedAlerts == 0 && failedAlerts == 0) && count++ < 50);
 
         assertNotEquals(0, parsedAlerts);
         assertEquals(0, failedAlerts);
