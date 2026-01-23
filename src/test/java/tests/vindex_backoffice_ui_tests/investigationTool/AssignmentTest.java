@@ -1,6 +1,7 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -12,6 +13,7 @@ import static utils.Constants.*;
 
 import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.kafka.alerts.PaymentAlertMessage;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.database.DbName;
@@ -21,6 +23,9 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AssignmentTest extends TestBaseWeb {
 
     private static final CrmTbUserObject crmTbUser = generateUserByClient(getRandomVantageClientAllFields());
@@ -30,13 +35,14 @@ public class AssignmentTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
+        PaymentAlertMessage alert1 = generatePaymentAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(alert1.getId().toString(), objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("548")
     @DisplayName("Assign a client to the current user and verify")
     public void assignClientAndVerifyTest() throws Exception {
@@ -57,6 +63,48 @@ public class AssignmentTest extends TestBaseWeb {
                 "Assert that client is assigned to current user in db table",
                 investigations.getFirst().getAssignedUserId(),
                 equalTo(autotestUserOne().getId()));
+    }
+
+    @Order(1)
+    @Test
+    public void loginPaymentSenior() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentSeniorUser();
+    }
+
+    @Order(2)
+    @Test
+    public void loginTradingSenior() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsSeniorOpsUser();
+    }
+
+    @Order(3)
+    @Test
+    @AllureId("2074")
+    @DisplayName("Assignment drawer payment")
+    public void assignmentDrawerPaymentTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        investigationPage.openAssignDrawer();
+        investigationPage.assignDrawerCheckButtons(
+                "Payment Role", "Paymentopssenior Autotest", "Tradingopssenior Autotest");
+    }
+
+    @Order(4)
+    @Test
+    @AllureId("2075")
+    @DisplayName("Assignment drawer trading")
+    public void assignmentDrawerTradingTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsOps24User();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        investigationPage.openAssignDrawer();
+        investigationPage.assignDrawerCheckButtons(
+                "Ops24 Role", "Tradingopssenior Autotest", "Paymentopssenior Autotest");
     }
 
     @AfterAll
