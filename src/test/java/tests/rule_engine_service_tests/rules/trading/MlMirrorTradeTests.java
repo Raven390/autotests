@@ -72,7 +72,6 @@ class MlMirrorTradeTests extends TestBaseRule {
         checkElementId("Event_1fe3v0e", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
     }
 
-    @Deprecated
     @Test
     @AllureId("1756")
     @DisplayName(
@@ -88,7 +87,6 @@ class MlMirrorTradeTests extends TestBaseRule {
         checkElementId("Event_1vz2lns", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
     }
 
-    @Deprecated
     @Test
     @AllureId("1757")
     @DisplayName(
@@ -120,12 +118,65 @@ class MlMirrorTradeTests extends TestBaseRule {
         assertThat("Verify alert - ucid from event", alerts.getFirst().getUcid(), is(data.mirrorScoreEvent.getUcid()));
         assertThat(
                 "Verify alert - account",
-                alerts.getFirst().getAccount(),
+                alerts.getFirst().getAccount().toString(),
                 is(data.mirrorScoreEvent.getAccount().toString()));
         assertThat(
                 "Verify alert - server id",
-                alerts.getFirst().getServerId(),
+                alerts.getFirst().getServerId().toString(),
                 is(data.mirrorScoreEvent.getServerId().toString()));
+        assertThat("Verify alert - symbol", alerts.getFirst().getSymbol(), is("ML Model"));
+        assertThat("Verify alert- fraud", alerts.getFirst().getFraudType(), is("HEDGING"));
+        assertThat(
+                "Verify alert - reason",
+                alerts.getFirst().getReason(),
+                is("ML Model suspects the client of Mirror Trading (on ML Model trigger)"));
+        assertThat("Verify alert- rule/name", alerts.getFirst().getRule().getName(), is("Mirror Trading"));
+        assertThat(
+                "Verify alert- rule/ver is not null",
+                alerts.getFirst().getRule().getVer(),
+                notNullValue());
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().getAttributes().getUcidScore(),
+                is(data.mirrorScoreEvent.getUcidScore()));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Mirror Trading");
+
+        checkManualWithdrawalRestrictionApplied(
+                data, "ML Model suspects the client of Mirror Trading (on ML Model trigger)");
+    }
+
+    @Test
+    @AllureId("2085")
+    @DisplayName(
+            "No server in account in event .ML Mirror trade rule. ML Mirror trade rule.  user has at least 1 closed alert currentPnl - lastPnl > min(5000, 0.8 * depositsUcid) not marked as hedger ElementId: Event_0pdqol0")
+    void MlMirrorTradeRuleTest5() throws Exception {
+        DataHelper data = dbDataMap.get("5");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, FraudType.HEDGING, FraudTypeStatus.CLEANED, null);
+
+        produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
+
+        checkElementId("Event_0pdqol0", data.mirrorScoreEvent.getId(), Rule.MIRROR_TRADE_ML.getProcessId());
+
+        // Verify alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Mirror Trading");
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert", alerts.getFirst().getAlertId(), is(data.mirrorScoreEvent.getId()));
+        assertThat(
+                "Verify alert",
+                alerts.getFirst().getTimestamp(),
+                matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert - type", alerts.getFirst().getType(), is("TRADING"));
+        assertThat("Verify alert - trigger vlue ", alerts.getFirst().getTrigger(), is("Close Trade"));
+        assertThat(
+                "Verify alert - trigger create time is not null",
+                alerts.getFirst().getTriggerCreatedTime(),
+                is(notNullValue()));
+        assertThat("Verify alert - ucid from event", alerts.getFirst().getUcid(), is(data.mirrorScoreEvent.getUcid()));
+        assertThat("Verify alert - account", alerts.getFirst().getAccount().toString(), is(String.valueOf(0)));
+        assertThat("Verify alert - server id", alerts.getFirst().getServerId().toString(), is(String.valueOf(0)));
         assertThat("Verify alert - symbol", alerts.getFirst().getSymbol(), is("ML Model"));
         assertThat("Verify alert- fraud", alerts.getFirst().getFraudType(), is("HEDGING"));
         assertThat(
