@@ -79,7 +79,7 @@ public class RestrictionPage extends AbstractPage {
     private static final String WORSE_TRADING_RESTRICTION_IN_LIST = RESTRICTIONS_LIST_CONTAINER
             + "//*[contains(@class,'v-trading-env-restrictions-item__name') and normalize-space(text())='Worse trading']";
     private static final String WT_ACCOUNT_LEVEL_TEXT_IN_ROW =
-            "button[data-qa='restrictions__wt_drawer__account__level'] .g-select-control__option-text";
+            "button[data-qa='restrictions__wt_drawer__account__level']";
 
     public RestrictionPage(Page page) {
         super(page);
