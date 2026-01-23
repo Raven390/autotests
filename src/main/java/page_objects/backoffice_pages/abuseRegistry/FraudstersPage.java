@@ -36,6 +36,8 @@ public class FraudstersPage extends AbstractPage {
     private final String sourceSelectButtonLocatorPattern = "[data-qa='buttons_list__item__%s']";
     private final String restrictionPopupListElementLocatorPattern =
             "//*[@class='g-select-list__option-default-label'][text()='%s']";
+    private final String restrictionWorseTradingPopupListElementLocatorPattern =
+            "//*[@class='v-menuitem']//*[text()='%s']";
     private final Locator validationList;
     private final Locator addRestrictionButton;
     private final Locator selectPopup;
@@ -295,6 +297,14 @@ public class FraudstersPage extends AbstractPage {
 
     public void selectRestriction(String restriction) {
         String locator = String.format(restrictionPopupListElementLocatorPattern, restriction);
+        page.locator(locator).click();
+    }
+
+    /**
+     * @param level "Medium", "Low", etc.
+     */
+    public void selectRestrictionWorseTradingLevel(String level) {
+        String locator = String.format(restrictionWorseTradingPopupListElementLocatorPattern, level);
         page.locator(locator).click();
     }
 
