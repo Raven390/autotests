@@ -112,4 +112,26 @@ public class UserFactory {
                 EMAIL_AUTOTEST_VIEWER,
                 ROLE_UNKNOWN);
     }
+
+    public static User autotestUserTrading() {
+        return new User(
+                ID_AUTOTEST_TRADING,
+                EMAIL_AUTOTEST_TRADING,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_TRADING,
+                LAST_NAME_AUTOTEST_TRADING,
+                EMAIL_AUTOTEST_TRADING,
+                ROLE_UNKNOWN);
+    }
+
+    public static User autotestUserPayment() {
+        return new User(
+                ID_AUTOTEST_PAYMENT,
+                EMAIL_AUTOTEST_PAYMENT,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_AUTOTEST_PAYMENT,
+                LAST_NAME_AUTOTEST_PAYMENT,
+                EMAIL_AUTOTEST_PAYMENT,
+                ROLE_UNKNOWN);
+    }
 }

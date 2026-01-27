@@ -18,8 +18,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.insertCrmAccountsToDb;
-import static utils.Utils.writeLog;
+import static utils.Utils.*;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
@@ -36,6 +35,9 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
+@Tag(ABUSE_REGISTRY)
 class DeductionTableTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
@@ -70,9 +72,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1141 Deduction list")
     @AllureId("1366")
     @DisplayName("Verify Abuse registry deduction table")
@@ -109,6 +108,7 @@ class DeductionTableTest extends TestBaseWeb {
                         String.format(
                                 "%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()),
                         "Deduction failed",
+                        "Full deduction",
                         "Approved",
                         client.getBrand(),
                         String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency),
@@ -121,13 +121,13 @@ class DeductionTableTest extends TestBaseWeb {
                         deduction
                                 .getCreatedAt()
                                 .toLocalDateTime()
-                                .plusHours(3)
+                                .plusHours(2)
                                 .toLocalDate()
                                 .toString(),
                         deduction
                                 .getCreatedAt()
                                 .toLocalDateTime()
-                                .plusHours(3)
+                                .plusHours(2)
                                 .toLocalTime()
                                 .format(DateTimeFormatter.ofPattern("HH:mm")),
                         deduction.getComment(),
@@ -135,9 +135,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by status")
     @AllureId("1367")
     @DisplayName("Verify Abuse registry deduction table status filter options")
@@ -162,9 +159,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by status")
     @AllureId("1368")
     @DisplayName("Verify Abuse registry deduction table email filter options")
@@ -188,9 +182,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by status")
     @AllureId("1369")
     @DisplayName("Verify Abuse registry deduction table filtration by status")
@@ -211,9 +202,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by status")
     @AllureId("1370")
     @DisplayName("Verify Abuse registry deduction table filtration by email")
@@ -234,9 +222,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by brand group")
     @AllureId("1460")
     @DisplayName("Verify Abuse registry deduction table filtration by brand group")
@@ -257,9 +242,6 @@ class DeductionTableTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by status")
     @AllureId("1371")
     @DisplayName("Verify Abuse registry deduction table filtration by status and email")
@@ -283,5 +265,118 @@ class DeductionTableTest extends TestBaseWeb {
                 "Check all email statuses in the table are as selected",
                 deductionPage.getEmailValues(),
                 everyItem(is(APPROVED.getDisplayName())));
+    }
+
+    @Test
+    @Feature("BMS-3016 Filter Deduction table")
+    @AllureId("2095")
+    @DisplayName("Verify Abuse registry deduction table filtration by brand in filter drawer")
+    void deductionTableFilterBrandTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        deductionPage.navigateDeduction();
+        deductionPage.clickFilterButton();
+        deductionPage.clickBrandCheckboxInFilterDrawer(client.getBrand());
+        deductionPage.clickApplyFilterButton();
+        deductionPage.waitForPageToLoad();
+        assertThat(
+                "Check all brand groups in the table are as selected",
+                deductionPage.getBrandValues(),
+                everyItem(is(client.getBrand())));
+    }
+
+    @Test
+    @Feature("BMS-3016 Filter Deduction table")
+    @AllureId("2096")
+    @DisplayName("Verify Abuse registry deduction table filtration by email stage in filter drawer")
+    void deductionTableFilterEmailStageTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        deductionPage.navigateDeduction();
+        deductionPage.clickFilterButton();
+        deductionPage.clickEmailStageFilterOption(APPROVED.name());
+        deductionPage.clickApplyFilterButton();
+        deductionPage.waitForPageToLoad();
+        assertThat(
+                "Check all email statuses in the table are as selected",
+                deductionPage.getEmailValues(),
+                everyItem(is(APPROVED.getDisplayName())));
+    }
+
+    @Test
+    @Feature("BMS-3016 Filter Deduction table")
+    @AllureId("2097")
+    @DisplayName("Verify Abuse registry deduction table filtration by deduction status in filter drawer")
+    void deductionTableFilterDeductionStatusTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        deductionPage.navigateDeduction();
+        deductionPage.clickFilterButton();
+        deductionPage.clickDeductionStatusFilterOption(DEDUCTION_FAILED.name());
+        deductionPage.clickApplyFilterButton();
+        deductionPage.waitForPageToLoad();
+        assertThat(
+                "Check all statuses in the table are as selected",
+                deductionPage.getStatusValues(),
+                everyItem(is(DEDUCTION_FAILED.getDisplayName())));
+    }
+
+    @Test
+    @Feature("BMS-3016 Filter Deduction table")
+    @AllureId("2098")
+    @DisplayName("Verify Abuse registry deduction table filtration by creation date in filter drawer")
+    void deductionTableFilterCreationDateTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        deductionPage.navigateDeduction();
+        deductionPage.clickFilterButton();
+        deductionPage.clickCreatedPresetFilterOption("Today");
+        deductionPage.clickApplyFilterButton();
+        deductionPage.waitForPageToLoad();
+        assertThat(
+                "Check all created dates in the table are as selected",
+                deductionPage.getCreatedColumnValues(),
+                everyItem(matchesPattern("^" + getCurrentDate() + "\\s\\d{2}:\\d{2}$")));
+    }
+
+    @Test
+    @Feature("BMS-3016 Filter Deduction table")
+    @AllureId("2099")
+    @DisplayName("Verify Abuse registry deduction table filtration by fraud type in filter drawer")
+    void deductionTableFilterFraudTypeTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        deductionPage.navigateDeduction();
+        deductionPage.clickFilterButton();
+        deductionPage.clickFraudTypeCheckboxInFilterDrawer(HEDGING.getCode());
+        deductionPage.clickApplyFilterButton();
+        deductionPage.waitForPageToLoad();
+        assertThat(
+                "Check all behavior values in the table are as selected",
+                deductionPage.getBehaviorColumnValues(),
+                everyItem(containsString(HEDGING.getName())));
+    }
+
+    @Test
+    @Feature("BMS-3016 Filter Deduction table")
+    @AllureId("2100")
+    @DisplayName("Verify Abuse registry deduction table amount filters in filter drawer are visible")
+    void deductionTableFilterAmountTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        deductionPage.navigateDeduction();
+        deductionPage.clickFilterButton();
+        assertThat(
+                "Check illegal profit filter is visible",
+                deductionPage.isIllegalProfitFilterVisibleInDrawer(),
+                is(true));
+        assertThat(
+                "Check suggestion filter is visible",
+                deductionPage.isSuggestedDeductionFilterVisibleInDrawer(),
+                is(true));
+        assertThat(
+                "Check deducted amount filter is visible",
+                deductionPage.isDeductedAmountFilterVisibleInDrawer(),
+                is(true));
     }
 }

@@ -167,9 +167,9 @@ public class ConfigFactory {
     public static final String LAST_NAME_CORE = CONFIG.lastNameCore();
     public static final String EMAIL_CORE = CONFIG.emailCore();
     public static final String ID_DEV = CONFIG.idDev();
-    public static final String ID_PAYMENT_TEAM_USER = CONFIG.idPaymentUser();
-    public static final String USERNAME_PAYMENT_TEAM_USER = CONFIG.emailPaymentUser();
-    public static final String EMAIL_PAYMENT_TEAM_USER = CONFIG.emailPaymentUser();
+    public static final String ID_PAYMENT_TEAM_USER = CONFIG.idPaymentUserOld();
+    public static final String USERNAME_PAYMENT_TEAM_USER = CONFIG.emailPaymentUserOld();
+    public static final String EMAIL_PAYMENT_TEAM_USER = CONFIG.emailPaymentUserOld();
     public static final String PASSWORD_PAYMENT_TEAM_USER = CONFIG.passwordPaymentUser();
     public static final String ID_PAYMENT_SENIOR_USER = CONFIG.idPaymentSeniorUser();
     public static final String USERNAME_PAYMENT_SENIOR_USER = CONFIG.emailPaymentSeniorUser();
@@ -193,6 +193,15 @@ public class ConfigFactory {
     public static final String ID_AUTOTEST_OPS24_SENIOR = CONFIG.idOps24SeniorUser();
     public static final String ID_AUTOTEST_OPS24 = CONFIG.idOps24User();
     public static final String EMAIL_AUTOTEST_VIEWER = CONFIG.emailViewerUser();
+    public static final String ID_AUTOTEST_TRADING = CONFIG.idTradingUser();
+    public static final String EMAIL_AUTOTEST_TRADING = CONFIG.emailTradingUser();
+    public static final String FIRST_NAME_AUTOTEST_TRADING = CONFIG.firstNameTradingUser();
+    public static final String LAST_NAME_AUTOTEST_TRADING = CONFIG.lastNameTradingUser();
+    public static final String ID_AUTOTEST_PAYMENT = CONFIG.idTradingUser();
+    public static final String EMAIL_AUTOTEST_PAYMENT = CONFIG.emailTradingUser();
+    public static final String FIRST_NAME_AUTOTEST_PAYMENT = CONFIG.firstNameTradingUser();
+    public static final String LAST_NAME_AUTOTEST_PAYMENT = CONFIG.lastNameTradingUser();
+
     // Abuse registry
     public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
     public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
@@ -595,10 +604,10 @@ public class ConfigFactory {
         String passwordPaymentUser();
 
         @Key("emailPaymentUserOld")
-        String emailPaymentUser();
+        String emailPaymentUserOld();
 
         @Key("idPaymentUserOld")
-        String idPaymentUser();
+        String idPaymentUserOld();
 
         @Key("idPaymentSeniorUserOld")
         String idPaymentSeniorUser();
@@ -722,6 +731,30 @@ public class ConfigFactory {
 
         @Key("idOps24User")
         String idOps24User();
+
+        @Key("idTradingUser")
+        String idTradingUser();
+
+        @Key("emailTradingUser")
+        String emailTradingUser();
+
+        @Key("firstNameTradingUser")
+        String firstNameTradingUser();
+
+        @Key("lastNameTradingUser")
+        String lastNameTradingUser();
+
+        @Key("idPaymentUser")
+        String idPaymentUser();
+
+        @Key("emailPaymentUser")
+        String emailPaymentUser();
+
+        @Key("firstNamePaymentUser")
+        String firstNamePaymentUser();
+
+        @Key("lastNamePaymentUser")
+        String lastNamePaymentUser();
 
         // Lark
 

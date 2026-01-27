@@ -143,12 +143,12 @@ class ViewerVisibilityTest extends TestBaseWeb {
 
     @Test
     @AllureId("1738")
-    @DisplayName("Viewer user have reduced set of tabs")
-    void viewerNotSeeAllTabs() {
+    @DisplayName("Trading user have reduced set of tabs, subtabs and buttons")
+    void tradingUser() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsViewerUser();
+        keycloackPage.loginAsTradingUser();
         investigationPage.navigateToClient(client.getUcid());
-        alertsPage.isAlertTabHidden();
+        alertsPage.isAlertTabVisible();
         generalTab.isGeneralTabVisible();
         sessionsTab.isSessionTabVisible();
         paymentsPage.isPaymentsTabVisible();
@@ -156,6 +156,13 @@ class ViewerVisibilityTest extends TestBaseWeb {
         connectionPage.isConnectionsTabVisible();
         auditTrailPage.isAuditTabVisible();
         restrictionPage.isRestrictionTabVisible();
+        paymentsPage.navigate(client.getUcid());
+        paymentsPage.isWithdrawalsSubtabVisible();
+        paymentsPage.isSummarySubtabVisible();
+        tradingPage.navigateOperations(client.getUcid());
+        tradingPage.isIllegalProfitButtonHidden();
+        connectionPage.openConnectionGraph();
+        connectionPage.isMultiselectButtonHidden();
     }
 
     @Test
