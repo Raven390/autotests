@@ -4,7 +4,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
-import static helpers.data.enums.Rule.MIRROR_TRADE_INTERNAL_HEDGE;
+import static helpers.data.enums.rule_engine.Rule.MIRROR_TRADE_INTERNAL_HEDGE;
 import static helpers.data.rules.trading.MirrorTradingInternalHedgeRuleDataFactory.setupMirrorTradingInternalHedgeRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;

@@ -13,7 +13,6 @@ import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3Fact
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.EURUSD;
-import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.getRandomUuidString;
 
@@ -23,6 +22,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.DateTimeFormat;
+import helpers.data.enums.rule_engine.Event;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +60,7 @@ public class NoSlippageRuleDataFactory {
                 ruleData.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
                 ruleData.mt5DealsCoercedObjects.getFirst().getSymbol(),
                 ruleData.clientHelper.getServerId(),
-                MT_CLOSE_TRADE_EVENT,
+                Event.MT_CLOSE_TRADE_EVENT.getName(),
                 Instant.now().toString(),
                 metadata,
                 Instant.now().toString());

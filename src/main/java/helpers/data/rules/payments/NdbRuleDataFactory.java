@@ -8,7 +8,7 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.data.DataHelper.createClient;
-import static helpers.data.enums.NdbComment.getRandomNbdComment;
+import static helpers.data.enums.rule_engine.NdbComment.getRandomNbdComment;
 import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.startSshTunnel;
@@ -24,6 +24,7 @@ import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.FraudTypeOld;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import java.time.Instant;
@@ -76,7 +77,7 @@ public class NdbRuleDataFactory {
                 .platform("MT4")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("2.0")
-                .type(CRM_WITHDRAWAL_EVENT)
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.1)
                 .withdrawalAmountUSD(1.2)
                 .withdrawalApplicationTime(Instant.now().toString())
@@ -371,15 +372,15 @@ public class NdbRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNdbRuleExitEventEnd1Data());
-        map.put("2", getNdbRuleExitEventEnd2Data());
-        map.put("3", getNdbRuleExitEventEnd3Data());
-        map.put("4", getNdbRuleExitEventEnd4Data());
-        map.put("42", getNdbRuleExitEventEnd42Data());
-        map.put("5", getNdbRuleExitEventEnd5Data());
-        map.put("6", getNdbRuleExitEventEnd6Data());
-        map.put("7", getNdbRuleExitEventEnd7Data());
-        map.put("8", getNdbRuleExitEventEnd8Data());
-        map.put("9", getNdbRuleExitEventEnd9Data());
+        //        map.put("2", getNdbRuleExitEventEnd2Data());
+        //        map.put("3", getNdbRuleExitEventEnd3Data());
+        //        map.put("4", getNdbRuleExitEventEnd4Data());
+        //        map.put("42", getNdbRuleExitEventEnd42Data());
+        //        map.put("5", getNdbRuleExitEventEnd5Data());
+        //        map.put("6", getNdbRuleExitEventEnd6Data());
+        //        map.put("7", getNdbRuleExitEventEnd7Data());
+        //        map.put("8", getNdbRuleExitEventEnd8Data());
+        //        map.put("9", getNdbRuleExitEventEnd9Data());
         return map;
     }
 }

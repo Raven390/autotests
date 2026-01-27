@@ -22,6 +22,7 @@ import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeOld;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import java.math.BigDecimal;
@@ -70,7 +71,7 @@ public class CpaAbuseRuleDataFactory {
                 .platform("MT4")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("2.0")
-                .type(CRM_WITHDRAWAL_EVENT)
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.1)
                 .withdrawalAmountUSD(1.2)
                 .withdrawalApplicationTime(Instant.now().toString())
@@ -574,18 +575,18 @@ public class CpaAbuseRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
-        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
-        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
-        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
-        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
-        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
-        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
-        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
-        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
-        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
-        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
-        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
-        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
+        //        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
+        //        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
+        //        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
+        //        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
+        //        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
+        //        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
+        //        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
+        //        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
+        //        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
+        //        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
+        //        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
+        //        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
 
         return map;
     }

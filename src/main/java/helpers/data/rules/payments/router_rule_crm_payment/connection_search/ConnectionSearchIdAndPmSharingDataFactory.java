@@ -15,6 +15,7 @@ import helpers.data.DataHelper;
 import helpers.data.DataSetupHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Country;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.io.IOException;
 import java.time.Instant;
@@ -112,7 +113,7 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
                 .platform("WEB")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("1.0")
-                .type(CRM_WITHDRAWAL_EVENT)
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.0)
                 .withdrawalApplicationTime(Instant.now().toString())
                 .withdrawalCurrency("EUR")

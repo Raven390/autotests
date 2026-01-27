@@ -67,6 +67,10 @@ public class Constants {
             "Clickhouse api. Get lexis nexis custom column data request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES =
             "Clickhouse api. Get mirror accounts by trades";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_WAVES =
+            "Clickhouse api. Get mirror trade waves";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_WAVES_V2 =
+            "Clickhouse api. Get mirror trade waves v2";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
             "Clickhouse api. Get mirror trade on last withdrawal";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
@@ -118,9 +122,10 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_ENOUGH_TRADES_IN_ROUTER_RULE = "Router rule. Enough trades branch";
     public static final String STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE =
             "Router rule. Connection search branch";
+    public static final String STORY_RULE_ENGINE_UNLIMITED_LEVERAGE_RULE = "Unlimited leverage rule";
+    public static final String STORY_RULE_ENGINE_CLEARANCE_IN_ROUTER_RULE = "Router rule. Clearance rule branch";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_TRANSFER_TO_WA = "Router rule. Transfer to wa";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_SHADOW_MODE = "Router rule. Shadow mode";
-    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_PAYMENT = "Router rule. crm payment topic";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE_CRM_EVENTS = "Router rule. crm events topic";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE =
             "Router rule. Withdrawal integrity check ";
@@ -364,7 +369,6 @@ public class Constants {
     public static final String CONNECTION_SEARCH_DATA_EMAIL1 = "matisse@gmx.net";
     public static final String CONNECTION_SEARCH_DATA_EMAIL2 = "matisse@gmx.net";
     public static final String CONNECTION_SEARCH_DATA_IP1 = "92.14.100.34";
-    public static final String CONNECTION_SEARCH_DATA_IP2 = "92.14.100.35";
     public static final String CONNECTION_SEARCH_DATA_IP3 = "111.111.111.111";
     public static final String CONNECTION_SEARCH_DATA_IP4 = "124.12.12.42";
     public static final String CONNECTION_SEARCH_DATA_IP5 = "124.12.12.46";
@@ -415,21 +419,8 @@ public class Constants {
               </bpmndi:BPMNDiagram>
             </bpmn:definitions>
             """;
-    // Event generator event names
-    public static final String CRM_DEPOSIT_EVENT = "deposit";
-    public static final String CRM_LOGIN_EVENT = "login";
-    public static final String CRM_REGISTRATION_EVENT = "registration";
-    public static final String CRM_WITHDRAWAL_EVENT = "withdrawal";
-    public static final String CRM_TRANSFER_TO_WA_EVENT = "transferToWA";
-    public static final String EG_LOGIN_EVENT = "egLoginToWeb";
-    public static final String EG_RAF_BALANCE_EVENT = "egRaf";
-    public static final String REGISTRATION_EVENT = "registration";
-    public static final String EG_WITHDRAWAL_EVENT = "egWithdrawal";
-    public static final String KAFKA_MESSAGE_KEY = "QA";
-    public static final String MT_CLOSE_TRADE_EVENT = "closeTrade";
-    public static final String MT_OPEN_TRADE_EVENT = "openTrade";
-    public static final String MT_RAF_BALANCE_EVENT = "raf";
     // Other
+    public static final String KAFKA_MESSAGE_KEY = "QA";
     public static final String APPLIED_STATUS = "APPLIED";
     public static final String COMMENT_ADDED_TYPE = "COMMENT_ADDED";
     public static final String CONNECTION_SEARCH_DATA_DOCUMENT_HIDDEN = "3***********2";

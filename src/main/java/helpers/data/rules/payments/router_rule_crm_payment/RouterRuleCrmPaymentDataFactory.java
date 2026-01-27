@@ -13,6 +13,7 @@ import static utils.Utils.getRandomUuidString;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -65,7 +66,7 @@ public class RouterRuleCrmPaymentDataFactory {
                 "MT4", // platform
                 data.clientHelper.getRegulator(), // regulator
                 "2.0", // schemaVersion
-                CRM_WITHDRAWAL_EVENT, // type
+                Event.CRM_WITHDRAWAL_EVENT.getName(), // type
                 1.1, // withdrawalAmount
                 1.2,
                 Instant.now().toString(), // withdrawalApplicationTime

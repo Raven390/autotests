@@ -3,13 +3,13 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.CRM_WITHDRAWAL_EVENT;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.*;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.time.Instant;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class RouterRuleCrmPaymentShadowModeFactory {
                 .platform("MT4")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("2.0")
-                .type(CRM_WITHDRAWAL_EVENT)
+                .type(Event.CRM_DEPOSIT_EVENT.getName())
                 .withdrawalAmount(1.1)
                 .withdrawalAmountUSD(1.2)
                 .withdrawalApplicationTime(Instant.now().toString())

@@ -11,7 +11,7 @@ import static utils.Constants.*;
 
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
-@Story(STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE)
+@Story(STORY_RULE_ENGINE_UNLIMITED_LEVERAGE_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
@@ -69,7 +69,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2051")
+    @AllureId("2093")
     @DisplayName("Unlimited leverage rule. Exit without alert if unlimited leverage is true. Element Id: Event_07awlre")
     void unlimitedLeverageRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");

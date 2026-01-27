@@ -21,6 +21,7 @@ import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.*;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Step;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -74,7 +75,7 @@ public class LoginRuleDataFactory {
                 "webAccount",
                 client.getRegulator(),
                 "1.0",
-                CRM_LOGIN_EVENT);
+                Event.CRM_LOGIN_EVENT.getName());
         return data;
     }
 

@@ -15,7 +15,7 @@ import static utils.Constants.*;
 
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;

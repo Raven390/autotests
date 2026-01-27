@@ -7,7 +7,7 @@ import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRes
 import static helpers.asserts.RestrictionsAssertsHelper.checkWorseTradingRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
-import static helpers.data.enums.Rule.CUSTOM_RULE;
+import static helpers.data.enums.rule_engine.Rule.CUSTOM_RULE;
 import static helpers.data.rules.general.CustomRuleDataFactory.setupCustomRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;

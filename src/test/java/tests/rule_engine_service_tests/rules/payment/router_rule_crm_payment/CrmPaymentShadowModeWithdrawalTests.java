@@ -15,13 +15,15 @@ import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmP
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static utils.Constants.*;
+import static utils.Utils.sleep;
 
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
 import helpers.data.DataHelper;
-import helpers.data.enums.Rule;
+import helpers.data.enums.payment_gate.Decision;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -79,18 +81,20 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Withdrawal Review");
         assertRiskWithdrawalAlert(data, alerts);
 
-        List<Acknowledge> acknowledge = getPaymentAcknowledgementFromKafka(paymentId);
+        List<Acknowledge> acknowledge = getPaymentAcknowledgeFromKafka(paymentId);
         assertAcknowledge(data, paymentId, acknowledge.getFirst());
         assertRuleExecutions(paymentId);
 
-        Thread.sleep(30_000);
+        sleep(30_000);
         sendRiskApproveDecision(paymentId);
 
         checkElementId(
                 "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
-        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb((paymentId), "risk");
-        List<PaymentDecisionsObject> decision2 = getRuleDecisionByWithdrawalIdFromDb((paymentId), "final");
+        List<PaymentDecisionsObject> decision =
+                getRuleDecisionByWithdrawalIdFromDb((paymentId), Decision.RISK_APPROVE.getType());
+        List<PaymentDecisionsObject> decision2 =
+                getRuleDecisionByWithdrawalIdFromDb((paymentId), Decision.FINAL_APPROVE.getType());
         assertDecision(decision, decision2, paymentId);
 
         assertPutPayment(paymentId);
@@ -117,7 +121,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
                 .getPaymentId();
 
-        Thread.sleep(20_000);
+        sleep(20_000);
         sendRiskRejectDecision(paymentId);
 
         checkElementId(

@@ -78,9 +78,6 @@ public class RuleAlertV2 {
     @AllArgsConstructor
     public static class Rule {
 
-        @JsonProperty("trigger")
-        private String trigger;
-
         @JsonProperty("ver")
         private String ver;
 

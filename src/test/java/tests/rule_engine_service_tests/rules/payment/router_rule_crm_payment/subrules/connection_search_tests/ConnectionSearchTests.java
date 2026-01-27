@@ -16,7 +16,7 @@ import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import helpers.database.DbName;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;

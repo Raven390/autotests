@@ -11,6 +11,7 @@ import static utils.Utils.getRandomUuidString;
 import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.time.Instant;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class MirrorTradeDataFactory {
                 .platform("WEB") // platform
                 .regulator(data.clientHelper.getRegulator()) // regulator
                 .schemaVersion("1.0") // schemaVersion
-                .type(CRM_WITHDRAWAL_EVENT) // type
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName()) // type
                 .withdrawalAmount(1.0) // withdrawalAmount
                 .withdrawalApplicationTime(Instant.now().toString()) // withdrawalApplicationTime
                 .withdrawalCurrency("EUR") // withdrawalCurrency

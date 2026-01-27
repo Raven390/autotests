@@ -1,4 +1,4 @@
-package helpers.data.enums;
+package helpers.data.enums.rule_engine;
 
 import lombok.Getter;
 
@@ -23,7 +23,8 @@ public enum Rule {
     LOGIN_RULE("Login rule", "login_rule"),
     CHARGEBACK("Chargeback", "chargeback"),
     UNLIMITED_LEVERAGE("Unlimited Leverage Abuse", "unlimited_leverage"),
-    CUSTOM_RULE("Custom rule", "custom_rule");
+    CUSTOM_RULE("Custom rule", "custom_rule"),
+    CLEARANCE_RULE("Withdrawal Clearance RR", "withdrawal_clearance_rr");
 
     private final String name;
     private final String processId;

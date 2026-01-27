@@ -8,7 +8,7 @@ import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 
 import helpers.data.DataHelper;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;

@@ -20,6 +20,7 @@ import helpers.data.DataHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Country;
 import helpers.data.enums.FraudTypeStatus;
+import helpers.data.enums.rule_engine.Event;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class RegistrationRuleDataFactory {
         data.registrationEvent.setClientId(data.clientHelper.getUserId());
         data.registrationEvent.setEmail(data.clientHelper.getEmail());
         data.registrationEvent.setPhoneNumber(data.clientHelper.getPhoneNumber());
-        data.registrationEvent.setType(REGISTRATION_EVENT);
+        data.registrationEvent.setType(Event.REGISTRATION_EVENT.getName());
 
         return data;
     }

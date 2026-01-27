@@ -11,6 +11,7 @@ import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDb
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt5;
 import business_objects.kafka.mt_events.RafBalanceOrderMtEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.*;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ class MtDbEventsRafBalanceOrderTest extends TestBaseKafka {
                 rafBalanceOrderMtDbEvent1.getData().getMtAccount(),
                 rafBalanceOrderMtDbEvent1.getData().getComment(),
                 rafBalanceOrderMtDbEvent1.getData().getServerId(),
-                EG_RAF_BALANCE_EVENT);
+                Event.EG_RAF_BALANCE_EVENT.getName());
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent2 = new RafBalanceOrderMtEvent(
                 rafBalanceOrderMtDbEvent2.getData().getOpenTime(),
@@ -78,7 +79,7 @@ class MtDbEventsRafBalanceOrderTest extends TestBaseKafka {
                 rafBalanceOrderMtDbEvent2.getData().getMtAccount(),
                 rafBalanceOrderMtDbEvent2.getData().getComment(),
                 rafBalanceOrderMtDbEvent2.getData().getServerId(),
-                EG_RAF_BALANCE_EVENT);
+                Event.EG_RAF_BALANCE_EVENT.getName());
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedRafBalanceOrderMtEvent1.getId(), notNullValue());
@@ -137,7 +138,7 @@ class MtDbEventsRafBalanceOrderTest extends TestBaseKafka {
                 rafBalanceOrderMtDbEvent1.getData().getMtAccount(),
                 rafBalanceOrderMtDbEvent1.getData().getComment(),
                 rafBalanceOrderMtDbEvent1.getData().getServerId(),
-                EG_RAF_BALANCE_EVENT);
+                Event.EG_RAF_BALANCE_EVENT.getName());
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent2 = new RafBalanceOrderMtEvent(
                 rafBalanceOrderMtDbEvent2.getData().getOpenTime(),
@@ -145,7 +146,7 @@ class MtDbEventsRafBalanceOrderTest extends TestBaseKafka {
                 rafBalanceOrderMtDbEvent2.getData().getMtAccount(),
                 rafBalanceOrderMtDbEvent2.getData().getComment(),
                 rafBalanceOrderMtDbEvent2.getData().getServerId(),
-                EG_RAF_BALANCE_EVENT);
+                Event.EG_RAF_BALANCE_EVENT.getName());
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedRafBalanceOrderMtEvent1.getId(), notNullValue());
