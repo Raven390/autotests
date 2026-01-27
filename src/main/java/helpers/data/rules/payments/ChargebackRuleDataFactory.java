@@ -90,7 +90,7 @@ public class ChargebackRuleDataFactory {
     @Description("Create data for Chargeback rule")
     private static DataHelper getChargebackRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
 
         attributes = Attributes.builder()
                 .cardMaskedNumber(cardMaskedNumber)

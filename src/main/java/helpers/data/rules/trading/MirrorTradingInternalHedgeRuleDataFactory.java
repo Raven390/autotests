@@ -1,7 +1,6 @@
 package helpers.data.rules.trading;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.convertTimestampToIsoFormat;
 import static utils.Utils.getCurrentTimestampMillis;
@@ -27,7 +26,7 @@ public class MirrorTradingInternalHedgeRuleDataFactory {
     private static DataHelper getMirrorTradingInternalHedgeRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
 
-        createClient(data, client);
+        data.createClient(client);
         data.internalHedgeEvent = new InternalHedgeEvent();
         data.internalHedgeEvent.setType("internalHedge");
         data.internalHedgeEvent.setId(Utils.getRandomUuidString());

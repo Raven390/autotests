@@ -177,13 +177,14 @@ public class DataHelper {
         this.clientFraudTypes = new ArrayList<>();
     }
 
-    public static void createClient(DataHelper data, ClientHelper clientHelper) {
-        data.clientHelper = clientHelper;
-        data.crmTbUserObject = generateUserByClient(data.clientHelper);
-        data.crmTbAccountObject = generateAccountByClient(data.clientHelper, false);
-        data.crmTbAccountForMtObject = generateAccountForMtByClient(data.clientHelper, false);
-        data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
-        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
+    public DataHelper createClient(ClientHelper clientHelper) {
+        this.clientHelper = clientHelper;
+        this.crmTbUserObject = generateUserByClient(this.clientHelper);
+        this.crmTbAccountObject = generateAccountByClient(this.clientHelper, false);
+        this.crmTbAccountForMtObject = generateAccountForMtByClient(this.clientHelper, false);
+        this.mtAccountObject = generateMtAccountByClient(this.clientHelper);
+        this.lnSessionParsedObject = generateLexisNexisDataByClient(this.clientHelper);
+        return this;
     }
 
     protected static void setupAttrConnectionPayoutIdAndNameBirthWithMaxScore(
@@ -472,5 +473,15 @@ public class DataHelper {
         data.crmTbDepositObjects.getFirst().setPaymentChannel("web");
         data.crmTbDepositObjects.getFirst().setPaymentSystemAccount("Credit card");
         return data;
+    }
+
+    public DataHelper createDeposit() {
+        this.crmTbDepositObjects = List.of(generateCrmTbDepositEntityByClient(this.getClientHelper()));
+        return this;
+    }
+
+    public DataHelper createWithdrawal() {
+        this.crmTbWithdrawalObjects = List.of(generateCrmTbWithdrawalEntityByClient(this.getClientHelper()));
+        return this;
     }
 }

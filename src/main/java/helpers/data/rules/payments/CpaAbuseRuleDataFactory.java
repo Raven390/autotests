@@ -5,7 +5,6 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.*;
-import static helpers.data.DataHelper.createClient;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -51,7 +50,7 @@ public class CpaAbuseRuleDataFactory {
     @Step("Create data for Mirror trading rule")
     private static DataHelper getCpaAbuseRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4")
                 .binNumber(Utils.getRandomIntPositive().toString())

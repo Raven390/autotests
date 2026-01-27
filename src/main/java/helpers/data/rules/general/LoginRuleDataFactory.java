@@ -61,7 +61,7 @@ public class LoginRuleDataFactory {
     private static DataHelper getLoginRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
 
-        createClient(data, client);
+        data.createClient(client);
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
 

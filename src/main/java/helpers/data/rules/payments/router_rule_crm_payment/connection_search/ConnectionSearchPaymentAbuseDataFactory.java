@@ -46,7 +46,7 @@ public class ConnectionSearchPaymentAbuseDataFactory {
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
 
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4")

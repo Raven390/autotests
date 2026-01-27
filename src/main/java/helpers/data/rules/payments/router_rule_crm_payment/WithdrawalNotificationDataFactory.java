@@ -4,7 +4,6 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEn
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
@@ -38,8 +37,7 @@ public class WithdrawalNotificationDataFactory {
     @Description("Create data for Withdrawal Notification rule")
     private static DataHelper getWithdrawalNotificationRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
-
+        data.createClient(client);
         data.setCrmWithdrawalEventV2(CrmWithdrawalEventV2.builder()
                 .id(UUID.randomUUID().toString())
                 .accountType("MT4")

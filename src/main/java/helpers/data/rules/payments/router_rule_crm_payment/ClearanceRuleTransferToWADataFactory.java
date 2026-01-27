@@ -1,27 +1,20 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.*;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getRandomUuidString;
 
-import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
+import business_objects.kafka.crm_events.TransferToWaEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import utils.Utils;
 
-public class ClearanceRuleDataFactory {
+public class ClearanceRuleTransferToWADataFactory {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
@@ -30,39 +23,35 @@ public class ClearanceRuleDataFactory {
     private static final ClientHelper client6 = getRandomVantageClientAllFields();
     private static final ClientHelper client7 = getRandomVantageClientAllFields();
     private static final ClientHelper client8 = getRandomVantageClientAllFields();
-    private static final ClientHelper client9 = getRandomVantageClientAllFields();
 
     @Description("Create data for Clearance rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
 
-        data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
-                .accountType("MT4")
-                .binNumber(Utils.getRandomIntPositive().toString())
-                .brand(data.clientHelper.getBrand().toLowerCase())
-                .checkName("")
-                .clientId(data.clientHelper.getUserId())
-                .eventDate(Instant.now().toString())
-                .expMonth("4")
-                .expYear("2030")
-                .fullName(data.clientHelper.getFirstName())
-                .id(getRandomUuidString())
-                .merchantOrderId("VTSG" + getRandomIntPositive())
-                .mt4Account(data.clientHelper.getTradingAccount())
-                .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
-                .paymentChannelName("-")
-                .paymentMethodCode("CREDIT_CARD")
-                .platform("WEB")
-                .regulator(data.clientHelper.getRegulator())
-                .schemaVersion("1.0")
-                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
-                .withdrawalAmount(1.0)
-                .withdrawalApplicationTime(Instant.now().toString())
-                .withdrawalCurrency("EUR")
-                .withdrawalId(Long.valueOf(getRandomIntPositive()))
-                .status("Risk audit")
-                .withdrawalAmountUSD(100d)
+        UUID id = UUID.randomUUID();
+        data.transferToWaEvent = TransferToWaEvent.builder()
+                .fromMt4account(data.clientHelper.getTradingAccount()) // fromMt4account
+                .schemaVersion("1.0") // schemaVersion
+                .clientId(data.clientHelper.getUserId()) // clientId
+                .accountType("MT5") // accountType
+                .actualAmount(0.033_958_96) // actualAmount
+                .transferAmount(101D) // transferAmount
+                .merchantOrderId("AUVF1110171050ETH17640572580047") // merchantOrderId
+                .type(Event.CRM_TRANSFER_TO_WA_EVENT.getName()) // type
+                .transferId(Utils.getRandomLongPositive()) // transferId
+                .checkName("") // checkName
+                .platform("WEB") // platform
+                .businessOrderId("AUVF1110171050ETH17640572580047") // businessOrderId
+                .statusId(24) // statusId
+                .toCurrency("ETH") // to currency
+                .transferApplicationTime("2025-11-25T07:55:46Z") // transferApplicationTime
+                .regulator(data.clientHelper.getRegulator()) // regulator
+                .fromCurrency("USD") // fromCurrency
+                .id(id) // id
+                .brand(data.clientHelper.getBrand()) // brand
+                .status("Risk Audit") // status
+                .eventDate("2025-11-25T07:55:46Z") // eventDate
                 .build();
 
         return data;
@@ -77,7 +66,7 @@ public class ClearanceRuleDataFactory {
     private static DataHelper getTest2Data() {
         DataHelper data = getRuleData(client2);
 
-        data.setCrmTbDepositObjects(List.of(generateCrmTbDepositEntityByClient(data.clientHelper)));
+        data.createDeposit();
         data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(10_001));
         data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
 
@@ -87,9 +76,9 @@ public class ClearanceRuleDataFactory {
     private static DataHelper getTest3Data() {
         DataHelper data = getRuleData(client3);
 
-        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(100d);
+        data.transferToWaEvent.setTransferAmount(100d);
 
-        data.setCrmTbDepositObjects(List.of(generateCrmTbDepositEntityByClient(data.clientHelper)));
+        data.createDeposit();
         data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
         data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
 
@@ -99,9 +88,9 @@ public class ClearanceRuleDataFactory {
     private static DataHelper getTest4Data() {
         DataHelper data = getRuleData(client4);
 
-        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(0d);
+        data.transferToWaEvent.setTransferAmount(0d);
 
-        data.setCrmTbDepositObjects(List.of(generateCrmTbDepositEntityByClient(data.clientHelper)));
+        data.createDeposit();
         data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
         data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
 
@@ -111,13 +100,13 @@ public class ClearanceRuleDataFactory {
     private static DataHelper getTest5Data() {
         DataHelper data = getRuleData(client5);
 
-        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(50d);
+        data.transferToWaEvent.setTransferAmount(50d);
 
-        data.setCrmTbDepositObjects(List.of(generateCrmTbDepositEntityByClient(data.clientHelper)));
+        data.createDeposit();
         data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(100));
         data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(100));
 
-        data.setCrmTbWithdrawalObjects((List.of(generateCrmTbWithdrawalEntityByClient(data.clientHelper))));
+        data.createWithdrawal();
         data.getCrmTbWithdrawalObjects().getFirst().setAmount(BigDecimal.valueOf(20));
         data.getCrmTbWithdrawalObjects().getFirst().setAmountUsd(BigDecimal.valueOf(20));
 
@@ -138,16 +127,16 @@ public class ClearanceRuleDataFactory {
 
     private static DataHelper getTest8Data() {
         DataHelper data = getRuleData(client8);
-        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(null);
+        data.transferToWaEvent.setTransferAmount(null);
 
-        data.setCrmTbDepositObjects(List.of(generateCrmTbDepositEntityByClient(data.clientHelper)));
+        data.createDeposit();
         data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
         data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
 
         return data;
     }
 
-    public static Map<String, DataHelper> setupClearanceRuleData() {
+    public static Map<String, DataHelper> setupClearanceTransferToWAEventRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map

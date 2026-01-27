@@ -7,7 +7,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
-import static helpers.data.DataHelper.createClient;
 import static helpers.data.enums.rule_engine.NdbComment.getRandomNbdComment;
 import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
@@ -55,8 +54,7 @@ public class NdbRuleDataFactory {
     @Step("Create data for Mirror trading rule")
     private static DataHelper getNdbRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
-
+        data.createClient(client);
         client.setIbId(1);
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4")

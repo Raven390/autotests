@@ -1,7 +1,6 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 
 import business_objects.kafka.crm_events.TransferToWaEvent;
@@ -22,7 +21,7 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
     @Description("Create data for Router rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
         UUID id = UUID.randomUUID();
         data.transferToWaEvent = TransferToWaEvent.builder()
                 .fromMt4account(data.clientHelper.getTradingAccount()) // fromMt4account

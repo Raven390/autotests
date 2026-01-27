@@ -1,7 +1,6 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -25,8 +24,7 @@ public class MirrorTradeDataFactory {
     @Description("Create data for Mirror Trade rule")
     private static DataHelper getMirrorTradeRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
-
+        data.createClient(client);
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4") // accountType
                 .binNumber(Utils.getRandomIntPositive().toString()) // binNumber

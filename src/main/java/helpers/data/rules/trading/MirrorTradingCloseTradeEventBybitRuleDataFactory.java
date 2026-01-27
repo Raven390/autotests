@@ -7,7 +7,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -63,8 +62,7 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
     private static DataHelper getMirrorTradingBybitRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         client.setServerId(64);
-        createClient(data, client);
-
+        data.createClient(client);
         data.tradeEvent = new TradeEvent();
         data.tradeEvent.type = "closeTrade";
         data.tradeEvent.openTime = convertTimestampToIsoFormat(getCurrentTimestampMillis());
