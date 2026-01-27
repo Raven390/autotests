@@ -1,7 +1,6 @@
 package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.*;
@@ -24,7 +23,7 @@ public class RouterRuleCrmPaymentShadowModeFactory {
     @Description("Create data for Shadow mode Router rule on withdrawal event")
     private static DataHelper getTest(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4")
                 .binNumber(Utils.getRandomIntPositive().toString())

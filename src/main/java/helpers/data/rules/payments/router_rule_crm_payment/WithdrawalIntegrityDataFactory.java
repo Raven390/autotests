@@ -2,7 +2,6 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
@@ -25,8 +24,7 @@ public class WithdrawalIntegrityDataFactory {
     @Description("Create data for Withdrawal Integrity check rule")
     private static DataHelper getWithdrawalIntegrityCheckRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
-
+        data.createClient(client);
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4")
                 .binNumber(Utils.getRandomIntPositive().toString())

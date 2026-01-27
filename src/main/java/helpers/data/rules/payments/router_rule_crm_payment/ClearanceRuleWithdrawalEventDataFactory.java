@@ -1,7 +1,6 @@
-package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
+package helpers.data.rules.payments.router_rule_crm_payment;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.*;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
@@ -12,12 +11,13 @@ import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import utils.Utils;
 
-public class ConnectionSearchDataFactory {
+public class ClearanceRuleWithdrawalEventDataFactory {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
@@ -25,20 +25,9 @@ public class ConnectionSearchDataFactory {
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
     private static final ClientHelper client6 = getRandomVantageClientAllFields();
     private static final ClientHelper client7 = getRandomVantageClientAllFields();
-    private static final ClientHelper client7_1 = getRandomVantageClientAllFields();
     private static final ClientHelper client8 = getRandomVantageClientAllFields();
-    private static final ClientHelper client8_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client9 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_2 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_3 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_4 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_5 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_6 = getRandomVantageClientAllFields();
-    private static final ClientHelper client11 = getRandomVantageClientAllFields();
 
-    @Description("Create data for Connection search rule")
+    @Description("Create data for Clearance rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         data.createClient(client);
@@ -77,30 +66,39 @@ public class ConnectionSearchDataFactory {
     private static DataHelper getTest1Data() {
         DataHelper data = getRuleData(client1);
 
-        data.crmWithdrawalEventV2.setLocalBankTransfer(CrmWithdrawalEventV2.LocalBankTransfer.builder()
-                .accountNumber("Cashh")
-                .build());
         return data;
     }
 
     private static DataHelper getTest2Data() {
         DataHelper data = getRuleData(client2);
-        data.crmWithdrawalEventV2.setLocalBankTransfer(CrmWithdrawalEventV2.LocalBankTransfer.builder()
-                .accountNumber("0")
-                .build());
+
+        data.createDeposit();
+        data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(10_001));
+        data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(10_001));
+
         return data;
     }
 
     private static DataHelper getTest3Data() {
         DataHelper data = getRuleData(client3);
-        data.crmWithdrawalEventV2.setLocalBankTransfer(CrmWithdrawalEventV2.LocalBankTransfer.builder()
-                .accountNumber("00")
-                .build());
+
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(100d);
+
+        data.createDeposit();
+        data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
+        data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
+
         return data;
     }
 
     private static DataHelper getTest4Data() {
         DataHelper data = getRuleData(client4);
+
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(0d);
+
+        data.createDeposit();
+        data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
+        data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
 
         return data;
     }
@@ -108,83 +106,43 @@ public class ConnectionSearchDataFactory {
     private static DataHelper getTest5Data() {
         DataHelper data = getRuleData(client5);
 
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(50d);
+
+        data.createDeposit();
+        data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(100));
+        data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(100));
+
+        data.createWithdrawal();
+        data.getCrmTbWithdrawalObjects().getFirst().setAmount(BigDecimal.valueOf(20));
+        data.getCrmTbWithdrawalObjects().getFirst().setAmountUsd(BigDecimal.valueOf(20));
+
         return data;
     }
 
     private static DataHelper getTest6Data() {
         DataHelper data = getRuleData(client6);
-        addDepositSumByCategory(data, 501d);
+
         return data;
     }
 
     private static DataHelper getTest7Data() {
         DataHelper data = getRuleData(client7);
-        DataHelper data2 = getRuleData(client7_1);
 
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
         return data;
     }
 
     private static DataHelper getTest8Data() {
         DataHelper data = getRuleData(client8);
-        DataHelper data2 = getRuleData(client8_1);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(null);
 
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
-
-        addDepositSumByCategory(data, 501d);
-        return data;
-    }
-
-    private static DataHelper getTest9Data() {
-        DataHelper data = getRuleData(client9);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
-
-        addDepositSumByCategory(data, 501d);
-
-        addWithdrawalSumByCategory(data, 9000d, 5);
+        data.createDeposit();
+        data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
+        data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
 
         return data;
     }
 
-    private static DataHelper getTest10Data() {
-        DataHelper data = getRuleData(client10);
-        DataHelper data2 = getRuleData(client10_1);
-        DataHelper data3 = getRuleData(client10_2);
-        DataHelper data4 = getRuleData(client10_3);
-        DataHelper data5 = getRuleData(client10_4);
-        DataHelper data6 = getRuleData(client10_5);
-        DataHelper data7 = getRuleData(client10_6);
-
-        addConnectionByPayoutIdAttribute(data, data2.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data3.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data4.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data5.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data6.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data7.clientHelper);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
-
-        addDepositSumByCategory(data, 501d);
-
-        addWithdrawalSumByCategory(data, 50_001d, 4);
-
-        return data;
-    }
-
-    private static DataHelper getTest11Data() {
-        DataHelper data = getRuleData(client11);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
-
-        addDepositSumByCategory(data, 501d);
-
-        addWithdrawalSumByCategory(data, 9000d, 4);
-
-        return data;
-    }
-
-    public static Map<String, DataHelper> setupConnectionSearchRuleData() {
+    public static Map<String, DataHelper> setupClearanceWithdrawalEventRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
@@ -196,9 +154,6 @@ public class ConnectionSearchDataFactory {
         map.put("6", getTest6Data());
         map.put("7", getTest7Data());
         map.put("8", getTest8Data());
-        map.put("9", getTest9Data());
-        map.put("10", getTest10Data());
-        map.put("11", getTest11Data());
         return map;
     }
 }

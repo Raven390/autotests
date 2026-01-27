@@ -3,7 +3,6 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -45,8 +44,7 @@ public class RouterRuleCrmPaymentDataFactory {
     @Description("Create data for Router rule")
     private static DataHelper getRouterRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
-
+        data.createClient(client);
         data.crmWithdrawalEvent = new CrmWithdrawalEvent(
                 "MT4", // accountType
                 Utils.getRandomIntPositive().toString(), // binNumber

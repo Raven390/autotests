@@ -2,7 +2,6 @@ package tests.click_house_api_service_tests;
 
 import static business_objects.api.clickhouse_api_service.get_mirror_trade_waves.GetMirrorTradeWavesRequest.getMirrorTradeWavesV2;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.data.DataHelper.createClient;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.WaveFlagInserterV2.insertMirrorWaveV2Data;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +35,7 @@ class GetMirrorTradeWavesV2Tests extends TestBaseApi {
     void getMirrorTradeWavesTest1() throws IOException, InterruptedException {
         DataHelper data = new DataHelper();
         ClientHelper client1 = getRandomVantageClient();
-        createClient(data, client1);
+        data.createClient(client1);
         insertMirrorWaveV2Data(data.clientHelper);
         setupData(data);
 
@@ -66,7 +65,7 @@ class GetMirrorTradeWavesV2Tests extends TestBaseApi {
     void getMirrorTradeWavesTest2() throws IOException {
         DataHelper data = new DataHelper();
         ClientHelper client2 = getRandomVantageClient();
-        createClient(data, client2);
+        data.createClient(client2);
         setupData(data);
 
         // Send request

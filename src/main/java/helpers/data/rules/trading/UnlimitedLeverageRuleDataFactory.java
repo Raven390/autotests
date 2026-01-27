@@ -42,7 +42,7 @@ public class UnlimitedLeverageRuleDataFactory {
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
+        data.createClient(client);
 
         data.tradeEvent = new TradeEvent();
         data.tradeEvent.type = "closeTrade";

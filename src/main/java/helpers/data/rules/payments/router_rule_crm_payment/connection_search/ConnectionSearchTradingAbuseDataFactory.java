@@ -1,7 +1,6 @@
 package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.getRandomIntPositive;
@@ -23,8 +22,7 @@ public class ConnectionSearchTradingAbuseDataFactory {
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
-        createClient(data, client);
-
+        data.createClient(client);
         data.crmWithdrawalEventV2 = CrmWithdrawalEventV2.builder()
                 .accountType("MT4")
                 .binNumber(Utils.getRandomIntPositive().toString())

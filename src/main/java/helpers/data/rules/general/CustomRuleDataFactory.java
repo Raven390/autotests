@@ -30,7 +30,7 @@ public class CustomRuleDataFactory {
     private static DataHelper getCustomRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
 
-        createClient(data, client);
+        data.createClient(client);
 
         data.customEvent = new CustomEvent();
         data.customEvent.setId(Utils.getRandomUuidString());
