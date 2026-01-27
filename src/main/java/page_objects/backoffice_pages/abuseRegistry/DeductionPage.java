@@ -31,7 +31,7 @@ public class DeductionPage extends AbstractPage {
     private final Locator singleEditButton;
     private final Locator getFileButton;
     private final Locator illegalProfitInput;
-    private final Locator suggesteedDeductionInput;
+    private final Locator suggestedDeductionInput;
     private final Locator deductionInput;
     private final Locator cancelButton;
     private final Locator commentaryInput;
@@ -44,11 +44,18 @@ public class DeductionPage extends AbstractPage {
     private final Locator batchDeductionConfirmApproveButton;
     private final Locator batchDeductionValidationItems;
     private final Locator batchDeductionValidationHeader;
+    private final Locator filterButton;
+    private final Locator applyFilterButton;
+    private final Locator illegalProfitFilterContainer;
+    private final Locator suggestedDeductionFilterContainer;
+    private final Locator deductedAmountFilterContainer;
+    private final Locator createdCells;
+    private final Locator behaviorCells;
 
     private static final String FILTER_OPTION_BY_TEXT_PATTERN =
             "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
-    private static final String COLUMN_VALUE_BY_ORDER_PATTERN =
-            "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
+    private static final String COLUMN_PRIMARY_VALUE_BY_ORDER_PATTERN =
+            "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-color-text_color_primary')]";
     private static final String DEDUCTION_TABLE_LOCATOR = "//*[@data-qa='deductions__table']";
     private static final String DEDUCTION_TABLE_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
     private static final String ILLEGAL_PROFIT_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[1]";
@@ -61,6 +68,17 @@ public class DeductionPage extends AbstractPage {
     private static final String DRAWER_DEDUCT_BUTTON_LOCATOR = "//span[text()='Deduct']/ancestor::button";
     private static final String DRAWER_FILE_BUTTON_LOCATOR =
             "//button[@data-qa='deductions__multiselect_panel__get_file']";
+    private static final String BRAND_CHECKBOX_PATTERN =
+            "//label[@data-qa='deductions__filters_drawer__brand_group__item__%s']/descendant::input[@type='checkbox']";
+    private static final String EMAIL_STAGE_FILTER_OPTION_PATTERN =
+            "//button[@data-qa='deductions__filters_drawer__email_stage__item__%s']";
+    private static final String DEDUCTION_STATUS_FILTER_OPTION_PATTERN =
+            "//button[@data-qa='deductions__filters_drawer__deduction_status__item__%s']";
+    private static final String CREATED_FILTER_PRESET_PATTERN = "//*[text()='%s']/ancestor::button";
+    private static final String FRAUD_TYPE_CHECKBOX_PATTERN =
+            "//label[@data-qa='deductions__filters_drawer__fraud_types__item__%s']/descendant::input[@type='checkbox']";
+    private static final String AMOUNT_FILTER_CONTAINER_PATTERN =
+            "//*[text()='%s']/ancestor::div[@class='v-deductions-filters-drawer__filter-container']";
 
     public DeductionPage(Page page) {
         super(page);
@@ -76,17 +94,15 @@ public class DeductionPage extends AbstractPage {
         this.brandsFilter = page.locator("//button[@data-qa='deductions__filters__brands']");
         this.filterOptions = page.locator(
                 "//div[@data-qa='select-popup']/descendant::span[@class='g-select-list__option-default-label']");
-        this.statusValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 5));
-        this.emailValues = deductionTableRow
-                .locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6))
-                .first();
-        this.brandValues = deductionTableRow
-                .locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6))
-                .last();
+        this.statusValues = deductionTableRow.locator(String.format(COLUMN_PRIMARY_VALUE_BY_ORDER_PATTERN, 5));
+        this.emailValues = deductionTableRow.locator(String.format(COLUMN_PRIMARY_VALUE_BY_ORDER_PATTERN, 6));
+        this.brandValues = deductionTableRow.locator(String.format(
+                "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-color-text_color_secondary')]",
+                6));
         this.deductionTable = page.locator(DEDUCTION_TABLE_LOCATOR);
         this.singleEditButton = page.locator("//button/span[text() = 'Edit']");
         this.illegalProfitInput = page.locator(ILLEGAL_PROFIT_INPUT_LOCATOR);
-        this.suggesteedDeductionInput = page.locator(SUGGESTED_DEDUCTION_INPUT_LOCATOR);
+        this.suggestedDeductionInput = page.locator(SUGGESTED_DEDUCTION_INPUT_LOCATOR);
         this.deductionInput = page.locator(DEDUCTION_INPUT_LOCATOR);
         this.commentaryInput = page.locator(COMMENTARY_INPUT_LOCATOR);
         this.cancelButton = page.locator(DRAWER_CANCEL_BUTTON_LOCATOR);
@@ -103,6 +119,16 @@ public class DeductionPage extends AbstractPage {
         this.batchDeductionValidationItems = page.locator("//div[@class='v-deduction-butch-failed-item']");
         this.batchDeductionValidationHeader =
                 page.locator("//div[@data-qa='drawer_header']/descendant::*[text()='Failed validation']");
+        this.filterButton = page.locator("//button[@data-qa='deductions__filters__toggle_button']");
+        this.applyFilterButton = page.locator("//button[@data-qa='deductions__filters_drawer__apply_button']");
+        this.illegalProfitFilterContainer =
+                page.locator(String.format(AMOUNT_FILTER_CONTAINER_PATTERN, "Illegal profit"));
+        this.suggestedDeductionFilterContainer =
+                page.locator(String.format(AMOUNT_FILTER_CONTAINER_PATTERN, "Suggestion"));
+        this.deductedAmountFilterContainer =
+                page.locator(String.format(AMOUNT_FILTER_CONTAINER_PATTERN, "Deducted amount"));
+        this.createdCells = page.locator("//div[@class='v-body-cell' and contains(@data-qa,'created')]");
+        this.behaviorCells = page.locator("//div[@class='v-body-cell' and contains(@data-qa,'behavior')]");
     }
 
     @Step("Click abuse registry button")
@@ -262,7 +288,7 @@ public class DeductionPage extends AbstractPage {
 
     public void fillSuggestedDeductionInput(String value) {
         Allure.step("fill suggested deduction input with value");
-        suggesteedDeductionInput.fill(value);
+        suggestedDeductionInput.fill(value);
     }
 
     public void fillDeductionInput(String value) {
@@ -336,6 +362,79 @@ public class DeductionPage extends AbstractPage {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < batchDeductionValidationItems.count(); i++) {
             list.add(batchDeductionValidationItems.nth(i).innerText());
+        }
+        return list;
+    }
+
+    @Step("Click filter button to open filter drawer")
+    public void clickFilterButton() {
+        filterButton.click();
+    }
+
+    @Step("Click apply filter button")
+    public void clickApplyFilterButton() {
+        applyFilterButton.click();
+    }
+
+    @Step("Click brand checkbox by name in filter drawer")
+    public void clickBrandCheckboxInFilterDrawer(String brand) {
+        page.locator(String.format(BRAND_CHECKBOX_PATTERN, brand)).click();
+    }
+
+    @Step("Click email stage filter option")
+    public void clickEmailStageFilterOption(String emailStage) {
+        page.locator(String.format(EMAIL_STAGE_FILTER_OPTION_PATTERN, emailStage))
+                .click();
+    }
+
+    @Step("Click deduction status filter option")
+    public void clickDeductionStatusFilterOption(String deductionStatus) {
+        page.locator(String.format(DEDUCTION_STATUS_FILTER_OPTION_PATTERN, deductionStatus))
+                .click();
+    }
+
+    @Step("Click created filter preset")
+    public void clickCreatedPresetFilterOption(String presetValue) {
+        page.locator(String.format(CREATED_FILTER_PRESET_PATTERN, presetValue)).click();
+    }
+
+    @Step("Click fraud type in filter drawer")
+    public void clickFraudTypeCheckboxInFilterDrawer(String fraudType) {
+        page.locator(String.format(FRAUD_TYPE_CHECKBOX_PATTERN, fraudType)).click();
+    }
+
+    @Step("Is Illegal profit filter visible")
+    public Boolean isIllegalProfitFilterVisibleInDrawer() {
+        illegalProfitFilterContainer.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        return illegalProfitFilterContainer.isVisible();
+    }
+
+    @Step("Is Suggestion filter visible")
+    public Boolean isSuggestedDeductionFilterVisibleInDrawer() {
+        suggestedDeductionFilterContainer.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        return suggestedDeductionFilterContainer.isVisible();
+    }
+
+    @Step("Is Deducted amount filter visible")
+    public Boolean isDeductedAmountFilterVisibleInDrawer() {
+        deductedAmountFilterContainer.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        return deductedAmountFilterContainer.isVisible();
+    }
+
+    @Step("Get list of values from created column")
+    public List<String> getCreatedColumnValues() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < createdCells.count(); i++) {
+            list.add(createdCells.nth(i).innerText());
+        }
+        return list;
+    }
+
+    @Step("Get list of values from behavior column")
+    public List<String> getBehaviorColumnValues() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < behaviorCells.count(); i++) {
+            list.add(behaviorCells.nth(i).innerText());
         }
         return list;
     }
