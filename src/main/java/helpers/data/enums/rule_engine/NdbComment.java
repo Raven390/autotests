@@ -1,4 +1,4 @@
-package helpers.data.enums;
+package helpers.data.enums.rule_engine;
 
 import java.security.SecureRandom;
 import java.util.Arrays;

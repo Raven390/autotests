@@ -48,6 +48,7 @@ public class ConfigFactory {
             CONFIG.clickhouseGetFloatingTradesGroupBy();
     public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES =
             CONFIG.clickhouseGetMirrorAccountsByTrades();
+
     public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
             CONFIG.clickhouseGetMirrorTradeOnLastWithdrawal();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
@@ -79,6 +80,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_NET_PROFIT = CONFIG.clickhouseGetNetProfit();
     public static final String CLICKHOUSE_API_GET_NAME_BIRTH = CONFIG.clickhouseGetNameBirth();
     public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES = CONFIG.clickhouseGetMirrorTradeWaves();
+    public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES_V2 = CONFIG.clickhouseGetMirrorTradeWavesV2();
     public static final String CLICKHOUSE_API_GET_MIRROR_SCORE = CONFIG.clickhouseGetMirrorScore();
     public static final String CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT =
             CONFIG.clickhouseGetMaxDailySlippageAmount();
@@ -404,6 +406,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetMirrorTradeWaves")
         String clickhouseGetMirrorTradeWaves();
+
+        @Key("clickhouseGetMirrorTradeWavesV2")
+        String clickhouseGetMirrorTradeWavesV2();
 
         @Key("clickhouseGetMirrorScore")
         String clickhouseGetMirrorScore();

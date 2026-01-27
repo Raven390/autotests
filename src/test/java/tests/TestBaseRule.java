@@ -375,7 +375,7 @@ public class TestBaseRule {
         assertThat(elementIdsDb, containsString(elementId));
     }
 
-    public static List<Acknowledge> getPaymentAcknowledgementFromKafka(UUID paymentId) throws Exception {
+    public static List<Acknowledge> getPaymentAcknowledgeFromKafka(UUID paymentId) throws Exception {
         return Arrays.stream(objectMapper.readValue(
                         kafka.consumeMessages(KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE, paymentId.toString())
                                 .toString(),

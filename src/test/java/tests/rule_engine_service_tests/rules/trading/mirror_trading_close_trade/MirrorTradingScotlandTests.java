@@ -48,7 +48,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     @Test
     @AllureId("1432")
     @DisplayName("Mirror trading. Scotland. Exit without alert if trades count > 5. ElementId: Event_end_8")
-    void mirrorTradeRuleTest1() throws Exception {
+    void mirrorTradeScotlandRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
         setupData(data);
 
@@ -62,7 +62,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     @AllureId("1433")
     @DisplayName(
             "Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. ElementId: Event_end_8")
-    void mirrorTradeRuleTest2() throws Exception {
+    void mirrorTradeScotlandRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
         setupData(data);
 
@@ -75,7 +75,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     @Test
     @AllureId("1434")
     @DisplayName("Mirror trading. Scotland. Exit without alert if Leverage < 200. ElementId: Event_12inxex")
-    void mirrorTradeRuleTest3() throws Exception {
+    void mirrorTradeScotlandRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
         setupData(data);
 
@@ -89,7 +89,7 @@ class MirrorTradingScotlandTests extends TestBaseRule {
     @AllureId("1435")
     @DisplayName(
             "Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
-    void mirrorTradeRuleTest4() throws Exception {
+    void mirrorTradeScotlandRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
         setupData(data);
 

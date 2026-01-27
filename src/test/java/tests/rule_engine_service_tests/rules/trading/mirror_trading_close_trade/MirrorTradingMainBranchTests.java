@@ -52,6 +52,7 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
 
     @Disabled
     @Test
+    @AllureId("1705")
     @DisplayName("Mirror trading. Exit without alert if user has no credits. ElementId: Event_end_3")
     void mirrorTradeRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -64,6 +65,7 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
 
     @Disabled
     @Test
+    @AllureId("1706")
     @DisplayName(
             "Mirror trading. Exit without alert if user has no mirrorMatch trades. ElementId: get_matching_opposite_trades_exit")
     void mirrorTradeRuleTest3() throws Exception {

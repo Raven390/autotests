@@ -11,7 +11,7 @@ import static utils.Constants.*;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeOld;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.*;
 import java.util.HashMap;
 import java.util.List;

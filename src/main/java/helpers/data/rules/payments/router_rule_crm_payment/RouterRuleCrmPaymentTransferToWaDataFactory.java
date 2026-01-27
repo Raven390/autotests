@@ -3,11 +3,11 @@ package helpers.data.rules.payments.router_rule_crm_payment;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.CRM_TRANSFER_TO_WA_EVENT;
 
 import business_objects.kafka.crm_events.TransferToWaEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
                 .actualAmount(0.033_958_96) // actualAmount
                 .transferAmount(101D) // transferAmount
                 .merchantOrderId("AUVF1110171050ETH17640572580047") // merchantOrderId
-                .type(CRM_TRANSFER_TO_WA_EVENT) // type
+                .type(Event.CRM_TRANSFER_TO_WA_EVENT.getName()) // type
                 .transferId(Utils.getRandomLongPositive()) // transferId
                 .checkName("") // checkName
                 .platform("WEB") // platform

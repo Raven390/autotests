@@ -64,7 +64,6 @@ public class RestrictionHelper {
         assertEquals(200, response.code());
     }
 
-    @Deprecated
     public static void setRestrictionAPIGeneral(
             String ucid, String code, String applyReason, String updatedBySystem, String updatedByUser)
             throws IOException {

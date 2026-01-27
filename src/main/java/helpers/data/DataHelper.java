@@ -177,13 +177,13 @@ public class DataHelper {
         this.clientFraudTypes = new ArrayList<>();
     }
 
-    public static void createClient(DataHelper dataHelper, ClientHelper clientHelper) {
-        dataHelper.clientHelper = clientHelper;
-        dataHelper.crmTbUserObject = generateUserByClient(dataHelper.clientHelper);
-        dataHelper.crmTbAccountObject = generateAccountByClient(dataHelper.clientHelper, false);
-        dataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(dataHelper.clientHelper, false);
-        dataHelper.mtAccountObject = generateMtAccountByClient(dataHelper.clientHelper);
-        dataHelper.lnSessionParsedObject = generateLexisNexisDataByClient(dataHelper.clientHelper);
+    public static void createClient(DataHelper data, ClientHelper clientHelper) {
+        data.clientHelper = clientHelper;
+        data.crmTbUserObject = generateUserByClient(data.clientHelper);
+        data.crmTbAccountObject = generateAccountByClient(data.clientHelper, false);
+        data.crmTbAccountForMtObject = generateAccountForMtByClient(data.clientHelper, false);
+        data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
+        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
     }
 
     protected static void setupAttrConnectionPayoutIdAndNameBirthWithMaxScore(

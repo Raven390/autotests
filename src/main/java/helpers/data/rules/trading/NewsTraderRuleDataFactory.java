@@ -11,7 +11,6 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.*;
 
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
@@ -24,6 +23,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.DateTimeFormat;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import java.math.BigDecimal;
@@ -66,7 +66,7 @@ public class NewsTraderRuleDataFactory {
                 data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
                 data.mt5DealsCoercedObjects.getFirst().getSymbol(),
                 data.clientHelper.getServerId(),
-                MT_CLOSE_TRADE_EVENT,
+                Event.MT_CLOSE_TRADE_EVENT.getName(),
                 Instant.now().toString(),
                 metadata,
                 Instant.now().toString());

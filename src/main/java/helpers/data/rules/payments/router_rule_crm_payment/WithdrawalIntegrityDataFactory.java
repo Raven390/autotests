@@ -10,6 +10,7 @@ import static utils.Utils.getRandomIntPositive;
 import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.time.Instant;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class WithdrawalIntegrityDataFactory {
                 .platform("WEB")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("1.0")
-                .type(CRM_WITHDRAWAL_EVENT)
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.0)
                 .withdrawalApplicationTime(Instant.now().toString())
                 .withdrawalCurrency("EUR")

@@ -26,7 +26,7 @@ import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudTypeStatus;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;

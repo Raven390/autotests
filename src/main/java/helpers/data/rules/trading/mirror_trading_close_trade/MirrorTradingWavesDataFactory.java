@@ -9,9 +9,8 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.addAlert;
-import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
+import static helpers.data.rules.WaveFlagInserterV2.insertMirrorWaveV2Data;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getRandomUuidString;
 
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
@@ -20,6 +19,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import java.math.BigDecimal;
@@ -54,7 +54,7 @@ public class MirrorTradingWavesDataFactory {
                 data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
                 data.mt5DealsCoercedObjects.getFirst().getSymbol(),
                 data.clientHelper.getServerId(),
-                MT_CLOSE_TRADE_EVENT,
+                Event.MT_CLOSE_TRADE_EVENT.getName(),
                 Instant.now().toString(),
                 metadata,
                 Instant.now().toString());
@@ -91,7 +91,7 @@ public class MirrorTradingWavesDataFactory {
         data.mtAccountObject.equityUsd = 3d;
         data.mtAccountObject.equity = 3d;
         addAlert(data, "Mirror Trading", "CLOSED");
-        insertWaveFlagData(data.clientHelper);
+        insertMirrorWaveV2Data(data.clientHelper);
         return data;
     }
 
@@ -106,7 +106,7 @@ public class MirrorTradingWavesDataFactory {
         data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
         data.mtAccountObject.equityUsd = 3d;
         data.mtAccountObject.equity = 3d;
-        insertWaveFlagData(data.clientHelper);
+        insertMirrorWaveV2Data(data.clientHelper);
         return data;
     }
 

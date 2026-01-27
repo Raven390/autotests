@@ -18,7 +18,7 @@ import business_objects.api.abuse_registry.GetStatusResponseBody;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudType;
-import helpers.data.enums.Rule;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;

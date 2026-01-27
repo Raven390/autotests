@@ -77,7 +77,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
                 paymentDetailsObject.getPayload(),
                 containsString("\"withdrawalAmountUSD\": 1.1"));
 
-        List<Acknowledge> acknowledgement = getPaymentAcknowledgementFromKafka(paymentId);
+        List<Acknowledge> acknowledgement = getPaymentAcknowledgeFromKafka(paymentId);
         assertThat("Assert acknowledgement", acknowledgement.getFirst().getPaymentId(), is(paymentId.toString()));
 
         PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());

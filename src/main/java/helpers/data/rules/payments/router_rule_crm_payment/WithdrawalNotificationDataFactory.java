@@ -15,6 +15,7 @@ import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -58,7 +59,7 @@ public class WithdrawalNotificationDataFactory {
                 .platform("WEB")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("1.0")
-                .type(CRM_WITHDRAWAL_EVENT)
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.0)
                 .withdrawalApplicationTime(Instant.now().toString())
                 .withdrawalCurrency("EUR")

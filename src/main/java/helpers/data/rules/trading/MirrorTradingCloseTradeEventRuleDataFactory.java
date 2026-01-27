@@ -17,7 +17,6 @@ import static helpers.data.DataHelper.addAlert;
 import static helpers.data.rules.MaxUsedLeverageInserter.insertMaxUsedLeverageData;
 import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.database.DbHelper.*;
-import static utils.Constants.*;
 import static utils.Utils.*;
 
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
@@ -26,6 +25,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import java.math.BigDecimal;
@@ -78,7 +78,7 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
                 data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
                 data.mt5DealsCoercedObjects.getFirst().getSymbol(),
                 data.clientHelper.getServerId(),
-                MT_CLOSE_TRADE_EVENT,
+                Event.MT_CLOSE_TRADE_EVENT.getName(),
                 Instant.now().toString(),
                 metadata,
                 Instant.now().toString());

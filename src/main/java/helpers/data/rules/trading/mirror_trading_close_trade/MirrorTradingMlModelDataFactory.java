@@ -10,7 +10,6 @@ import static business_objects.db.data_science.ucid_general_score.UcidGeneralSco
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getRandomUuidString;
 
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
@@ -18,6 +17,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import java.time.Instant;
@@ -53,7 +53,7 @@ public class MirrorTradingMlModelDataFactory {
                 data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
                 data.mt5DealsCoercedObjects.getFirst().getSymbol(),
                 data.clientHelper.getServerId(),
-                MT_CLOSE_TRADE_EVENT,
+                Event.MT_CLOSE_TRADE_EVENT.getName(),
                 Instant.now().toString(),
                 metadata,
                 Instant.now().toString());

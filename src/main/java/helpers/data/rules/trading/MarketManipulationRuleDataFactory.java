@@ -9,7 +9,6 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static utils.Constants.*;
 import static utils.Utils.*;
 
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
@@ -17,6 +16,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Event;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +47,7 @@ public class MarketManipulationRuleDataFactory {
                 data.mt5DealsCoercedObjects.getFirst().getVolumeLots(),
                 data.mt5DealsCoercedObjects.getFirst().getSymbol(),
                 data.clientHelper.getServerId(),
-                MT_CLOSE_TRADE_EVENT,
+                Event.MT_CLOSE_TRADE_EVENT.getName(),
                 Instant.now().toString(),
                 metadata,
                 Instant.now().toString());
