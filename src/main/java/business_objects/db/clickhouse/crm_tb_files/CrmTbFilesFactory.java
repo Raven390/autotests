@@ -1,6 +1,6 @@
 package business_objects.db.clickhouse.crm_tb_files;
 
-import static utils.Constants.CRM_FILES_EXAMPLE_NAME;
+import static utils.Constants.*;
 import static utils.Utils.getRandomLongPositive;
 
 import helpers.data.ClientHelper;
@@ -24,8 +24,8 @@ public class CrmTbFilesFactory {
                 .category(3)
                 .ucid(client.getUcid())
                 .id(BigInteger.valueOf(getRandomLongPositive()))
-                .fileName(CRM_FILES_EXAMPLE_NAME)
-                .filePath(CRM_FILES_EXAMPLE_NAME)
+                .fileName(FILE_KYC_NAME)
+                .filePath(FILE_KYC_PATH)
                 .uploadTime(now)
                 .uploadTimeUtc(now)
                 .updateTime(now)
