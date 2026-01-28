@@ -237,7 +237,7 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by open date in trading - operations tab")
     public void verifyTradingInfoDealsOpenDateFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.getOpenTime()));
+        tradingPage.selectOpenDateTo(convertDateTimeDbToDate(trade2.getOpenTime()));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat(
@@ -253,13 +253,13 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by close date in trading - operations tab")
     public void verifyTradingInfoDealsCloseDateFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.getCloseTime()));
+        tradingPage.selectCloseDateFrom(convertDateTimeDbToDate(trade1.getCloseTime()));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat(
                 "Assert only the expected operation is present in the table",
                 tradingPage.getOperationAccountByIndex(0),
-                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
     }
 
     @Test
@@ -362,10 +362,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.getReasonName());
         tradingPage.resetMethodFilterAndVerify();
         // Open date
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.getOpenTimeUtc()));
+        tradingPage.selectOpenDateTo(convertDateTimeDbToDate(trade2.getOpenTimeUtc()));
         tradingPage.resetOpenDateFilterAndVerify();
         // Close date
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.getCloseTimeUtc()));
+        tradingPage.selectCloseDateFrom(convertDateTimeDbToDate(trade2.getCloseTimeUtc()));
         tradingPage.resetCloseDateFilterAndVerify();
         // Duration
         tradingPage.fillDurationValues("1", "");
@@ -381,8 +381,8 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.getAccount().toString());
         tradingPage.clickFilterCheckbox(trade2.getSymbol());
         tradingPage.clickFilterCheckbox(trade2.getReasonName());
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.getOpenTimeUtc()));
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.getCloseTimeUtc()));
+        tradingPage.selectOpenDateTo(convertDateTimeDbToDate(trade2.getOpenTimeUtc()));
+        tradingPage.selectCloseDateFrom(convertDateTimeDbToDate(trade2.getCloseTimeUtc()));
         tradingPage.fillDurationValues("1", "");
         tradingPage.fillProfitValues(trade2.getProfitUsd().toString(), "200");
         tradingPage.fillVolumeAmountValues(trade2.getNotionalValueUsd().toString(), "200");

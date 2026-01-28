@@ -84,6 +84,7 @@ class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.verifyEachClientAssignedToUser(autotestUserOne());
         investigationPage.verifyEachClientHasCardTimer();
         investigationPage.verifyEachClientHasAlertCount();
+        investigationPage.filterAssignedMe();
         investigationPage.verifyClientCardsCount();
         // 'Unassigned' tab
         investigationPage.filterUnassigned();
