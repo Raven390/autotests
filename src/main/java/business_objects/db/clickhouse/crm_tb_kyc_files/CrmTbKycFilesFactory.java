@@ -1,6 +1,7 @@
 package business_objects.db.clickhouse.crm_tb_kyc_files;
 
 import static utils.Constants.FILE_KYC_NAME;
+import static utils.Constants.FILE_KYC_PATH;
 import static utils.Utils.*;
 
 import helpers.data.ClientHelper;
@@ -22,7 +23,7 @@ public class CrmTbKycFilesFactory {
                 .proofId(BigInteger.valueOf(getRandomLongPositive()))
                 .docFileId(BigInteger.valueOf(getRandomLongPositive()))
                 .fileName(FILE_KYC_NAME)
-                .filePath(FILE_KYC_NAME)
+                .filePath(FILE_KYC_PATH)
                 .fileTypeId(12)
                 .fileType("ID_PROOF")
                 .uploadTime(getCurrentTimestampDbFormat())

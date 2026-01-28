@@ -107,7 +107,8 @@ public class GeneralTab extends AbstractPage {
             "//*[@class='v-sales-manager-item__manager-org-name']//" + VARIANT_BODY_1_SELECTOR;
     private static final String MANAGER_ACCOUNTS =
             "//*[@class='v-sales-manager-item__manager-accounts-list']//" + VARIANT_BODY_1_SELECTOR;
-    private static final String VERIFICATION_FILES_ITEM_PATTERN = "//*[@data-qa='preview_%s']";
+    private static final String VERIFICATION_FILES_ITEM_PATTERN =
+            "//*[@data-qa='pp_verification_files_drawer__previews__%s']";
 
     public GeneralTab(Page page) {
         super(page);
