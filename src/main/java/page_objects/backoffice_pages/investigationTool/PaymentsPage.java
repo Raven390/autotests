@@ -349,9 +349,11 @@ public class PaymentsPage extends AbstractPage {
     }
 
     @Step("Click on transaction payment profile link by order number: {orderNumber}")
-    public void clickTransactionPaymentProfileLinkByOrderNumber(String orderNumber) {
-        Locator methodCell = page.locator(
-                String.format("//*[@data-qa='transaction_history__table__rows__%s__method']", orderNumber));
+    public void clickTransactionPaymentProfileLinkByOrderNumberPaymentFamilyProfile(
+            String orderNumber, String paymentFamilyName, String paymentProfileName) {
+        Locator methodCell = page.locator(String.format(
+                "//*[@data-qa='transaction_history__table__rows__%s::%s::%s__method']",
+                orderNumber, paymentFamilyName, paymentProfileName));
         Locator paymentProfileLink = methodCell.locator(".v-transaction-history__payment-profile-link");
         paymentProfileLink.scrollIntoViewIfNeeded();
         paymentProfileLink.click();
@@ -632,14 +634,22 @@ public class PaymentsPage extends AbstractPage {
 
         for (int i = 0; i < rowCount; i++) {
             Locator row = transactionHistoryRows.nth(i);
-            String orderNumber = row.getAttribute("data-qa").replace("transaction_history__table__rows__", "");
-            transactions.add(getTransactionByOrderNumber(orderNumber));
+            String dataQaIdentifiers = row.getAttribute("data-qa").replace("transaction_history__table__rows__", "");
+            var identifiersArray = dataQaIdentifiers.split("::");
+            String orderNumber = identifiersArray[0];
+            String paymentFamily = identifiersArray[1];
+            String paymentProfile = identifiersArray[2];
+            transactions.add(
+                    getTransactionByOrderNumberPaymentFamilyProfile(orderNumber, paymentFamily, paymentProfile));
         }
         return transactions;
     }
 
-    public TransactionRow getTransactionByOrderNumber(String orderNumber) {
-        String baseLocator = String.format("div[data-qa='transaction_history__table__rows__%s", orderNumber);
+    public TransactionRow getTransactionByOrderNumberPaymentFamilyProfile(
+            String orderNumber, String paymentFamilyName, String paymentProfileName) {
+        String baseLocator = String.format(
+                "div[data-qa='transaction_history__table__rows__%s::%s::%s",
+                orderNumber, paymentFamilyName, paymentProfileName);
         return new TransactionRow(
                 page.locator(baseLocator + "__created']").textContent(),
                 page.locator(baseLocator + "__type']").textContent(),
@@ -1428,8 +1438,10 @@ public class PaymentsPage extends AbstractPage {
     }
 
     @Step("Click on transaction row by order number: {orderNumber}")
-    public void clickTransactionRow(String orderNumber) {
-        String rowSelector = String.format("div[data-qa='transaction_history__table__rows__%s']", orderNumber);
+    public void clickTransactionRow(String orderNumber, String paymentFamilyName, String paymentProfileName) {
+        String rowSelector = String.format(
+                "div[data-qa='transaction_history__table__rows__%s::%s::%s__account']",
+                orderNumber, paymentFamilyName, paymentProfileName);
         page.locator(rowSelector).click();
         page.waitForTimeout(500);
     }
