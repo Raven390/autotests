@@ -215,8 +215,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         paymentDetailsObject1.setMerchantOrderId(withdrawal1.getOrderNumber());
         paymentDetailsObject1.setPayload(String.format(
                 """
-                {"merchantOrderId": "%s"}
-                """, withdrawal1.getOrderNumber()));
+                {
+                "merchantOrderId": "%s",
+                "withdrawalId": %d
+                }
+                """,
+                withdrawal1.getOrderNumber(), withdrawal1.getTransferId()));
         paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
         paymentDecisionsObject1.setRejectionCode(null);
         paymentDecisionsObject1.setDecisionType("final");
@@ -226,8 +230,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         paymentDetailsObject2.setMerchantOrderId(withdrawal2.getOrderNumber());
         paymentDetailsObject2.setPayload(String.format(
                 """
-                {"merchantOrderId": "%s"}
-                """, withdrawal2.getOrderNumber()));
+                {
+                "merchantOrderId": "%s",
+                "withdrawalId": %d
+                }
+                """,
+                withdrawal2.getOrderNumber(), withdrawal2.getTransferId()));
         paymentDecisionsObject2 = generatePaymentDecisionObject(paymentEventsObject2);
         paymentDecisionsObject2.setRejectionCode(null);
         paymentDecisionsObject2.setDecisionCode(2);
@@ -238,8 +246,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         paymentDetailsObject3.setMerchantOrderId(withdrawal3.getOrderNumber());
         paymentDetailsObject3.setPayload(String.format(
                 """
-                {"merchantOrderId": "%s"}
-                """, withdrawal3.getOrderNumber()));
+                {
+                "merchantOrderId": "%s",
+                "withdrawalId": %d
+                }
+                """,
+                withdrawal3.getOrderNumber(), withdrawal3.getTransferId()));
         paymentDecisionsObject3 = generatePaymentDecisionObject(paymentEventsObject3);
         paymentDecisionsObject3.setRejectionCode(null);
         paymentDecisionsObject3.setDecisionCode(0);
@@ -394,13 +406,19 @@ public class TransactionHistoryTest extends TestBaseWeb {
     void all_transactions_no_filter_test() {
         openTransactionPage();
 
-        var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
-        var depositRow2 = paymentsPage.getTransactionByOrderNumber(deposit2.getOrderNumber());
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
+        var depositRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit1.getOrderNumber(), deposit1.getPaymentFamily(), deposit1.getPaymentProfileKey());
+        var depositRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit2.getOrderNumber(), deposit2.getPaymentFamily(), deposit2.getPaymentProfileKey());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
 
-        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumber(withdrawal1.getOrderNumber());
-        var withdrawalRow2 = paymentsPage.getTransactionByOrderNumber(withdrawal2.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal1.getOrderNumber(), withdrawal1.getPaymentFamily(), withdrawal1.getPaymentProfileKey());
+        var withdrawalRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal2.getOrderNumber(), withdrawal2.getPaymentFamily(), withdrawal2.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 1 type should be DepositSuccess",
@@ -538,9 +556,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         Assertions.assertEquals(3, allTransactions.size());
 
-        var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
-        var depositRow2 = paymentsPage.getTransactionByOrderNumber(deposit2.getOrderNumber());
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
+        var depositRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit1.getOrderNumber(), deposit1.getPaymentFamily(), deposit1.getPaymentProfileKey());
+        var depositRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit2.getOrderNumber(), deposit2.getPaymentFamily(), deposit2.getPaymentProfileKey());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 1 type should be DepositSuccess",
@@ -603,9 +624,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         allTransactions = paymentsPage.getAllTransactions();
         Assertions.assertEquals(3, allTransactions.size());
 
-        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumber(withdrawal1.getOrderNumber());
-        var withdrawalRow2 = paymentsPage.getTransactionByOrderNumber(withdrawal2.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal1.getOrderNumber(), withdrawal1.getPaymentFamily(), withdrawal1.getPaymentProfileKey());
+        var withdrawalRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal2.getOrderNumber(), withdrawal2.getPaymentFamily(), withdrawal2.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Withdrawal 1 type should be WithdrawalSuccess",
@@ -687,7 +711,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         Assertions.assertEquals(1, allTransactions.size());
 
-        var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
+        var depositRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit1.getOrderNumber(), deposit1.getPaymentFamily(), deposit1.getPaymentProfileKey());
         assertThat(
                 "Deposit 1 type should be DepositSuccess",
                 depositRow1.type(),
@@ -718,10 +743,14 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(4));
 
-        var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
-        var depositRow2 = paymentsPage.getTransactionByOrderNumber(deposit2.getOrderNumber());
-        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumber(withdrawal1.getOrderNumber());
-        var withdrawalRow2 = paymentsPage.getTransactionByOrderNumber(withdrawal2.getOrderNumber());
+        var depositRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit1.getOrderNumber(), deposit1.getPaymentFamily(), deposit1.getPaymentProfileKey());
+        var depositRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit2.getOrderNumber(), deposit2.getPaymentFamily(), deposit2.getPaymentProfileKey());
+        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal1.getOrderNumber(), withdrawal1.getPaymentFamily(), withdrawal1.getPaymentProfileKey());
+        var withdrawalRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal2.getOrderNumber(), withdrawal2.getPaymentFamily(), withdrawal2.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 1 type should be DepositSuccess",
@@ -818,8 +847,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
 
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 3 type should be DepositFail",
@@ -869,8 +900,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
 
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 3 type should be DepositFail",
@@ -921,8 +954,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
 
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 3 type should be DepositFail",
@@ -973,8 +1008,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
 
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 3 type should be DepositFail",
@@ -1019,9 +1056,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(3));
 
-        var depositRow1 = paymentsPage.getTransactionByOrderNumber(deposit1.getOrderNumber());
-        var depositRow2 = paymentsPage.getTransactionByOrderNumber(deposit2.getOrderNumber());
-        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumber(withdrawal1.getOrderNumber());
+        var depositRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit1.getOrderNumber(), deposit1.getPaymentFamily(), deposit1.getPaymentProfileKey());
+        var depositRow2 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit2.getOrderNumber(), deposit2.getPaymentFamily(), deposit2.getPaymentProfileKey());
+        var withdrawalRow1 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal1.getOrderNumber(), withdrawal1.getPaymentFamily(), withdrawal1.getPaymentProfileKey());
         assertThat(
                 "Deposit 1 type should be DepositSuccess",
                 depositRow1.type(),
@@ -1087,7 +1127,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
     void transaction_drawer_test() {
         openTransactionPage();
 
-        paymentsPage.clickTransactionRow(withdrawal2.getOrderNumber());
+        paymentsPage.clickTransactionRow(
+                withdrawal2.getOrderNumber(), withdrawal2.getPaymentFamily(), withdrawal2.getPaymentProfileKey());
         paymentsPage.checkTransactionDetailsDrawerIsVisible();
 
         var transactionDataMap = paymentsPage.getTransactionDetailsData();
@@ -1130,8 +1171,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
 
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 3 type should be DepositFail",
@@ -1195,8 +1238,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         var allTransactions = paymentsPage.getAllTransactions();
         assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
 
-        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
-        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+        var depositRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumberPaymentFamilyProfile(
+                withdrawal3.getOrderNumber(), withdrawal3.getPaymentFamily(), withdrawal3.getPaymentProfileKey());
 
         assertThat(
                 "Deposit 3 type should be DepositFail",
@@ -1255,7 +1300,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
     void transactions_payment_profile_details_drawer_test() {
         openTransactionPage();
 
-        paymentsPage.clickTransactionPaymentProfileLinkByOrderNumber(deposit3.getOrderNumber());
+        paymentsPage.clickTransactionPaymentProfileLinkByOrderNumberPaymentFamilyProfile(
+                deposit3.getOrderNumber(), deposit3.getPaymentFamily(), deposit3.getPaymentProfileKey());
         assertThat(
                 paymentsPage.getPaymentProfileDrawerName(),
                 org.hamcrest.Matchers.equalTo(deposit3.getPaymentProfile()));
