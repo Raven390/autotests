@@ -117,8 +117,26 @@ public abstract class AbstractPage {
         page.waitForSelector(CALENDAR_XPATH, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
-    protected void selectDateInElement(Locator locator, String date) {
+    protected void selectDateRangeInElement(Locator locator, String date) {
         selectDateRangeInElement(locator, date, date);
+    }
+
+    protected void selectDateInElement(Locator locator, String dateFrom) {
+        Allure.step("Select date from date picker by label");
+        locator.click();
+        page.waitForSelector(CALENDAR_XPATH, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
+        calendarMode.click();
+        calendarMode.click();
+        LocalDate dateFromLocal = LocalDate.parse(dateFrom);
+        String yearFrom = String.valueOf(dateFromLocal.getYear());
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM", Locale.US);
+        String monthFrom = dateFromLocal.format(monthFormatter);
+        String dayFrom = String.valueOf(dateFromLocal.getDayOfMonth());
+        page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, yearFrom)).click();
+        page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, monthFrom))
+                .click();
+        page.locator(String.format(CALENDAR_BUTTON_WITH_TEXT_PATTERN, dayFrom)).click();
+        page.waitForSelector(CALENDAR_XPATH, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
     protected void selectRangeInSlider(Locator locator, Double rangeFrom, Double rangeTo) {

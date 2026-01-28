@@ -113,8 +113,8 @@ public class TradingPage extends AbstractPage {
     private final Locator accountTableHeaderMarginFree;
     private final Locator accountTableHeaderServer;
     private final Locator accountTableHeaderGroup;
-    private final Locator openDatePicker;
-    private final Locator closeDatePicker;
+    private final Locator openToDatePicker;
+    private final Locator closeFromDatePicker;
     private final Locator typeCheckboxes;
     private final Locator accountsCheckboxes;
     private final Locator symbolCheckboxes;
@@ -216,7 +216,6 @@ public class TradingPage extends AbstractPage {
             "//td[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]/div";
     private static final String FILTER_CONTAINER =
             "//div[text()='%s']/ancestor::div[@class='v-trading-tab-deals-filter__filter-container']";
-    private static final String DATE_PICKER_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input";
     private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='%s']";
     private static final String CHECKBOXES_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input[@type='checkbox']";
     private static final String RESET_BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='Reset']";
@@ -448,8 +447,10 @@ public class TradingPage extends AbstractPage {
         this.accountTableHeaderMarginFree = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "margin-free"));
         this.accountTableHeaderServer = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "server"));
         this.accountTableHeaderGroup = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "group"));
-        this.openDatePicker = page.locator(String.format(DATE_PICKER_BY_LABEL_PATTERN, "Open date"));
-        this.closeDatePicker = page.locator(String.format(DATE_PICKER_BY_LABEL_PATTERN, "Close date"));
+        this.openToDatePicker = page.locator(
+                "//span[@data-qa='trading_deals__filters__open_date__range_picker_end__input']/descendant::input");
+        this.closeFromDatePicker = page.locator(
+                "//span[@data-qa='trading_deals__filters__close_date__range_picker_start__input']/descendant::input");
         this.typeCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Type"));
         this.accountsCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Accounts"));
         this.symbolCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Symbol"));
@@ -1347,13 +1348,13 @@ public class TradingPage extends AbstractPage {
     }
 
     @Step("Select open date from date picker")
-    public void selectOpenDate(String openDate) {
-        selectDateInElement(openDatePicker, openDate);
+    public void selectOpenDateTo(String openDate) {
+        selectDateInElement(openToDatePicker, openDate);
     }
 
     @Step("Select close date from date picker")
-    public void selectCloseDate(String closeDate) {
-        selectDateInElement(closeDatePicker, closeDate);
+    public void selectCloseDateFrom(String closeDate) {
+        selectDateInElement(closeFromDatePicker, closeDate);
     }
 
     @Step("Verify preset options for filters")
@@ -1365,31 +1366,32 @@ public class TradingPage extends AbstractPage {
         // Open date
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Today"))
                 .click();
-        assertThat(openDatePicker).hasValue(Utils.getCurrentDate());
+        assertThat(openToDatePicker).hasValue(Utils.getCurrentDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Yesterday"))
                 .click();
-        assertThat(openDatePicker).hasValue(Utils.getYesterdayDate());
+        assertThat(openToDatePicker).hasValue(Utils.getYesterdayDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 7 days"))
                 .click();
-        assertThat(openDatePicker)
+        assertThat(openToDatePicker)
                 .hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 30 days"))
                 .click();
-        assertThat(openDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
+        assertThat(openToDatePicker)
+                .hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         // Close date
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Today"))
                 .click();
-        assertThat(closeDatePicker).hasValue(Utils.getCurrentDate());
+        assertThat(closeFromDatePicker).hasValue(Utils.getCurrentDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Yesterday"))
                 .click();
-        assertThat(closeDatePicker).hasValue(Utils.getYesterdayDate());
+        assertThat(closeFromDatePicker).hasValue(Utils.getYesterdayDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 7 days"))
                 .click();
-        assertThat(closeDatePicker)
+        assertThat(closeFromDatePicker)
                 .hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 30 days"))
                 .click();
-        assertThat(closeDatePicker)
+        assertThat(closeFromDatePicker)
                 .hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         // Profit
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "0-50"))
@@ -1484,7 +1486,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public void verifyNoOpenDateIsFilled() {
-        assertThat(openDatePicker).hasValue("");
+        assertThat(openToDatePicker).hasValue("");
     }
 
     @Step("Press reset button for open date and verify that none are selected")
@@ -1494,7 +1496,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public void verifyNoCloseDateIsFilled() {
-        assertThat(closeDatePicker).hasValue("");
+        assertThat(closeFromDatePicker).hasValue("");
     }
 
     @Step("Press reset button for close date and verify that none are selected")

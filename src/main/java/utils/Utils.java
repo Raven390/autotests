@@ -15,7 +15,6 @@ import business_objects.api.connection_search_api.get_connections.GetConnections
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.mt_account.MtAccountObjectFactory;
 import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -563,7 +562,7 @@ public class Utils {
         executeQueryToDb(
                 DbName.POSTGRES,
                 String.format(
-                        "UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')",
+                        "UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'INVESTIGATING', 'ASSIGNED')",
                         BO_INVESTIGATION_TABLE_NAME,
                         userId,
                         userId,
@@ -590,11 +589,6 @@ public class Utils {
                 CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
                 Arrays.stream(crmTbAccounts)
                         .map(CrmTbAccountForMtObjectFactory::generateAccountForMtByAccount)
-                        .toList());
-        insertObjectsToDb(
-                MT_ACCOUNT_TABLE_NAME,
-                Arrays.stream(crmTbAccounts)
-                        .map(MtAccountObjectFactory::generateMtAccountByCrmTbAccount)
                         .toList());
     }
 

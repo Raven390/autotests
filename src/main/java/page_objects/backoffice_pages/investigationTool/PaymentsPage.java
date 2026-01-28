@@ -106,6 +106,7 @@ public class PaymentsPage extends AbstractPage {
     private final Locator paymentProfileDrawerProfileTotalsNetDeposits;
     private final Locator connectedClientsTableRows;
     private final Locator cashflowEmptyStatePlaceholder;
+    private final Locator closePopupButton;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR =
@@ -262,6 +263,7 @@ public class PaymentsPage extends AbstractPage {
         this.connectedClientsTableRows = page.locator(".v-body-row[data-qa*='virtualized_table__rows__']");
         this.cashflowEmptyStatePlaceholder =
                 page.locator("//div[@class='v-cash-flow-v2__chart-container']/*[@data-qa='error_view']");
+        this.closePopupButton = page.locator("//button[contains(@class,'g-toast__btn-close')]");
     }
 
     @Step("Open users operations tab")
@@ -1494,5 +1496,9 @@ public class PaymentsPage extends AbstractPage {
 
     public String getPaymentProfileDrawerSubheader() {
         return paymentProfileDrawerSubheader.innerText();
+    }
+
+    public void closePopup() {
+        closePopupButton.click();
     }
 }

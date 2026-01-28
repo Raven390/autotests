@@ -96,6 +96,7 @@ class PaymentProfilesVerificationTest extends TestBaseWeb {
                 equalTo(withdrawal1.getPaymentProfile()));
         paymentsPage.selectVerificationStatus(VerificationStatus.VERIFIED);
         paymentsPage.commentAndSendVerificationStatus("test");
+        paymentsPage.closePopup();
 
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
         PaymentsPage.PaymentFamilyBlock block = paymentProfilesList.stream()
@@ -125,6 +126,7 @@ class PaymentProfilesVerificationTest extends TestBaseWeb {
                 paymentsPage.getPaymentProfileVerificationDrawerName(),
                 equalTo(deposit.getPaymentProfile()));
         paymentsPage.commentAndSendVerificationStatus("test");
+        paymentsPage.closePopup();
 
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
         PaymentsPage.PaymentFamilyBlock block = paymentProfilesList.stream()
