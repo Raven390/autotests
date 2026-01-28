@@ -60,14 +60,14 @@ public class MitigationHelper {
         }
         String where = String.format(
                 """
-                %s.ucid = '%s'
-                    AND NOT EXISTS (
-                        SELECT 1
-                        FROM %s ctrs
-                        WHERE ctrs.client_restriction_id = %s.id
-                            AND ctrs.status <> '%s'
-                     )
-                """,
+                        %s.ucid = '%s'
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM %s ctrs
+                                WHERE ctrs.client_restriction_id = %s.id
+                                    AND ctrs.status <> '%s'
+                             )
+                        """,
                 MITIGATION_CLIENT_TRADING_RESTRICTION,
                 client.getUcid(),
                 MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE,
@@ -80,6 +80,36 @@ public class MitigationHelper {
                     restriction.getRestrictionId().intValue()));
         }
         return restrictionList;
+    }
+
+    public static List<ClientGeneralRestriction> getClientGeneralRestrictionListFromDb(ClientHelper client)
+            throws Exception {
+        return getObjectsFromDB(
+                DbName.POSTGRES,
+                MITIGATION_CLIENT_GENERAL_RESTRICTION,
+                String.format("ucid = '%s' and status = '%s'", client.getUcid(), APPLIED_STATUS),
+                ClientGeneralRestriction.class);
+    }
+
+    public static List<ClientTradingRestriction> getClientTradingRestrictionListFromDb(ClientHelper client)
+            throws Exception {
+        String where = String.format(
+                """
+                        %s.ucid = '%s'
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM %s ctrs
+                                WHERE ctrs.client_restriction_id = %s.id
+                                    AND ctrs.status <> '%s'
+                             )
+                        """,
+                MITIGATION_CLIENT_TRADING_RESTRICTION,
+                client.getUcid(),
+                MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE,
+                MITIGATION_CLIENT_TRADING_RESTRICTION,
+                APPLIED_STATUS);
+        return getObjectsFromDB(
+                DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, where, ClientTradingRestriction.class);
     }
 
     public static void deleteTradingEnvironmentRestrictions(String ucid) throws Exception {

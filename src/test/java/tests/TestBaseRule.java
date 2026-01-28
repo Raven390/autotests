@@ -331,7 +331,6 @@ public class TestBaseRule {
                         () -> {
                             List<ZeebeRulesStarted> startedList = getObjectsFromDB(
                                     DbName.CLICKHOUSE,
-                                    REPORTING_DB_ZEEBE_RULES_STARTED,
                                     String.format(
                                             "SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'",
                                             REPORTING_DB_ZEEBE_RULES_STARTED, eventId, bpmnProcessId),

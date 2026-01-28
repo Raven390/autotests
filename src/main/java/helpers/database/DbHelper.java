@@ -1,7 +1,6 @@
 package helpers.database;
 
 import static utils.ConfigFactory.*;
-import static utils.ConfigFactory.POSTGRES_DB_USER;
 import static utils.Utils.writeLog;
 
 import io.qameta.allure.Step;
@@ -41,6 +40,15 @@ public class DbHelper {
         });
     }
 
+    @Step("Get objects from {dbName}, select {select}")
+    public static <T> List<T> getObjectsFromDB(DbName dbName, String select, Class<T> className) throws Exception {
+        return executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                return fetchObjects(connection, select, className);
+            }
+        });
+    }
+
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDB(
             DbName dbName, String tableName, String where, Class<T> className, int retries) throws Exception {
@@ -67,14 +75,20 @@ public class DbHelper {
         String query;
         if (where == null || where.isEmpty()) {
             query = String.format("SELECT * FROM %s", tableName);
-        } else if (where.contains("SELECT")) {
-            query = String.format(where);
         } else {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
         }
         try (PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()) {
             writeLog(query);
+            return mapResultSetToObjects(resultSet, className);
+        }
+    }
+
+    private static <T> List<T> fetchObjects(Connection connection, String select, Class<T> className) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement(select);
+                ResultSet resultSet = statement.executeQuery()) {
+            writeLog(select);
             return mapResultSetToObjects(resultSet, className);
         }
     }
