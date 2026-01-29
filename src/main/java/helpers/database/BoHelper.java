@@ -94,7 +94,6 @@ public class BoHelper {
                         "investigation_id IN (" + investigationIds + ")");
             }
             deleteObjectFromDb(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
-            deleteObjectFromDb(POSTGRES, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
             deleteObjectFromDb(POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
             deleteObjectFromDb(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
         } catch (Exception e) {

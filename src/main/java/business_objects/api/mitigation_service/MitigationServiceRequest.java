@@ -166,4 +166,42 @@ public class MitigationServiceRequest {
                         null,
                         deleteRestrictionRequestBody);
     }
+
+    public static Response postGeneralRestrictionV3(NewGeneralRestriction newGeneralRestriction) throws IOException {
+        return new HttpHelper()
+                .sendPostRequest(
+                        MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3,
+                        null,
+                        null,
+                        newGeneralRestriction);
+    }
+
+    public static Response postTradingRestrictionV3(NewTradingRestriction newTradingRestriction) throws IOException {
+        return new HttpHelper()
+                .sendPostRequest(
+                        MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3,
+                        null,
+                        null,
+                        newTradingRestriction);
+    }
+
+    public static Response deleteGeneralRestrictionV3(CancelGeneralRestriction cancelGeneralRestriction)
+            throws IOException {
+        return new HttpHelper()
+                .sendDeleteRequest(
+                        MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3,
+                        null,
+                        null,
+                        cancelGeneralRestriction);
+    }
+
+    public static Response deleteTradingRestrictionV3(CancelTradingRestriction cancelTradingRestriction)
+            throws IOException {
+        return new HttpHelper()
+                .sendDeleteRequest(
+                        MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_V3,
+                        null,
+                        null,
+                        cancelTradingRestriction);
+    }
 }

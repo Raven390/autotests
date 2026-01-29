@@ -8,10 +8,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import business_objects.api.mitigation_service.DeleteTradingEnvRestrictionRequestBody;
-import business_objects.api.mitigation_service.MitigationServiceRequest;
-import business_objects.api.mitigation_service.NewTradingEnvRestrictionRequestBody;
-import business_objects.api.mitigation_service.PostRestrictionRequestBody;
+import business_objects.api.mitigation_service.*;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -168,6 +165,40 @@ public class RestrictionHelper {
         Response response = MitigationServiceRequest.deleteRestrictionV3(deleteRestrictionRequestBody);
         assertNotNull(response);
         assertEquals(200, response.code());
+        return response;
+    }
+
+    @Step("Add general restriction through API")
+    public static Response addGeneralRestrictionV3(NewGeneralRestriction newGeneralRestriction) throws IOException {
+        Response response = MitigationServiceRequest.postGeneralRestrictionV3(newGeneralRestriction);
+        assertNotNull(response);
+        assertEquals(200, response.code());
+        return response;
+    }
+
+    @Step("Cancel general restriction through API")
+    public static Response cancelGeneralRestrictionV3(CancelGeneralRestriction cancelGeneralRestriction)
+            throws IOException {
+        Response response = MitigationServiceRequest.deleteGeneralRestrictionV3(cancelGeneralRestriction);
+        assertNotNull(response);
+        assertEquals(204, response.code());
+        return response;
+    }
+
+    @Step("Add trading restriction through API")
+    public static Response addTradingRestrictionV3(NewTradingRestriction newTradingRestriction) throws IOException {
+        Response response = MitigationServiceRequest.postTradingRestrictionV3(newTradingRestriction);
+        assertNotNull(response);
+        assertEquals(200, response.code());
+        return response;
+    }
+
+    @Step("Cancel general restriction through API")
+    public static Response cancelTradingRestrictionV3(CancelTradingRestriction cancelTradingRestriction)
+            throws IOException {
+        Response response = MitigationServiceRequest.deleteTradingRestrictionV3(cancelTradingRestriction);
+        assertNotNull(response);
+        assertEquals(204, response.code());
         return response;
     }
 }
