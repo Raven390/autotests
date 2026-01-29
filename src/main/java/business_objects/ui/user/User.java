@@ -80,6 +80,10 @@ public class User {
         this.role = role;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

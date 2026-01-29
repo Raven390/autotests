@@ -107,8 +107,8 @@ public class UserFactory {
                 ID_AUTOTEST_OPS24,
                 EMAIL_AUTOTEST_OPS24,
                 PASSWORD_BACKOFFICE_USERS,
-                FIRST_NAME_AUTOTEST_ONE,
-                LAST_NAME_AUTOTEST_ONE,
+                FIRST_NAME_AUTOTEST_OPS24,
+                LAST_NAME_AUTOTEST_OPS24,
                 EMAIL_AUTOTEST_VIEWER,
                 ROLE_UNKNOWN);
     }
