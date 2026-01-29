@@ -10,6 +10,7 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.writeLog;
 
 import business_objects.db.backoffice_db.Investigation;
+import business_objects.db.backoffice_db.InvestigationHistory.InvestigationHistoryObject;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.backoffice_db.backoffice_user.BackofficeUser;
 import business_objects.db.backoffice_db.client.Client;
@@ -218,5 +219,15 @@ public class BoHelper {
                 .map(Investigation::getClientUcid)
                 .distinct()
                 .count();
+    }
+
+    public static InvestigationHistoryObject getClientsInvestigationsHistoryLastDb(int investigationId)
+            throws Exception {
+        return getObjectsFromDB(
+                        POSTGRES,
+                        BO_INVESTIGATION_HISTORY_TABLE_NAME,
+                        "investigation_id = " + investigationId + " ORDER BY happened_at DESC LIMIT 1",
+                        InvestigationHistoryObject.class)
+                .getFirst();
     }
 }

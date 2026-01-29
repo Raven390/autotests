@@ -59,6 +59,7 @@ public class TestBaseWeb {
     public DeductionPage deductionPage;
     public SearchPage searchPage;
     public DutyTeamPage dutyTeamPage;
+    public AssignDrawer assignDrawer;
 
     public static DecimalFormat df = new DecimalFormat("#,###");
     public static DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -129,6 +130,7 @@ public class TestBaseWeb {
         deductionPage = new DeductionPage(page);
         searchPage = new SearchPage(page);
         dutyTeamPage = new DutyTeamPage(page);
+        assignDrawer = new AssignDrawer(page);
     }
 
     @AfterEach

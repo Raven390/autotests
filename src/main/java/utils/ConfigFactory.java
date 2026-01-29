@@ -185,6 +185,8 @@ public class ConfigFactory {
     public static final String PASSWORD_AUTOTEST_AF = CONFIG.passwordAutotestAF();
     public static final String FIRST_NAME_AUTOTEST_ONE = CONFIG.firstNameAutotestOne();
     public static final String LAST_NAME_AUTOTEST_ONE = CONFIG.lastNameAutotestOne();
+    public static final String FIRST_NAME_AUTOTEST_OPS24 = CONFIG.firstNameAutotestOps24();
+    public static final String LAST_NAME_AUTOTEST_OPS24 = CONFIG.lastNameAutotestOps24();
     public static final String EMAIL_AUTOTEST_ONE = CONFIG.emailAutotestOne();
     public static final String EMAIL_AUTOTEST_OPS24_DUTY = CONFIG.emailOps24DutyUser();
     public static final String EMAIL_AUTOTEST_OPS24 = CONFIG.emailOps24User();
@@ -692,6 +694,12 @@ public class ConfigFactory {
 
         @Key("lastNameAutotestOne")
         String lastNameAutotestOne();
+
+        @Key("firstNameAutotestOps24")
+        String firstNameAutotestOps24();
+
+        @Key("lastNameAutotestOps24")
+        String lastNameAutotestOps24();
 
         @Key("abuseRegistryBasePath")
         String abuseRegistryBasePath();

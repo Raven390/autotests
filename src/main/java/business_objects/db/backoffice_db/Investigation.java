@@ -1,7 +1,9 @@
 package business_objects.db.backoffice_db;
 
 import java.util.Objects;
+import lombok.Data;
 
+@Data
 public class Investigation {
 
     private Integer id;
@@ -13,6 +15,8 @@ public class Investigation {
     private String completedAt;
     private String status;
     private String clientUcid;
+    private String modifiedByUserId;
+    private String updatedAt;
 
     public Investigation() {}
 
