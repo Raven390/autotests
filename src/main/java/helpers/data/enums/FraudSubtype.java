@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum FraudSubtype {
     EXTERNAL("EXTERNAL", "External"),
     INTERNAL("INTERNAL", "Internal"),
-    BEFORE_NEWS("BEFORE_NEWS", "Before news"),
+    BEFORE_NEWS("BEFORE_NEWS", "Before - no deduction"),
+    BEFORE_NEWS_DEDUCTION("BEFORE_NEWS_DEDUCTION", "Before - with deduction"),
     AFTER_NEWS("AFTER_NEWS", "After news"),
     SINGLE_ACCOUNT("SINGLE_ACCOUNT", "No deduction"),
     HEDGING_STRATEGY("HEDGING_STRATEGY", "With deduction"),

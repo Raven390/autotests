@@ -156,7 +156,8 @@ public class ResolveTest extends TestBaseWeb {
                         DEPOSITS.getName(),
                         CREDIT_AND_BONUS.getName(),
                         INTERNAL_TRANSFER.getName(),
-                        WITHDRAWALS.getName()));
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -199,7 +200,8 @@ public class ResolveTest extends TestBaseWeb {
                         DEPOSITS.getName(),
                         CREDIT_AND_BONUS.getName(),
                         INTERNAL_TRANSFER.getName(),
-                        WITHDRAWALS.getName()));
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -237,7 +239,8 @@ public class ResolveTest extends TestBaseWeb {
                         DEPOSITS.getName(),
                         CREDIT_AND_BONUS.getName(),
                         INTERNAL_TRANSFER.getName(),
-                        WITHDRAWALS.getName()));
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -263,10 +266,23 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.NEWS_TRADER, CONFIRMED, FraudSubtype.AFTER_NEWS);
+        resolvePage.addFraud(FraudType.NEWS_TRADER, CONFIRMED, FraudSubtype.BEFORE_NEWS_DEDUCTION);
         assertThat(
                 resolvePage.getSelectedRestrictionsList(),
-                containsInAnyOrder(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName()));
+                containsInAnyOrder(
+                        ACCOUNT_CREATION.getName(),
+                        DEPOSITS.getName(),
+                        CREDIT_AND_BONUS.getName(),
+                        INTERNAL_TRANSFER.getName(),
+                        WITHDRAWALS.getName(),
+                        CLOSE_ONLY_MODE.getName()));
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+
+        resolvePage.addFraud(FraudType.NEWS_TRADER, CONFIRMED, FraudSubtype.BEFORE_NEWS);
+        assertThat(
+                resolvePage.getSelectedRestrictionsList(),
+                containsInAnyOrder(ACCOUNT_CREATION.getName(), CREDIT_AND_BONUS.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
@@ -335,8 +351,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.CHARGEBACK, POTENTIAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), contains(MANUAL_WITHDRAWAL_REVIEW.getName()));
-        resolvePage.resetRestrictionChanges();
+        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.CLAIMER, POTENTIAL);
