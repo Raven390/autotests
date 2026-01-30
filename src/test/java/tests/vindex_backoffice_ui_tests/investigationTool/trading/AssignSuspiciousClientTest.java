@@ -10,6 +10,8 @@ import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.*;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.POSTGRES;
+import static java.util.function.Function.identity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -19,6 +21,7 @@ import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.backoffice_db.InvestigationHistory.InvestigationHistoryObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
+import business_objects.ui.audit_trail.AuditTrailItemV2;
 import business_objects.ui.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -27,6 +30,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -66,7 +70,7 @@ class AssignSuspiciousClientTest extends TestBaseWeb {
     @Test
     @AllureId("2103")
     @DisplayName("Initial assign test")
-    void assignTest1() throws Exception {
+    void assignTest() throws Exception {
         User currentUser = autotestUserOne();
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
@@ -89,12 +93,20 @@ class AssignSuspiciousClientTest extends TestBaseWeb {
         assertThat("check reassigned_from_user_id", historyRecord.getReassignedFromUserId(), nullValue());
         assertThat("check actor_user_id", historyRecord.getActorUserId(), is(currentUser.getId()));
         assertThat("check action", historyRecord.getAction(), is(ASSIGNED.getDisplayName()));
+
+        checkAuditTrailEvent(new AuditTrailItemV2(
+                """
+                        Investigation assigned
+                        %s (by %s)
+                        """
+                        .formatted(currentUser.getFullName(), currentUser.getFullName()),
+                ""));
     }
 
     @Test
     @AllureId("2105")
     @DisplayName("Reassign assign test")
-    void assignTest2() throws Exception {
+    void reassignTest() throws Exception {
         User currentUser = autotestUserOne();
         User anotherUser = autotestUserOPS24();
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
@@ -118,12 +130,22 @@ class AssignSuspiciousClientTest extends TestBaseWeb {
         assertThat("check reassigned_from_user_id", historyRecord.getReassignedFromUserId(), is(currentUser.getId()));
         assertThat("check actor_user_id", historyRecord.getActorUserId(), is(currentUser.getId()));
         assertThat("check action", historyRecord.getAction(), is(REASSIGNED.getDisplayName()));
+
+        checkAuditTrailEvent(new AuditTrailItemV2(
+                """
+                        Assignee changed
+                        %s
+                        %s
+                        (by %s)
+                        """
+                        .formatted(currentUser.getFullName(), anotherUser.getFullName(), currentUser.getFullName()),
+                ""));
     }
 
     @Test
     @AllureId("2104")
     @DisplayName("Unassign assign test")
-    void assignTest3() throws Exception {
+    void unassignTest() throws Exception {
         User currentUser = autotestUserOne();
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
@@ -146,5 +168,71 @@ class AssignSuspiciousClientTest extends TestBaseWeb {
         assertThat("check reassigned_from_user_id", historyRecord.getReassignedFromUserId(), is(currentUser.getId()));
         assertThat("check actor_user_id", historyRecord.getActorUserId(), is(currentUser.getId()));
         assertThat("check action", historyRecord.getAction(), is(UNASSIGNED.getDisplayName()));
+        checkAuditTrailEvent(new AuditTrailItemV2(
+                """
+                        Assignee removed
+                        %s
+                        (by %s)
+                        """
+                        .formatted(currentUser.getFullName(), currentUser.getFullName()),
+                ""));
+    }
+
+    @Test
+    @AllureId("2107")
+    @DisplayName("Start unassigned investigation test")
+    void startUnassignedInvestigationTest() throws Exception {
+        User currentUser = autotestUserOne();
+        kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
+        investigationPage.investigateClientCard();
+        Allure.step("Check clients investigation record In DB");
+        List<Investigation> investigations = getClientsInvestigationsDb(client.getUcid());
+        assertThat("there is only one investigation in DB", investigations.size(), is(1));
+        Investigation investigation = investigations.getFirst();
+        assertThat("investigation status should be 'INVESTIGATING'", investigation.getStatus(), is("INVESTIGATING"));
+        assertThat("check id of assigned user", investigation.getAssignedUserId(), is(currentUser.getId()));
+        assertThat("check id of user modifier", investigation.getModifiedByUserId(), is(currentUser.getId()));
+        Allure.step("Check clients investigation history record In DB");
+        var historyRecords = getObjectsFromDB(
+                POSTGRES,
+                BO_INVESTIGATION_HISTORY_TABLE_NAME,
+                "investigation_id = " + investigation.getId(),
+                InvestigationHistoryObject.class);
+        assertThat("there is should be 2 history records", historyRecords, hasSize(2));
+        var historyMap =
+                historyRecords.stream().collect(Collectors.toMap(InvestigationHistoryObject::getAction, identity()));
+
+        var historyRecord = historyMap.get(ASSIGNED.getDisplayName());
+        assertThat("check assigned_to_user_id", historyRecord.getAssignedToUserId(), is(currentUser.getId()));
+        assertThat("check reassigned_from_user_id", historyRecord.getReassignedFromUserId(), nullValue());
+        assertThat("check actor_user_id", historyRecord.getActorUserId(), is(currentUser.getId()));
+        historyRecord = historyMap.get(STARTED.getDisplayName());
+        assertThat("check assigned_to_user_id", historyRecord.getAssignedToUserId(), nullValue());
+        assertThat("check reassigned_from_user_id", historyRecord.getReassignedFromUserId(), nullValue());
+        assertThat("check actor_user_id", historyRecord.getActorUserId(), is(currentUser.getId()));
+        checkAuditTrailEvent(new AuditTrailItemV2(
+                """
+                        Investigation started
+                        %s
+                        """
+                        .formatted(currentUser.getFullName()),
+                ""));
+    }
+
+    private void checkAuditTrailEvent(AuditTrailItemV2 auditTrailItem) {
+        auditTrailPage.openAuditTrailTab();
+        var trailItems = auditTrailPage.getAuditTrailItemsV2();
+        var trailStrings = trailItems.stream()
+                .map(AuditTrailItemV2::getHeader)
+                .map(s -> s.replace("\n", ""))
+                .map(s -> s.replace(" ", ""))
+                .collect(Collectors.toSet());
+        assertThat(
+                "audit event should be present in the trail",
+                trailStrings,
+                hasItem(auditTrailItem.getHeader().replace("\n", "").replace(" ", "")));
     }
 }
