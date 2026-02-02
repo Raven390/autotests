@@ -96,6 +96,12 @@ public class ResolvePage extends AbstractPage {
     private final Locator rejectionReasonItems;
     private final Locator rejectionDynamicInputs;
     private final Locator rejectionReasonInput;
+    private final Locator rejectionReasonPresetOptions;
+    private final Locator rejectionReasonCryptoAddressPreset;
+    private final Locator rejectionReasonPaymentProfileCurrentPreset;
+    private final Locator rejectionReasonVerificationDocumentsPreset;
+    private final Locator rejectionReasonRecommendedMethodInput;
+    private final Locator popup;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -208,6 +214,17 @@ public class ResolvePage extends AbstractPage {
                 ".v-rejection-reason__dynamic-values input, .v-dynamic-attributes input[type='text'], input[data-qa='rejection_dynamic_attribute_input']");
         this.confirmFinishPaymentInvestigationButton =
                 page.locator("[data-qa='client_payment_resolving_drawer__complete_investigation_button__confirm']");
+        this.rejectionReasonPresetOptions = page.locator(
+                "//div[contains(@class,'v-rejection-reason-variable')]/descendant::*[@class='g-select-list__option-default-label']");
+        this.rejectionReasonCryptoAddressPreset =
+                page.locator("//*[@data-qa='rejection_reason__attribute__CRYPTO_ADDRESS__control']");
+        this.rejectionReasonPaymentProfileCurrentPreset =
+                page.locator("//*[@data-qa='rejection_reason__attribute__PAYMENT_PROFILE_CURRENT__control']");
+        this.rejectionReasonVerificationDocumentsPreset =
+                page.locator("//*[@data-qa='rejection_reason__attribute__VERIFICATION_DOCS__control']");
+        this.rejectionReasonRecommendedMethodInput =
+                page.locator("//*[@data-qa='rejection_reason__attribute__RECOMMENDED_METHOD__0']");
+        this.popup = page.locator("//div[@data-qa='select-popup']");
     }
 
     String bigLorem =
@@ -645,7 +662,8 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Select predefined rejection reason and fill dynamic values if required")
     protected void selectRejectionReasonAndFillDynamics(String reasonTitle, String... dynamics) {
-        Locator reasonOption = rejectionReasonItems.getByText(reasonTitle);
+        Locator reasonOption =
+                rejectionReasonItems.getByText(reasonTitle, new Locator.GetByTextOptions().setExact(true));
         reasonOption.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         reasonOption.click();
 
@@ -771,5 +789,55 @@ public class ResolvePage extends AbstractPage {
     public void clickSaveAsFraud() {
         noDeductionSaveAsFraudButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         noDeductionSaveAsFraudButton.click();
+    }
+
+    @Step("Click rejection reason crypto address preset")
+    public void clickRejectionReasonCryptoAddress() {
+        rejectionReasonCryptoAddressPreset.click();
+    }
+
+    @Step("Get list of preset options in popup")
+    public List<String> getPresetOptionsList() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < rejectionReasonPresetOptions.count(); i++) {
+            list.add(rejectionReasonPresetOptions.nth(i).textContent());
+        }
+        return list;
+    }
+
+    @Step("Click rejection reason payment profile preset")
+    public void clickRejectionReasonPaymentProfile() {
+        rejectionReasonPaymentProfileCurrentPreset.click();
+    }
+
+    @Step("Click rejection reason verification documents preset")
+    public void clickRejectionReasonVerificationDocuments() {
+        rejectionReasonVerificationDocumentsPreset.click();
+    }
+
+    @Step("Fill rejection reason recommended method input")
+    public void fillRejectionReasonRecommendedMethod(String text) {
+        rejectionReasonRecommendedMethodInput.fill(text);
+    }
+
+    @Step("Get filled rejection reason text")
+    public String getRejectionReasonText() {
+        return rejectionReasonInput.innerText();
+    }
+
+    @Step("Get filled rejection reason text")
+    public void clickPresetOption(String option) {
+        rejectionReasonPresetOptions
+                .getByText(option, new Locator.GetByTextOptions().setExact(true))
+                .click();
+    }
+
+    @Step("Click apply button")
+    public void clickApplyButton() {
+        applyButton.click();
+    }
+
+    public void waitForPopupToClose() {
+        popup.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 }
