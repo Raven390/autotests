@@ -196,6 +196,6 @@ public class RuleAlertFactory {
                 "500.00",
                 "USD",
                 "D987654321",
-                "evt-" + UUID.randomUUID());
+                getRandomUuidString());
     }
 }

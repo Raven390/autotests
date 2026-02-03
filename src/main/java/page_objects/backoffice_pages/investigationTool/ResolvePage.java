@@ -44,7 +44,9 @@ public class ResolvePage extends AbstractPage {
     private final Locator investigateButton;
     private final Locator commentInput;
     private final Locator withdrawalList;
-    private final Locator approveAllwithdrawalsButton;
+    private final Locator paymentWithdrawals;
+    private final Locator approveAllWithdrawalsButton;
+    private final Locator approveAllPaymentWithdrawalsButton;
     private final Locator rejectAllwithdrawalsButton;
     private final Locator completeInvestigationButton;
     private final Locator successToast;
@@ -150,8 +152,10 @@ public class ResolvePage extends AbstractPage {
         this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Fraud management");
         this.commentInput = page.locator(".v-drawer-section-layout textarea");
         this.withdrawalList = page.locator(".v-withdrawals-list__list-item");
-        this.approveAllwithdrawalsButton =
+        this.approveAllWithdrawalsButton =
                 page.locator("[data-qa='client_resolving_drawer__withdrawals_list__approve_all']");
+        this.approveAllPaymentWithdrawalsButton =
+                page.locator("(//div[@class='v-rejection-decision-input'])[1]/button");
         this.rejectAllwithdrawalsButton =
                 page.locator(".v-rejection-decision-input .g-button").nth(1);
         this.successToast = page.locator(".g-toast__container").first();
@@ -225,6 +229,7 @@ public class ResolvePage extends AbstractPage {
         this.rejectionReasonRecommendedMethodInput =
                 page.locator("//*[@data-qa='rejection_reason__attribute__RECOMMENDED_METHOD__0']");
         this.popup = page.locator("//div[@data-qa='select-popup']");
+        this.paymentWithdrawals = page.locator("//div[@class='v-withdrawal__info']");
     }
 
     String bigLorem =
@@ -249,6 +254,17 @@ public class ResolvePage extends AbstractPage {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < withdrawalList.count(); i++) {
             list.add(withdrawalList.nth(i).textContent());
+        }
+        return list;
+    }
+
+    @Step("Get payment withdrawals list")
+    public List<String> getPaymentWithdrawalsList() {
+        Locator resolution = page.locator(DRAWER_HEADER_SELECTOR).getByText(RESOLUTION);
+        resolution.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < paymentWithdrawals.count(); i++) {
+            list.add(paymentWithdrawals.nth(i).textContent());
         }
         return list;
     }
@@ -308,7 +324,12 @@ public class ResolvePage extends AbstractPage {
 
     @Step("approve all withdrawals")
     public void clickWithdrawalApprove() {
-        approveAllwithdrawalsButton.click();
+        approveAllWithdrawalsButton.click();
+    }
+
+    @Step("approve all payment withdrawals")
+    public void clickPaymentWithdrawalApprove() {
+        approveAllPaymentWithdrawalsButton.click();
     }
 
     public void clickCleanRestrictionList() {
@@ -324,7 +345,7 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Resolve and approve all withdrawals")
     public void resolveWithdrawalsAllApprove(String comment) {
-        approveAllwithdrawalsButton.click();
+        approveAllWithdrawalsButton.click();
         commentInput.fill(comment);
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
