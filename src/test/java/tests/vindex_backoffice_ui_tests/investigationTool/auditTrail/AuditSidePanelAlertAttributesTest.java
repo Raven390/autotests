@@ -2,6 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool.auditTrail;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcidByTrigger;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.SLIPPAGE_FREE_ABUSE;
 import static helpers.database.BoHelper.closeAlert;
@@ -17,6 +18,7 @@ import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.AlertMessageType;
 import business_objects.kafka.alerts.BaseAlertMessageV2;
+import business_objects.kafka.alerts.PaymentAlertMessageV2;
 import business_objects.kafka.alerts.TradingAlertMessageV2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -49,8 +51,8 @@ class AuditSidePanelAlertAttributesTest extends TestBaseWeb {
 
     @Test
     @AllureId("1791")
-    @DisplayName("Verify alert attributes in side panel are displayed correctly")
-    void auditSidePanelAlertAttributesTest() throws Exception {
+    @DisplayName("Verify alert attributes in side panel are displayed correctly. Trading")
+    void auditSidePanelAlertAttributesTest1() throws Exception {
         BaseAlertMessageV2.Rule rule = new BaseAlertMessageV2.Rule();
         rule.name = "No Slippage";
         rule.ver = "0.2.0";
@@ -126,6 +128,59 @@ class AuditSidePanelAlertAttributesTest extends TestBaseWeb {
                         openTradeAlert1.serverId,
                         "11111",
                         "11112"));
+    }
+
+    @Test
+    @AllureId("")
+    @DisplayName("Verify alert attributes in side panel are displayed correctly payment")
+    void auditSidePanelAlertAttributesTest2() throws Exception {
+        BaseAlertMessageV2.Rule rule = new BaseAlertMessageV2.Rule();
+        rule.name = "Withdrawal Notification";
+        rule.ver = "0.2.0";
+
+        PaymentAlertMessageV2 paymentAlert1 = generatePaymentAlertByUcidByTrigger(client.getUcid(), "Deposit");
+        paymentAlert1.setRule(rule);
+        PaymentAlertMessageV2 paymentAlert2 = generatePaymentAlertByUcidByTrigger(client.getUcid(), "Deposit");
+        paymentAlert2.setRule(rule);
+
+        kafka.produceMessages(
+                getRandomUuid().toString(),
+                KAFKA_TOPIC_ALERTS,
+                objectMapper.writeValueAsString(paymentAlert1),
+                objectMapper.writeValueAsString(paymentAlert2));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        auditTrailPage.openAuditTrailTab();
+        auditTrailPage.clickFirstAuditCard();
+
+        assertThat("Verify rule name", auditTrailPage.getAuditTrailDetailsTitle(), is(rule.name));
+        assertThat(
+                "Verify alert type and status",
+                auditTrailPage.getAuditTrailDetailsLabels(),
+                contains("Payments", "Active"));
+        assertThat(
+                "Verify alert attribute names",
+                auditTrailPage.getAuditTrailDetailsAttributeNames(),
+                hasItems(
+                        "Date",
+                        "Reason",
+                        "Amount",
+                        "Amount in USD",
+                        "Account",
+                        "Server ID",
+                        "Payment method",
+                        "Order ID"));
+        assertThat(
+                "Verify alert attribute values",
+                auditTrailPage.getAuditTrailDetailsAttributeValues(),
+                hasItems(
+                        paymentAlert1.reason,
+                        paymentAlert1.account,
+                        paymentAlert1.serverId,
+                        paymentAlert1.merchantOrderId));
     }
 
     @AfterAll
