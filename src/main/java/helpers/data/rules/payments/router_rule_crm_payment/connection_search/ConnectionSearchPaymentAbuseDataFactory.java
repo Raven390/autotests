@@ -81,12 +81,13 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
     private static DataHelper getTest1Data() {
         DataHelper data = getRuleData(client1);
+        data.createCreditCard();
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 10_001d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
         return data;
     }
 
@@ -98,9 +99,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 10_001d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
         return data;
     }
 
@@ -113,9 +114,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
         // add deposit
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 10_001d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
         return data;
     }
 
@@ -128,9 +129,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
         // add deposit
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 10_001d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
         return data;
     }
 
@@ -143,9 +144,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 10_001d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
         return data;
     }
 
@@ -161,9 +162,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 999d, 4);
+        data.addWithdrawalSumByCategory(999d, 4);
 
         return data;
     }
@@ -180,9 +181,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 999d, 4);
+        data.addWithdrawalSumByCategory(999d, 4);
 
         return data;
     }
@@ -199,9 +200,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 999d, 4);
+        data.addWithdrawalSumByCategory(999d, 4);
         return data;
     }
 
@@ -217,9 +218,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(100d);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 999d, 4);
+        data.addWithdrawalSumByCategory(999d, 4);
         return data;
     }
 
@@ -232,9 +233,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 10_001d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
         return data;
     }
 

@@ -48,8 +48,8 @@ class MirrorTradeTests extends TestBaseRule {
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "mirror_trade_rr");
-        checkElementId("Activity_1kf15qu", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("Event_1gdl5i3", data.crmWithdrawalEventV2.getId(), "mirror_trade_rr");
+        checkElementId("Activity_1kf15qu", data.crmWithdrawalEventV2.getId(), "router_rule_crm_payment");
     }
 
     @Test

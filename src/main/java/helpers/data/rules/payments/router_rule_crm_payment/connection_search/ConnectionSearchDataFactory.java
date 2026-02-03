@@ -113,7 +113,7 @@ public class ConnectionSearchDataFactory {
 
     private static DataHelper getTest6Data() {
         DataHelper data = getRuleData(client6);
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
         return data;
     }
 
@@ -131,7 +131,7 @@ public class ConnectionSearchDataFactory {
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
         return data;
     }
 
@@ -140,9 +140,9 @@ public class ConnectionSearchDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 9000d, 5);
+        data.addWithdrawalSumByCategory(9000d, 5);
 
         return data;
     }
@@ -165,9 +165,9 @@ public class ConnectionSearchDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 50_001d, 4);
+        data.addWithdrawalSumByCategory(50_001d, 4);
 
         return data;
     }
@@ -177,9 +177,9 @@ public class ConnectionSearchDataFactory {
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
-        addDepositSumByCategory(data, 501d);
+        data.addDepositSumByCategory(501d);
 
-        addWithdrawalSumByCategory(data, 9000d, 4);
+        data.addWithdrawalSumByCategory(9000d, 4);
 
         return data;
     }

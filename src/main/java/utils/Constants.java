@@ -39,6 +39,10 @@ public class Constants {
     // STORIES
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_EFFECTIVE_LEVERAGE =
+            "Clickhouse api. Get effective leverage";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CUMULATIVE_NOTIONAL_VALUE =
+            "Clickhouse api. Get cumulative notional value";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MARKET_CLOSE = "Clickhouse api. Get market close";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BALANCE_ORDERS = "Clickhouse api. Get balance orders";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MARKET_MANIPULATOR_FLAG =
@@ -56,6 +60,8 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO =
             "Clickhouse api. Get credit risk free revenue ratio";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDITS = "Clickhouse api. Get credits";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_COUNT_TRADING_DAYS =
+            "Clickhouse api. Get count trading days";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS = "Clickhouse api. Get deposits";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FAST_TRADES = "Clickhouse api. Get fast trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY =
@@ -86,6 +92,7 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_WITHDRAWALS = "Clickhouse api. Get withdrawals";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
+    public static final String STORY_CONNECTION_SEARCH_BY_PAYOUT = "Get connections by client id";
     public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V1 =
             "Get abuse types by client id V1";
     public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V2 =
