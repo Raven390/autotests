@@ -3,10 +3,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
-import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
-import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.USD;
 import static helpers.data.enums.FraudType.*;
@@ -20,7 +17,6 @@ import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
 
 import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
@@ -31,8 +27,6 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
@@ -74,11 +68,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     public static final String REASON_WITH_PARAMS = "Use recommended method";
 
     private static MtAccountObject mtAccount1;
-    private static MtAccountObject mtAccount2;
-    private static MtMt4TradesCoercedObject trade1;
-    private static MtMt4TradesCoercedObject trade2;
     private static PaymentEventsObject event = PaymentEventsObjectFactory.generatePaymentEventsObject(client);
-    private static MtMt4TradesCoercedObject tradeWithdrawal;
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -118,30 +108,16 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         objectMapper.findAndRegisterModules();
         CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client);
         account1.currency = USD.getIsoCode();
-        CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(client);
-        account2.account = getRandomIntPositive();
-        account2.currency = USD.getIsoCode();
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
-        mtAccount2 = generateMtAccountByCrmTbAccount(account2);
-
-        String comment = "comment";
-        trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
-        trade2 = generateMt4TradesCoercedAccountProfitComment(account2, 1000.23, comment);
-        tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, -10_000d, "withdraw");
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
-        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, tradeWithdrawal));
-        MtMt5PositionsObject position = generateMtMt5PositionsObject(client);
-        position.setAccount(mtAccount2.account);
-        position.setServerId(mtAccount2.sourceIdSt);
-        insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1));
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1));
     }
 
     @BeforeEach
     void sendAlert() throws Exception {
-        PaymentAlertMessage alertPayment = generatePaymentAlertByUcid(crmTbUser.ucid);
+        PaymentAlertMessageV2 alertPayment = generatePaymentAlertByUcidByTrigger(crmTbUser.ucid, "withdrawal");
         kafka.produceMessage(
                 alertPayment.getId().toString(), objectMapper.writeValueAsString(alertPayment), KAFKA_TOPIC_ALERTS);
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
@@ -199,10 +175,10 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
-        resolvePage.clickWithdrawalApprove();
+        resolvePage.clickPaymentWithdrawalApprove();
         resolvePage.addFraud();
         resolvePage.resolveNoActionsPayment(longResolveComment);
 
@@ -268,7 +244,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
@@ -315,10 +291,10 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
-        resolvePage.clickWithdrawalApprove();
+        resolvePage.clickPaymentWithdrawalApprove();
         resolvePage.resolveNoActionsPayment("test comment");
         // Alert resolution
         Alert dbAlert = getObjectsFromDB(
@@ -345,10 +321,10 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
-        resolvePage.clickWithdrawalApprove();
+        resolvePage.clickPaymentWithdrawalApprove();
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActionsPayment("test comment");
         // Alert resolution
@@ -435,10 +411,10 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
-        resolvePage.clickWithdrawalApprove();
+        resolvePage.clickPaymentWithdrawalApprove();
         resolvePage.resolveNoActionsPayment("test comment");
         // Alert resolution
         Alert dbAlert = getObjectsFromDB(
@@ -524,7 +500,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
@@ -554,7 +530,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
@@ -585,7 +561,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
@@ -616,7 +592,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        List<String> withdrawalList = resolvePage.getPaymentWithdrawalsList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.resolveWithdrawalsAllRejectPayment(REASON_WITH_PARAMS, "AQA");
