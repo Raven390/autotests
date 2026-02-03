@@ -27,6 +27,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_BASE_PROD = CONFIG.clickhouseBasePathProd();
     public static final String CLICKHOUSE_API_GET_CLIENT = CONFIG.clickhouseGetClientPath();
     public static final String CLICKHOUSE_API_GET_CLIENTS = CONFIG.clickhouseGetClientsPath();
+    public static final String CLICKHOUSE_API_GET_COUNT_TRADING_DAYS = CONFIG.clickhouseGetCountTradingDays();
     public static final String CLICKHOUSE_API_GET_CLIENTS_V2 = CONFIG.clickhouseGetClientsV2Path();
     public static final String CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS =
             CONFIG.clickhouseGetClientTradingAccountsPath();
@@ -52,6 +53,9 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
             CONFIG.clickhouseGetMirrorTradeOnLastWithdrawal();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
+    public static final String CLICKHOUSE_API_GET_EFFECTIVE_LEVERAGE = CONFIG.clickhouseGetEffectiveLeverage();
+    public static final String CLICKHOUSE_API_GET_CUMULATIVE_NOTIONAL_VALUE =
+            CONFIG.clickhouseGetCumulativeNotionalValue();
     public static final String CLICKHOUSE_API_GET_MARKET_CLOSE = CONFIG.clickhouseGetMarketClose();
     public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO =
             CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
@@ -88,7 +92,6 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT =
             CONFIG.clickhouseGetFastTradesAndTotalCount();
     public static final String CLICKHOUSE_API_GET_CUMULATIVE_DEPOSITS = CONFIG.clickhouseGetCumulativeDeposits();
-    public static final String CLICKHOUSE_API_GET_COUNT_TRADING_DAYS = CONFIG.clickhouseGetCountTradingDays();
     public static final String CLICKHOUSE_API_GET_COUNT_CPA = CONFIG.clickhouseGetCountCpa();
     public static final String CLICKHOUSE_API_GET_CHARGEBACK_SCORE = CONFIG.clickhouseGetChargebackScore();
     public static final String CLICKHOUSE_API_GET_ALERTS = CONFIG.clickhouseGetAlerts();
@@ -107,6 +110,8 @@ public class ConfigFactory {
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT =
             CONFIG.connectionSearchGetConnectionsByClient();
+    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_PAYOUT =
+            CONFIG.connectionSearchGetConnectionsByPayout();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES =
             CONFIG.connectionSearchGetConnectionsByAttributes();
     public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V1 =
@@ -343,6 +348,12 @@ public class ConfigFactory {
         @Key("clickhouseGetAbuseTypes")
         String clickhouseGetAbuseTypes();
 
+        @Key("clickhouseGetEffectiveLeverage")
+        String clickhouseGetEffectiveLeverage();
+
+        @Key("clickhouseGetCumulativeNotionalValue")
+        String clickhouseGetCumulativeNotionalValue();
+
         @Key("clickhouseGetCreditRiskFreeRevenueRatio")
         String clickhouseGetCreditRiskFreeRevenueRatio();
 
@@ -489,6 +500,9 @@ public class ConfigFactory {
 
         @Key("connectionSearchBasePathProd")
         String connectionSearchBasePathProd();
+
+        @Key("connectionSearchGetConnectionsByPayout")
+        String connectionSearchGetConnectionsByPayout();
 
         @Key("connectionSearchGetConnectionsByClient")
         String connectionSearchGetConnectionsByClient();

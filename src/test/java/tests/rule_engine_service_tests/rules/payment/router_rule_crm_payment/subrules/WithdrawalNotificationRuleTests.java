@@ -20,6 +20,7 @@ import business_objects.api.mitigation_service.GetRestrictionResponseBody;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import helpers.data.DataHelper;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.*;
 import java.io.IOException;
 import java.util.*;
@@ -60,8 +61,8 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.getCrmWithdrawalEventV2());
 
         String eventId = data.getCrmWithdrawalEventV2().getId();
-        checkElementId(expectedEnd, eventId, "withdrawal_notification_rr_payment");
-        checkElementId("retrieve_rule_outcomes", eventId, "router_rule_crm_payment_shadow_mode");
+        checkElementId(expectedEnd, eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+        checkElementId("retrieve_rule_outcomes", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
     @Test
@@ -98,7 +99,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     @Test
     @AllureId("1925")
     @DisplayName(
-            "Scotland . Exit with alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restrictions >1 . ElementId: end_alert")
+            "Withdrawal notification rule. Exit with alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restrictions >1 . ElementId: end_alert")
     void withdrawalNotificationRuleScotlandPattern5Test() throws Exception {
         DataHelper data = dataMap.get("5");
         setupData(data);
@@ -110,8 +111,8 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         String eventId = data.getCrmWithdrawalEventV2().getId();
-        checkElementId("end_alert", eventId, "withdrawal_notification_rr_payment");
-        checkElementId("retrieve_rule_outcomes", eventId, "router_rule_crm_payment_shadow_mode");
+        checkElementId("end_alert", eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+        checkElementId("retrieve_rule_outcomes", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -126,7 +127,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     @Test
     @AllureId("1926")
     @DisplayName(
-            "Scotland. Exit with alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restriction count = 1, profit exceeds 60% of total funding (deposit plus credit). ElementId: end_alert")
+            "Withdrawal notification rule. Exit with alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restriction count = 1, profit exceeds 60% of total funding (deposit plus credit). ElementId: end_alert")
     void withdrawalNotificationRuleScotlandPattern6Test() throws Exception {
         DataHelper data = dataMap.get("6");
         setupData(data);
@@ -136,9 +137,16 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("profit_check", data.crmWithdrawalEventV2.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("end_alert", data.crmWithdrawalEventV2.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("end", data.crmWithdrawalEventV2.getId(), "withdrawal_notification_rr_payment");
+        checkElementId(
+                "profit_check",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+        checkElementId(
+                "end_alert",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+        checkElementId(
+                "end", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -153,7 +161,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     @Test
     @AllureId("1927")
     @DisplayName(
-            "Scotland . Exit without alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restrictions count = 1, profit does not exceed 60% of total funding. ElementId: end_103")
+            "Withdrawal notification rule. Exit without alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restrictions count = 1, profit does not exceed 60% of total funding. ElementId: end_103")
     void withdrawalNotificationRuleScotlandPattern7Test() throws Exception {
         DataHelper data = dataMap.get("7");
         setupData(data);
@@ -163,9 +171,14 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("profit_check", data.crmWithdrawalEventV2.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("end_103", data.crmWithdrawalEventV2.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("end", data.crmWithdrawalEventV2.getId(), "withdrawal_notification_rr_payment");
+        checkElementId(
+                "profit_check",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+        checkElementId(
+                "end_103", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+        checkElementId(
+                "end", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());

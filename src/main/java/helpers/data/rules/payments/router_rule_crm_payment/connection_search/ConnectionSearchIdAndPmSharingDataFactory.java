@@ -134,10 +134,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawal
-        addWithdrawalSumByCategory(data, 9999D, 4);
+        data.addWithdrawalSumByCategory(9999D, 4);
         return data;
     }
 
@@ -151,9 +151,9 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
-        addWithdrawalSumByCategory(data, 9999D, 4);
+        data.addWithdrawalSumByCategory(9999D, 4);
 
         data.crmTbDepositObjects.getFirst().setPaymentProfileKey(accountNumberTest2);
         data.crmTbDepositObjects.getFirst().setPaymentProfileMasked(accountNumberTest2);
@@ -173,7 +173,7 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.getEWallet().setAccountNumber(accountNumberTest2);
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         data.crmTbDepositObjects.getFirst().setPaymentProfileKey(accountNumberTest2);
         data.crmTbDepositObjects.getFirst().setPaymentProfileMasked(accountNumberTest2);
@@ -201,14 +201,14 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
         // add deposit and withdrawal
-        addDepositSumByCategory(data, 499d);
+        data.addDepositSumByCategory(499d);
 
-        addWithdrawalSumByCategory(data, 9999D, 4);
+        data.addWithdrawalSumByCategory(9999D, 4);
 
         // add deposit and withdrawal for connection
-        addDepositSumByCategory(data2, 501D);
+        data2.addDepositSumByCategory(501D);
 
-        addWithdrawalSumByCategory(data2, 9999D, 4);
+        data2.addWithdrawalSumByCategory(9999D, 4);
         DataSetupHelper.setupData(data2);
 
         data.crmTbDepositObjects.getFirst().setPaymentProfileKey(accountNumberTest3);
@@ -229,7 +229,7 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.getEWallet().setAccountNumber(accountNumberTest3);
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
 
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         data.crmTbDepositObjects.getFirst().setPaymentProfileKey(accountNumberTest3);
         data.crmTbDepositObjects.getFirst().setPaymentProfileMasked(accountNumberTest3);
@@ -265,10 +265,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         addConnectionByPayoutIdAttribute(data, data9.clientHelper);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawal
-        addWithdrawalSumByCategory(data, 10_001D, 5);
+        data.addWithdrawalSumByCategory(10_001D, 5);
 
         return data;
     }
@@ -286,15 +286,15 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         addConnectionByPayoutAndNameBirthAttribute(data, client5_1);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawal
-        addWithdrawalSumByCategory(data, 9999D, 4);
+        data.addWithdrawalSumByCategory(9999D, 4);
 
         // add CRYPTO withdrawals (6 records) with identical parameters
         data.crmTbWithdrawalObjects = new java.util.ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            addWithdrawalSumByCategory(data, 9999D, 4);
+            data.addWithdrawalSumByCategory(9999D, 4);
         }
 
         return data;
@@ -305,10 +305,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add withdrawal
-        addWithdrawalSumByCategory(data, 10_001D, 5);
+        data.addWithdrawalSumByCategory(10_001D, 5);
 
         return data;
     }
@@ -361,10 +361,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         addConnectionByPayoutIdAttribute(data, data21.clientHelper);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawal
-        addWithdrawalSumByCategory(data, 10_001D, 5);
+        data.addWithdrawalSumByCategory(10_001D, 5);
 
         return data;
     }
@@ -381,10 +381,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         addConnectionByPayoutIdAttribute(data, data3.clientHelper);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add withdrawal
-        addWithdrawalSumByCategory(data, 10_001D, 5);
+        data.addWithdrawalSumByCategory(10_001D, 5);
         return data;
     }
 
@@ -408,10 +408,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawal
-        addWithdrawalSumByCategory(data, 10_001D, 4);
+        data.addWithdrawalSumByCategory(10_001D, 4);
 
         return data;
     }
@@ -436,10 +436,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawals (6 records) with identical parameters
-        addMultipleWithdrawalSumByCategory(data, 9999d, 4, 6);
+        data.addMultipleWithdrawalSumByCategory(9999d, 4, 6);
 
         return data;
     }
@@ -464,10 +464,10 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
         // add deposit
-        addDepositSumByCategory(data, 501D);
+        data.addDepositSumByCategory(501D);
 
         // add CRYPTO withdrawal
-        addWithdrawalSumByCategory(data, 9999D, 4);
+        data.addWithdrawalSumByCategory(9999D, 4);
 
         return data;
     }

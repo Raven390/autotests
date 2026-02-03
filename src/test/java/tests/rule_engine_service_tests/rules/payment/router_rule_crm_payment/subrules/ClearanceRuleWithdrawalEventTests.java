@@ -52,7 +52,7 @@ class ClearanceRuleWithdrawalEventTests extends TestBaseRule {
                 data.clientHelper.getUcid(),
                 MANUAL_WITHDRAWAL_REVIEW.getCode(),
                 "Clearance rule test",
-                "Rule engine",
+                "Automation",
                 "QA");
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
