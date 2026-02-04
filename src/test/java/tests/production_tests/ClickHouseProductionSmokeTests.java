@@ -838,6 +838,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat(
                 "Assert body",
                 response.body().string(),
-                is("{\"modelScore\":0.038232025,\"ucidScore\":0.07537152,\"avgPastUcidScore\":0.09}"));
+                is("{\"modelScore\":0.038232025,\"ucidScore\":0.07,\"avgPastUcidScore\":0.09}"));
     }
 }

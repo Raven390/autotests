@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_events;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static business_objects.api.payment_gate.payments.PaymentsRequests.postPayments;
 import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
@@ -24,6 +25,7 @@ import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import helpers.data.DataHelper;
 import helpers.data.enums.payment_gate.Decision;
+import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.*;
 import java.io.IOException;
 import java.util.*;
@@ -55,7 +57,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @Test
     @AllureId("1794")
     @DisplayName("Router Rule. No alerts/rejects. Approve withdrawal. elementId: Event_0t14mt3")
-    void routerRuleTest1() throws Exception {
+    void routerRuleCrmEventsTest1() throws Exception {
         DataHelper data = dataMap.get("1");
         setupData(data);
 
@@ -154,7 +156,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @Test
     @AllureId("1795")
     @DisplayName("Router Rule. Alert, no rejects,. elementId: Event_11azia8")
-    void routerRuleTest2() throws Exception {
+    void routerRuleCrmEventsTest2() throws Exception {
         DataHelper data = dataMap.get("2");
         setupData(data);
 
@@ -246,7 +248,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @Test
     @AllureId("1796")
     @DisplayName("Router Rule. Alert, no rejects, Risk rejection = true. elementId: Event_1kdk048")
-    void routerRuleTest3() throws Exception {
+    void routerRuleCrmEventsTest3() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
 
@@ -340,7 +342,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @AllureId("1624")
     @DisplayName(
             "Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = true. ElementId:Event_0dvxfab")
-    void routerRuleTest4() throws Exception {
+    void routerRuleCrmEventsTest4() throws Exception {
         DataHelper data = dataMap.get("4");
         setupData(data);
 
@@ -392,7 +394,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     @AllureId("1623")
     @DisplayName(
             "Withdrawal notification rule. Exit with alert if withdrawal has not empty check name and 'Crypto_Risk' mirror flag = false. ElementId:Event_1gdl5i3")
-    void routerRuleTest5() throws Exception {
+    void routerRuleCrmEventsTest5() throws Exception {
         DataHelper data = dataMap.get("5");
         setupData(data);
 
@@ -454,5 +456,33 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
                 "Verify orderNumber in Kafka topic",
                 approval.getFirst().getOrderNumber(),
                 is(data.crmWithdrawalEvent.getMerchantOrderId()));
+    }
+
+    @Test
+    @AllureId("2122")
+    @DisplayName("Router Rule. Exit rule for duplicate event")
+    void routerRuleCrmEventsTest6() throws Exception {
+        DataHelper data = dataMap.get("6");
+        setupData(data);
+
+        postPayments(data.crmWithdrawalEventV2);
+        produceWithdrawalMessageV2ToCrmEventsTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("end_duplicate", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_CRM_EVENTS.getProcessId());
+    }
+
+    @Test
+    @AllureId("2123")
+    @DisplayName("Router Rule. No exit for duplicate which need to be reprocessed")
+    void routerRuleCrmEventsTest7() throws Exception {
+        DataHelper data = dataMap.get("7");
+        setupData(data);
+
+        postPayments(data.crmWithdrawalEventV2);
+        data.crmWithdrawalEventV2.setNeedReprocessing(true);
+        produceWithdrawalMessageV2ToCrmEventsTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "send_acknowledge", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_CRM_EVENTS.getProcessId());
     }
 }

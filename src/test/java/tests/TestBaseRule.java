@@ -57,10 +57,16 @@ public class TestBaseRule {
     }
 
     @Deprecated
-    @Step("Produce withdrawal event to crm-events topic")
+    @Step("Produce withdrawal event to crm-payment topic")
     public static void produceWithdrawalMessageToCrmPaymentTopic(CrmWithdrawalEvent event)
             throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
+    }
+
+    @Step("Produce withdrawal v2 event to crm-events topic")
+    public static void produceWithdrawalMessageV2ToCrmEventsTopic(CrmWithdrawalEventV2 event)
+            throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
     }
 
     @Step("Produce withdrawal v2 event to crm-events topic")
@@ -332,7 +338,7 @@ public class TestBaseRule {
                             List<ZeebeRulesStarted> startedList = getObjectsFromDB(
                                     DbName.CLICKHOUSE,
                                     String.format(
-                                            "SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'",
+                                            "SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s' ORDER BY timestamp_start DESC LIMIT 1",
                                             REPORTING_DB_ZEEBE_RULES_STARTED, eventId, bpmnProcessId),
                                     ZeebeRulesStarted.class);
 

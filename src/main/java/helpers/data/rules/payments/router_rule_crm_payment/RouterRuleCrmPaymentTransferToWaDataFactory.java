@@ -17,12 +17,15 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
     private static final ClientHelper testClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper testClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper testClient3 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient5 = getRandomVantageClientAllFields();
 
     @Description("Create data for Router rule")
     private static DataHelper getRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         data.createClient(client);
         UUID id = UUID.randomUUID();
+        Long transferId = Utils.getRandomLongPositive();
         data.transferToWaEvent = TransferToWaEvent.builder()
                 .fromMt4account(data.clientHelper.getTradingAccount()) // fromMt4account
                 .schemaVersion("1.0") // schemaVersion
@@ -32,7 +35,7 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
                 .transferAmount(101D) // transferAmount
                 .merchantOrderId("AUVF1110171050ETH17640572580047") // merchantOrderId
                 .type(Event.CRM_TRANSFER_TO_WA_EVENT.getName()) // type
-                .transferId(Utils.getRandomLongPositive()) // transferId
+                .transferId(transferId) // transferId
                 .checkName("") // checkName
                 .platform("WEB") // platform
                 .businessOrderId("AUVF1110171050ETH17640572580047") // businessOrderId
@@ -69,6 +72,18 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
         return data;
     }
 
+    private static DataHelper getTest4Data() {
+        DataHelper data = getRuleData(testClient4);
+        data.transferToWaEvent.setTransferAmount(1d);
+        return data;
+    }
+
+    private static DataHelper getTest5Data() {
+        DataHelper data = getRuleData(testClient5);
+        data.transferToWaEvent.setTransferAmount(1d);
+        return data;
+    }
+
     public static Map<String, DataHelper> setupRouterRuleShadowModeTransferToWaData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -76,6 +91,8 @@ public class RouterRuleCrmPaymentTransferToWaDataFactory {
         map.put("1", getTest1Data());
         map.put("2", getTest2Data());
         map.put("3", getTest3Data());
+        map.put("4", getTest4Data());
+        map.put("5", getTest5Data());
         return map;
     }
 }

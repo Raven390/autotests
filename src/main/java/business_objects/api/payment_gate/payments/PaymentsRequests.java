@@ -26,6 +26,16 @@ public class PaymentsRequests {
                         postPaymentsRequestBody);
     }
 
+    public static Response postPayments(Object paymentEvent) throws IOException {
+        // Send as JSON with proper headers
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+        return new HttpHelper()
+                .sendPostRequest(
+                        PAYMENT_GATE_SERVICE_BASE_PATH + PAYMENT_GATE_PAYMENTS_PATH, headers, null, paymentEvent);
+    }
+
     public static Response postPayments(String postPaymentsRequestBody, Integer errorCode) throws IOException {
         // Send raw body as invalid JSON with appropriate headers to trigger server JSON parsing
         Map<String, Object> headers = new HashMap<>();

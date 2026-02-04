@@ -102,6 +102,9 @@ public class CrmWithdrawalEventV2 {
     @JsonProperty("crypto")
     private Crypto crypto;
 
+    @JsonProperty("needReprocessing")
+    private Boolean needReprocessing;
+
     @Getter
     @Setter
     @Builder

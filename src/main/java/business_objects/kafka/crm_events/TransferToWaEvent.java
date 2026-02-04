@@ -3,11 +3,9 @@ package business_objects.kafka.crm_events;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 @Builder
 public class TransferToWaEvent {
 
@@ -73,4 +71,7 @@ public class TransferToWaEvent {
 
     @JsonProperty("eventDate")
     private String eventDate;
+
+    @JsonProperty("needReprocessing")
+    private Boolean needReprocessing;
 }
