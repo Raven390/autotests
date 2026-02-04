@@ -1,6 +1,6 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static business_objects.api.payment_gate.payments.PaymentsRequests.postPayments;
 import static helpers.api.PaymentGateHelper.*;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.asserts.AcknowledgeAssertsHelper.assertAcknowledge;
@@ -14,6 +14,7 @@ import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmP
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.*;
 import static utils.Constants.*;
+import static utils.Utils.sleep;
 
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.kafka.alerts.RuleAlertV2;
@@ -24,7 +25,6 @@ import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import java.io.IOException;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
@@ -39,9 +39,8 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setup() throws IOException {
+    static void setup() {
         startSshTunnel();
-        enableCRMEmulator();
         dataMap = setupRouterRuleShadowModeTransferToWaData();
     }
 
@@ -53,7 +52,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     @Test
     @AllureId("1942")
     @DisplayName("Router Rule transfer to wallet. Transfer manual Approve")
-    void routerRuleTest1() throws Exception {
+    void routerRuleShadowModeTransferTest1() throws Exception {
         DataHelper data = dataMap.get("1");
         setupData(data);
 
@@ -103,7 +102,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     @Test
     @AllureId("1943")
     @DisplayName("Router Rule transfer to wallet. Transfer manual Reject")
-    void routerRuleTest2() throws Exception {
+    void routerRuleShadowModeTransferTest2() throws Exception {
         DataHelper data = dataMap.get("2");
         setupData(data);
 
@@ -129,7 +128,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     @Test
     @AllureId("1944")
     @DisplayName("Router Rule transfer to wallet. Transfer Auto approve")
-    void routerRuleTest3() throws Exception {
+    void routerRuleShadowModeTransferTest3() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
 
@@ -144,6 +143,44 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
 
         checkElementId(
                 "exit_from_payment_branch_for_transfer_to_wa",
+                data.transferToWaEvent.getId().toString(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2126")
+    @DisplayName("Router Rule transfer to wallet. Exit rule for duplicate event")
+    void routerRuleShadowModeTransferTest4() throws Exception {
+        DataHelper data = dataMap.get("4");
+        setupData(data);
+
+        produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
+        checkElementId(
+                "send_acknowledge",
+                data.transferToWaEvent.getId().toString(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+
+        produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
+        sleep(180_000);
+        checkElementId(
+                "end_duplicate",
+                data.transferToWaEvent.getId().toString(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2127")
+    @DisplayName("Router Rule transfer to wallet. No exit for duplicate which need to be reprocessed")
+    void routerRuleShadowModeTransferTest5() throws Exception {
+        DataHelper data = dataMap.get("5");
+        setupData(data);
+
+        postPayments(data.transferToWaEvent);
+        data.getTransferToWaEvent().setNeedReprocessing(true);
+        produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
+
+        checkElementId(
+                "send_acknowledge",
                 data.transferToWaEvent.getId().toString(),
                 Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }

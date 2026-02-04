@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static business_objects.api.payment_gate.payments.PaymentsRequests.postPayments;
 import static helpers.api.PaymentGateHelper.sendRiskApproveDecision;
 import static helpers.api.PaymentGateHelper.sendRiskRejectDecision;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
@@ -56,7 +57,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     @Test
     @AllureId("1945")
     @DisplayName("Router Rule shadow mode. Withdrawal Manual Approve")
-    void routerRuleTest1() throws Exception {
+    void routerRuleShadowModeWithdrawalTest1() throws Exception {
         DataHelper data = dataMap.get("1");
         setupData(data);
 
@@ -107,7 +108,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     @Test
     @AllureId("1946")
     @DisplayName("Router Rule shadow mode. Withdrawal Manual Reject")
-    void routerRuleTest2() throws Exception {
+    void routerRuleShadowModeWithdrawalTest2() throws Exception {
         DataHelper data = dataMap.get("2");
         setupData(data);
 
@@ -131,7 +132,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     @Test
     @AllureId("1947")
     @DisplayName("Router Rule shadow mode. Withdrawal Auto approve")
-    void routerRuleTest3() throws Exception {
+    void routerRuleShadowModeWithdrawalTest3() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
 
@@ -144,5 +145,33 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
 
         checkElementId(
                 "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2124")
+    @DisplayName("Router Rule shadow mode. Exit rule for duplicate event")
+    void routerRuleShadowModeWithdrawalTest4() throws Exception {
+        DataHelper data = dataMap.get("4");
+        setupData(data);
+
+        postPayments(data.crmWithdrawalEventV2);
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("end_duplicate", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2125")
+    @DisplayName("Router Rule shadow mode. No exit for duplicate which need to be reprocessed")
+    void routerRuleShadowModeWithdrawalTest5() throws Exception {
+        DataHelper data = dataMap.get("5");
+        setupData(data);
+
+        postPayments(data.crmWithdrawalEventV2);
+        data.crmWithdrawalEventV2.setNeedReprocessing(true);
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "send_acknowledge", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 }

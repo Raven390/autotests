@@ -19,6 +19,8 @@ public class RouterRuleCrmPaymentShadowModeFactory {
     private static final ClientHelper testClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper testClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper testClient3 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient5 = getRandomVantageClientAllFields();
 
     @Description("Create data for Shadow mode Router rule on withdrawal event")
     private static DataHelper getTest(ClientHelper client) {
@@ -43,7 +45,7 @@ public class RouterRuleCrmPaymentShadowModeFactory {
                 .platform("MT4")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("2.0")
-                .type(Event.CRM_DEPOSIT_EVENT.getName())
+                .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.1)
                 .withdrawalAmountUSD(1.2)
                 .withdrawalApplicationTime(Instant.now().toString())
@@ -74,6 +76,18 @@ public class RouterRuleCrmPaymentShadowModeFactory {
         return data;
     }
 
+    private static DataHelper getTest4Data() {
+        DataHelper data = getTest(testClient4);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1d);
+        return data;
+    }
+
+    private static DataHelper getTest5Data() {
+        DataHelper data = getTest(testClient5);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1d);
+        return data;
+    }
+
     public static Map<String, DataHelper> setupRouterRuleShadowModeWithdrawalData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -81,6 +95,8 @@ public class RouterRuleCrmPaymentShadowModeFactory {
         map.put("1", getTest1Data());
         map.put("2", getTest2Data());
         map.put("3", getTest3Data());
+        map.put("4", getTest4Data());
+        map.put("5", getTest5Data());
         return map;
     }
 }

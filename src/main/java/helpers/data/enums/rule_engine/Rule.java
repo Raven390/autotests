@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Rule {
     ROUTER_RULE("Router Rule for crm_payment topic", "router_rule_crm_payment"),
+    ROUTER_RULE_CRM_EVENTS("Router Rule for crm_payment topic", "router_rule_crm_events"),
     ROUTER_RULE_TRANSFER_TO_WA("Router Rule for crm_payment topic", "router_rule_crm_payment_transfer_to_wa"),
     ROUTER_RULE_SHADOW_MODE("Router Rule for crm_payment topic (shadow mode)", "router_rule_crm_payment_shadow_mode"),
     CONNECTION_SEARCH_IN_ROUTER_RULE("Connection Search Withdrawal", "cs_on_withdrawal"),

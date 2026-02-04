@@ -40,8 +40,8 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     static void teardown() throws Exception {}
 
     @Test
+    @AllureId("2133")
     @DisplayName("Connection search by payout. Get connection by payout category CREDIT_CARD(200)")
-    @AllureId("")
     void getConnectionsByPayoutTest1() throws Exception {
         DataHelper data = new DataHelper();
         data.createClient(testClient1).createCreditCard();
@@ -89,8 +89,8 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     }
 
     @Test
+    @AllureId("2134")
     @DisplayName("Connection search by payout. Get connection by payout category CREDIT_CARD, exclude ucid(200)")
-    @AllureId("")
     void getConnectionsByPayoutTest2() throws Exception {
         DataHelper data = new DataHelper();
         data.createClient(testClient1).createCreditCard();
@@ -141,8 +141,8 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     }
 
     @Test
+    @AllureId("2135")
     @DisplayName("Connection search by payout. Get connection by payout category CRYPTO(200)")
-    @AllureId("")
     void getConnectionsByPayoutTest3() throws Exception {
         String paymentProfileKey = getRandomLongPositive().toString();
 
@@ -178,8 +178,8 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     }
 
     @Test
+    @AllureId("2136")
     @DisplayName("Connection search by payout. Get connection by payout category E_WALLET(200)")
-    @AllureId("")
     void getConnectionsByPayoutTest4() throws Exception {
         String paymentProfileKey = "E_WALLET" + getRandomIntPositive();
 
@@ -213,8 +213,8 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     }
 
     @Test
+    @AllureId("2137")
     @DisplayName("Connection search by payout. Get connection by payout category LOCAL_BANK_TRANSFER(200)")
-    @AllureId("")
     void getConnectionsByPayoutTest5() throws Exception {
         String paymentProfileKey = "LOCAL_BANK_TRANSFER" + getRandomIntPositive();
 
@@ -248,8 +248,8 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     }
 
     @Test
+    @AllureId("2138")
     @DisplayName("Connection search by payout. Get connection by payout category INTERNATIONAL_WIRE_TRANSFER(200)")
-    @AllureId("")
     void getConnectionsByPayoutTest6() throws Exception {
         String paymentProfileKey = "LOCAL_BANK_TRANSFER" + getRandomIntPositive();
         DataHelper data = new DataHelper();
