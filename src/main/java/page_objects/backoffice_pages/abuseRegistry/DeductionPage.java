@@ -4,6 +4,7 @@ import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
+import com.microsoft.playwright.Download;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
@@ -51,6 +52,12 @@ public class DeductionPage extends AbstractPage {
     private final Locator deductedAmountFilterContainer;
     private final Locator createdCells;
     private final Locator behaviorCells;
+    private final Locator searchSection;
+    private final Locator searchInput;
+    private final Locator searchButton;
+    private final Locator selectAllDeductionsCheckbox;
+    private final Locator getFilePopupNoButton;
+    private final Locator getFilePopupYesButton;
 
     private static final String FILTER_OPTION_BY_TEXT_PATTERN =
             "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
@@ -129,6 +136,15 @@ public class DeductionPage extends AbstractPage {
                 page.locator(String.format(AMOUNT_FILTER_CONTAINER_PATTERN, "Deducted amount"));
         this.createdCells = page.locator("//div[@class='v-body-cell' and contains(@data-qa,'created')]");
         this.behaviorCells = page.locator("//div[@class='v-body-cell' and contains(@data-qa,'behavior')]");
+        this.searchSection = page.locator("//*[@data-qa='search_with_select__input']");
+        this.searchInput = searchSection.locator("//input");
+        this.searchButton = searchSection.locator("//*[@class='v-search-with-select__search-btn']");
+        this.selectAllDeductionsCheckbox =
+                page.locator("//*[@data-qa='deductions__table__header__checkbox']/descendant::input");
+        this.getFilePopupNoButton =
+                page.locator("//button[@data-qa='deductions__multiselect_panel__get_file__cancel']");
+        this.getFilePopupYesButton =
+                page.locator("//button[@data-qa='deductions__multiselect_panel__get_file__confirm']");
     }
 
     @Step("Click abuse registry button")
@@ -437,5 +453,26 @@ public class DeductionPage extends AbstractPage {
             list.add(behaviorCells.nth(i).innerText());
         }
         return list;
+    }
+
+    @Step("Fill search input and click search button")
+    public void fillSearchAndClickSearchButton(String text) {
+        searchInput.fill(text);
+        searchButton.click();
+    }
+
+    @Step("Click select all deductions checkbox")
+    public void clickAllDeductionsCheckbox() {
+        selectAllDeductionsCheckbox.click();
+    }
+
+    @Step("Click get file popup No button and download file")
+    public Download clickGetFilePopupNoButton() {
+        return page.waitForDownload(getFilePopupNoButton::click);
+    }
+
+    @Step("Click get file popup Yes button and download file")
+    public Download clickGetFilePopupYesButton() {
+        return page.waitForDownload(getFilePopupYesButton::click);
     }
 }
