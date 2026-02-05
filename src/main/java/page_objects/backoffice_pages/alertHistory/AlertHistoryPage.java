@@ -58,7 +58,7 @@ public class AlertHistoryPage extends AbstractPage {
                 .first();
         this.alertHistoryTableHeaders = page.locator("//div[contains(@class,'v-header-cell')]");
         this.filterButton = page.locator("//div[@class='v-alert-history-filter-button__filters']/button");
-        this.applyFilterButton = page.locator("//span[text()='Apply']/..");
+        this.applyFilterButton = page.locator("//button[contains(@class,'g-button_view_action')]");
         this.clickableRow = page.locator(".v-body-row_clickable");
         this.drawer = page.locator("[data-qa=\"drawer_body\"]");
         this.commentTextArea = page.locator("//textarea[@class='g-text-area__control']");
