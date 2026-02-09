@@ -145,6 +145,15 @@ public class PaymentsPage extends AbstractPage {
     public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected clients')]";
     public static final String OPEN_VERIFICATION_DRAWER_BUTTON =
             "//*[@data-qa='payment_profile__view_drawer__change_status']";
+    public static final String METHOD_CELL = "//*[contains(@data-qa,\"paymentProfileMaskedKey__method\")]";
+    public static final String TRANSACTION_DETAILS_DRAWER =
+            "//*[contains(@class,'v-transaction-history-details__drawer')]";
+    public static final String TRANSACTION_DETAILS_DRAWER_ATTRIBUTE_VALUE_PATTERN =
+            "//*[contains(@class,'v-transaction-history-details__attribute-label') and (text()='%s')]/following-sibling::*[text()]"; // //*[text()]
+    private final Locator methodCellFamily;
+    private final Locator methodCellProfile;
+    private final Locator transactionRowClickable;
+    private final Locator transactionHistoryDetailsDrawer;
 
     public PaymentsPage(Page page) {
         super(page);
@@ -264,6 +273,10 @@ public class PaymentsPage extends AbstractPage {
         this.cashflowEmptyStatePlaceholder =
                 page.locator("//div[@class='v-cash-flow-v2__chart-container']/*[@data-qa='error_view']");
         this.closePopupButton = page.locator("//button[contains(@class,'g-toast__btn-close')]");
+        this.methodCellFamily = page.locator(METHOD_CELL + "//" + PRIMARY_TEXT);
+        this.methodCellProfile = page.locator(METHOD_CELL + "//" + SECONDARY_TEXT);
+        this.transactionRowClickable = page.locator(".v-body-row_clickable");
+        this.transactionHistoryDetailsDrawer = page.locator(TRANSACTION_DETAILS_DRAWER);
     }
 
     @Step("Open users operations tab")
@@ -274,6 +287,12 @@ public class PaymentsPage extends AbstractPage {
     public void navigate(String ucid) {
         Allure.step("Navigate to payments tab");
         page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "payments"));
+        waitForPageToLoad();
+    }
+
+    public void navigateTransactions(String ucid) {
+        Allure.step("Navigate to payments tab transactions subtab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "payments/transactions"));
         waitForPageToLoad();
     }
 
@@ -1494,8 +1513,42 @@ public class PaymentsPage extends AbstractPage {
         assertNotNull(metricValue);
     }
 
+    public void checkMethodFamilyValue(String expectedValue) {
+        Allure.step("Check method family value");
+        methodCellFamily.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(expectedValue, methodCellFamily.textContent());
+    }
+
+    public void checkMethodProfileValue(String expectedValue) {
+        Allure.step("Check method payment profile value");
+        methodCellProfile.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(expectedValue, methodCellProfile.textContent());
+    }
+
     public String getPaymentProfileDrawerSubheader() {
         return paymentProfileDrawerSubheader.innerText();
+    }
+
+    public void openTransactionDetainsDrawer(int rowIndex) {
+        Allure.step("Open transaction details drawer");
+        transactionRowClickable
+                .nth(rowIndex)
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        transactionRowClickable.nth(rowIndex).click();
+        transactionHistoryDetailsDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void checkTransactionAttributeValues(String expectedValue, String attributeName, int rowIndex) {
+        Allure.step("Check transaction attribute values");
+        assertEquals(
+                expectedValue,
+                page.locator(String.format(TRANSACTION_DETAILS_DRAWER_ATTRIBUTE_VALUE_PATTERN, attributeName))
+                        .nth(rowIndex)
+                        .textContent());
+    }
+
+    public void checkTransactionAttributeValues(String expectedValue, String attributeName) {
+        checkTransactionAttributeValues(expectedValue, attributeName, 0);
     }
 
     public void closePopup() {
