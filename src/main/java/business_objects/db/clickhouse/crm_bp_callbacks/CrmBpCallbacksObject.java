@@ -41,6 +41,7 @@ public class CrmBpCallbacksObject {
     private String cardIssuerCountryIso2; // LowCardinality(String)
     private String cardExpirationDate; // String
     private String paymentProfileKey; // String
+    private String bin; // String
 
     private OffsetDateTime kafkaTimestamp; // DateTime64(3)
     private OffsetDateTime lastUpdated; // DateTime64(3)
