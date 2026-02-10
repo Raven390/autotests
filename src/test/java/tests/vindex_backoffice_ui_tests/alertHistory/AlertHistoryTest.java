@@ -11,18 +11,23 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentDate;
 
+import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.ui.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("BMS-1446 Alert history")
 class AlertHistoryTest extends TestBaseWeb {
@@ -51,8 +56,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(1)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName("Setup data before Alert history test execution")
     void setupData() {
         investigationPage.navigateToClient(client.getUcid());
@@ -63,8 +66,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(2)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1151")
     @DisplayName("Verify Alert history title, table headers, data")
     void verifyAlertHistory1() {
@@ -112,8 +113,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(3)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1152")
     @DisplayName("Verify Alert history brand filter")
     void verifyAlertHistory2() {
@@ -128,8 +127,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(4)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1153")
     @DisplayName("Verify Alert history rule filter")
     void verifyAlertHistory3() {
@@ -144,8 +141,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(5)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1154")
     @DisplayName("Verify Alert history created filter")
     void verifyAlertHistory4() {
@@ -161,8 +156,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(6)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1155")
     @DisplayName("Verify Alert history resolved filter")
     void verifyAlertHistory5() {
@@ -178,8 +171,6 @@ class AlertHistoryTest extends TestBaseWeb {
 
     @Test
     @Order(7)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1156")
     @DisplayName("Verify Alert history investigator filter")
     void verifyAlertHistory6() {
@@ -191,6 +182,20 @@ class AlertHistoryTest extends TestBaseWeb {
                 "Verify only selected resolution date is displayed",
                 alertHistoryPage.getInvestigatorValues(),
                 everyItem(is(fullName)));
+    }
+
+    @Test
+    @AllureId("2143")
+    @Order(8)
+    @Feature("BMS-3200 Total number of alerts under filters in alert history")
+    @DisplayName("Verify Alert history brand filter")
+    void alertFilterButtonHaveCounterTest() throws Exception {
+        alertHistoryPage.clickFilterButton();
+        alertHistoryPage.fillFilterById(client.getUserId().toString());
+        List<Alert> alerts = getObjectsFromDB(
+                DbName.POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + client.getUcid() + "'", Alert.class);
+        int dBAlertCounter = alerts.size();
+        alertHistoryPage.checkCountOfAlertsInFilter(dBAlertCounter);
     }
 
     @AfterAll
