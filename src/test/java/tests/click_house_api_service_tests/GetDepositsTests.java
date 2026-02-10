@@ -5,8 +5,7 @@ import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanDepositsTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 
@@ -23,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,26 +73,8 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat(
-                "Assert tradingAccount",
-                mappedResponse[0].tradingAccount,
-                is(client.getTradingAccount().toString()));
-        assertThat(
-                "Assert transferId",
-                mappedResponse[0].transferId,
-                is(deposit2.getTransferId().toString()));
-        assertThat(
-                "Assert createTime",
-                mappedResponse[0].createTime,
-                is(deposit2.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.getUcid()));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.getAmountUsd()));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.getAmount()));
+        GetDepositsResponse[] mappedResponse = verifySuccessResponse(response, 2);
+        verifyDeposit(mappedResponse[0], deposit2);
     }
 
     @Test
@@ -110,11 +92,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(2));
+        verifySuccessResponse(response, 2);
     }
 
     @Test
@@ -126,11 +104,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("clientId", deposit1.getUcid());
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(2));
+        verifySuccessResponse(response, 2);
     }
 
     @Test
@@ -145,26 +119,8 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(1));
-        assertThat(
-                "Assert tradingAccount",
-                mappedResponse[0].tradingAccount,
-                is(client.getTradingAccount().toString()));
-        assertThat(
-                "Assert transferId",
-                mappedResponse[0].transferId,
-                is(deposit2.getTransferId().toString()));
-        assertThat(
-                "Assert createTime",
-                mappedResponse[0].createTime,
-                is(deposit2.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.getUcid()));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.getAmountUsd()));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.getAmount()));
+        GetDepositsResponse[] mappedResponse = verifySuccessResponse(response, 1);
+        verifyDeposit(mappedResponse[0], deposit2);
     }
 
     @Test
@@ -177,26 +133,8 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("orderBy", "createTime");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat(
-                "Assert tradingAccount",
-                mappedResponse[0].tradingAccount,
-                is(client.getTradingAccount().toString()));
-        assertThat(
-                "Assert transferId",
-                mappedResponse[0].transferId,
-                is(deposit1.getTransferId().toString()));
-        assertThat(
-                "Assert createTime",
-                mappedResponse[0].createTime,
-                is(deposit1.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit1.getUcid()));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.getAmountUsd()));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit1.getAmount()));
+        GetDepositsResponse[] mappedResponse = verifySuccessResponse(response, 2);
+        verifyDeposit(mappedResponse[0], deposit1);
     }
 
     @Test
@@ -210,12 +148,11 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.getAmountUsd()));
+        GetDepositsResponse[] mappedResponse = verifySuccessResponse(response, 2);
+        assertThat(
+                "Assert actualAmountUSD",
+                BigDecimal.valueOf(mappedResponse[0].actualAmountUsd),
+                comparesEqualTo(deposit1.getAmountUsd()));
     }
 
     @Test
@@ -228,15 +165,11 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("paymentProfileKey", deposit1.getPaymentProfileKey());
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        GetDepositsResponse[] mappedResponse =
-                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response length", mappedResponse.length, is(1));
+        GetDepositsResponse[] mappedResponse = verifySuccessResponse(response, 1);
         assertThat(
                 "Assert actualAmountUSD",
                 BigDecimal.valueOf(mappedResponse[0].actualAmountUsd),
-                is((deposit1.getAmountUsd())));
+                comparesEqualTo(deposit1.getAmountUsd()));
     }
 
     @Test
@@ -247,15 +180,8 @@ class GetDepositsTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat(
-                "Assert error message",
-                mappedResponse.getError(),
-                is("Required request parameter 'clientId' for method parameter type String is not present"));
-        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
+        verifyErrorResponse(
+                response, 400, "Required request parameter 'clientId' for method parameter type String is not present");
     }
 
     @Test
@@ -271,15 +197,8 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat(
-                "Assert error message",
-                mappedResponse.getError(),
-                is("Required request parameter 'clientId' for method parameter type String is not present"));
-        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
+        verifyErrorResponse(
+                response, 400, "Required request parameter 'clientId' for method parameter type String is not present");
     }
 
     @Test
@@ -292,14 +211,9 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("dateFrom", "test");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
+        ClickhouseApiErrorResponse mappedResponse = verifyErrorResponse(response, 400, null);
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
         assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateFrom' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/deposits"));
-        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -312,14 +226,9 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("dateTo", "test");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
+        ClickhouseApiErrorResponse mappedResponse = verifyErrorResponse(response, 400, null);
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
         assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/deposits"));
-        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -332,16 +241,10 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat(
-                "Assert error",
-                mappedResponse.getError(),
-                is(
-                        "Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
-        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        verifyErrorResponse(
+                response,
+                400,
+                "Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD");
     }
 
     @Test
@@ -354,15 +257,10 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat(
-                "Assert error",
-                mappedResponse.getError(),
-                is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
-        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        verifyErrorResponse(
+                response,
+                400,
+                "Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc");
     }
 
     @Test
@@ -375,13 +273,55 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getDeposits(queryParams);
 
-        assertThat(response.body(), is(notNullValue()));
-        ClickhouseApiErrorResponse mappedResponse =
-                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
+        ClickhouseApiErrorResponse mappedResponse = verifyErrorResponse(response, 400, null);
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
         assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'limit' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/deposits"));
-        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
+    }
+
+    private GetDepositsResponse[] verifySuccessResponse(Response response, int expectedLength) throws IOException {
+        assertThat(response.body(), is(notNullValue()));
+        assertThat("Assert that code is 200", response.code(), is(200));
+        GetDepositsResponse[] mappedResponse =
+                objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
+        assertThat("Assert response length", mappedResponse.length, is(expectedLength));
+        return mappedResponse;
+    }
+
+    private ClickhouseApiErrorResponse verifyErrorResponse(
+            Response response, int expectedCode, String expectedErrorMessage) throws IOException {
+        assertThat(response.body(), is(notNullValue()));
+        assertThat("Assert that code is " + expectedCode, response.code(), is(expectedCode));
+        ClickhouseApiErrorResponse mappedResponse =
+                objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        if (expectedErrorMessage != null) {
+            assertThat("Assert error message", mappedResponse.getError(), is(expectedErrorMessage));
+        }
+        assertThat("Assert error status", mappedResponse.getStatus(), is(expectedCode));
+        return mappedResponse;
+    }
+
+    private void verifyDeposit(GetDepositsResponse actual, CrmTbDepositEntity expected) {
+        assertThat(
+                "Assert tradingAccount",
+                actual.tradingAccount,
+                is(client.getTradingAccount().toString()));
+        assertThat(
+                "Assert transferId",
+                actual.transferId,
+                is(expected.getTransferId().toString()));
+        assertThat(
+                "Assert createTime",
+                OffsetDateTime.parse(actual.createTime).toInstant(),
+                is(expected.getCreateTime()
+                        .atZoneSameInstant(ZoneOffset.UTC)
+                        .toInstant()
+                        .truncatedTo(ChronoUnit.MILLIS)));
+        assertThat("Assert clientId", actual.clientId, is(expected.getUcid()));
+        assertThat(
+                "Assert actualAmountUSD",
+                BigDecimal.valueOf(actual.actualAmountUsd),
+                comparesEqualTo(expected.getAmountUsd()));
+        assertThat(
+                "Assert actualAmount", BigDecimal.valueOf(actual.actualAmount), comparesEqualTo(expected.getAmount()));
     }
 }

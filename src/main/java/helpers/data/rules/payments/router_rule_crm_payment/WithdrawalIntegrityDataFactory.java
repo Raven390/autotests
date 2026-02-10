@@ -5,6 +5,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.getRandomUuidString;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
 import helpers.data.ClientHelper;
@@ -45,10 +46,12 @@ public class WithdrawalIntegrityDataFactory {
                 .schemaVersion("1.0")
                 .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.0)
+                .withdrawalAmountUSD(1d)
                 .withdrawalApplicationTime(Instant.now().toString())
                 .withdrawalCurrency("EUR")
                 .withdrawalId(Long.valueOf(getRandomIntPositive()))
                 .status("Risk audit")
+                .id(getRandomUuidString())
                 .build();
         return data;
     }
@@ -56,18 +59,21 @@ public class WithdrawalIntegrityDataFactory {
     private static DataHelper getWithdrawalIntegrityCheckTest1Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
         data.crmWithdrawalEventV2.setWithdrawalAmount(1d);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1d);
         return data;
     }
 
     private static DataHelper getWithdrawalIntegrityCheckTest2Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
-        data.crmWithdrawalEventV2.setWithdrawalAmount(50_000d);
+        data.crmWithdrawalEventV2.setWithdrawalAmount(50_001d);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(50_001d);
         return data;
     }
 
     private static DataHelper getWithdrawalIntegrityCheckTest3Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient2);
         data.crmWithdrawalEventV2.setWithdrawalAmount(101d);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(101d);
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.91, 0.91);
 
         return data;
@@ -76,6 +82,7 @@ public class WithdrawalIntegrityDataFactory {
     private static DataHelper getWithdrawalIntegrityCheckTest4Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient3);
         data.crmWithdrawalEventV2.setWithdrawalAmount(2000d);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(2000d);
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.8, 0.8);
         return data;
     }

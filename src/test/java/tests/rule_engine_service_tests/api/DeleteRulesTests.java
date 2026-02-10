@@ -17,7 +17,6 @@ import business_objects.db.rule_engine_db.rule.RuleDbObjectPgArray;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import java.util.List;
-import java.util.stream.Collectors;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
@@ -53,11 +52,8 @@ class DeleteRulesTests extends TestBaseApi {
         List<RuleDbObjectPgArray> ruleFromDb = getObjectsFromDB(
                 POSTGRES, RULE_ENGINE_RULE_TABLE, "id = '" + rule.getId() + "'", RuleDbObjectPgArray.class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat(
-                "Check that no element in the list has the specific id",
-                ruleFromDb.stream() // Convert the list to a stream
-                        .map(RuleDbObjectPgArray::getId) // Extract the 'id' field from each element
-                        .collect(Collectors.toList()), // Collect the ids into a list
-                not(hasItem(rule.getId())));
+        List<String> ruleIds =
+                ruleFromDb.stream().map(RuleDbObjectPgArray::getId).toList();
+        assertThat("Check that no element in the list has the specific id", ruleIds, not(hasItem(rule.getId())));
     }
 }

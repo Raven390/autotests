@@ -81,7 +81,7 @@ public class ConnectionSearchPaymentAbuseDataFactory {
 
     private static DataHelper getTest1Data() {
         DataHelper data = getRuleData(client1);
-        data.createCreditCard();
+        data.addCreditCard();
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
 

@@ -48,7 +48,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1829")
+    @AllureId("2128")
     @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is 'cash%'")
     void connectionSearchRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -58,10 +58,10 @@ class ConnectionSearchTests extends TestBaseRule {
 
         checkElementId(
                 "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementIdNotPresent(
-                "check_chargeback_ratio",
+        checkElementId(
+                "put_rule_execution",
                 data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
@@ -75,14 +75,14 @@ class ConnectionSearchTests extends TestBaseRule {
 
         checkElementId(
                 "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementIdNotPresent(
-                "check_chargeback_ratio",
+        checkElementId(
+                "put_rule_execution",
                 data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
-    @AllureId("1830")
+    @AllureId("2129")
     @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is '00'")
     void connectionSearchRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -92,10 +92,10 @@ class ConnectionSearchTests extends TestBaseRule {
 
         checkElementId(
                 "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementIdNotPresent(
-                "check_chargeback_ratio",
+        checkElementId(
+                "put_rule_execution",
                 data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
@@ -125,11 +125,13 @@ class ConnectionSearchTests extends TestBaseRule {
         checkElementId(
                 "end_101", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_1jc7wmc", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
-    @AllureId("1830")
+    @AllureId("2130")
     @DisplayName(
             "Connection Search in router rule. Approve withdrawal if user has no connections(by deposits). ElementId: end_102")
     void connectionSearchRuleTest5() throws Exception {
@@ -141,7 +143,9 @@ class ConnectionSearchTests extends TestBaseRule {
         checkElementId(
                 "end_102", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Activity_06e7z5l", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
@@ -157,7 +161,9 @@ class ConnectionSearchTests extends TestBaseRule {
         checkElementId(
                 "end_102", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Activity_06e7z5l", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
@@ -173,7 +179,9 @@ class ConnectionSearchTests extends TestBaseRule {
         checkElementId(
                 "end_103", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_1jc7wmc", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
@@ -189,14 +197,35 @@ class ConnectionSearchTests extends TestBaseRule {
         checkElementId(
                 "end_104", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_1jc7wmc", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
     @AllureId("1833")
-    @DisplayName("Connection Search in router rule. At least one rule finished with alert= false. ElementId: end_105")
+    @DisplayName("Connection Search in router rule. Payment profile key = null. ElementId: Event_07avgn0")
     void connectionSearchRuleTest9() throws Exception {
         DataHelper data = dataMap.get("9");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "Event_07avgn0",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementId(
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2131")
+    @DisplayName("Connection Search in router rule. At least one rule finished with alert= false. ElementId: end_105")
+    void connectionSearchRuleTest10() throws Exception {
+        DataHelper data = dataMap.get("10");
         setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -206,15 +235,17 @@ class ConnectionSearchTests extends TestBaseRule {
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_1jc7wmc", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
     @AllureId("1834")
     @DisplayName(
-            "Connection Search in router rule. at least one rule finished with alert= true. ElementId: Event_1v8iqld")
-    void connectionSearchRuleTest10() throws Exception {
-        DataHelper data = dataMap.get("10");
+            "Connection Search in router rule. At least one rule finished with alert= true. ElementId: Event_1v8iqld")
+    void connectionSearchRuleTest11() throws Exception {
+        DataHelper data = dataMap.get("11");
         setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -224,24 +255,26 @@ class ConnectionSearchTests extends TestBaseRule {
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_1jc7wmc", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }
 
     @Test
-    @AllureId("1834")
+    @AllureId("2132")
     @DisplayName("Connection Search in router rule. Payment method never used before for WD. ElementId: Event_1v8iqld")
-    void connectionSearchRuleTest11() throws Exception {
-        DataHelper data = dataMap.get("11");
+    void connectionSearchRuleTest12() throws Exception {
+        DataHelper data = dataMap.get("12");
         setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "put_rule_execution",
+                "Event_1v8iqld",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementIdNotPresent(
-                "payment_abuse_cs",
+        checkElementId(
+                "put_rule_execution",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
     }

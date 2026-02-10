@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
 import helpers.data.DataHelper;
 import helpers.data.enums.Brand;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public class WithdrawalApprovalAssertsHelper {
     @Step("Assert withdrawal approval")
-    public static void assertWithdrawalApproval(
+    public static void assertWithdrawalApprovalV2(
             DataHelper data, UUID paymentId, WithdrawalApprovalsV2 withdrawalApproval) {
         if (data.crmWithdrawalEventV2 == null) {
             assertThat(
@@ -112,6 +113,37 @@ public class WithdrawalApprovalAssertsHelper {
                     withdrawalApproval.getRejectionReasonRecommend(),
                     is(""));
             assertThat("UnderManualReview should be 1", withdrawalApproval.getUnderManualReview(), is(1));
+        }
+    }
+
+    @Step("Assert withdrawal approval")
+    public static void assertWithdrawalApprovalV1(
+            DataHelper data, UUID paymentId, WithdrawalApprovals withdrawalApproval) {
+        if (data.crmWithdrawalEventV2 == null) {
+            assertThat("Assert withdrawal.approval message", withdrawalApproval.getTimestamp(), is(notNullValue()));
+            assertThat(
+                    "Assert withdrawal.approval message",
+                    withdrawalApproval.getMessageId(),
+                    is(data.crmWithdrawalEvent.getId()));
+            assertThat(
+                    "Assert withdrawal.approval message",
+                    withdrawalApproval.getTransferId(),
+                    is(data.crmWithdrawalEvent.getWithdrawalId()));
+            assertThat(
+                    "Assert withdrawal.approval message",
+                    withdrawalApproval.getBrand(),
+                    is(data.crmWithdrawalEvent.getBrand().replace("v", "V")));
+            assertThat(
+                    "Assert withdrawal.approval message",
+                    withdrawalApproval.getRegulator(),
+                    is(data.crmWithdrawalEvent.getRegulator()));
+            assertThat("Assert withdrawal.approval message", withdrawalApproval.getInternalReason(), is(""));
+            assertThat("Assert withdrawal.approval message", withdrawalApproval.getStatus(), is("Approve"));
+            assertThat(
+                    "Assert withdrawal.approval message",
+                    withdrawalApproval.getOrderNumber(),
+                    is(data.crmWithdrawalEventV2.getMerchantOrderId()));
+            assertThat("Assert withdrawal.approval message", withdrawalApproval.getCheckName(), is(""));
         }
     }
 }

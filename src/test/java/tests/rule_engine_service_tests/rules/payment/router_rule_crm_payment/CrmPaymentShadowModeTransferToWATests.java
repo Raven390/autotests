@@ -6,7 +6,7 @@ import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.asserts.AcknowledgeAssertsHelper.assertAcknowledge;
 import static helpers.asserts.AlertsAssertsHelper.assertRiskTransferToWaAlert;
 import static helpers.asserts.PaymentGateAssertsHelper.*;
-import static helpers.asserts.WithdrawalApprovalAssertsHelper.assertWithdrawalApproval;
+import static helpers.asserts.WithdrawalApprovalAssertsHelper.assertWithdrawalApprovalV2;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.Restriction.*;
@@ -96,7 +96,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
 
         List<WithdrawalApprovalsV2> withdrawalApprovals =
                 getWithdrawalApprovalsV2FromKafka(String.valueOf(data.transferToWaEvent.getTransferId()));
-        assertWithdrawalApproval(data, paymentId, withdrawalApprovals.getFirst());
+        assertWithdrawalApprovalV2(data, paymentId, withdrawalApprovals.getFirst());
     }
 
     @Test

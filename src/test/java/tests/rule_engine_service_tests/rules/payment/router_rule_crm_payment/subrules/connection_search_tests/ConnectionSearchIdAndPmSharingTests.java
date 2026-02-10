@@ -45,7 +45,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
 
     @Test
     @AllureId("1835")
-    @DisplayName("Connection Search in router rule. No alert if Email / Phone compare = true. ElementId: Event_1i416tj")
+    @DisplayName("Connection Search in router rule. No alert if Email / Phone compare = true. ElementId: end_105")
     void connectionSearchRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
         setupData(data);
@@ -53,11 +53,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_1i416tj",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_105", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -69,7 +67,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     @Test
     @AllureId("2015")
     @DisplayName(
-            "Connection Search in router rule. Exit without alert if payment profile verified for another user and name_birth=false. ElementId: Event_0jxlf93")
+            "Connection Search in router rule. Exit without alert if payment profile verified for another user and name_birth=false. ElementId: end_111")
     void connectionSearchRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
         DataHelper data2 = dataMap.get("2_1");
@@ -79,9 +77,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_0jxlf93",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_111", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
                 "payment_branch_end_for_withdrawal",
                 data.crmWithdrawalEventV2.getId(),
@@ -99,9 +95,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_0sdekqs",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_206", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
                 "payment_branch_end_for_withdrawal",
                 data.crmWithdrawalEventV2.getId(),
@@ -126,7 +120,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     @Test
     @AllureId("1836")
     @DisplayName(
-            "Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = true. ElementId: Event_1ypjv6r")
+            "Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = true. ElementId: end_106")
     void connectionSearchIdAndPmSharingTest4() throws Exception {
         DataHelper data = dataMap.get("4");
         setupData(data);
@@ -134,11 +128,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_1ypjv6r",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_106", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -150,7 +142,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     @Test
     @AllureId("1837")
     @DisplayName(
-            "Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = false. ElementId: Event_1sjvssv")
+            "Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = false. ElementId: end_202")
     void connectionSearchIdAndPmSharingTest5() throws Exception {
         DataHelper data = dataMap.get("5");
         setupData(data);
@@ -158,11 +150,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_1sjvssv",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_202", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -173,7 +163,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
 
     @Test
     @AllureId("1838")
-    @DisplayName("Connection Search in router rule. Is Crypto withdrawal = false. ElementId: Event_1w0lx0h")
+    @DisplayName("Connection Search in router rule. Is Crypto withdrawal = false. ElementId: end_107")
     void connectionSearchIdAndPmSharingTest6() throws Exception {
         DataHelper data = dataMap.get("6");
         setupData(data);
@@ -181,11 +171,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_1w0lx0h",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_107", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -196,7 +184,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
 
     @Test
     @AllureId("1839")
-    @DisplayName("Connection Search in router rule. payoutConnectionsCount > 19 = true. ElementId: Event_1d2pl82")
+    @DisplayName("Connection Search in router rule. payoutConnectionsCount > 19 = true. ElementId: end_203")
     void connectionSearchIdAndPmSharingTest7() throws Exception {
         DataHelper data = dataMap.get("7");
         setupData(data);
@@ -204,15 +192,13 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_1d2pl82",
+                "end_203", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementId(
+                "create_alert_var_id_pm_sharing",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Activity_0w14j8s",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -223,7 +209,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
 
     @Test
     @AllureId("1840")
-    @DisplayName("Connection Search in router rule. payoutConnectionsCount > 5 = false. ElementId: Event_10q9rcg")
+    @DisplayName("Connection Search in router rule. payoutConnectionsCount > 5 = false. ElementId: end_110")
     void connectionSearchIdAndPmSharingTest8() throws Exception {
         DataHelper data = dataMap.get("8");
         setupData(data);
@@ -231,11 +217,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_10q9rcg",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_110", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -247,7 +231,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     @Test
     @AllureId("1841")
     @DisplayName(
-            "Connection Search in router rule. Send alert if Single transaction of >= 10K USD = true. ElementId: Event_13t7cj9")
+            "Connection Search in router rule. Send alert if Single transaction of >= 10K USD = true. ElementId: end_204")
     void connectionSearchIdAndPmSharingTest9() throws Exception {
         DataHelper data = dataMap.get("9");
         setupData(data);
@@ -255,15 +239,13 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_13t7cj9",
+                "end_204", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementId(
+                "create_alert_var_id_pm_sharing",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Activity_0w14j8s",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -274,7 +256,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         List<RuleAlertV2> alerts =
                 getUserAlertsV2FromKafka(data.clientHelper, "Connection search", "Crypto withdrawal > 10k");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert name", alerts.getFirst().getAlertId(), is(data.crmWithdrawalEventV2.getId()));
+        assertThat("Verify alert", alerts.getFirst().getAlertId(), is(data.crmWithdrawalEventV2.getId()));
         assertThat("Verify alert", alerts.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Verify alert", alerts.getFirst().getType(), is("PAYMENT"));
         assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), is(notNullValue()));
@@ -311,8 +293,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
 
     @Test
     @AllureId("1842")
-    @DisplayName(
-            "Connection Search in router rule. Sum Deposit OR Withdrawal >= 50K USD = true. ElementId: Event_0sscypz")
+    @DisplayName("Connection Search in router rule. Sum Deposit OR Withdrawal >= 50K USD = true. ElementId: end_205")
     void connectionSearchIdAndPmSharingTest10() throws Exception {
         DataHelper data = dataMap.get("10");
         setupData(data);
@@ -320,15 +301,13 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_0sscypz",
+                "end_205", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementId(
+                "create_alert_var_id_pm_sharing",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Activity_0w14j8s",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
@@ -339,8 +318,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
 
     @Test
     @AllureId("1843")
-    @DisplayName(
-            "Connection Search in router rule. Sum Deposit OR Withdrawal >= 50K USD = false. ElementId: Event_136ttoj")
+    @DisplayName("Connection Search in router rule. Sum Deposit OR Withdrawal >= 50K USD = false. ElementId: end_109")
     void connectionSearchIdAndPmSharingTest11() throws Exception {
         DataHelper data = dataMap.get("11");
         setupData(data);
@@ -348,11 +326,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "Event_136ttoj",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+                "end_109", data.crmWithdrawalEventV2.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
-                "Gateway_0tbmvdy",
+                "id_pm_sharing_end",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(

@@ -2,7 +2,7 @@ package tests.click_house_api_service_tests;
 
 import static business_objects.api.clickhouse_api_service.get_client.GetClientRequest.getClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -33,12 +33,14 @@ class GetClientTests extends TestBaseApi {
     @AllureId("59")
     void getClientSuccessTest() throws IOException, InterruptedException {
         // Create an instance of ClientHelper
-        ClientHelper client = getRandomVantageClient();
+        ClientHelper client = getRandomVantageClientAllFields();
         client.setCountry("Cyprus");
         client.setCountryCode("CY");
         client.setIbId(3);
         client.setCpaId(4);
         client.setReferrerId(5);
+        client.setFirstName("Test");
+        client.setLastName("User");
         CrmTbUserObject userObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, userObject);
         // Execute request
@@ -53,7 +55,7 @@ class GetClientTests extends TestBaseApi {
         assertThat("Check clientId", client.getUcid(), is(getClientResponse.getClientId()));
         assertThat("Check userId", client.getUserId().toString(), is(getClientResponse.getUserId()));
         assertThat("Check brand", "Vantage", is(getClientResponse.getBrand()));
-        assertThat("Check regulator", "VFSC", is(getClientResponse.getRegulator()));
+        assertThat("Check regulator", "VFSC2", is(getClientResponse.getRegulator()));
         assertThat("Check registrationDate", "2025-01-30T14:56:59Z", is(getClientResponse.getRegistrationDate()));
         assertThat("Check firstName", "Test", is(getClientResponse.getFirstName()));
         assertThat("Check lastName", "User", is(getClientResponse.getLastName()));
