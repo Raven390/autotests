@@ -104,6 +104,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator rejectionReasonVerificationDocumentsPreset;
     private final Locator rejectionReasonRecommendedMethodInput;
     private final Locator popup;
+    private final Locator selectAllAccountsCheckbox;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -230,6 +231,8 @@ public class ResolvePage extends AbstractPage {
                 page.locator("//*[@data-qa='rejection_reason__attribute__RECOMMENDED_METHOD__0']");
         this.popup = page.locator("//div[@data-qa='select-popup']");
         this.paymentWithdrawals = page.locator("//div[@class='v-withdrawal__info']");
+        this.selectAllAccountsCheckbox =
+                page.locator("//div[@class='v-checkbox-list-with-select-all__select-all']/descendant::input");
     }
 
     String bigLorem =
@@ -634,6 +637,18 @@ public class ResolvePage extends AbstractPage {
         page.locator(String.format(DROPDOWN_ITEM_BY_ACCOUNT, account))
                 .locator(accountIllegalProfit)
                 .click();
+    }
+
+    @Step("Click all accounts in illegal profit accounts dropdown")
+    public void clickAllAccountsInDropdown() {
+        selectAllAccountsCheckbox.click();
+    }
+
+    @Step("Select all accounts in illegal profit accounts dropdown")
+    public void selectAllAccountsAsIllegalProfit() {
+        clickIllegalProfitAccountsDropdown();
+        clickAllAccountsInDropdown();
+        clickUseAsIllegalProfit();
     }
 
     @Step("Click Use as illegal profit button")

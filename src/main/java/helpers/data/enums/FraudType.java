@@ -175,14 +175,14 @@ public enum FraudType {
 
     public static List<String> getPaymentFraudTypeNamesList() {
         return Arrays.stream(values())
-                .filter(f -> f.getCategory() == PAYMENT || f.getCategory() == BOTH)
+                .filter(f -> (f.getCategory() == PAYMENT || f.getCategory() == BOTH) && f.isVisible())
                 .map(FraudType::getName)
                 .toList();
     }
 
     public static List<String> getTradingFraudTypeNamesList() {
         return Arrays.stream(values())
-                .filter(f -> f.getCategory() == TRADING || f.getCategory() == BOTH)
+                .filter(f -> (f.getCategory() == TRADING || f.getCategory() == BOTH) && f.isVisible())
                 .map(FraudType::getName)
                 .toList();
     }

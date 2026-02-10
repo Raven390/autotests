@@ -15,6 +15,12 @@ public class PostFraudTypesV2RequestBody {
     @JsonProperty("comment")
     private String comment;
 
+    @JsonProperty("canDeleteTradingConfirmed")
+    private Boolean canDeleteTradingConfirmed;
+
+    @JsonProperty("canDeletePaymentConfirmed")
+    private Boolean canDeletePaymentConfirmed;
+
     @JsonProperty("fraudTypes")
     private List<FraudType> fraudTypes;
 
@@ -57,6 +63,22 @@ public class PostFraudTypesV2RequestBody {
 
     public void setFraudTypes(List<FraudType> fraudTypes) {
         this.fraudTypes = fraudTypes;
+    }
+
+    public Boolean getCanDeleteTradingConfirmed() {
+        return canDeleteTradingConfirmed;
+    }
+
+    public void setCanDeleteTradingConfirmed(Boolean canDeleteTradingConfirmed) {
+        this.canDeleteTradingConfirmed = canDeleteTradingConfirmed;
+    }
+
+    public Boolean getCanDeletePaymentConfirmed() {
+        return canDeletePaymentConfirmed;
+    }
+
+    public void setCanDeletePaymentConfirmed(Boolean canDeletePaymentConfirmed) {
+        this.canDeletePaymentConfirmed = canDeletePaymentConfirmed;
     }
 
     @Override

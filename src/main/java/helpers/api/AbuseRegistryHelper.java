@@ -55,6 +55,8 @@ public class AbuseRegistryHelper {
                         COMMENT,
                         fraudSubtype != null ? fraudSubtype.getCode() : null,
                         symbols)));
+        requestBody.setCanDeleteTradingConfirmed(true);
+        requestBody.setCanDeletePaymentConfirmed(true);
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postFraudTypesV2(client, requestBody).code();
@@ -79,6 +81,8 @@ public class AbuseRegistryHelper {
                 COMMENT,
                 List.of(new PostFraudTypesV2RequestBody.FraudType(
                         fraudType.getCode(), status.getStatus(), COMMENT, null, symbols)));
+        requestBody.setCanDeleteTradingConfirmed(true);
+        requestBody.setCanDeletePaymentConfirmed(true);
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postFraudTypesV2(client, requestBody).code();

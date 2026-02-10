@@ -198,4 +198,31 @@ public class RuleAlertFactory {
                 "D987654321",
                 getRandomUuidString());
     }
+
+    @Step("Generate payment alert for client with ucid '{ucid}' and trigger '{trigger}'")
+    public static PaymentAlertMessageV2 generateTradingAlertWithDecision(
+            String ucid, String trigger, String paymentId) {
+        BaseAlertMessageV2.Rule rule = new BaseAlertMessageV2.Rule();
+        rule.name = "fraud_detection";
+        rule.ver = "1.0.0";
+        return new PaymentAlertMessageV2(
+                UUID.randomUUID(),
+                AlertMessageType.TRADING,
+                OffsetDateTime.now(),
+                OffsetDateTime.now().minusMinutes(2),
+                ucid,
+                "POTENTIAL_ABUSE",
+                trigger,
+                "Suspicious payment",
+                rule,
+                new HashMap<>(),
+                "12345",
+                "srv-45",
+                "CRYPTO",
+                "500.00",
+                "500.00",
+                "USD",
+                "D987654321",
+                paymentId);
+    }
 }

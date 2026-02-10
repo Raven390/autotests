@@ -235,4 +235,11 @@ public class PaymentGateHelper {
         paymentGateData.setPaymentDecisions(decision);
         return paymentGateData;
     }
+
+    public static PaymentGateData generateTradingWithdrawalPaymentGateData(ClientHelper client)
+            throws JsonProcessingException {
+        PaymentGateData paymentGateData = generatePaymentWithdrawalPaymentGateData(client);
+        paymentGateData.getPaymentDecisions().setDecisionType("risk");
+        return paymentGateData;
+    }
 }
