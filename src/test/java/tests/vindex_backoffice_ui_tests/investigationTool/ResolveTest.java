@@ -4,8 +4,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
+import static business_objects.kafka.alerts.RuleAlertFactory.*;
 import static helpers.api.AbuseRegistryHelper.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeStatus.*;
@@ -15,6 +14,8 @@ import static helpers.database.ArHelper.waitForClientToChangeStatus;
 import static helpers.database.BoHelper.*;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.POSTGRES;
+import static helpers.database.PaymentGateHelper.generateTradingWithdrawalPaymentGateData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,10 +32,13 @@ import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
+import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
+import business_objects.kafka.alerts.PaymentAlertMessageV2;
 import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.restriction_events.WithdrawalApprovals;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.data.PaymentGateData;
 import helpers.data.enums.*;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
@@ -55,7 +59,8 @@ public class ResolveTest extends TestBaseWeb {
     private static final CrmTbAccountObject crmAccount = generateCrmTbAccountDataForUi(client);
     private static final MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(crmAccount);
     private static final RuleAlert alert = generateRuleAlertByUcid(client);
-    private static final RuleAlert withdrawalAlert = generateWithdrawalNotificationAlert(client);
+    private static PaymentGateData pgsData;
+    private static PaymentAlertMessageV2 withdrawalAlert;
     private static MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
     private static MtMt4TradesCoercedObject trade2 = generateMt4TradesCoerced(client);
     private static final String RESOLVE_COMMENT = "Autotest resolve comment";
@@ -64,7 +69,8 @@ public class ResolveTest extends TestBaseWeb {
     private static final String UCID_AND_FRAUD_WHERE = "ucid = '%s' and fraud_type_code = '%s'";
 
     @BeforeAll
-    static void setup() throws InterruptedException {
+    static void setup() throws JsonProcessingException {
+        objectMapper.findAndRegisterModules();
         insertObjectToDb(CRM_USER_TABLE_NAME, crmUser);
         insertCrmAccountsToDb(crmAccount);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
@@ -73,7 +79,14 @@ public class ResolveTest extends TestBaseWeb {
         trade1.setSymbol("USDEUR");
         trade2.setSymbol("JPYCZK");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2));
-        alert.rule.attributes.account = client.getTradingAccount().toString();
+        pgsData = generateTradingWithdrawalPaymentGateData(client);
+        insertObjectToDb(POSTGRES, PAYMENT_EVENT_TABLE_NAME, pgsData.getPaymentEvent());
+        insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, pgsData.getPaymentDetails());
+        insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, pgsData.getPaymentDecisions());
+        withdrawalAlert = generateTradingAlertWithDecision(
+                client.getUcid(),
+                "withdrawal",
+                pgsData.getPaymentEvent().getPaymentId().toString());
     }
 
     @AfterAll
@@ -100,13 +113,13 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest1() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         resolvePage.openResolveSuspicious();
         assertThat(
                 "Check fraud types",
                 resolvePage.getFraudTypesList(),
-                containsInAnyOrder(FraudType.getVisibleFraudTypeNamesList().toArray()));
+                containsInAnyOrder(FraudType.getTradingFraudTypeNamesList().toArray()));
         assertThat(
                 "Check hedging subtypes",
                 resolvePage.getFraudSubtypesList(FraudType.HEDGING),
@@ -114,7 +127,10 @@ public class ResolveTest extends TestBaseWeb {
         assertThat(
                 "Check news trader subtypes",
                 resolvePage.getFraudSubtypesList(FraudType.NEWS_TRADER),
-                containsInAnyOrder(FraudSubtype.BEFORE_NEWS.getName(), FraudSubtype.AFTER_NEWS.getName()));
+                containsInAnyOrder(
+                        FraudSubtype.BEFORE_NEWS.getName(),
+                        FraudSubtype.BEFORE_NEWS_DEDUCTION.getName(),
+                        FraudSubtype.AFTER_NEWS.getName()));
         assertThat(
                 "Check swap arbitrage subtypes",
                 resolvePage.getFraudSubtypesList(FraudType.SWAP_ARBITRAGE),
@@ -138,15 +154,12 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest2() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
 
         // Check for confirmed frauds
-        resolvePage.addFraud(FraudType.ATO);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.BONUS_ABUSE);
         assertThat(
@@ -173,15 +186,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.CLAIMER);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
-
         resolvePage.addFraud(FraudType.CPA_ABUSE);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
-
-        resolvePage.addFraud(FraudType.EXCHANGER);
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
@@ -255,10 +260,6 @@ public class ResolveTest extends TestBaseWeb {
                         WITHDRAWALS.getName(),
                         CLOSE_ONLY_MODE.getName()));
         resolvePage.resetRestrictionChanges();
-        resolvePage.resetFraudsChanges();
-
-        resolvePage.addFraud(FraudType.MONEY_LAUNDRY);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.NBP_ABUSE);
@@ -336,14 +337,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.UPGRADER);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
-
         // Check for potential frauds
-        resolvePage.addFraud(FraudType.ATO, POTENTIAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.BONUS_ABUSE, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), contains(MANUAL_WITHDRAWAL_REVIEW.getName()));
@@ -354,17 +348,9 @@ public class ResolveTest extends TestBaseWeb {
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
-        resolvePage.addFraud(FraudType.CLAIMER, POTENTIAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
-
         resolvePage.addFraud(FraudType.CPA_ABUSE, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), contains(MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
-        resolvePage.resetFraudsChanges();
-
-        resolvePage.addFraud(FraudType.EXCHANGER, POTENTIAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.GAP_TRADING, POTENTIAL);
@@ -395,10 +381,6 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addFraud(FraudType.MARKET_MANIPULATION, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), contains(MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
-        resolvePage.resetFraudsChanges();
-
-        resolvePage.addFraud(FraudType.MONEY_LAUNDRY, POTENTIAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.NBP_ABUSE, POTENTIAL);
@@ -435,10 +417,6 @@ public class ResolveTest extends TestBaseWeb {
         assertThat(resolvePage.getSelectedRestrictionsList(), contains(MANUAL_WITHDRAWAL_REVIEW.getName()));
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-
-        resolvePage.addFraud(FraudType.UPGRADER, POTENTIAL);
-        assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetFraudsChanges();
     }
 
     @Test
@@ -447,11 +425,12 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest3() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
+        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(
@@ -469,7 +448,7 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest4() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -492,11 +471,12 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest5() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.addFraud(FraudType.CPA_ABUSE);
+        resolvePage.addFraud(FraudType.BONUS_ABUSE);
+        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(
@@ -514,11 +494,12 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest6() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
+        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -543,7 +524,7 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTest7() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -571,10 +552,12 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Resolution works when potential fraud is applied to client with cleaned frauds")
     void resolveTest8() throws Exception {
         addFraudForClient(client, FraudType.CPA_ABUSE, CONFIRMED, List.of());
+        waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         addFraudForClient(client, FraudType.CPA_ABUSE, CLEANED, List.of());
+        waitForClientToChangeStatus(client.getUcid(), CLEANED);
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -604,11 +587,12 @@ public class ResolveTest extends TestBaseWeb {
         addFraudForClient(client, FraudType.CPA_ABUSE, CONFIRMED, List.of());
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
+        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -635,11 +619,12 @@ public class ResolveTest extends TestBaseWeb {
         addFraudForClient(client, FraudType.CPA_ABUSE, POTENTIAL, List.of());
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
+        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -665,11 +650,12 @@ public class ResolveTest extends TestBaseWeb {
         setClientStatus(client, POTENTIAL);
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
+        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -693,27 +679,24 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Resolution works with withdrawal approval")
     void resolveTest12() throws Exception {
         kafka.produceMessages(
-                withdrawalAlert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(withdrawalAlert));
+                withdrawalAlert.getId().toString(),
+                KAFKA_TOPIC_ALERTS,
+                objectMapper.writeValueAsString(withdrawalAlert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove(RESOLVE_COMMENT);
-        WithdrawalApprovals actualKafkaApproval = objectMapper.readValue(
-                kafka.consumeMessage(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalAlert.rule.attributes.withdrawalId),
-                WithdrawalApprovals.class);
-        WithdrawalApprovals expectedKafkaApproval = new WithdrawalApprovals(
-                null,
-                null,
-                Long.valueOf(withdrawalAlert.rule.attributes.withdrawalId),
-                client.getBrand(),
-                client.getRegulator(),
-                "",
-                "Approve",
-                withdrawalAlert.rule.attributes.orderId,
-                withdrawalAlert.rule.attributes.check);
-        assertThat("Verify kafka message for withdrawal approval", actualKafkaApproval, is(expectedKafkaApproval));
+        List<PaymentDecisionsObject> paymentDecisionsList = getObjectsFromDB(
+                POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE,
+                String.format("payment_id = '%s'", pgsData.getPaymentDecisions().getPaymentId()),
+                PaymentDecisionsObject.class);
+        assertThat(
+                "Verify approval is present in PGS",
+                paymentDecisionsList.getFirst().getDecisionCode(),
+                is(1));
     }
 
     @Test
@@ -722,7 +705,7 @@ public class ResolveTest extends TestBaseWeb {
     void resolveTestInvestigationId() throws Exception {
         kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();

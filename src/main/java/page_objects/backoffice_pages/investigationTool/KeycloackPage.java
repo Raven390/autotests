@@ -119,6 +119,11 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(autotestUserPayment());
     }
 
+    @Step("Log in as dev user")
+    public void loginAsTradingOpsUser() {
+        loginWithUser(autotestUserTradingOps());
+    }
+
     @Step("Check that authorisation is failed")
     public void errorMessageIsShown() {
         errorMessage.isVisible();
