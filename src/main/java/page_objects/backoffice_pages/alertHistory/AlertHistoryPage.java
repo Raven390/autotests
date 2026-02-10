@@ -3,6 +3,7 @@ package page_objects.backoffice_pages.alertHistory;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
@@ -49,6 +50,7 @@ public class AlertHistoryPage extends AbstractPage {
     private static final String QC_CHECK_BUTTON_PATTERN = "//button[@data-qa='buttons_list__item__%s']";
     private static final String REVIEWER_FILTER_PATTERN =
             "//*[text()='%s']/ancestor::label[contains(@data-qa,'alert_history_filters__reviewers__item')]/descendant::input";
+    private final Locator filterByIdInput;
 
     public AlertHistoryPage(Page page) {
         super(page);
@@ -58,11 +60,13 @@ public class AlertHistoryPage extends AbstractPage {
                 .first();
         this.alertHistoryTableHeaders = page.locator("//div[contains(@class,'v-header-cell')]");
         this.filterButton = page.locator("//div[@class='v-alert-history-filter-button__filters']/button");
-        this.applyFilterButton = page.locator("//button[contains(@class,'g-button_view_action')]");
+        this.applyFilterButton = page.locator(
+                "//button[contains(@class,'g-button_view_action') and contains(@class,'g-button_size_l')]");
         this.clickableRow = page.locator(".v-body-row_clickable");
         this.drawer = page.locator("[data-qa=\"drawer_body\"]");
         this.commentTextArea = page.locator("//textarea[@class='g-text-area__control']");
         this.correctResolutionButton = page.locator("//*[@data-qa='qc_decision_drawer__correct_resolution_button']");
+        this.filterByIdInput = page.locator("//input[@placeholder='Enter client ID to filter table']");
     }
 
     @Override
@@ -254,5 +258,14 @@ public class AlertHistoryPage extends AbstractPage {
     @Step("Get list of reviewer values in alert history table")
     public List<String> getReviewerValues() {
         return getCellValuesByColumnIndex(9);
+    }
+
+    public void checkCountOfAlertsInFilter(int expectedCount) {
+        String count = applyFilterButton.textContent().split(" ")[1];
+        assertEquals(expectedCount, Integer.valueOf(count));
+    }
+
+    public void fillFilterById(String id) {
+        filterByIdInput.fill(id);
     }
 }

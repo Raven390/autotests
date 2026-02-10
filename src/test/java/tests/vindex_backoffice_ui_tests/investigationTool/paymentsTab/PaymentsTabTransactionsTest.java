@@ -83,14 +83,13 @@ class PaymentsTabTransactionsTest extends TestBaseWeb {
         paymentsPage.checkTransactionAttributeValues(callback.getDeclineReason(), "Fail Reason");
         paymentsPage.checkTransactionAttributeValues("Yes", "Due To Fraud");
         paymentsPage.checkTransactionAttributeValues(callback.getCardHolderName(), "Entered Holder Name ");
-        paymentsPage.checkTransactionAttributeValues(deposit.getPaymentFamily(), "Family", 0);
-        paymentsPage.checkTransactionAttributeValues(deposit.getPaymentType(), "Type", 1);
-        paymentsPage.checkTransactionAttributeValues(deposit.getPaymentChannel(), "System", 0);
+        paymentsPage.checkTransactionAttributeValues(deposit.getPaymentFamily(), "Family");
+        paymentsPage.checkTransactionAttributeValues(deposit.getPaymentType(), "Payment Type");
+        paymentsPage.checkTransactionAttributeValues(deposit.getPaymentChannel(), "System");
         paymentsPage.checkTransactionAttributeValues(callback.getCardMaskedNumber(), "Card Number");
-        paymentsPage.checkTransactionAttributeValues(callback.getBin(), "BIN", 0);
-        paymentsPage.checkTransactionAttributeValues(callback.getCardExpirationDate(), "Expiry", 0);
-        paymentsPage.checkTransactionAttributeValues("Yes", "3DS", 0);
+        paymentsPage.checkTransactionAttributeValues(callback.getBin(), "BIN");
+        paymentsPage.checkTransactionAttributeValues(callback.getCardExpirationDate(), "Expiry");
+        paymentsPage.checkTransactionAttributeValues("Yes", "3DS");
         paymentsPage.checkTransactionAttributeValues(" United States", "Country");
-        System.out.println("END");
     }
 }
