@@ -145,4 +145,15 @@ public class UserFactory {
                 EMAIL_AUTOTEST_TRADING_OPS,
                 ROLE_UNKNOWN);
     }
+
+    public static User autotestTradingOpsSeniorUser() {
+        return new User(
+                ID_AUTOTEST_TRADING_OPS_SENIOR,
+                EMAIL_AUTOTEST_TRADING_OPS_SENIOR_USER,
+                PASSWORD_BACKOFFICE_USERS,
+                FIRST_NAME_TRADING_OPS_SENIOR_USER,
+                LAST_NAME_PAYMENT_USER,
+                EMAIL_AUTOTEST_TRADING_OPS_SENIOR_USER,
+                ROLE_UNKNOWN);
+    }
 }

@@ -21,7 +21,7 @@ import page_objects.backoffice_pages.AbstractPage;
 
 public class ResolvePage extends AbstractPage {
 
-    private static final String investigationCompleted = "Investigation completed";
+    private static final String INVESTIGATION_COMPLETED = "Investigation completed";
     private static final String FRAUD_MANAGEMENT_COMPLETED = "Fraud management completed";
     public static final String FRAUD_TYPE_STATUS_SELECTOR_FORMATTER =
             "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
@@ -119,7 +119,7 @@ public class ResolvePage extends AbstractPage {
     private static final String RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR =
             "//button[contains(@data-qa,'restrictions_selector__reset')]";
     private static final String FRAUD_CONTAINER_BY_NAME_PATTERN =
-            "//span[text()='%s']/ancestor::div[contains(@data-qa,'client_report_fraud_drawer__reported_fraud_types_list__item')]";
+            "//span[text()='%s']/ancestor::div[contains(@data-qa,'_reported_fraud_types_list__item')]";
     private static final String FRAUD_TIME_BY_NAME_PATTERN = String.format(
             "%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
     private static final String DELETE_FRAUD_BY_NAME_PATTERN =
@@ -386,7 +386,7 @@ public class ResolvePage extends AbstractPage {
     public void resolveNoActions(String comment) {
         fillCommentAndApply(comment);
         successToast
-                .getByText(investigationCompleted)
+                .getByText(INVESTIGATION_COMPLETED)
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
@@ -396,7 +396,7 @@ public class ResolvePage extends AbstractPage {
         fillCommentAndApply(comment);
         clickConfirmFinishPaymentInvestigationButton();
         successToast
-                .getByText(investigationCompleted)
+                .getByText(INVESTIGATION_COMPLETED)
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 

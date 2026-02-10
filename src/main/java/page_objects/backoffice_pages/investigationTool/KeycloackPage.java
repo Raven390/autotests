@@ -78,6 +78,11 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(autotestUserOne());
     }
 
+    @Step("Log in as trading ops senior user")
+    public void loginAsTradingOpsSeniorUser() {
+        loginWithUser(autotestTradingOpsSeniorUser());
+    }
+
     @Step("Log in as duty ops user")
     public void loginAsDutyOpsUser() {
         loginWithUser(autotestUserOPSDuty());
