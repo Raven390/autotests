@@ -29,14 +29,16 @@ public class ConnectionSearchDataFactory {
     private static final ClientHelper client8 = getRandomVantageClientAllFields();
     private static final ClientHelper client8_1 = getRandomVantageClientAllFields();
     private static final ClientHelper client9 = getRandomVantageClientAllFields();
+    private static final ClientHelper client9_1 = getRandomVantageClientAllFields();
     private static final ClientHelper client10 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_2 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_3 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_4 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_5 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_6 = getRandomVantageClientAllFields();
     private static final ClientHelper client11 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_2 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_3 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_4 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_5 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_6 = getRandomVantageClientAllFields();
+    private static final ClientHelper client12 = getRandomVantageClientAllFields();
 
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
@@ -137,8 +139,9 @@ public class ConnectionSearchDataFactory {
 
     private static DataHelper getTest9Data() {
         DataHelper data = getRuleData(client9);
+        DataHelper data2 = getRuleData(client9_1);
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
+        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
 
         data.addDepositSumByCategory(501d);
 
@@ -149,12 +152,24 @@ public class ConnectionSearchDataFactory {
 
     private static DataHelper getTest10Data() {
         DataHelper data = getRuleData(client10);
-        DataHelper data2 = getRuleData(client10_1);
-        DataHelper data3 = getRuleData(client10_2);
-        DataHelper data4 = getRuleData(client10_3);
-        DataHelper data5 = getRuleData(client10_4);
-        DataHelper data6 = getRuleData(client10_5);
-        DataHelper data7 = getRuleData(client10_6);
+
+        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
+
+        data.addDepositSumByCategory(501d);
+
+        data.addWithdrawalSumByCategory(9000d, 5);
+
+        return data;
+    }
+
+    private static DataHelper getTest11Data() {
+        DataHelper data = getRuleData(client11);
+        DataHelper data2 = getRuleData(client11_1);
+        DataHelper data3 = getRuleData(client11_2);
+        DataHelper data4 = getRuleData(client11_3);
+        DataHelper data5 = getRuleData(client11_4);
+        DataHelper data6 = getRuleData(client11_5);
+        DataHelper data7 = getRuleData(client11_6);
 
         addConnectionByPayoutIdAttribute(data, data2.clientHelper);
         addConnectionByPayoutIdAttribute(data, data3.clientHelper);
@@ -172,8 +187,8 @@ public class ConnectionSearchDataFactory {
         return data;
     }
 
-    private static DataHelper getTest11Data() {
-        DataHelper data = getRuleData(client11);
+    private static DataHelper getTest12Data() {
+        DataHelper data = getRuleData(client12);
 
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
 
@@ -199,6 +214,7 @@ public class ConnectionSearchDataFactory {
         map.put("9", getTest9Data());
         map.put("10", getTest10Data());
         map.put("11", getTest11Data());
+        map.put("12", getTest12Data());
         return map;
     }
 }

@@ -4,6 +4,7 @@ import static utils.Utils.getRandomIntPositive;
 
 import helpers.data.ClientHelper;
 import java.time.OffsetDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ClientCardObjectFactory {
     private ClientCardObjectFactory() {}
@@ -22,8 +23,10 @@ public class ClientCardObjectFactory {
                 .isDel((short) 0)
                 .usedForDeposit((short) 0)
                 .usedForWithdrawal((short) 0)
-                .cardBeginSixDigits(String.format("%06d", getRandomIntPositive()))
-                .cardLastFourDigits(String.format("%04d", getRandomIntPositive()))
+                .cardBeginSixDigits(
+                        String.format("%06d", ThreadLocalRandom.current().nextInt(0, 1_000_000)))
+                .cardLastFourDigits(
+                        String.format("%04d", ThreadLocalRandom.current().nextInt(0, 10_000)))
                 .cardHolderName(client.getFirstName() + " " + client.getLastName())
                 .expiryMonth((short) 12)
                 .expiryYear(2099)

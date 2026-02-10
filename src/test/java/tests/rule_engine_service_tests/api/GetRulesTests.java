@@ -18,7 +18,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
@@ -54,11 +53,8 @@ class GetRulesTests extends TestBaseApi {
         GetRulesResponse[] mappedResponse =
                 objectMapper.readValue(response.body().string(), GetRulesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat(
-                "Check the response body",
-                Arrays.stream(mappedResponse) // Convert the array to a stream
-                        .map(GetRulesResponse::getId) // Extract the 'id' field from each element
-                        .collect(Collectors.toList()), // Collect the results into a list
-                hasItem(rule.getId()));
+        List<String> ruleIds =
+                Arrays.stream(mappedResponse).map(GetRulesResponse::getId).toList();
+        assertThat("Check the response body", ruleIds, hasItem(rule.getId()));
     }
 }

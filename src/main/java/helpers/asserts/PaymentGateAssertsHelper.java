@@ -143,6 +143,7 @@ public class PaymentGateAssertsHelper {
                 containsString("\"withdrawalAmountUSD\": 1"));
     }
 
+    @Deprecated
     @Step("Assert risk decision")
     public static void assertRiskDecision(UUID paymentId, int code) throws Exception {
         // check pending decision
@@ -173,6 +174,37 @@ public class PaymentGateAssertsHelper {
                 is("Rule engine"));
     }
 
+    @Step("Assert risk decision")
+    public static void assertRiskDecision(UUID paymentId, int decisionCode, int rejectionCode, String actor)
+            throws Exception {
+        // check pending decision
+        List<PaymentDecisionsObject> paymentDecisionsObject =
+                Objects.requireNonNull(getPaymentDecisionsByPaymentId(paymentId)).stream()
+                        .filter(payment -> "risk".equals(payment.getDecisionType()))
+                        .toList();
+        assertThat("There should be exactly 1 risk decision in DB", paymentDecisionsObject.size(), is(1));
+        assertThat(
+                "Risk decision paymentId should match provided paymentId",
+                paymentDecisionsObject.getFirst().getPaymentId(),
+                is(paymentId));
+        assertThat(
+                "DecisionType should be 'risk'",
+                paymentDecisionsObject.getFirst().getDecisionType(),
+                is("risk"));
+        assertThat(
+                "Risk decision code should match provided code",
+                paymentDecisionsObject.getFirst().getDecisionCode(),
+                is(decisionCode));
+        assertThat(
+                "Risk decision rejectionCode should be null",
+                paymentDecisionsObject.getFirst().getRejectionCode(),
+                is(rejectionCode));
+        assertThat(
+                "Risk decision actor should be 'Rule engine'",
+                paymentDecisionsObject.getFirst().getActor(),
+                is(actor));
+    }
+
     @Step("Assert payment decision")
     public static void assertPaymentDecision(UUID paymentId, int code) throws Exception {
         // check pending decision
@@ -180,7 +212,6 @@ public class PaymentGateAssertsHelper {
                 Objects.requireNonNull(getPaymentDecisionsByPaymentId(paymentId)).stream()
                         .filter(payment -> "payment".equals(payment.getDecisionType()))
                         .toList();
-        assertThat("There should be exactly 1 payment decision in DB", paymentDecisionsObject.size(), is(1));
         assertThat(
                 "Payment decision paymentId should match provided paymentId",
                 paymentDecisionsObject.getFirst().getPaymentId(),

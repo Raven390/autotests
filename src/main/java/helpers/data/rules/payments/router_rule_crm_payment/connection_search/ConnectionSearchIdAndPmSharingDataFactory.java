@@ -25,6 +25,7 @@ import utils.Utils;
 
 public class ConnectionSearchIdAndPmSharingDataFactory {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client1_1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client2_1 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
@@ -88,6 +89,8 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
     private static final ClientHelper client11_4 = getRandomVantageClientAllFields();
     private static final ClientHelper client11_5 = getRandomVantageClientAllFields();
     private static final ClientHelper client11_6 = getRandomVantageClientAllFields();
+    private static final String accountNumberTest2 = Utils.getRandomUuidString();
+    private static final String accountNumberTest3 = Utils.getRandomUuidString();
 
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
@@ -141,8 +144,6 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         return data;
     }
 
-    private static final String accountNumberTest2 = Utils.getRandomUuidString();
-
     private static DataHelper getTest2Data() throws IOException {
         DataHelper data = getRuleData(client2);
 
@@ -185,8 +186,6 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
 
         return data;
     }
-
-    private static final String accountNumberTest3 = Utils.getRandomUuidString();
 
     private static DataHelper getTest3Data() throws IOException {
         DataHelper data = getRuleData(client3);

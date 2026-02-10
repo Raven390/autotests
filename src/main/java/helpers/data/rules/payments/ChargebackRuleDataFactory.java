@@ -12,10 +12,8 @@ import static business_objects.db.payment_gate.payment_events.PaymentEventsObjec
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
 import static helpers.api.VerificationServiceHelper.putProfileStatus;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.*;
 import static helpers.data.enums.VerificationStatus.VERIFIED;
 import static helpers.database.DbHelper.*;
-import static utils.Constants.*;
 import static utils.Utils.*;
 
 import business_objects.db.clickhouse.client_cards.ClientCardsObject;
@@ -70,6 +68,7 @@ public class ChargebackRuleDataFactory {
     private static final ClientHelper chargebackRuleClient20 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient21 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient22 = getRandomVantageClientAllFields();
+
     private static final ClientHelper chargebackRuleClient23 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient24 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient25 = getRandomVantageClientAllFields();
@@ -1538,147 +1537,9 @@ public class ChargebackRuleDataFactory {
 
     private static DataHelper getChargebackTest21Data() {
         DataHelper data = getChargebackRuleData(chargebackRuleClient21);
-
-        // set ticks
-        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
-                .ts(getCurrentTimestampDbFormat())
-                .currency(baseCurrency)
-                .rate(1.1)
-                .build();
-        data.ratesUsdCurrentObjects = List.of(tick);
-
-        // set deposits
-        int wdTypeId = getRandomBytePositive();
-        int sourceId = getRandomBytePositive();
-        int pcId = getRandomBytePositive();
-        String catName = "card cat";
-        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        data.crmTbDepositObjects.add(deposit1);
-        data.crmTbDepositObjects.add(deposit2);
-        data.crmTbDepositObjects.add(deposit3);
-        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
-        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
-        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
-        data.crmTbDepositObjects.forEach(
-                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
-                .id(wdTypeId)
-                .sourceIdSt(sourceId)
-                .category(2)
-                .name(catName)
-                .lastUpdated(getCurrentTimestampDbFormat())
-                .build();
-        data.crmTbDepositTypeObjects = List.of(dType);
-        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
-                .id(pcId)
-                .sourceIdSt(sourceId)
-                .channelId(pcId)
-                .typeId(wdTypeId)
-                .name(catName)
-                .isMobileChannel(0)
-                .lastUpdated(getCurrentTimestampDbFormat())
-                .build();
-        data.crmTbDepositChannelObjects = List.of(dChannel);
-
-        // set client connections
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
-        connection1.connectionScore = 0.8;
-        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo1.connectionAttributeName = "name+dateofbirth";
-        connectionInfo1.connectionAttributeValue = "test";
-        connectionInfo1.sourceAttributeValue = "test";
-        connectionInfo1.relationType = "exact";
-        connection1.connectionInfo =
-                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
-        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
-        connection2.connectionScore = 0.8;
-        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo2.connectionAttributeName = "document";
-        connectionInfo2.connectionAttributeValue = "test";
-        connectionInfo2.sourceAttributeValue = "test";
-        connectionInfo2.relationType = "exact";
-        connection2.connectionInfo =
-                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
-        ClientHelper connectedClient3 = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
-        connection3.connectionScore = 0.8;
-        ConnectionTableEntry.ConnectionInfo connectionInfo3 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo3.connectionAttributeName = "payout";
-        connectionInfo3.connectionAttributeValue = "test";
-        connectionInfo3.sourceAttributeValue = "test";
-        connectionInfo3.relationType = "exact";
-        connection3.connectionInfo =
-                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
-        data.connections = List.of(connection1, connection2, connection3);
-        ClientHelper connectedClient4 = getRandomVantageClientAllFields();
-        ClientHelper connectedClient5 = getRandomVantageClientAllFields();
-        CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
-        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
-        CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
-        CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
-        CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedClientHelpers = List.of(connectedClient, connectedClient3);
-        data.connectedUsers = List.of(
-                connectedUserCrmTbUserObject1,
-                connectedUserCrmTbUserObject2,
-                connectedUserCrmTbUserObject3,
-                connectedUserCrmTbUserObject4,
-                connectedUserCrmTbUserObject5);
-
-        // set client cards
-        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard5 = clientCard1;
-        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
-        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
-        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
-        clientCard5.setCardLastFourDigits(cardLastFourDigits);
-        clientCard5.setUcid(connectedClient.getUcid());
-        clientCard5.setId(Utils.getRandomLongPositive());
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
-
-        // set open trades
-        Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
-        trade1.setPositionId(getRandomLongPositive());
-        trade1.setEntry(0);
-        trade1.setSymbol("EURUSD");
-        data.mt5DealsCoercedObjects = List.of(trade1);
-
-        // set segment
-        SegmentationTableObject segment = SegmentationTableObject.builder()
-                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
-                .ucid(data.clientHelper.getUcid())
-                .segment("Very High")
-                .build();
-
-        data.segmentObjects = List.of(segment);
-
-        // add decline score
-        CrmBpCallbacksObject callback1 = generateCrmBpCallbacksObject(data.clientHelper);
-        CrmBpCallbacksObject callback2 = generateCrmBpCallbacksObject(data.clientHelper);
-        CrmBpCallbacksObject callback3 = generateCrmBpCallbacksObject(data.clientHelper);
-        callback3.setIsFraudDeclined((short) 1);
-        callback3.setBusinessOrderId(callbackEvent.getBusinessOrderId());
-
-        data.callbacksObjects = List.of(callback1, callback2, callback3);
-        data.callbacksObjects.forEach(c -> c.setPaymentProfileKey(basePaymentProfile));
-        data.callbacksObjects.forEach(c -> c.setStatus("declined"));
-
-        return data;
-    }
-
-    private static DataHelper getChargebackTest22Data() {
-        DataHelper data = getChargebackRuleData(chargebackRuleClient22);
+        data.connectedClientHelpers = List.of(connectedClient);
+        data.connectedUsers = List.of(generateUserByClient(connectedClient));
 
         // set ticks
         RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
@@ -1722,62 +1583,127 @@ public class ChargebackRuleDataFactory {
                 .build();
         data.crmTbDepositChannelObjects = List.of(dChannel);
 
-        // set client connections
+        // set client connections by payout
+        ClientCardsObject card1 = generateClientCardsObject(data.clientHelper);
+        card1.setCardBeginSixDigits(cardFirstSixDigits);
+        card1.setCardLastFourDigits(cardLastFourDigits);
+        card1.setExpiryMonth((short) 10);
+        card1.setExpiryYear(2036);
+
+        ClientCardsObject card2 = generateClientCardsObject(data.clientHelper);
+        card2.setUserId(Long.valueOf(connectedClient.getUserId()));
+        card2.setUcid(connectedClient.getUcid());
+        card2.setCardBeginSixDigits(card1.getCardBeginSixDigits());
+        card2.setCardLastFourDigits(card1.getCardLastFourDigits());
+        card2.setExpiryMonth(card1.getExpiryMonth());
+        card2.setExpiryYear(card1.getExpiryYear());
+        card2.setExpiryYear(card1.getExpiryYear());
+
+        ClientCardsObject card3 = generateClientCardsObject(data.clientHelper);
+        card3.setUserId(Long.valueOf(connectedClient.getUserId()));
+        card3.setUcid(connectedClient.getUcid());
+        card3.setCardBeginSixDigits(card1.getCardBeginSixDigits());
+        card3.setCardLastFourDigits(card1.getCardLastFourDigits());
+        card3.setExpiryMonth(card1.getExpiryMonth());
+        card3.setExpiryYear(card1.getExpiryYear());
+        card3.setExpiryYear(card1.getExpiryYear());
+
+        data.clientCards = List.of(card1, card2, card3);
+
+        // set open trades
+        Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
+        trade1.setPositionId(getRandomLongPositive());
+        trade1.setEntry(0);
+        trade1.setSymbol("EURUSD");
+        data.mt5DealsCoercedObjects = List.of(trade1);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("Ultra High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
+
+        return data;
+    }
+
+    private static DataHelper getChargebackTest22Data() {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient22);
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection1 = getConnection(data.clientHelper, connectedClient);
-        connection1.connectionScore = 0.8;
-        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo1.connectionAttributeName = "name+dateofbirth";
-        connectionInfo1.connectionAttributeValue = "test";
-        connectionInfo1.sourceAttributeValue = "test";
-        connectionInfo1.relationType = "exact";
-        connection1.connectionInfo =
-                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo1));
-        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection2 = getConnection(data.clientHelper, connectedClient2);
-        connection2.connectionScore = 0.8;
-        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo2.connectionAttributeName = "document";
-        connectionInfo2.connectionAttributeValue = "test";
-        connectionInfo2.sourceAttributeValue = "test";
-        connectionInfo2.relationType = "exact";
-        connection2.connectionInfo =
-                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo2));
-        ClientHelper connectedClient3 = getRandomVantageClientAllFields();
-        ConnectionTableEntry connection3 = getConnection(data.clientHelper, connectedClient3);
-        connection3.connectionScore = 0.8;
-        ConnectionTableEntry.ConnectionInfo connectionInfo3 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo3.connectionAttributeName = "payout";
-        connectionInfo3.connectionAttributeValue = "test";
-        connectionInfo3.sourceAttributeValue = "test";
-        connectionInfo3.relationType = "exact";
-        connection3.connectionInfo =
-                ConnectionTableEntry.ConnectionInfo.connectionInfoToString(List.of(connectionInfo3));
-        data.connections = List.of(connection1, connection2, connection3);
-        ClientHelper connectedClient4 = getRandomVantageClientAllFields();
-        ClientHelper connectedClient5 = getRandomVantageClientAllFields();
-        CrmTbUserObject connectedUserCrmTbUserObject1 = generateUserByClient(connectedClient);
-        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
-        CrmTbUserObject connectedUserCrmTbUserObject3 = generateUserByClient(connectedClient3);
-        CrmTbUserObject connectedUserCrmTbUserObject4 = generateUserByClient(connectedClient4);
-        CrmTbUserObject connectedUserCrmTbUserObject5 = generateUserByClient(connectedClient5);
-        data.connectedClientHelpers = List.of(connectedClient3);
-        data.connectedUsers = List.of(
-                connectedUserCrmTbUserObject1,
-                connectedUserCrmTbUserObject2,
-                connectedUserCrmTbUserObject3,
-                connectedUserCrmTbUserObject4,
-                connectedUserCrmTbUserObject5);
+        data.connectedClientHelpers = List.of(connectedClient);
+        data.connectedUsers = List.of(generateUserByClient(connectedClient));
+        data.callbackEvent.getCallback().getData().getCharge().getAttributes().setCardHolderName("Ivan Ivanov");
 
-        // set client cards
-        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard3 = clientCard1;
-        clientCard3.setId(Utils.getRandomLongPositive());
-        clientCard3.setUcid("vantage-123");
-        clientCard3.setExpiryYear(2040);
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
+        data.ratesUsdCurrentObjects = List.of(tick);
 
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3);
+        // set deposits
+        int wdTypeId = getRandomBytePositive();
+        int sourceId = getRandomBytePositive();
+        int pcId = getRandomBytePositive();
+        String catName = "card cat";
+        CrmTbDepositEntity deposit4 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit4.setStatus("Reject");
+        deposit4.setOrderNumber(callbackData.getOrderId());
+        data.crmTbDepositObjects.add(deposit4);
+        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
+        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(300.01)));
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositTypeObjects = List.of(dType);
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositChannelObjects = List.of(dChannel);
+
+        // set client connections by payout
+        ClientCardsObject card1 = generateClientCardsObject(data.clientHelper);
+        card1.setCardBeginSixDigits(cardFirstSixDigits);
+        card1.setCardLastFourDigits(cardLastFourDigits);
+        card1.setExpiryMonth((short) 10);
+        card1.setExpiryYear(2036);
+
+        ClientCardsObject card2 = generateClientCardsObject(data.clientHelper);
+        card2.setUserId(Long.valueOf(connectedClient.getUserId()));
+        card2.setUcid(connectedClient.getUcid());
+        card2.setCardBeginSixDigits(card1.getCardBeginSixDigits());
+        card2.setCardLastFourDigits(card1.getCardLastFourDigits());
+        card2.setExpiryMonth(card1.getExpiryMonth());
+        card2.setExpiryYear(card1.getExpiryYear());
+        card2.setExpiryYear(card1.getExpiryYear());
+
+        ClientCardsObject card3 = generateClientCardsObject(data.clientHelper);
+        card3.setUserId(Long.valueOf(connectedClient.getUserId()));
+        card3.setUcid(connectedClient.getUcid());
+        card3.setCardBeginSixDigits(card1.getCardBeginSixDigits());
+        card3.setCardLastFourDigits(card1.getCardLastFourDigits());
+        card3.setExpiryMonth(card1.getExpiryMonth());
+        card3.setExpiryYear(card1.getExpiryYear());
+        card3.setExpiryYear(card1.getExpiryYear());
+
+        data.clientCards = List.of(card1, card2, card3);
 
         // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());

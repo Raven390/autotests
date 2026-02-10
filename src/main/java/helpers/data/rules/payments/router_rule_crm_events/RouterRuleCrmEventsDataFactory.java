@@ -1,7 +1,6 @@
 package helpers.data.rules.payments.router_rule_crm_events;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -11,19 +10,21 @@ import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import utils.Utils;
 
 public class RouterRuleCrmEventsDataFactory {
-    private static final ClientHelper routerRuleClient1 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient2 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient3 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient4 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient5 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient6 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient7 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient1 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient2 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient3 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient5 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient6 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient7 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient8 = getRandomVantageClientAllFields();
 
     @Description("Create data for Router rule")
     private static DataHelper getRouterRuleData(ClientHelper client) {
@@ -61,46 +62,38 @@ public class RouterRuleCrmEventsDataFactory {
     }
 
     private static DataHelper getRouterRuleTest1Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient1);
+        DataHelper data = getRouterRuleData(testClient1);
+        data.getCrmWithdrawalEventV2().setCheckName("Not_Crypto_Risk");
         data.crmWithdrawalEventV2.setWithdrawalAmount(1d);
         return data;
     }
 
-    private static DataHelper getRouterRuleTest2Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient2);
-        data.crmWithdrawalEventV2.setCheckName("Checkname");
-
-        return data;
-    }
-
     private static DataHelper getRouterRuleTest3Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient3);
+        DataHelper data = getRouterRuleData(testClient3);
         data.crmWithdrawalEventV2.setCheckName("Checkname");
         return data;
     }
 
-    private static DataHelper getRouterRuleTest4Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient4);
-        data.crmWithdrawalEventV2.setCheckName("Crypto_Risk");
-        insertMirrorFlagData(data.clientHelper);
-        return data;
-    }
+    private static DataHelper getRouterRuleTest8Data() {
+        DataHelper data = getRouterRuleData(testClient8);
+        data.getCrmWithdrawalEventV2().setCheckName("Crypto_Risk");
+        data.getCrmWithdrawalEventV2().setWithdrawalAmountUSD(100d);
 
-    private static DataHelper getRouterRuleTest5Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient5);
-        data.crmWithdrawalEventV2.setCheckName("Crypto_Risk");
+        data.createDeposit();
+        data.getCrmTbDepositObjects().getFirst().setAmount(BigDecimal.valueOf(9999));
+        data.getCrmTbDepositObjects().getFirst().setAmountUsd(BigDecimal.valueOf(9999));
         return data;
     }
 
     private static DataHelper getRouterRuleTest6Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient6);
-        data.crmWithdrawalEventV2.setCheckName("Crypto_Risk");
+        DataHelper data = getRouterRuleData(testClient6);
+        data.getCrmWithdrawalEventV2().setCheckName("Crypto_Risk");
         return data;
     }
 
     private static DataHelper getRouterRuleTest7Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient7);
-        data.crmWithdrawalEventV2.setCheckName("Crypto_Risk");
+        DataHelper data = getRouterRuleData(testClient7);
+        data.getCrmWithdrawalEventV2().setCheckName("Crypto_Risk");
         return data;
     }
 
@@ -109,12 +102,10 @@ public class RouterRuleCrmEventsDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getRouterRuleTest1Data());
-        map.put("2", getRouterRuleTest2Data());
         map.put("3", getRouterRuleTest3Data());
-        map.put("4", getRouterRuleTest4Data());
-        map.put("5", getRouterRuleTest5Data());
-        map.put("6", getRouterRuleTest5Data());
-        map.put("7", getRouterRuleTest5Data());
+        map.put("8", getRouterRuleTest8Data());
+        map.put("6", getRouterRuleTest6Data());
+        map.put("7", getRouterRuleTest7Data());
         return map;
     }
 }

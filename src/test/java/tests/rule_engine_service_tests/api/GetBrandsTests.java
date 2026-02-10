@@ -3,7 +3,6 @@ package tests.rule_engine_service_tests.api;
 import static business_objects.api.rule_engine_api.get_brands.GetBrandsRequest.getBrands;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static tests.TestBaseApi.objectMapper;
 import static utils.Constants.*;
 import static utils.Constants.SUITE_RULE_ENGINE_API_TESTS;
 
@@ -16,12 +15,13 @@ import okhttp3.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseApi;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_API_TESTS)
-class GetBrandsTests {
+class GetBrandsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Rule engine api. Get brands request success")

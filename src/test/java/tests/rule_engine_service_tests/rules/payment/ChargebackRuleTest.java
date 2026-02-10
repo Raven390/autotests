@@ -5,6 +5,7 @@ import static business_objects.db.payment_gate.payment_details.PaymentDetailsObj
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
+import static helpers.asserts.AlertsAssertsHelper.assertChargebackRuleAlert;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.*;
@@ -54,7 +55,7 @@ class ChargebackRuleTest {
         dbDataMap = setupChargebackData();
     }
 
-    // @AfterAll
+    @AfterAll
     static void teardown() throws Exception {
         deleteData(dbDataMap);
     }
@@ -1250,9 +1251,9 @@ class ChargebackRuleTest {
         DataHelper data = dbDataMap.get("21");
         setupData(data);
 
-        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         Thread.sleep(1000);
-        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
         checkElementId("end_204", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
@@ -1281,59 +1282,7 @@ class ChargebackRuleTest {
 
         // check alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getProcessId());
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        RuleAlertV2 alert = alerts.getFirst();
-        // alert root
-        assertThat(
-                "Verify alert rule",
-                alert.getMerchantOrderId(),
-                is(data.callbackEvent.getCallback().getData().getOrderId()));
-        assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
-        assertThat("Verify alert ", alert.getReason(), is("Card used by known fraudster"));
-        assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
-        assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
-        assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
-        assertThat(
-                "Verify alert ",
-                alert.getCurrency(),
-                is(data.callbackEvent
-                        .getCallback()
-                        .getData()
-                        .getCharge()
-                        .getAttributes()
-                        .getCurrency()));
-        assertThat("Verify alert ", alert.getAccount(), is(notNullValue()));
-        assertThat("Verify alert ", alert.getTrigger(), is("Deposit"));
-        assertThat(
-                "Verify alert ",
-                alert.getAmount(),
-                is(data.callbackEvent
-                        .getCallback()
-                        .getData()
-                        .getCharge()
-                        .getAttributes()
-                        .getAmount()));
-        assertThat("Verify alert ", alert.getAmountUsd(), is(notNullValue()));
-        assertThat("Verify alert ", alert.getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Verify alert ", alert.getType(), is("PAYMENT"));
-
-        // alert/rule
-        assertThat("Verify alert rule", alert.getRule().getVer(), is(notNullValue()));
-        assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
-
-        // alert/attribute
-        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is(nullValue()));
-        assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
-        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(2));
-        assertThat(
-                "Verify alert attributes",
-                alert.getAttributes().getPaymentProfile(),
-                is(data.callbackEvent
-                        .getCallback()
-                        .getData()
-                        .getCharge()
-                        .getAttributes()
-                        .getCardMaskedNumber()));
+        assertChargebackRuleAlert(data, alerts, 1);
     }
 
     @Test

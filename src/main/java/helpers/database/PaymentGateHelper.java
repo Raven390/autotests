@@ -53,8 +53,25 @@ public class PaymentGateHelper {
         }
     }
 
+    @Deprecated
     public static PaymentRuleExecutionsObject getPaymentRuleExecution(String paymentId, String ruleId)
             throws Exception {
+        List<PaymentRuleExecutionsObject> objects = getObjectsFromDB(
+                POSTGRES,
+                PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE,
+                String.format("payment_id='%s'", paymentId) + String.format(" and rule_id ='%s'", ruleId)
+                        + "ORDER BY date_updated DESC",
+                PaymentRuleExecutionsObject.class,
+                60);
+        writeLog(objects);
+        if (objects.isEmpty()) {
+            return null;
+        } else {
+            return objects.getFirst();
+        }
+    }
+
+    public static PaymentRuleExecutionsObject getPaymentRuleExecution(String paymentId, int ruleId) throws Exception {
         List<PaymentRuleExecutionsObject> objects = getObjectsFromDB(
                 POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE,
@@ -74,7 +91,7 @@ public class PaymentGateHelper {
         List<PaymentEventsObject> objects = getObjectsFromDB(
                 POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE,
-                "ucid='%s'".replace("%s", ucid) + "ORDER BY date_updated DESC",
+                "ucid='%s'".replace("%s", ucid) + " ORDER BY date_updated DESC",
                 PaymentEventsObject.class,
                 60);
         writeLog(objects);

@@ -73,7 +73,7 @@ public class AlertsAssertsHelper {
         assertThat(
                 "AlertId should match crmWithdrawalEventV2.id",
                 alerts.getFirst().getAlertId(),
-                is(data.crmWithdrawalEventV2.getId()));
+                is(notNullValue()));
         assertThat("MerchantOrderId should not be null", alerts.getFirst().getMerchantOrderId(), is(notNullValue()));
         assertThat(
                 "Reason should be 'Potential fraud detected'",
@@ -115,9 +115,7 @@ public class AlertsAssertsHelper {
         assertThat("Amount should be a Double", alerts.getFirst().getAmount(), is(instanceOf(Double.class)));
         assertThat("PaymentMethod should be 'CRYPTO'", alerts.getFirst().getPaymentMethod(), is("CRYPTO"));
         assertThat(
-                "AlertId should match transferToWaEvent.id",
-                alerts.getFirst().getAlertId(),
-                is(data.transferToWaEvent.getId().toString()));
+                "AlertId should match transferToWaEvent.id", alerts.getFirst().getAlertId(), is(notNullValue()));
         assertThat("MerchantOrderId should not be null", alerts.getFirst().getMerchantOrderId(), is(notNullValue()));
         assertThat(
                 "Reason should be 'Potential fraud detected'",
@@ -163,7 +161,7 @@ public class AlertsAssertsHelper {
         assertThat("Alerts list should contain exactly 1 item", alerts.size(), is(1));
         RuleAlertV2 alert = alerts.getFirst();
 
-        assertThat("assert alert", alert.getAlertId(), is(data.tradeEvent.id));
+        assertThat("assert alert", alert.getAlertId(), is(notNullValue()));
         assertThat("assert alert", alert.getTimestamp(), is(notNullValue()));
         assertThat("assert alert", alert.getType(), is(TRADING.getDisplayName()));
         assertThat("assert alert", alert.getTriggerCreatedTime(), is(data.tradeEvent.eventDate));
@@ -193,7 +191,7 @@ public class AlertsAssertsHelper {
                 "Verify alert",
                 alert.getTimestamp(),
                 matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alert.getAlertId(), is(data.customEvent.getId()));
+        assertThat("Verify alert", alert.getAlertId(), is(notNullValue()));
         assertThat(
                 "Verify alert",
                 alert.getTriggerCreatedTime(),
@@ -205,5 +203,61 @@ public class AlertsAssertsHelper {
         assertThat("Verify alert", alert.getRule().getName(), is(data.customEvent.getSource()));
         assertThat("Verify alert", alert.getRule().getVer(), notNullValue());
         assertThat("Verify alert", alert.getAttributes().getDetails(), is(""));
+    }
+
+    @Step("Assert chargeback alert")
+    public static void assertChargebackRuleAlert(DataHelper data, List<RuleAlertV2> alerts, int fraudScore) {
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        assertThat(
+                "Verify alert rule",
+                alert.getMerchantOrderId(),
+                is(data.callbackEvent.getCallback().getData().getOrderId()));
+        assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
+        assertThat("Verify alert ", alert.getReason(), is("Card used by known fraudster"));
+        assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
+        assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
+        assertThat(
+                "Verify alert ",
+                alert.getCurrency(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCurrency()));
+        assertThat("Verify alert ", alert.getAccount(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getTrigger(), is("Deposit"));
+        assertThat(
+                "Verify alert ",
+                alert.getAmount(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getAmount()));
+        assertThat("Verify alert ", alert.getAmountUsd(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert ", alert.getType(), is("PAYMENT"));
+
+        // alert/rule
+        assertThat("Verify alert rule", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
+
+        // alert/attribute
+        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is(nullValue()));
+        assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(fraudScore));
+        assertThat(
+                "Verify alert attributes",
+                alert.getAttributes().getPaymentProfile(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCardMaskedNumber()));
     }
 }

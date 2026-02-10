@@ -11,8 +11,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -53,10 +51,7 @@ class PostRuleDeploymentsTests extends TestBaseApi {
         assertThat("Assert rule processId", mappedResponse.getProcessId(), is(processId));
         assertThat("Assert rule ruleName", mappedResponse.getRuleName(), is("rule_name"));
         assertThat("Assert rule zeebeRevision", mappedResponse.getZeebeRevision(), is(1));
-        assertThat(
-                "Assert rule lastUpdate",
-                mappedResponse.getLastUpdate(),
-                is(equalTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))));
+        assertThat("Assert rule lastUpdate", mappedResponse.getLastUpdate(), is(equalTo(Utils.getCurrentDate())));
         assertThat("Assert rule status", mappedResponse.getStatus(), is("DEPLOYED"));
         assertThat("Assert rule comment", mappedResponse.getComment(), is(nullValue()));
     }

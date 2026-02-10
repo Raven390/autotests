@@ -1,6 +1,5 @@
 package tests.connection_search_api_service_tests;
 
-import static business_objects.api.connection_search_api.get_connections.GetConnectionsResponseFactory.*;
 import static business_objects.api.connection_search_api.get_connections_by_payout.GetConnectionsByPayoutRequest.getConnectionsByPayout;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.DataSetupHelper.setupData;
@@ -44,10 +43,10 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     @DisplayName("Connection search by payout. Get connection by payout category CREDIT_CARD(200)")
     void getConnectionsByPayoutTest1() throws Exception {
         DataHelper data = new DataHelper();
-        data.createClient(testClient1).createCreditCard();
+        data.createClient(testClient1).addCreditCard();
 
         DataHelper data2 = new DataHelper();
-        data2.createClient(testClient2).createCreditCard();
+        data2.createClient(testClient2).addCreditCard();
 
         data2.getClientCards().getFirst().setId(getRandomLongPositive());
         data2.getClientCards()
@@ -93,10 +92,10 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     @DisplayName("Connection search by payout. Get connection by payout category CREDIT_CARD, exclude ucid(200)")
     void getConnectionsByPayoutTest2() throws Exception {
         DataHelper data = new DataHelper();
-        data.createClient(testClient1).createCreditCard();
+        data.createClient(testClient1).addCreditCard();
 
         DataHelper data2 = new DataHelper();
-        data2.createClient(testClient2).createCreditCard();
+        data2.createClient(testClient2).addCreditCard();
 
         data2.getClientCards().getFirst().setId(getRandomLongPositive());
         data2.getClientCards()
@@ -184,11 +183,11 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
         String paymentProfileKey = "E_WALLET" + getRandomIntPositive();
 
         DataHelper data = new DataHelper();
-        data.createClient(testClient1).createCreditCard().addWithdrawalSumByCategory(100d, 3);
+        data.createClient(testClient1).addCreditCard().addWithdrawalSumByCategory(100d, 3);
         data.getCrmTbWithdrawalObjects().getFirst().setPaymentDetails(paymentProfileKey);
 
         DataHelper data2 = new DataHelper();
-        data2.createClient(testClient2).createCreditCard().addWithdrawalSumByCategory(100d, 3);
+        data2.createClient(testClient2).addCreditCard().addWithdrawalSumByCategory(100d, 3);
         data2.getCrmTbWithdrawalObjects().getFirst().setPaymentDetails(paymentProfileKey);
 
         setupData(data);
@@ -219,11 +218,11 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
         String paymentProfileKey = "LOCAL_BANK_TRANSFER" + getRandomIntPositive();
 
         DataHelper data = new DataHelper();
-        data.createClient(testClient1).createCreditCard().addWithdrawalSumByCategory(100d, 3);
+        data.createClient(testClient1).addCreditCard().addWithdrawalSumByCategory(100d, 3);
         data.getCrmTbWithdrawalObjects().getFirst().setPaymentDetails(paymentProfileKey);
 
         DataHelper data2 = new DataHelper();
-        data2.createClient(testClient2).createCreditCard().addWithdrawalSumByCategory(100d, 3);
+        data2.createClient(testClient2).addCreditCard().addWithdrawalSumByCategory(100d, 3);
         data2.getCrmTbWithdrawalObjects().getFirst().setPaymentDetails(paymentProfileKey);
 
         setupData(data);
@@ -253,11 +252,11 @@ class GetConnectionsByPayoutTests extends TestBaseApi {
     void getConnectionsByPayoutTest6() throws Exception {
         String paymentProfileKey = "LOCAL_BANK_TRANSFER" + getRandomIntPositive();
         DataHelper data = new DataHelper();
-        data.createClient(testClient1).createCreditCard().addWithdrawalSumByCategory(100d, 3);
+        data.createClient(testClient1).addCreditCard().addWithdrawalSumByCategory(100d, 3);
         data.getCrmTbWithdrawalObjects().getFirst().setPaymentDetails(paymentProfileKey);
 
         DataHelper data2 = new DataHelper();
-        data2.createClient(testClient2).createCreditCard().addWithdrawalSumByCategory(100d, 3);
+        data2.createClient(testClient2).addCreditCard().addWithdrawalSumByCategory(100d, 3);
         data2.getCrmTbWithdrawalObjects().getFirst().setPaymentDetails(paymentProfileKey);
 
         setupData(data);

@@ -49,10 +49,12 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "end_102", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+                "end_102",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
         checkElementId(
                 "put_rule_execution",
-                data.crmWithdrawalEvent.getId(),
+                data.crmWithdrawalEventV2.getId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 
@@ -66,10 +68,12 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "end_202", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+                "end_202",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
         checkElementId(
                 "put_rule_execution",
-                data.crmWithdrawalEvent.getId(),
+                data.crmWithdrawalEventV2.getId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 
@@ -83,10 +87,12 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "end_203", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+                "end_203",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
         checkElementId(
                 "put_rule_execution",
-                data.crmWithdrawalEvent.getId(),
+                data.crmWithdrawalEventV2.getId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 
@@ -101,10 +107,12 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
-                "end_101", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+                "end_101",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
         checkElementId(
                 "put_rule_execution",
-                data.crmWithdrawalEvent.getId(),
+                data.crmWithdrawalEventV2.getId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 }

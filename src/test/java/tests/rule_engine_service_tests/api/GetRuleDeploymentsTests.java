@@ -18,13 +18,13 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
+import utils.Utils;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Tag(TEAM_CORE)
@@ -84,9 +84,7 @@ class GetRuleDeploymentsTests extends TestBaseApi {
                 mappedResponse.getFirst().getZeebeRevision(),
                 equalTo(rule.getZeebeRevision()));
         assertThat(
-                "Assert rule LastUpdate",
-                mappedResponse.getFirst().getLastUpdate(),
-                equalTo(rule.getLastUpdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+                "Assert rule LastUpdate", mappedResponse.getFirst().getLastUpdate(), equalTo(Utils.getCurrentDate()));
         assertThat(
                 "Assert rule Status",
                 mappedResponse.getFirst().getStatus(),

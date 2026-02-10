@@ -486,7 +486,7 @@ public class DataHelper {
         return this;
     }
 
-    public DataHelper createCreditCard() {
+    public DataHelper addCreditCard() {
         if (this.getClientCards() == null) {
             this.setClientCards(new ArrayList<>());
         }
