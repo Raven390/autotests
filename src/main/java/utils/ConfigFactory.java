@@ -213,6 +213,11 @@ public class ConfigFactory {
     public static final String FIRST_NAME_AUTOTEST_TRADING_OPS = CONFIG.firstNameTradingOpsUser();
     public static final String LAST_NAME_AUTOTEST_TRADING_OPS = CONFIG.lastNameTradingOpsUser();
 
+    public static final String ID_AUTOTEST_TRADING_OPS_SENIOR = CONFIG.idTradingOpsSeniorUser();
+    public static final String EMAIL_AUTOTEST_TRADING_OPS_SENIOR_USER = CONFIG.emailTradingOpsSeniorUser();
+    public static final String FIRST_NAME_TRADING_OPS_SENIOR_USER = CONFIG.firstNameTradingOpsSeniorUser();
+    public static final String LAST_NAME_PAYMENT_USER = CONFIG.lastNamePaymentUser();
+
     // Abuse registry
     public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
     public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
@@ -793,6 +798,15 @@ public class ConfigFactory {
 
         @Key("lastNameTradingOpsUser")
         String lastNameTradingOpsUser();
+
+        @Key("emailTradingOpsSeniorUser")
+        String emailTradingOpsSeniorUser();
+
+        @Key("firstNameTradingOpsSeniorUser")
+        String firstNameTradingOpsSeniorUser();
+
+        @Key("idTradingOpsSeniorUser")
+        String idTradingOpsSeniorUser();
 
         // Lark
 
