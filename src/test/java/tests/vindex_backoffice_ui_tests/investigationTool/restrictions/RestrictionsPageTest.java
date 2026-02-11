@@ -15,8 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
-import static utils.Utils.insertCrmAccountsToDb;
+import static utils.Utils.*;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -37,6 +36,8 @@ class RestrictionsPageTest extends TestBaseWeb {
 
     static ClientHelper restrictionClient = getRandomVantageClientAllFields();
     static ClientHelper labelClient = getRandomVantageClientAllFields();
+    private static CrmTbAccountObject activeAccount;
+    private static CrmTbAccountObject activeAccount3;
 
     private static final String RESTRICTION_COMMENT = "test reason";
     private static final User user = autotestUserOne();
@@ -45,8 +46,10 @@ class RestrictionsPageTest extends TestBaseWeb {
     static void setup() {
         CrmTbUserObject restrictionClientDB = generateUserByClient(restrictionClient);
         CrmTbUserObject labelClientDB = generateUserByClient(labelClient);
-        CrmTbAccountObject activeAccount = generateCrmTbAccountDataForUi(restrictionClient);
+        activeAccount = generateCrmTbAccountDataForUi(restrictionClient);
+        activeAccount3 = generateAdditionalStaticCrmTbAccountActive(restrictionClient);
         MtAccountObject mtAccountActive = generateMtAccountByCrmTbAccount(activeAccount);
+        MtAccountObject mtAccountActive3 = generateMtAccountByCrmTbAccount(activeAccount3);
         CrmTbAccountObject activeAccount2 = generateCrmTbAccountDataForUi(labelClient);
         CrmTbAccountObject inactiveAccount = generateAdditionalCrmTbAccountDataForUi(labelClient);
         inactiveAccount.accountStatus = ACCOUNT_STATUS_INACTIVE;
@@ -55,9 +58,10 @@ class RestrictionsPageTest extends TestBaseWeb {
         mtAccountInactive.lastLogin =
                 getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 1, 0, 0, 0);
 
-        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccountActive, mtAccountActive2, mtAccountInactive));
+        insertObjectsToDb(
+                MT_ACCOUNT_TABLE_NAME, List.of(mtAccountActive, mtAccountActive2, mtAccountActive3, mtAccountInactive));
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, labelClientDB));
-        insertCrmAccountsToDb(activeAccount, activeAccount2, inactiveAccount);
+        insertCrmAccountsToDb(activeAccount, activeAccount2, activeAccount3, inactiveAccount);
     }
 
     @BeforeEach
@@ -377,5 +381,21 @@ class RestrictionsPageTest extends TestBaseWeb {
                 "Verify only restrictions with bo_visibility = true are displayed",
                 restrictionPage.getDisplayedRestrictionsList(),
                 containsInAnyOrder(getVisibleRestrictionsList().toArray()));
+    }
+
+    @Test
+    @AllureId("2151")
+    @Feature("BMS-3271 Display the last comment on Restriction tab for trading & WT restrictions")
+    @DisplayName("Last comment should be displayed for Close only in restriction tab")
+    void closeOnlyRestrictionLastCommentTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        String comment1 = "test first comment";
+        restrictionPage.addNewRestriction(CLOSE_ONLY_MODE, activeAccount.account.toString(), comment1);
+        restrictionPage.verifyRestrictionAppliedInUi(CLOSE_ONLY_MODE, user, comment1);
+        String comment2 = "test second comment";
+        restrictionPage.addAccountForRestriction(CLOSE_ONLY_MODE, activeAccount3.account.toString(), comment2);
+        restrictionPage.waitForFirstRestrictionCommentToBe(comment2);
     }
 }

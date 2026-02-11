@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import helpers.data.enums.Restriction;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
@@ -49,6 +50,8 @@ public class RestrictionPage extends AbstractPage {
     private final Locator worseTradingEmptyRestrictionsButton;
     private final Locator worseTradingAppliedRestrictionsButton;
     private final Locator worseTradingTabApplyButton;
+    private final Locator worseTradingComment;
+    private final Locator selectAllAccountsCheckbox;
 
     private static final String RESTRICTION_ITEM_BY_NAME_PATTERN =
             "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
@@ -80,6 +83,9 @@ public class RestrictionPage extends AbstractPage {
             + "//*[contains(@class,'v-trading-env-restrictions-item__name') and normalize-space(text())='Worse trading']";
     private static final String WT_ACCOUNT_LEVEL_TEXT_IN_ROW =
             "button[data-qa='restrictions__wt_drawer__account__level']";
+    private static final String ACCOUNT_SELECTION_BUTTON_BY_RESTRICTION_CODE_PATTERN =
+            "//button[@data-qa='restrictions__drawer__list__item__%s__accounts__toggle']";
+    private static final String INPUT_WITH_VALUE_PATTERN = "//input[@value='%s']";
 
     public RestrictionPage(Page page) {
         super(page);
@@ -110,6 +116,9 @@ public class RestrictionPage extends AbstractPage {
         this.worseTradingEmptyRestrictionsButton =
                 page.locator("//button[@data-qa='restrictions__empty_view__open_wt_drawer']");
         this.worseTradingTabApplyButton = page.locator("//button[@data-qa='restrictions__wt_drawer__submit']");
+        this.worseTradingComment = page.locator("//span[contains(@class,'v-trading-env-restrictions-item__comment')]");
+        this.selectAllAccountsCheckbox =
+                page.locator("//div[@class='v-checkbox-list-with-select-all__select-all']/descendant::input");
     }
 
     public void navigate(String ucid) {
@@ -357,6 +366,33 @@ public class RestrictionPage extends AbstractPage {
         applyChangesButton.click();
     }
 
+    @Step("Set the restriction {restriction} for account {account} in UI")
+    public void addNewRestriction(Restriction restriction, String account, String comment) {
+        openRestrictionsDrawerButton.click();
+        addRestrictionButton.click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName()))
+                .click();
+        applyRestrictionButton.click();
+        page.locator(String.format(ACCOUNT_SELECTION_BUTTON_BY_RESTRICTION_CODE_PATTERN, restriction.getCode()))
+                .click();
+        selectAllAccountsCheckbox.click();
+        page.locator(String.format(INPUT_WITH_VALUE_PATTERN, account)).click();
+        applyRestrictionButton.click();
+        commentInput.fill(comment);
+        applyChangesButton.click();
+    }
+
+    @Step("Set the restriction {restriction} for additional account {account} in UI")
+    public void addAccountForRestriction(Restriction restriction, String account, String comment) {
+        openRestrictionsDrawerButton.click();
+        page.locator(String.format(ACCOUNT_SELECTION_BUTTON_BY_RESTRICTION_CODE_PATTERN, restriction.getCode()))
+                .click();
+        page.locator(String.format(INPUT_WITH_VALUE_PATTERN, account)).click();
+        applyRestrictionButton.click();
+        commentInput.fill(comment);
+        applyChangesButton.click();
+    }
+
     @Step("Open worse trading applied restrictions tab")
     public void openWorseTradingAppliedRestrictionsTab() {
         worseTradingAppliedRestrictionsButton.click();
@@ -521,5 +557,16 @@ public class RestrictionPage extends AbstractPage {
     public void isRestrictionTabVisible() {
         Allure.step("check is restriction tab visible");
         restrictionTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    @Step("Wait for worse trading comment to be '{expectedComment}'")
+    public void waitForWorseTradingCommentToBe(String expectedComment) {
+        worseTradingComment.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        PlaywrightAssertions.assertThat(worseTradingComment).containsText(expectedComment);
+    }
+
+    @Step("Wait for worse trading comment to be '{expectedComment}'")
+    public void waitForFirstRestrictionCommentToBe(String expectedComment) {
+        PlaywrightAssertions.assertThat(restrictionAppliedComment.first()).containsText(expectedComment);
     }
 }
