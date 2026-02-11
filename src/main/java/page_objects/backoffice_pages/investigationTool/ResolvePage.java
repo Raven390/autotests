@@ -89,6 +89,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator confirmFinishPaymentInvestigationButton;
 
     // No-deduction "Select fraud account" UI
+    private final Locator noDeductionBlock;
     private final Locator noDeductionFraudAccountSelect;
     private final Locator noDeductionCheckboxList;
     private final Locator noDeductionSaveAsFraudButton;
@@ -188,6 +189,8 @@ public class ResolvePage extends AbstractPage {
         this.useAsIllegalProfitButton = page.locator(
                 "//div[@class='v-suggested-deduction-select__controls']/button[contains(@class,'g-button_view_action')]");
         this.suggestedDeductionSection = page.locator("//div[@class='v-suggested-deduction']");
+        this.noDeductionBlock = page.locator(
+                "//div[contains(@class,'g-text') and contains(text(),'No deduction')]//ancestor::div[contains(@class,'v-drawer-section-layout')]");
         this.previouslyReportedFraudItem =
                 page.locator("//div[contains(@data-qa,'client_report_fraud_drawer__reported_fraud_types_list__item')]");
         this.previouslyReportedFraudTypes = page.locator("//span[contains(@class,'g-color-text_color_primary')]");
@@ -661,31 +664,18 @@ public class ResolvePage extends AbstractPage {
         noDeductionSwitch.click();
     }
 
+    @Step("Is No deduction block visible")
+    public Boolean isNoDeductionBlockVisible() {
+        return noDeductionBlock.isVisible();
+    }
+
     @Step("Is Suggested deduction section visible")
     public Boolean isSuggestedDeductionSectionVisible() {
         return suggestedDeductionSection.isVisible();
     }
 
     @Step("Get previously reported fraud items")
-    public List<List<String>> getPreviouslyReportedFraudItems() {
-        List<List<String>> list = new ArrayList<>();
-        for (int i = 0; i < previouslyReportedFraudItem.count(); i++) {
-            List<String> typesList = new ArrayList<>();
-            typesList.add(previouslyReportedFraudItem
-                    .nth(i)
-                    .locator(previouslyReportedFraudTypes)
-                    .textContent());
-            typesList.add(previouslyReportedFraudItem
-                    .nth(i)
-                    .locator(previouslyReportedFraudSymbols)
-                    .textContent());
-            list.add(typesList);
-        }
-        return list;
-    }
-
-    @Step("Get previously reported fraud items")
-    public List<String> getPreviouslyReportedFraudItems2() {
+    public List<String> getPreviouslyReportedFraudItems() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < previouslyReportedFraudItem.count(); i++) {
             list.add(previouslyReportedFraudItem

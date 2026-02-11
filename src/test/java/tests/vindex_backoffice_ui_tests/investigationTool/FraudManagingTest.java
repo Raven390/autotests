@@ -24,7 +24,6 @@ import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudType;
-import helpers.database.ArHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -48,15 +47,20 @@ class FraudManagingTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         deleteObjectFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserFromAbuseRegistry(client.getUcid());
-        deleteUserBO(client.getUcid());
-        cleanUserRestriction(client.getUcid());
     }
 
+    @AfterEach
+    void deleteFraudType() throws Exception {
+        cleanClientAudit(client.getUcid());
+        deleteUserBO(client.getUcid());
+        cleanUserRestriction(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
+    }
+
+    @Test
     @AllureId("1504")
     @DisplayName(
             "Fraud types that was separately added as potential and confirmed must be shown only as confirmed on FE")
-    @Test
     void overridedPotentialNotShown() throws IOException {
 
         FraudType fraudType = getRandomFraudType();
@@ -72,23 +76,17 @@ class FraudManagingTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
-        List<List<String>> frauds = resolvePage.getPreviouslyReportedFraudItems();
+        List<String> frauds = resolvePage.getPreviouslyReportedFraudItems();
         Allure.step("check that there only one fraud type displayed");
         assertEquals(1, frauds.size());
         Allure.step("check that name of the fraud is that that we reported on client");
-        assertEquals(fraudType.getName(), frauds.getFirst().getFirst());
+        assertEquals(fraudType.getName(), frauds.getFirst());
     }
 
-    @DisplayName("fraud management source test Vindex")
     @Test
     @AllureId("1804")
+    @DisplayName("fraud management source test Vindex")
     void sourceVindexTest() throws Exception {
-
-        cleanClientAudit(client.getUcid());
-        deleteUserBO(client.getUcid());
-        cleanUserRestriction(client.getUcid());
-        ArHelper.deleteUserFromAbuseRegistry(client.getUcid());
-
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -116,16 +114,10 @@ class FraudManagingTest extends TestBaseWeb {
         assertEquals(source, fraud.getFraudSource());
     }
 
-    @DisplayName("fraud management source test RA Raise")
     @Test
     @AllureId("1805")
+    @DisplayName("fraud management source test RA Raise")
     void sourceRaRaiseTest() throws Exception {
-
-        cleanClientAudit(client.getUcid());
-        deleteUserBO(client.getUcid());
-        cleanUserRestriction(client.getUcid());
-        ArHelper.deleteUserFromAbuseRegistry(client.getUcid());
-
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -153,16 +145,10 @@ class FraudManagingTest extends TestBaseWeb {
         assertEquals(source, fraud.getFraudSource());
     }
 
-    @DisplayName("fraud management source test Additional Review")
     @Test
     @AllureId("1806")
+    @DisplayName("fraud management source test Additional Review")
     void sourceAdditionalReviewTest() throws Exception {
-
-        cleanClientAudit(client.getUcid());
-        deleteUserBO(client.getUcid());
-        cleanUserRestriction(client.getUcid());
-        ArHelper.deleteUserFromAbuseRegistry(client.getUcid());
-
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -190,53 +176,10 @@ class FraudManagingTest extends TestBaseWeb {
         assertEquals(source, fraud.getFraudSource());
     }
 
-    @DisplayName("fraud management source test Insight")
-    @Test
-    @AllureId("1807")
-    void sourceInsightTest() throws Exception {
-
-        cleanClientAudit(client.getUcid());
-        deleteUserBO(client.getUcid());
-        cleanUserRestriction(client.getUcid());
-        ArHelper.deleteUserFromAbuseRegistry(client.getUcid());
-
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        alertsPage.waitForPageToLoad();
-        resolvePage.openReportFraudForm();
-        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
-        String source = INSIGHT.getDisplayName();
-        resolvePage.selectFraudSourceManage(source);
-        String comment = String.valueOf(getCurrentTimestampSeconds());
-        resolvePage.applyFraudManagement(comment);
-
-        page.waitForTimeout(1000);
-
-        List<AbuserFraudType> frauds = getObjectsFromDB(
-                DbName.POSTGRES,
-                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
-                "ucid='" + client.getUcid() + "'",
-                AbuserFraudType.class);
-        Allure.step("Assert that there only one record in ar.abuser_fraud_type");
-        assertEquals(1, frauds.size());
-        AbuserFraudType fraud = frauds.getFirst();
-        Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
-        assertEquals(comment, fraud.getComment());
-        Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
-    }
-
-    @DisplayName("fraud management source test Frontend")
     @Test
     @AllureId("1808")
+    @DisplayName("fraud management source test Frontend")
     void sourceFrontendTest() throws Exception {
-
-        cleanClientAudit(client.getUcid());
-        deleteUserBO(client.getUcid());
-        cleanUserRestriction(client.getUcid());
-        ArHelper.deleteUserFromAbuseRegistry(client.getUcid());
-
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -265,9 +208,38 @@ class FraudManagingTest extends TestBaseWeb {
     }
 
     @Test
+    @AllureId("1807")
+    @DisplayName("fraud management source test Insight")
+    void sourceInsightTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openReportFraudForm();
+        resolvePage.addFraud(CPA_ABUSE, POTENTIAL);
+        String source = INSIGHT.getDisplayName();
+        resolvePage.selectFraudSourceManage(source);
+        String comment = String.valueOf(getCurrentTimestampSeconds());
+        resolvePage.applyFraudManagement(comment);
+
+        page.waitForTimeout(1000);
+
+        List<AbuserFraudType> frauds = getObjectsFromDB(
+                DbName.POSTGRES,
+                AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
+                "ucid='" + client.getUcid() + "'",
+                AbuserFraudType.class);
+        Allure.step("Assert that there only one record in ar.abuser_fraud_type");
+        assertEquals(1, frauds.size());
+        AbuserFraudType fraud = frauds.getFirst();
+        Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
+        assertEquals(comment, fraud.getComment());
+        Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
+        assertEquals(source, fraud.getFraudSource());
+    }
+
+    @Test
     @AllureId("1885")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @DisplayName("general role can manage Trading fraud type without active alerts - verify UI blocks")
     void generalRoleManagePaymentFraudWithoutAlerts() throws Exception {
         investigationPage.navigateEnterPage();
@@ -281,7 +253,7 @@ class FraudManagingTest extends TestBaseWeb {
         resolvePage.reportFraud(CHARGEBACK, CONFIRMED);
 
         Allure.step("Verify that \"Previously reported\" section is visible");
-        List<String> previouslyReportedFrauds = resolvePage.getPreviouslyReportedFraudItems2();
+        List<String> previouslyReportedFrauds = resolvePage.getPreviouslyReportedFraudItems();
         assertThat("Verify that previously reported section is displayed", previouslyReportedFrauds, hasSize(0));
 
         Allure.step("Verify that \"Detected fraud\" section is visible (selected fraud should be displayed)");
@@ -295,8 +267,8 @@ class FraudManagingTest extends TestBaseWeb {
         List<String> restrictionsList = resolvePage.getRestrictionsList();
         assertThat("Verify that restrictions section is accessible", restrictionsList.isEmpty(), is(false));
 
-        Allure.step("Verify that 'Suggested Deduction' block is NOT displayed");
-        boolean isSuggestedDeductionVisible = resolvePage.isSuggestedDeductionSectionVisible();
+        Allure.step("Verify that 'Suggested Deduction' block is displayed ");
+        boolean isSuggestedDeductionVisible = resolvePage.isNoDeductionBlockVisible();
         assertThat("Verify that Suggested Deduction block is displayed", isSuggestedDeductionVisible, is(true));
 
         resolvePage.checkDisplayedFraudSources(getFraudSourceNames(getTradingFraudSourcesList()));
