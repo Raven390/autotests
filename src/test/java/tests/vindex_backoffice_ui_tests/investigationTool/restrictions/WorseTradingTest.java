@@ -20,6 +20,7 @@ import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -131,5 +132,32 @@ class WorseTradingTest extends TestBaseWeb {
         restrictionPage.applyWorseTrading("Autotest comment remove");
         boolean hidden = restrictionPage.waitForWorseTradingDisappearRestrictionInList(20_000);
         assertThat("Worse trading restriction should disappear", hidden, is(true));
+    }
+
+    @Test
+    @AllureId("2150")
+    @Feature("BMS-3271 Display the last comment on Restriction tab for trading & WT restrictions")
+    @DisplayName("Worse trading: last comment should be displayed in restriction tab")
+    void worseTradingLastCommentTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(client.getUcid());
+        restrictionPage.openWorseTradingEmptyRestrictionsTab();
+        restrictionPage.setWorseTradingLevelForAccount(String.valueOf(account1.account), "Low");
+        restrictionPage.setWorseTradingLevelForAccount(String.valueOf(account3.account), "High");
+        restrictionPage.applyWorseTrading("test first comment");
+        boolean shown = restrictionPage.waitForWorseTradingAppearRestrictionInList(20_000);
+        assertThat("Worse trading restriction should appear", shown, is(true));
+        restrictionPage.openWorseTradingAppliedRestrictionsTab();
+        restrictionPage.isPageLoaded();
+        var level1 = restrictionPage.getWorseTradingLevelForAccount(String.valueOf(account1.account));
+        var level3 = restrictionPage.getWorseTradingLevelForAccount(String.valueOf(account3.account));
+        assertThat("Worse trading restriction should be set", level1, is("Low"));
+        assertThat("Worse trading restriction should be set", level3, is("High"));
+        restrictionPage.setWorseTradingLevelForAccount(String.valueOf(account1.account), "High");
+        restrictionPage.setWorseTradingLevelForAccount(String.valueOf(account3.account), "Low");
+        String comment2 = "test second comment";
+        restrictionPage.applyWorseTrading(comment2);
+        restrictionPage.waitForWorseTradingCommentToBe(comment2);
     }
 }
