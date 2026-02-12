@@ -230,25 +230,32 @@ job_test_backoffice:
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
     - chmod +x allurectl
-    - chmod +x ./run-tests-and-lark-pub.sh
   script:
-    - echo "Running tests"
+    - echo "Running tests (always), TestOps upload is best-effort"
     - ./gradlew installDeps
     - ./gradlew installChromium
     - |
       set +e
-      echo "Trying TestOps wrapper script..."
-      ./run-tests-and-lark-pub.sh testSmokeBackoffice
-      WRAPPER_EXIT_CODE=$?
 
-      if [ $WRAPPER_EXIT_CODE -ne 0 ]; then
-        echo "Wrapper failed (exit=$WRAPPER_EXIT_CODE). Running tests without TestOps..."
-        ./gradlew clean testSmokeBackoffice
-        TEST_EXIT_CODE=$?
-        exit $TEST_EXIT_CODE
+      echo "1) Running Backoffice tests WITHOUT TestOps wrapper (source of truth)"
+      ./gradlew clean testSmokeBackoffice
+      TEST_EXIT_CODE=$?
+
+      echo "2) Trying to upload allure-results to Allure TestOps (must NOT fail the job if TestOps is down)"
+      if [ -d "$ALLURE_RESULTS" ]; then
+        ./allurectl upload "$ALLURE_RESULTS"
+        UPLOAD_EXIT_CODE=$?
+        if [ $UPLOAD_EXIT_CODE -ne 0 ]; then
+          echo "Allure TestOps upload failed (exit=$UPLOAD_EXIT_CODE). Ignoring and continuing."
+        else
+          echo "Allure TestOps upload success."
+        fi
+      else
+        echo "No $ALLURE_RESULTS directory found. Skipping upload."
       fi
 
-      exit 0
+      echo "3) Exiting with tests exit code: $TEST_EXIT_CODE"
+      exit $TEST_EXIT_CODE
   artifacts:
     when: always
     paths:
