@@ -10,6 +10,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
+import business_objects.db.clickhouse.mt___mt5_deals_coerced_dd.Mt5DealsCoercedDd;
 import business_objects.db.clickhouse.mt___mt5_deals_coerced_dd.Mt5DealsCoercedDdFactory;
 import business_objects.db.clickhouse.mt___symbol_session.MtSymbolSession;
 import business_objects.db.clickhouse.mt___symbol_session.MtSymbolSessionObjectFactory;
@@ -113,8 +114,8 @@ public class GapTradingRuleDataFactory {
     private static DataHelper getGapTradingRuleExitEventEnd5Data() {
         DataHelper data = getGapTradingRuleData(gapTradingRuleExitEventEnd5Client);
         data.setMt5DealsCoercedObjects(new ArrayList<>(List.of(generateMt5DealsCoercedObject(data.getClientHelper()))));
-        data.setMt5DealsCoercedDdObjects(
-                new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(data.getClientHelper(), 500d))));
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 200d, 10d, -100d, getCurrentTimestampDbFormat()))));
         return data;
     }
 
@@ -123,15 +124,15 @@ public class GapTradingRuleDataFactory {
         data.setMt5DealsCoercedObjects(new ArrayList<>(List.of(generateMt5DealsCoercedObject(data.getClientHelper()))));
 
         data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
-                data.getClientHelper(), 500d, 50d, 5d, getCurrentTimestampDbFormat()))));
+                data.getClientHelper(),
+                200d,
+                10d,
+                -100d,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)))));
 
         data.getMt5DealsCoercedDdObjects()
                 .add(Mt5DealsCoercedDdFactory.generateTradeByClient(
-                        data.getClientHelper(),
-                        600d,
-                        10_000d,
-                        6000d,
-                        getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)));
+                        data.getClientHelper(), 200d, 10d, 50d, getCurrentTimestampDbFormat()));
 
         return data;
     }
@@ -139,18 +140,18 @@ public class GapTradingRuleDataFactory {
     private static DataHelper getGapTradingRuleExitEventEnd7Data() {
         DataHelper data = getGapTradingRuleData(gapTradingRuleExitEventEnd7Client);
         data.setMt5DealsCoercedObjects(new ArrayList<>(List.of(generateMt5DealsCoercedObject(data.getClientHelper()))));
-        data.getMt5DealsCoercedObjects().getFirst().setNotionalValueUsd(6000d);
+        data.getMt5DealsCoercedObjects().getFirst().setNotionalValueUsd(60_000d);
 
-        data.setMt5DealsCoercedDdObjects(
-                new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(data.getClientHelper(), 500d))));
-        data.getMt5DealsCoercedDdObjects()
-                .add(Mt5DealsCoercedDdFactory.generateTradeByClient(
-                        data.getClientHelper(),
-                        600d,
-                        10_000d,
-                        6000d,
-                        getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)));
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(),
+                1000d,
+                100d,
+                -2000d,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)))));
 
+        Mt5DealsCoercedDd mt5DealsCoercedDd = Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 1000d, 100d, 200d, getCurrentTimestampDbFormat());
+        data.getMt5DealsCoercedDdObjects().add(mt5DealsCoercedDd);
         return data;
     }
 
@@ -159,15 +160,16 @@ public class GapTradingRuleDataFactory {
         data.setMt5DealsCoercedObjects(generateMt5DealsCoercedObject(data.getClientHelper(), 2));
         data.getMt5DealsCoercedObjects().getLast().setSymbol("BTCUSD");
 
-        data.setMt5DealsCoercedDdObjects(
-                new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(data.getClientHelper(), 500d))));
-        data.getMt5DealsCoercedDdObjects()
-                .add(Mt5DealsCoercedDdFactory.generateTradeByClient(
-                        data.getClientHelper(),
-                        600d,
-                        10_000d,
-                        6000d,
-                        getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)));
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(),
+                1000d,
+                100d,
+                -2000d,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)))));
+
+        Mt5DealsCoercedDd mt5DealsCoercedDd = Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 1000d, 100d, 200d, getCurrentTimestampDbFormat());
+        data.getMt5DealsCoercedDdObjects().add(mt5DealsCoercedDd);
 
         return data;
     }
@@ -176,16 +178,16 @@ public class GapTradingRuleDataFactory {
         DataHelper data = getGapTradingRuleData(gapTradingRuleExitEventEndAlertClient);
         data.setMt5DealsCoercedObjects(new ArrayList<>(List.of(generateMt5DealsCoercedObject(data.getClientHelper()))));
 
-        data.setMt5DealsCoercedDdObjects(
-                new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(data.getClientHelper(), 500d))));
-        data.getMt5DealsCoercedDdObjects()
-                .add(Mt5DealsCoercedDdFactory.generateTradeByClient(
-                        data.getClientHelper(),
-                        600d,
-                        10_000d,
-                        6000d,
-                        getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)));
+        data.setMt5DealsCoercedDdObjects(new ArrayList<>(List.of(Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(),
+                1000d,
+                100d,
+                -2000d,
+                getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 40)))));
 
+        Mt5DealsCoercedDd mt5DealsCoercedDd = Mt5DealsCoercedDdFactory.generateTradeByClient(
+                data.getClientHelper(), 1000d, 100d, 200d, getCurrentTimestampDbFormat());
+        data.getMt5DealsCoercedDdObjects().add(mt5DealsCoercedDd);
         return data;
     }
 

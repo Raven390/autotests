@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.trading;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
 import static helpers.asserts.AlertsAssertsHelper.checkTradingAlert;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.trading.GapTradingRuleDataFactory.setupGapTradingRuleData;
@@ -115,7 +116,7 @@ class GapTradingRuleTests extends TestBaseRule {
         checkTradingAlert(
                 data,
                 alerts,
-                "Client has open trades with " + data.getTradeEvent().symbol + " after market close at ",
+                "Client traded with " + data.getTradeEvent().symbol + " on ",
                 "GAP_TRADING",
                 "Open trade",
                 "Gap trading");
@@ -125,6 +126,7 @@ class GapTradingRuleTests extends TestBaseRule {
                 "Attributes.tradeId should match tradeEvent.tradeId",
                 alert.getAttributes().getTicketId(),
                 is(String.valueOf(data.getTradeEvent().getTradeId())));
+        assertThatAlertNotFailed(alert.getUcid(), "Gap trading");
     }
 
     private void runGapTradingRuleTest(String dataKey, String expectedElementId) throws Exception {
