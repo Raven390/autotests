@@ -218,6 +218,15 @@ public class RuleAlertV2 {
         @JsonProperty("Ticket ID")
         private String ticketId;
 
+        @JsonProperty("Leverage")
+        private String leverage;
+
+        @JsonProperty("Equity USD")
+        private String equityUSD;
+
+        @JsonProperty("Total Exposure after market close")
+        private String totalExposureAfterMarketClose;
+
         @JsonProperty("Trigger")
         private String trigger;
     }
