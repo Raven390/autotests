@@ -23,7 +23,7 @@ default:
   services:
     - name: public.ecr.aws/docker/library/docker:dind
       alias: docker
-      command: ["--tls=false"]
+      command: [ "--tls=false" ]
 
 cache:
   key: "${CI_PROJECT_ID}-gradle"
@@ -36,37 +36,37 @@ cache:
 
 workflow:
   rules:
-   # Rule for nightly job
-   - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
-     when: always
+    # Rule for nightly job
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
+      when: always
     # Rule for prod smoke job
-   - if: '$CI_PIPELINE_SOURCE == "schedule" && $PRODUCTION_SMOKE_RUN == "true"'
-     when: always
-   - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
-     when: always
-   # Rule for jobs run on MR
-   - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $APP_NAME == null'
-     when: always  # Pipeline runs on merge requests
-   # Push pipeline workflow (excluding main branch)
-   - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
-     when: always  # Pipeline runs on non-main branch pushes
-   # Rule for downstream pipeline for merges to services repos
-   - if: '$APP_NAME != null'
-     when: always
-   # Rule for launching core tests from gitlab ui
-   - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core"'
-     when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $PRODUCTION_SMOKE_RUN == "true"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
+      when: always
+    # Rule for jobs run on MR
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $APP_NAME == null'
+      when: always  # Pipeline runs on merge requests
+    # Push pipeline workflow (excluding main branch)
+    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: always  # Pipeline runs on non-main branch pushes
+    # Rule for downstream pipeline for merges to services repos
+    - if: '$APP_NAME != null'
+      when: always
+    # Rule for launching core tests from gitlab ui
+    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core"'
+      when: always
     # Rule for launching backoffice tests from gitlab ui
-   - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice"'
-     when: always
-   - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null'
-     when: always
-   - if: '$PROD_TESTS == "true"'
-     when: always
-   - if: '$CI_PIPELINE_SOURCE == "schedule" && $DEBUG_RUNNER == "true"'
-     when: always
-   # Default: Disable pipeline for other scenarios
-   - when: never
+    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null'
+      when: always
+    - if: '$PROD_TESTS == "true"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $DEBUG_RUNNER == "true"'
+      when: always
+    # Default: Disable pipeline for other scenarios
+    - when: never
 
 job_build:
   timeout: 1 hour
@@ -88,7 +88,7 @@ job_build:
 job_code_check:
   timeout: 20 minutes
   stage: check
-  needs: ["job_build"]
+  needs: [ "job_build" ]
   image: gradle:8.10.0-jdk22
   rules:
     - if: '$APP_NAME == null && $PROD_TESTS == null && $DEBUG_RUNNER != "true"'
@@ -132,7 +132,7 @@ job_build_generator_jar:
   stage: build
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null && $PROD_TESTS == null'
-  needs: ["job_build"]
+  needs: [ "job_build" ]
   variables:
     IMAGE_NAME: generator
     IMAGE_VERSION: 0.1.0-SNAPSHOT
@@ -153,7 +153,7 @@ job_publish_generator_image:
   stage: build
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null && $PROD_TESTS == null'
-  needs: ["job_build_generator_jar"]
+  needs: [ "job_build_generator_jar" ]
   before_script:
     - apk add aws-cli
   script:
@@ -169,7 +169,7 @@ job_deploy_generator:
   image: alpine/helm:3.15.4
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null && $PROD_TESTS == null'
-  needs: ["job_publish_generator_image"]
+  needs: [ "job_publish_generator_image" ]
   when: manual
   script:
     - helm repo add "$CHART_NAME" "$CHART_PATH"
@@ -182,7 +182,7 @@ job_deploy_generator:
 job_test_core:
   timeout: 3 hours
   stage: test
-  needs: ["job_build"]
+  needs: [ "job_build" ]
   image: gradle:8.10.0-jdk22
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main" && $PROD_TESTS == null'
@@ -216,7 +216,7 @@ job_test_core:
 job_test_backoffice:
   timeout: 4 hours
   stage: test
-  needs: ["job_build"]
+  needs: [ "job_build" ]
   image: gradle:8.10.0-jdk22
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main" && $PROD_TESTS == null'
@@ -235,14 +235,27 @@ job_test_backoffice:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./run-tests-and-lark-pub.sh testSmokeBackoffice
+    - |
+      set +e
+      echo "Trying TestOps wrapper script..."
+      ./run-tests-and-lark-pub.sh testSmokeBackoffice
+      WRAPPER_EXIT_CODE=$?
+
+      if [ $WRAPPER_EXIT_CODE -ne 0 ]; then
+        echo "Wrapper failed (exit=$WRAPPER_EXIT_CODE). Running tests without TestOps..."
+        ./gradlew clean testSmokeBackoffice
+        TEST_EXIT_CODE=$?
+        exit $TEST_EXIT_CODE
+      fi
+
+      exit 0
   artifacts:
     when: always
     paths:
       - playwright-report
       - build/reports/
       - allure-results
-      - test-output/videos
+      - test-output/
     expire_in: 1 day
 
 job_debug_runner:
@@ -263,15 +276,27 @@ job_debug_runner:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean testRunnerDebug
-    - echo "TEST SUCCESS"
+    - ./gradlew clean
+    - |
+      set +e
+      echo "Trying TestOps (allurectl watch)..."
+      ./allurectl watch --results "$ALLURE_RESULTS" -- ./gradlew testRunnerDebug
+      WATCH_EXIT_CODE=$?
+
+      if [ $WATCH_EXIT_CODE -ne 0 ]; then
+        echo "TestOps integration failed (exit=$WATCH_EXIT_CODE). Running tests without TestOps..."
+        ./gradlew testRunnerDebug
+        exit $?
+      fi
+
+      exit 0
   artifacts:
     when: always
     paths:
       - playwright-report
       - build/reports/
       - allure-results
-      - test-output/videos
+      - test-output/
     expire_in: 1 day
 
 #Job to launch tests by connected service
@@ -294,12 +319,33 @@ job_test_downstream_end_to_end:
   script:
     - echo "Running tests"
     - |
+      set +e
+
+      run_with_optional_testops() {
+        local task="$1"
+
+        echo "Trying TestOps (allurectl watch) for task: ${task}"
+        ./allurectl watch --results "$ALLURE_RESULTS" -- ./gradlew clean "${task}"
+        local watch_code=$?
+
+        if [ $watch_code -ne 0 ]; then
+          echo "TestOps integration failed (exit=$watch_code). Running without TestOps: ${task}"
+          ./gradlew clean "${task}"
+          return $?
+        fi
+
+        return 0
+      }
+
       if [ "$APP_NAME" == "event-generator" ]; then
-        ./allurectl watch -- gradle clean testEventGeneratorService
+        run_with_optional_testops "testEventGeneratorService"
+        exit $?
       elif [ "$APP_NAME" == "connection-search-service" ]; then
-        ./allurectl watch -- gradle clean testConnectionSearchApiService
+        run_with_optional_testops "testConnectionSearchApiService"
+        exit $?
       fi
-    - echo "TEST SUCCESS"
+
+      exit 0
   artifacts:
     when: always
     paths:
