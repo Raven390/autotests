@@ -105,7 +105,7 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
         resolvePage.reportFraud(CHARGEBACK, CONFIRMED);
 
         // Verify that "Previously reported" section is visible
-        List<String> previouslyReportedFrauds = resolvePage.getPreviouslyReportedFraudItems2();
+        List<String> previouslyReportedFrauds = resolvePage.getPreviouslyReportedFraudItems();
         assertThat("Verify that previously reported section is displayed", previouslyReportedFrauds, hasSize(0));
 
         // Verify that "Detected fraud" section is visible (selected fraud should be displayed)

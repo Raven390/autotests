@@ -514,7 +514,7 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         resolvePage.fillCommentAndApply("test comment");
 
         resolvePage.openReportFraudForm();
-        List<String> previouslyReportedFraudItems = resolvePage.getPreviouslyReportedFraudItems2();
+        List<String> previouslyReportedFraudItems = resolvePage.getPreviouslyReportedFraudItems();
         assertThat(previouslyReportedFraudItems.size(), is(1));
 
         List<AbuserDeduction> deductionList = getObjectsFromDB(
