@@ -21,6 +21,7 @@ import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.backoffice_pages.search.GeneralSearchElements;
 import page_objects.backoffice_pages.search.SearchPage;
+import utils.ConfigFactory;
 import utils.TestResultWatcher;
 import utils.TestUtils;
 import utils.Utils;
@@ -67,6 +68,7 @@ public class TestBaseWeb {
     public static DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.##");
 
     public static Faker faker = new Faker();
+    boolean debug = ConfigFactory.isDebugMode();
 
     @BeforeAll
     static void setupBrowser() throws IOException {
@@ -99,7 +101,13 @@ public class TestBaseWeb {
 
     @BeforeEach
     void setupContextAndPage() {
-        context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO)));
+        Browser.NewContextOptions options = new Browser.NewContextOptions().setViewportSize(1920, 1080);
+
+        if (debug) {
+            options.setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO));
+        }
+
+        context = browser.newContext(options);
         context.tracing()
                 .start(new Tracing.StartOptions()
                         .setScreenshots(true)
@@ -135,14 +143,26 @@ public class TestBaseWeb {
 
     @AfterEach
     void closeContext() throws IOException {
+        if (context == null) return;
+
         String traceName = timestamp + "-" + n;
-        if (context != null) {
-            context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get(PATH_TRACE + traceName + ".zip")));
+        boolean failed = TestResultWatcher.isFailed();
+
+        try {
+            if (failed) {
+                context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get(PATH_TRACE + traceName + ".zip")));
+
+                TestUtils.attachScreenshot(page);
+            } else {
+                // passed: stop без path => zip не будет создан
+                try {
+                    context.tracing().stop();
+                } catch (Throwable t) {
+                    context.tracing().stop(new Tracing.StopOptions());
+                }
+            }
+        } finally {
             n += 1;
-            // Start attach
-            TestUtils.attachPlaywrightTrace(traceName);
-            TestUtils.attachScreenshot(page);
-            // End attach
             context.close();
         }
     }
