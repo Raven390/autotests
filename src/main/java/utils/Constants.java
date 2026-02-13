@@ -252,6 +252,7 @@ public class Constants {
     public static final String CRM_FILES_TABLE_NAME = "consolidated.crm___tb_files";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "consolidated.crm___tb_withdrawal";
     public static final String COST_PAYMENT_FEE_TABLE_NAME = "consolidated.cost_payment_fee";
+    public static final String S3_MT_SPREADS_TABLE_NAME = "s3___mt_spreads";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE = "consolidated.crm___tb_withdraw_type";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_BYBIT = "data_science.ucid_mirror_score_bybit";
     public static final String DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME = "data_science.feature_store_service";

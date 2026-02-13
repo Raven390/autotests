@@ -46,6 +46,9 @@ public class DataSetupHelper {
                     insertObjectToDb(COST_PAYMENT_FEE_TABLE_NAME, cf);
                 });
             }
+            if (data.s3MtSpreadsObject != null) {
+                data.s3MtSpreadsObject.forEach(s -> insertObjectToDb(S3_MT_SPREADS_TABLE_NAME, s));
+            }
             insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE, data.crmTbWithdrawalTypeObjects);
             if (data.crmTbDepositObjects != null) {
                 insertDepositTypeData();

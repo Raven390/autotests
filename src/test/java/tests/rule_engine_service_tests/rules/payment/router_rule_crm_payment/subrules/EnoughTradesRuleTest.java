@@ -52,7 +52,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("1826")
+    @AllureId("2153")
     @DisplayName("Enough trades rule. Account type in event 'IB'. Element id: Event_1f8kqnh")
     void enoughTradesTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -73,7 +73,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("1828")
+    @AllureId("2154")
     @DisplayName("Enough trades rule. Fund type in event 'PAMM'. Element id: Event_1f8kqnh")
     void enoughTradesTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -93,7 +93,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("1827")
+    @AllureId("2155")
     @DisplayName("Enough trades rule. Fund type in event 'MAM'. Element id: Event_1f8kqnh")
     void enoughTradesTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
@@ -114,7 +114,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2004")
+    @AllureId("2156")
     @DisplayName("Enough trades rule. Account type in event 'MTS'. Element id: Event_1f8kqnh")
     void enoughTradMTSesTest31() throws Exception {
         DataHelper data = dbDataMap.get("31");
@@ -135,7 +135,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("1827")
+    @AllureId("2157")
     @DisplayName("Enough trades rule. Client have Deposits amd Close Only restrictions . Element id: Event_1o3t1d2")
     void enoughTradesTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
@@ -163,7 +163,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2007")
+    @AllureId("2158")
     @DisplayName("Enough trades rule. Client have only Close Only restrictions . Element id: Event_0p0h812")
     void enoughTradesTest41() throws Exception {
         DataHelper data = dbDataMap.get("41");
@@ -201,7 +201,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2003")
+    @AllureId("2159")
     @DisplayName("Enough trades rule. Client not have any deposits . Element id: Event_1mskm4k")
     void enoughTradesTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
@@ -224,7 +224,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2021")
+    @AllureId("2160")
     @DisplayName("Enough trades rule. Clients deposits <=500, no connections . Element id: end_102")
     void enoughTradesTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");
@@ -247,7 +247,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2022")
+    @AllureId("2161")
     @DisplayName("Enough trades rule. Clients withdrawals <=500, no connections . Element id: end_102")
     void enoughTradesTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
@@ -268,7 +268,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2023")
+    @AllureId("2162")
     @DisplayName(
             "Enough trades rule. Clients withdrawals <=500, yes connections. Connected deposits <=500 . Element id: end_103")
     void enoughTradesTest8() throws Exception {
@@ -290,7 +290,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2024")
+    @AllureId("2163")
     @DisplayName(
             "Enough trades rule. Clients withdrawals <=500, yes connections. Connected withdrawals <=500 . Element id: end_104")
     void enoughTradesTest9() throws Exception {
@@ -312,7 +312,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2025")
+    @AllureId("2164")
     @DisplayName("Enough trades rule. Clients withdrawals <=500, yes connections. Connected withdrawals > 500 . ")
     void enoughTradesTest10() throws Exception {
         DataHelper data = dbDataMap.get("10");
@@ -325,7 +325,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2005")
+    @AllureId("2165")
     @DisplayName("Enough trades rule. Last N days: withdrawals - credits <= trading profit. end_105")
     void enoughTradesTest11() throws Exception {
         DataHelper data = dbDataMap.get("11");
@@ -345,7 +345,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2006")
+    @AllureId("2166")
     @DisplayName("Enough trades rule. Last N days: withdrawals - credits > trading profit.")
     void enoughTradesTest12() throws Exception {
         DataHelper data = dbDataMap.get("12");
@@ -357,8 +357,8 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2013")
-    @DisplayName("Enough trades rule. Last N days: RFR / Withdrawal <= 0.02")
+    @AllureId("2167")
+    @DisplayName("Enough trades rule. Last N days: SR / Withdrawal <= 0.02")
     void enoughTradesTest13() throws Exception {
         DataHelper data = dbDataMap.get("13");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -369,8 +369,8 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2012")
-    @DisplayName("Enough trades rule. Last N days: RFR / Withdrawal > 0.02")
+    @AllureId("2168")
+    @DisplayName("Enough trades rule. Last N days: SR / Withdrawal > 0.02")
     void enoughTradesTest14() throws Exception {
         DataHelper data = dbDataMap.get("14");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -381,8 +381,8 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2011")
-    @DisplayName("Enough trades rule.Last N days: RFR >= cost * 0.8O. paymentMethodCode = CRYPTO")
+    @AllureId("2169")
+    @DisplayName("Enough trades rule.Last N days: SR >= cost * 0.8O. paymentMethodCode = CRYPTO")
     void enoughTradesTest15() throws Exception {
         DataHelper data = dbDataMap.get("15");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -393,8 +393,8 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2010")
-    @DisplayName("Enough trades rule.Last N days: RFR < cost * 0.8O. paymentMethodCode = CRYPTO")
+    @AllureId("2170")
+    @DisplayName("Enough trades rule.Last N days: SR < cost * 0.8O. paymentMethodCode = CRYPTO")
     void enoughTradesTest16() throws Exception {
         DataHelper data = dbDataMap.get("16");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -405,7 +405,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2009")
+    @AllureId("2171")
     @DisplayName("Enough trades rule.Last N days: cost < 10. paymentMethodCode != CRYPTO")
     void enoughTradesTest17() throws Exception {
         DataHelper data = dbDataMap.get("17");
@@ -417,7 +417,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2014")
+    @AllureId("2172")
     @DisplayName("Enough trades rule.Last N days: cost > 10. paymentMethodCode != CRYPTO")
     void enoughTradesTest18() throws Exception {
         DataHelper data = dbDataMap.get("18");
@@ -429,7 +429,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2026")
+    @AllureId("2173")
     @DisplayName("Enough trades rule. Last 24h: turnovers < 4.")
     void enoughTradesTest19() throws Exception {
         DataHelper data = dbDataMap.get("19");
@@ -441,7 +441,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2027")
+    @AllureId("2174")
     @DisplayName("Enough trades rule. Last 24h: turnovers !< 4.")
     void enoughTradesTest20() throws Exception {
         DataHelper data = dbDataMap.get("20");
@@ -453,7 +453,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2028")
+    @AllureId("2175")
     @DisplayName("Enough trades rule. Last 24h: PM in [card] and event.paymentType not Neteller. end_111")
     void enoughTradesTest21() throws Exception {
         DataHelper data = dbDataMap.get("21");
@@ -473,7 +473,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2029")
+    @AllureId("2176")
     @DisplayName("Enough trades rule. Last 24h: PM in [E_WALLET] and event.paymentType not Neteller. end_111")
     void enoughTradesTest22() throws Exception {
         DataHelper data = dbDataMap.get("22");
@@ -493,7 +493,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2030")
+    @AllureId("2177")
     @DisplayName("Enough trades rule. Last 24h: PM in [E_WALLET] and event.paymentType is Neteller.")
     void enoughTradesTest23() throws Exception {
         DataHelper data = dbDataMap.get("23");
@@ -505,8 +505,8 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2031")
-    @DisplayName("Enough trades rule. Last 24h: RFR >= cost*0.8. end_107")
+    @AllureId("2178")
+    @DisplayName("Enough trades rule. Last 24h: SR >= cost*0.8. end_107")
     void enoughTradesTest24() throws Exception {
         DataHelper data = dbDataMap.get("24");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -525,8 +525,8 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2033")
-    @DisplayName("Enough trades rule. Last 24h: RFR < cost*0.8.")
+    @AllureId("2179")
+    @DisplayName("Enough trades rule. Last 24h: SR < cost*0.8.")
     void enoughTradesTest25() throws Exception {
         DataHelper data = dbDataMap.get("25");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -536,7 +536,49 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("1886")
+    @AllureId("2180")
+    @DisplayName("Enough trades rule. Lifetime: 'cost' < SR*0.7. end 113")
+    void enoughTradesTest26() throws Exception {
+        DataHelper data = dbDataMap.get("26");
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("Activity_1ve369z", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementId("end_113", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(113));
+    }
+
+    @Test
+    @AllureId("2181")
+    @DisplayName("Enough trades rule. Two last month: 'cost' >= SR*0.7. end 113")
+    void enoughTradesTest27() throws Exception {
+        DataHelper data = dbDataMap.get("27");
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("Activity_0sstcik", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementId("Event_16krycn", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(113));
+    }
+
+    @Test
+    @AllureId("2182")
     @DisplayName("Enough trades rule. Alert 1  . Element id: Event_1gmc8xt")
     void enoughTradesTestAlert1() throws Exception {
         DataHelper data = dbDataMap.get("770");
@@ -574,7 +616,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("1887")
+    @AllureId("2183")
     @DisplayName("Enough trades rule. Alert2 . Element id: Event_1mzlm7b")
     void enoughTradesTestAlert2() throws Exception {
         DataHelper data = dbDataMap.get("771");
@@ -613,7 +655,7 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2032")
+    @AllureId("2184")
     @DisplayName("Enough trades rule. Alert 3  . Element id: Event_1gmc8xt. 202 in story with 4 outcomes to reset")
     void enoughTradesTestAlert3() throws Exception {
         DataHelper data = dbDataMap.get("772");
