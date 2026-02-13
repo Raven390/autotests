@@ -63,6 +63,7 @@ import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
+import business_objects.db.clickhouse.s3MtSpreads.S3MtSpreadsObject;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
@@ -173,6 +174,7 @@ public class DataHelper {
     public MirrorScoreEvent mirrorScoreEvent;
     public InternalHedgeEvent internalHedgeEvent;
     public TransferToWaEvent transferToWaEvent;
+    public List<S3MtSpreadsObject> s3MtSpreadsObject;
 
     public DataHelper() {
         this.clientFraudTypes = new ArrayList<>();

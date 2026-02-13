@@ -229,5 +229,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("Trigger")
         private String trigger;
+
+        @JsonProperty("SR")
+        private String SR;
     }
 }

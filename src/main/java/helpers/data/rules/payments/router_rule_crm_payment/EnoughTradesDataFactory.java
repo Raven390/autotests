@@ -29,6 +29,7 @@ import business_objects.db.clickhouse.data_science_test.connection_table.Connect
 import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
+import business_objects.db.clickhouse.s3MtSpreads.S3MtSpreadsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
@@ -78,6 +79,8 @@ public class EnoughTradesDataFactory {
     private static final ClientHelper enoughTradesRuleClient23 = getRandomVantageClientAllFields();
     private static final ClientHelper enoughTradesRuleClient24 = getRandomVantageClientAllFields();
     private static final ClientHelper enoughTradesRuleClient25 = getRandomVantageClientAllFields();
+    private static final ClientHelper enoughTradesRuleClient26 = getRandomVantageClientAllFields();
+    private static final ClientHelper enoughTradesRuleClient27 = getRandomVantageClientAllFields();
     private static final ClientHelper enoughTradesRuleClientAlert1 = getRandomVantageClientAllFields();
     private static final ClientHelper enoughTradesRuleClientAlert2 = getRandomVantageClientAllFields();
     private static final ClientHelper enoughTradesRuleClientAlert3 = getRandomVantageClientAllFields();
@@ -107,6 +110,7 @@ public class EnoughTradesDataFactory {
                 .schemaVersion("1.0")
                 .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.0)
+                .withdrawalAmountUSD(1.0)
                 .withdrawalApplicationTime(Instant.now().toString())
                 .withdrawalCurrency("EUR")
                 .withdrawalId(Long.valueOf(getRandomIntPositive()))
@@ -875,10 +879,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(6.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(6.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -987,10 +996,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(7.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(7.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1100,10 +1114,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2565.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2565.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1213,10 +1232,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2564.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2564.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1325,10 +1349,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(0.01);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2.5);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2.5))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1437,10 +1466,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(0.01);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(0.31);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(0.31))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1518,10 +1552,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2000.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2000.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1601,10 +1640,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(3500.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(3500.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1683,10 +1727,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2000.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2000))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1765,10 +1814,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2000.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2000.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1848,10 +1902,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2000.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2000.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -1931,10 +1990,15 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(3500.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(3500.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
 
         return data;
     }
@@ -2014,10 +2078,240 @@ public class EnoughTradesDataFactory {
         deal.setProfitUsd(200.0);
         data.mt5DealsCoercedObjects = List.of(deal);
 
-        // set RFR risk free revenue
-        S3FactLoginMetricsObject loginMetrics = generateS3FactLoginMetricsClientZero(data.clientHelper);
-        loginMetrics.setDailyTakerSpreadRevenueOz(2250.0);
-        data.S3FactLoginMetricsObjects = List.of(loginMetrics);
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2250.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        data.s3MtSpreadsObject = List.of(spread);
+
+        return data;
+    }
+
+    private static DataHelper getEnoughTradesTest26Data() {
+        DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClient26);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1.0);
+
+        // set withdrawals
+        CrmTbWithdrawalEntity withdrawal1 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawal2 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawal3 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawal4 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        data.crmTbWithdrawalObjects = (List.of(withdrawal1, withdrawal2, withdrawal3, withdrawal4));
+        int wdTypeId = getRandomBytePositive();
+        int sourceId = getRandomBytePositive();
+        int pcId = getRandomBytePositive();
+        String catName = "International cat";
+        CrmTbWithdrawalTypeObject wdType = CrmTbWithdrawalTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .enName(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbWithdrawalTypeObjects = List.of(wdType);
+        data.crmTbWithdrawalObjects.forEach(wd -> wd.setSourceIdSt(sourceId));
+        data.crmTbWithdrawalObjects.forEach(wd -> wd.setPaymentTypeId(wdTypeId));
+        data.crmTbWithdrawalObjects.forEach(wd -> wd.setAmountUsd(BigDecimal.valueOf(176.0)));
+
+        // set deposits
+        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit4 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        data.crmTbDepositObjects = List.of(deposit1, deposit2, deposit3, deposit4);
+        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
+        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(176.0)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositTypeObjects = List.of(dType);
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositChannelObjects = List.of(dChannel);
+
+        CostPaymentFee cpf = CostPaymentFee.builder()
+                .id(getRandomIntPositive())
+                .category("INTERNATIONAL_WIRE_TRANSFER")
+                .country(data.clientHelper.getCountry())
+                .depositFeePrc(BigDecimal.valueOf(200))
+                .withdrawalFeePrc(BigDecimal.valueOf(200))
+                .lastUpdated(OffsetDateTime.now())
+                .build();
+        data.costPaymentFees = List.of(cpf);
+
+        // set credits
+        MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper);
+        credit.setAmountUsd(100.0);
+        data.mtTbCreditsObjects = List.of(credit);
+
+        // set profit
+        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(data.clientHelper);
+        deal.setProfitUsd(200.0);
+        data.mt5DealsCoercedObjects = List.of(deal);
+
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2250.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        S3MtSpreadsObject spread2 = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now().minusDays(62))
+                .spreadRevenueUsd(BigDecimal.valueOf(2250.0))
+                .chInsertTs(OffsetDateTime.now().minusDays(62))
+                .build();
+        data.s3MtSpreadsObject = List.of(spread, spread2);
+
+        return data;
+    }
+
+    private static DataHelper getEnoughTradesTest27Data() {
+        DataHelper data = getEnoughTradesRuleData(enoughTradesRuleClient27);
+
+        var moreThanTwoMonth = OffsetDateTime.now().minusDays(90);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1.0);
+
+        // set withdrawals
+        CrmTbWithdrawalEntity withdrawal1 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawal2 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawal3 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawal4 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        CrmTbWithdrawalEntity withdrawalOld1 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        withdrawalOld1.setCreateTime(moreThanTwoMonth);
+        withdrawalOld1.setCreateTimeUtc(moreThanTwoMonth);
+        CrmTbWithdrawalEntity withdrawalOld2 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        withdrawalOld2.setCreateTime(moreThanTwoMonth);
+        withdrawalOld2.setCreateTimeUtc(moreThanTwoMonth);
+        CrmTbWithdrawalEntity withdrawalOld3 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        withdrawalOld3.setCreateTime(moreThanTwoMonth);
+        withdrawalOld3.setCreateTimeUtc(moreThanTwoMonth);
+        CrmTbWithdrawalEntity withdrawalOld4 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        withdrawalOld4.setCreateTime(moreThanTwoMonth);
+        withdrawalOld4.setCreateTimeUtc(moreThanTwoMonth);
+        data.crmTbWithdrawalObjects = (List.of(
+                withdrawal1,
+                withdrawal2,
+                withdrawal3,
+                withdrawal4,
+                withdrawalOld1,
+                withdrawalOld2,
+                withdrawalOld3,
+                withdrawalOld4));
+        int wdTypeId = getRandomBytePositive();
+        int sourceId = getRandomBytePositive();
+        int pcId = getRandomBytePositive();
+        String catName = "International cat";
+        CrmTbWithdrawalTypeObject wdType = CrmTbWithdrawalTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .enName(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbWithdrawalTypeObjects = List.of(wdType);
+        data.crmTbWithdrawalObjects.forEach(wd -> wd.setSourceIdSt(sourceId));
+        data.crmTbWithdrawalObjects.forEach(wd -> wd.setPaymentTypeId(wdTypeId));
+        data.crmTbWithdrawalObjects.forEach(wd -> wd.setAmountUsd(BigDecimal.valueOf(176.0)));
+
+        // set deposits
+        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit4 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity depositOld1 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        depositOld1.setCreateTime(moreThanTwoMonth);
+        depositOld1.setCreateTimeUtc(moreThanTwoMonth);
+        CrmTbDepositEntity depositOld2 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        depositOld2.setCreateTime(moreThanTwoMonth);
+        depositOld2.setCreateTimeUtc(moreThanTwoMonth);
+        CrmTbDepositEntity depositOld3 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        depositOld3.setCreateTime(moreThanTwoMonth);
+        depositOld3.setCreateTimeUtc(moreThanTwoMonth);
+        CrmTbDepositEntity depositOld4 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        depositOld4.setCreateTime(moreThanTwoMonth);
+        depositOld4.setCreateTimeUtc(moreThanTwoMonth);
+        data.crmTbDepositObjects =
+                List.of(deposit1, deposit2, deposit3, deposit4, depositOld1, depositOld2, depositOld3, depositOld4);
+        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
+        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(176.0)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(1)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositTypeObjects = List.of(dType);
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositChannelObjects = List.of(dChannel);
+
+        CostPaymentFee cpf = CostPaymentFee.builder()
+                .id(getRandomIntPositive())
+                .category("INTERNATIONAL_WIRE_TRANSFER")
+                .country(data.clientHelper.getCountry())
+                .depositFeePrc(BigDecimal.valueOf(200))
+                .withdrawalFeePrc(BigDecimal.valueOf(200))
+                .lastUpdated(OffsetDateTime.now())
+                .build();
+        data.costPaymentFees = List.of(cpf);
+
+        // set credits
+        MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper);
+        credit.setAmountUsd(100.0);
+        data.mtTbCreditsObjects = List.of(credit);
+
+        // set profit
+        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(data.clientHelper);
+        deal.setProfitUsd(200.0);
+        data.mt5DealsCoercedObjects = List.of(deal);
+
+        // set spread
+        S3MtSpreadsObject spread = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now())
+                .spreadRevenueUsd(BigDecimal.valueOf(2250.0))
+                .chInsertTs(OffsetDateTime.now())
+                .build();
+        S3MtSpreadsObject spread2 = S3MtSpreadsObject.builder()
+                .account(data.clientHelper.getTradingAccount())
+                .serverId(data.clientHelper.getServerId())
+                .date(OffsetDateTime.now().minusDays(55))
+                .spreadRevenueUsd(BigDecimal.valueOf(2250.0))
+                .chInsertTs(OffsetDateTime.now().minusDays(55))
+                .build();
+        data.s3MtSpreadsObject = List.of(spread, spread2);
 
         return data;
     }
@@ -2404,6 +2698,8 @@ public class EnoughTradesDataFactory {
         map.put("23", getEnoughTradesTest23Data());
         map.put("24", getEnoughTradesTest24Data());
         map.put("25", getEnoughTradesTest25Data());
+        map.put("26", getEnoughTradesTest26Data());
+        map.put("27", getEnoughTradesTest27Data());
         map.put("770", getEnoughTradesTestAlert1Data());
         map.put("771", getEnoughTradesTestAlert2Data());
         map.put("772", getEnoughTradesTestAlert3Data());
