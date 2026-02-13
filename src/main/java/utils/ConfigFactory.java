@@ -267,6 +267,9 @@ public class ConfigFactory {
         @Key("pathBaselineScreenshot")
         String pathBaselineScreenshot();
 
+        @Key("debugMode")
+        Boolean debugMode();
+
         // Kafka
 
         @Key("testClusterKafkaPublic")
@@ -831,6 +834,15 @@ public class ConfigFactory {
         } else {
             writeLog("Set Headless mode to local value in config.properties");
             return CONFIG.headlessMode();
+        }
+    }
+
+    public static Boolean isDebugMode() {
+        if (isGitlab()) {
+            return false;
+        } else {
+            writeLog("Set Debug mode to local value in config.properties");
+            return CONFIG.debugMode();
         }
     }
 }
