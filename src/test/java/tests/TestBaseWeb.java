@@ -4,10 +4,12 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
 import static utils.ConfigFactory.*;
+import static utils.Utils.writeLog;
 
 import com.microsoft.playwright.*;
 import helpers.kafka.KafkaHelper;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import net.datafaker.Faker;
@@ -147,23 +149,63 @@ public class TestBaseWeb {
 
         String traceName = timestamp + "-" + n;
         boolean failed = TestResultWatcher.isFailed();
+        Video video;
+
+        if (debug && page != null) {
+            video = page.video();
+        } else {
+            video = null;
+        }
+        Path traceZip = Paths.get(PATH_TRACE + traceName + ".zip");
 
         try {
-            if (failed) {
-                context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get(PATH_TRACE + traceName + ".zip")));
-
-                TestUtils.attachScreenshot(page);
-            } else {
-                // passed: stop без path => zip не будет создан
+            // Tracing: run only in debug, save zip only on failure
+            if (debug) {
                 try {
-                    context.tracing().stop();
+                    if (failed) {
+                        context.tracing().stop(new Tracing.StopOptions().setPath(traceZip));
+                    } else {
+                        context.tracing().stop(); // do not create zip
+                    }
                 } catch (Throwable t) {
-                    context.tracing().stop(new Tracing.StopOptions());
+                    // Don't fail teardown because of tracing
+                    writeLog("Tracing stop failed: " + t.getMessage());
+                }
+            }
+
+            // Allure: screenshot only on failure
+            if (failed) {
+                try {
+                    TestUtils.attachScreenshot(page);
+                } catch (Throwable t) {
+                    writeLog("Failed to attach screenshot: " + t.getMessage());
                 }
             }
         } finally {
             n += 1;
-            context.close();
+
+            // Close context first to finalize video on disk (if recorded)
+            try {
+                context.close();
+            } catch (Throwable t) {
+                writeLog("Failed to close context: " + t.getMessage());
+            }
+
+            // Keep video only for debug + failed; otherwise delete it
+            if (debug && video != null && !failed) {
+                deleteVideoQuietly(video);
+            }
+        }
+    }
+
+    private void deleteVideoQuietly(Video video) {
+        try {
+            Path videoPath = video.path();
+            if (videoPath != null) {
+                java.nio.file.Files.deleteIfExists(videoPath);
+            }
+        } catch (Throwable t) {
+            writeLog("Failed to delete video: " + t.getMessage());
         }
     }
 }

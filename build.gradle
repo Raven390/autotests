@@ -188,6 +188,13 @@ tasks.register('createConsumerGroupsFile') {
 
 tasks.withType(Test) {
     dependsOn(createConsumerGroupsFile)
+
+    // Disable Gradle test reports (keep ONLY Allure)
+    reports {
+        html.required.set(false)
+        junitXml.required.set(false)
+    }
+
     // Enable parallel test execution
     maxParallelForks = 2// Set to the number of available processors
 
