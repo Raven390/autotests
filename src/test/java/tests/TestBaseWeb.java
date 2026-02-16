@@ -103,7 +103,7 @@ public class TestBaseWeb {
 
     @BeforeEach
     void setupContextAndPage() {
-        Browser.NewContextOptions options = new Browser.NewContextOptions().setViewportSize(1920, 1080);
+        Browser.NewContextOptions options = new Browser.NewContextOptions();
 
         if (debug) {
             options.setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO));

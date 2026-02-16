@@ -118,6 +118,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @BeforeEach
     void sendAlert() throws Exception {
         PaymentAlertMessageV2 alertPayment = generatePaymentAlertByUcidByTrigger(crmTbUser.ucid, "withdrawal");
+        alertPayment.setFraudType(ATO.getCode());
         kafka.produceMessage(
                 alertPayment.getId().toString(), objectMapper.writeValueAsString(alertPayment), KAFKA_TOPIC_ALERTS);
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
@@ -179,7 +180,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickPaymentWithdrawalApprove();
-        resolvePage.addFraud();
+        resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActionsPayment(longResolveComment);
 
         // check investigation in db
@@ -217,9 +218,9 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
                         Alert.class)
                 .getFirst();
         assertThat(
-                "Verify alert_resolution is FALSE_POSITIVE",
+                "Verify alert_resolution is FRAUD_TYPE_MISMATCH",
                 dbAlert.getAlertResolution(),
-                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+                is(AlertResolution.FRAUD_TYPE_MISMATCH.getDisplayName()));
         AuditEvent audit = getObjectsFromDB(
                         DbName.POSTGRES,
                         AUDIT_EVENT_TABLE,
@@ -314,7 +315,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1613")
-    @DisplayName("Verify alert resolution FALSE_POSITIVE withdrawals on approve and different fraud for payment team")
+    @DisplayName(
+            "Verify alert resolution FRAUD_TYPE_MISMATCH withdrawals on approve and different fraud for payment team")
     void alertResolutionTest2() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
@@ -335,9 +337,9 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
                         Alert.class)
                 .getFirst();
         assertThat(
-                "Verify alert_resolution is FALSE_POSITIVE",
+                "Verify alert_resolution is FRAUD_TYPE_MISMATCH",
                 dbAlert.getAlertResolution(),
-                is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+                is(AlertResolution.FRAUD_TYPE_MISMATCH.getDisplayName()));
     }
 
     @Order(5)
