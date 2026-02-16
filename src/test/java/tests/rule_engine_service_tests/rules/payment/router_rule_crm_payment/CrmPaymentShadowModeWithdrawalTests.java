@@ -55,7 +55,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1945")
+    @AllureId("2265")
     @DisplayName("Router Rule shadow mode. Withdrawal Manual Approve")
     void routerRuleShadowModeWithdrawalTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -106,7 +106,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1946")
+    @AllureId("2266")
     @DisplayName("Router Rule shadow mode. Withdrawal Manual Reject")
     void routerRuleShadowModeWithdrawalTest2() throws Exception {
         DataHelper data = dataMap.get("2");
@@ -130,7 +130,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1947")
+    @AllureId("2267")
     @DisplayName("Router Rule shadow mode. Withdrawal Auto approve")
     void routerRuleShadowModeWithdrawalTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -148,7 +148,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2124")
+    @AllureId("2268")
     @DisplayName("Router Rule shadow mode. Exit rule for duplicate event")
     void routerRuleShadowModeWithdrawalTest4() throws Exception {
         DataHelper data = dataMap.get("4");
@@ -161,7 +161,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2125")
+    @AllureId("2269")
     @DisplayName("Router Rule shadow mode. No exit for duplicate which need to be reprocessed")
     void routerRuleShadowModeWithdrawalTest5() throws Exception {
         DataHelper data = dataMap.get("5");

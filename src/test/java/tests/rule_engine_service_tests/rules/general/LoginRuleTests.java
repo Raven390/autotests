@@ -20,7 +20,6 @@ import helpers.data.DataHelper;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.io.IOException;
@@ -46,14 +45,13 @@ class LoginRuleTests extends TestBaseRule {
         dbDataMap = setupLoginRuleData();
     }
 
-    // @AfterAll
+    @AfterAll
     static void teardown() throws Exception {
         deleteData(dbDataMap);
         stopSshTunnel();
     }
 
     @Test
-    @AllureId("1462")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score <0.9. ElementId: Event.id end_cs_no_toxic")
     void loginRuleTest1() throws Exception {
@@ -67,21 +65,18 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1462")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score >0.9, no false positives. ElementId: Event.id end_cs_no_toxic")
     void loginRuleTest2() throws Exception {}
 
     @Disabled
     @Test
-    @AllureId("1463")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users, chargeback score >0.9, false positives alerts exists. ElementId: Event.id end_cs_no_toxic")
     void loginRuleTest3() throws Exception {}
 
     @Disabled
     @Test
-    @AllureId("1656")
     @DisplayName("Login rule. Connection search sub-process. Exit if general score < 0.7. ElementId: end_gs_low")
     void loginRuleTest16() throws Exception {
         DataHelper data = dbDataMap.get("16");
@@ -94,7 +89,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1655")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit if has WR that 24OP removed and current <= previous average generalScore. ElementId: Event_1fdy7w1")
     void loginRuleTest17() throws Exception {
@@ -110,7 +104,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1466")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if user has model score > 0.7 and is mirror trader without strong connections. ElementId: end_no_str1_hedge")
     void loginRuleTest6() throws Exception {
@@ -123,7 +116,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1467")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if user has model score> 0.7 and is mirror trader with strong connections. ElementId: Event_1o2qu8z")
     void loginRuleTest7() throws Exception {
@@ -135,7 +127,6 @@ class LoginRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1468")
     @DisplayName(
             "Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and no bonus restriction. ElementId: end_cs_abuse")
     void loginRuleTest8() throws Exception {
@@ -167,7 +158,6 @@ class LoginRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1469")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if user has model score > 0.7 and fraud type is unknown. ElementId: end_unknown_fraud_type")
     void loginRuleTest9() throws Exception {
@@ -200,7 +190,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1470")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit with restriction if user has model score > 0.7 and fraud type is Market manipulation. ElementId: end_cs_abuse")
     void loginRuleTest10() throws Exception {
@@ -234,7 +223,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1532")
     @DisplayName(
             "Login rule. Connection search sub-process. General score> 0.7, fraud type is Bonus abuser and toxic account linked. ElementId: end_cs_abuse")
     void loginRuleTest15() throws Exception {
@@ -286,7 +274,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1471")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit with restriction if user has model score > 0.7 and fraud type is Chargeback. ElementId: end_cs_abuse")
     void loginRuleTest11() throws Exception {
@@ -320,7 +307,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1472")
     @DisplayName(
             "Login rule. Connection search sub-process. Exit without restriction if user has model score> 0.7 and fraud type is CPA. ElementId: end_no_mitigation")
     void loginRuleTest12() throws Exception {
@@ -359,7 +345,6 @@ class LoginRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1473")
     @DisplayName(
             "Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and has bonus restriction. ElementId: end_hedge_ald_no_bonus")
     void loginRuleTest13() throws Exception {

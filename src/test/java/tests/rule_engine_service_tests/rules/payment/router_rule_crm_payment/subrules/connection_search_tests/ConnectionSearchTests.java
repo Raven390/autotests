@@ -48,7 +48,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2128")
+    @AllureId("2221")
     @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is 'cash%'")
     void connectionSearchRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -65,7 +65,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2008")
+    @AllureId("2222")
     @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is '0'")
     void connectionSearchRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
@@ -82,7 +82,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2129")
+    @AllureId("2223")
     @DisplayName("Connection search in router rule. Exit with ruleEndId = 101 if accountNumber is '00'")
     void connectionSearchRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -99,7 +99,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1829")
+    @AllureId("2224")
     @DisplayName(
             "Connection Search in router rule. Exit without alert if Connection Search rule suspended a WD <= 3 days. ElementId: end_101")
     void connectionSearchRuleTest4() throws Exception {
@@ -131,7 +131,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2130")
+    @AllureId("2225")
     @DisplayName(
             "Connection Search in router rule. Approve withdrawal if user has no connections(by deposits). ElementId: end_102")
     void connectionSearchRuleTest5() throws Exception {
@@ -149,7 +149,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1830")
+    @AllureId("2226")
     @DisplayName(
             "Connection Search in router rule. Approve withdrawal if user has no connections(by deposits and withdrawals. ElementId: end_102")
     void connectionSearchRuleTest6() throws Exception {
@@ -167,7 +167,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1831")
+    @AllureId("2227")
     @DisplayName(
             "Connection Search in router rule. Total deposits among connected UCIDs <= 500 USD. ElementId: end_103")
     void connectionSearchRuleTest7() throws Exception {
@@ -185,7 +185,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1832")
+    @AllureId("2228")
     @DisplayName(
             "Connection Search in router rule. Total withdrawals among connected UCIDs <= 500 USD. ElementId: end_104")
     void connectionSearchRuleTest8() throws Exception {
@@ -203,7 +203,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1833")
+    @AllureId("2229")
     @DisplayName("Connection Search in router rule. Payment profile key = null. ElementId: Event_07avgn0")
     void connectionSearchRuleTest9() throws Exception {
         DataHelper data = dataMap.get("9");
@@ -222,7 +222,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2131")
+    @AllureId("2230")
     @DisplayName("Connection Search in router rule. At least one rule finished with alert= false. ElementId: end_105")
     void connectionSearchRuleTest10() throws Exception {
         DataHelper data = dataMap.get("10");
@@ -241,7 +241,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1834")
+    @AllureId("2231")
     @DisplayName(
             "Connection Search in router rule. At least one rule finished with alert= true. ElementId: Event_1v8iqld")
     void connectionSearchRuleTest11() throws Exception {
@@ -261,7 +261,7 @@ class ConnectionSearchTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2132")
+    @AllureId("2232")
     @DisplayName("Connection Search in router rule. Payment method never used before for WD. ElementId: Event_1v8iqld")
     void connectionSearchRuleTest12() throws Exception {
         DataHelper data = dataMap.get("12");

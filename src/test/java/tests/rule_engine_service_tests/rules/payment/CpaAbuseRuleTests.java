@@ -43,8 +43,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
     }
 
     @Test
+    @AllureId("2295")
     @DisplayName("CPA abuse rule. User don't have cpaId. Element id: Event1")
-    @AllureId("916")
     void cpaAbuseRuleExitEventEnd1Test() throws Exception {
         DataHelper data = dbDataMap.get("1");
         setupData(data);
@@ -57,7 +57,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("CPA abuse rule exit Event_2. User have cpaId first deal  less than 60 d ago")
-    @AllureId("1125")
     void cpaAbuseRuleExitEvent2Test() throws Exception {
         DataHelper data = dbDataMap.get("2");
         setupData(data);
@@ -87,7 +86,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("CPA abuse rule exit Event_3. first deal more than 60 d ago,500 user same cpa")
-    @AllureId("1126")
     void cpaAbuseRuleExitEvent3Test() throws Exception {
         DataHelper data = dbDataMap.get("3");
         setupData(data);
@@ -117,7 +115,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("CPA abuse rule exit Event_4. User connected to known abuser")
-    @AllureId("917")
     void cpaAbuseRuleExitEventEnd4Test() throws Exception {
         DataHelper data = dbDataMap.get("4");
         setupData(data);
@@ -171,7 +168,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("CPA abuse rule exit Event_5p1 profit>2.5k")
-    @AllureId("1126")
     void cpaAbuseRuleExitEvent5p1Test() throws Exception {
         DataHelper data = dbDataMap.get("5");
         setupData(data);
@@ -201,7 +197,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("CPA abuse rule exit Event_5p2 profit<-700")
-    @AllureId("1127")
     void cpaAbuseRuleExitEvent5p2Test() throws Exception {
         DataHelper data = dbDataMap.get("6");
         setupData(data);
@@ -232,7 +227,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName(
             "CPA abuse rule exit Event_6. Among connected clients for the same brand there are more than 3 clients, 99% of them have the same CPA value as the initial client")
-    @AllureId("921")
     void cpaAbuseRuleExitEventEnd6Test() throws Exception {
         DataHelper data = dbDataMap.get("7");
         setupData(data);
@@ -283,7 +277,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
         // containsInAnyOrder(expectedRestriction));
     }
 
-    @Disabled
     @Test
     @DisplayName(
             "CPA abuse rule exit Event_7p1. First deposit are less than 60 days ago. Among connected clients for the same brand there are  3 clients, 100% of them have the same CPA value as the initial client")
@@ -310,7 +303,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
         // data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
-    @Disabled
     @Test
     @DisplayName(
             "CPA abuse rule exit Event_7p2. First deposit are less than 60 days ago. Among connected clients for the same brand there are  4 clients, 50% of them have the same CPA value as the initial client")
@@ -341,7 +333,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName(
             "CPA abuse rule exit Event 8p1. CPA score 0 not crypto,deposit more than 550, 1 trade, 0.1 lots no mirror, no hft  Allow payout")
-    @AllureId("929")
     void cpaAbuseRuleExitEventEnd8Test() throws Exception {
         DataHelper data = dbDataMap.get("10");
         setupData(data);
@@ -368,7 +359,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName(
             "CPA abuse rule exit Event 8p2. CPA score 2  crypto,deposit less than 450,  8.1 lots, 1 mirror, 1 hft  Allow payout")
-    @AllureId("1130")
     void cpaAbuseRuleExitEventEnd8p2Test() throws Exception {
         DataHelper data = dbDataMap.get("11");
         setupData(data);
@@ -395,7 +385,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName(
             "CPA abuse rule exit Event 9p1. Connected to clients with Same CPA, CPA score 3  not crypto,deposit 500,  4 lots, 0 mirror, 0 hft")
-    @AllureId("929")
     void cpaAbuseRuleExitEventEnd9p1Test() throws Exception {
         DataHelper data = dbDataMap.get("12");
         setupData(data);
@@ -449,7 +438,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Disabled
     @Test
     @DisplayName("CPA abuse rule exit Event 9p2. No connections with same CPA")
-    @AllureId("1131")
     void cpaAbuseRuleExitEventEnd9p2Test() throws Exception {
         DataHelper data = dbDataMap.get("13");
         setupData(data);

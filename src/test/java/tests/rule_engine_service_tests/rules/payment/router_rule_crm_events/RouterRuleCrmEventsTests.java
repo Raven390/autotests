@@ -52,7 +52,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1794")
+    @AllureId("2195")
     @DisplayName("Router Rule. No alerts/rejects. Approve withdrawal. elementId: end_approve")
     void routerRuleCrmEventsTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -89,7 +89,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1796")
+    @AllureId("2196")
     @DisplayName("Router Rule. Alert, no rejects, Risk rejection = true. elementId: end_risk_reject")
     void routerRuleCrmEventsTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -140,7 +140,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("")
+    @AllureId("2197")
     @DisplayName("Withdrawal notification rule. Auto approve if outcome is 400. ElementId:end_approve")
     void routerRuleCrmEventsTest8() throws Exception {
         DataHelper data = dataMap.get("8");
@@ -167,7 +167,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2122")
+    @AllureId("2198")
     @DisplayName("Router Rule. Exit rule for duplicate event")
     void routerRuleCrmEventsTest6() throws Exception {
         DataHelper data = dataMap.get("6");
@@ -180,7 +180,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2123")
+    @AllureId("2199")
     @DisplayName("Router Rule. No exit for duplicate which need to be reprocessed")
     void routerRuleCrmEventsTest7() throws Exception {
         DataHelper data = dataMap.get("7");

@@ -12,7 +12,6 @@ import static utils.Constants.*;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.io.IOException;
@@ -45,7 +44,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1524")
     @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_10k041u")
     void mirrorTradeRuleTest18() throws Exception {
         DataHelper data = dbDataMap.get("18");
@@ -58,7 +56,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1525")
     @DisplayName(
             "Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
     void mirrorTradeRuleTest19() throws Exception {
@@ -72,7 +69,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1526")
     @DisplayName(
             "Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_1ya7o9a")
     void mirrorTradeRuleTest20() throws Exception {
@@ -86,7 +82,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1527")
     @DisplayName(
             "Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_1q3hzii")
     void mirrorTradeRuleTest21() throws Exception {
@@ -100,7 +95,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1528")
     @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest22() throws Exception {
         DataHelper data = dbDataMap.get("22");
@@ -113,7 +107,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1529")
     @DisplayName(
             "Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest23() throws Exception {

@@ -47,7 +47,7 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1764")
+    @AllureId("2296")
     @DisplayName("NDB rule. User don't have any ndb. Element id: Event_1")
     void ndbRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -60,7 +60,6 @@ class NdbWithdrawalRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1765")
     @DisplayName("NDB rule. User  have any ndb trades.count !<50. ElementId: Event_2.")
     void ndbRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");

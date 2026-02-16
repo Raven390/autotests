@@ -68,6 +68,7 @@ import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSales
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
+import business_objects.db.data_science.ucid_general_score_python_test.UcidGeneralScorePythonTest;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
@@ -174,6 +175,7 @@ public class DataHelper {
     public MirrorScoreEvent mirrorScoreEvent;
     public InternalHedgeEvent internalHedgeEvent;
     public TransferToWaEvent transferToWaEvent;
+    public UcidGeneralScorePythonTest ucidGeneralScorePythonTest;
     public List<S3MtSpreadsObject> s3MtSpreadsObject;
 
     public DataHelper() {

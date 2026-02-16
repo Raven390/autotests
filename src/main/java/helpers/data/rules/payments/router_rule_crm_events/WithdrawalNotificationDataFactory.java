@@ -1,17 +1,23 @@
-package helpers.data.rules.payments.router_rule_crm_payment;
+package helpers.data.rules.payments.router_rule_crm_events;
 
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.rules.MirrorTradeOnWithdrawalDataInserter.insertMirrorTradeOnWithdrawalData;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Constants.*;
+import static utils.Constants.PAYMENT_METHOD_CODE_CREDIT_CARD;
+import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.getRandomIntPositive;
 
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
-import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
+import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
+import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Event;
@@ -19,6 +25,7 @@ import io.qameta.allure.Description;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,18 +40,26 @@ public class WithdrawalNotificationDataFactory {
     private static final ClientHelper withdrawalNotificationRuleClient5 = getRandomVantageClientAllFields();
     private static final ClientHelper withdrawalNotificationRuleClient6 = getRandomVantageClientAllFields();
     private static final ClientHelper withdrawalNotificationRuleClient7 = getRandomVantageClientAllFields();
+    private static final ClientHelper withdrawalNotificationRuleClient8 = getRandomVantageClientAllFields();
+    private static final ClientHelper withdrawalNotificationRuleClient9 = getRandomVantageClientAllFields();
+    private static final ClientHelper withdrawalNotificationRuleClient10 = getRandomVantageClientAllFields();
+
+    private static final String checkNameCryptoRisk = "Crypto_Risk";
+    private static final String checkNameNotCryptoRisk = "Not_Crypto_Risk";
+    private static final String time2025 = "2025-01-11T11:11:11.111+00:00";
+    private static final String time2026 = "2026-01-11T11:11:11.111+00:00";
 
     @Description("Create data for Withdrawal Notification rule")
     private static DataHelper getWithdrawalNotificationRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         data.createClient(client);
-        data.setCrmWithdrawalEventV2(CrmWithdrawalEventV2.builder()
+        data.setCrmWithdrawalEvent(CrmWithdrawalEvent.builder()
                 .id(UUID.randomUUID().toString())
                 .accountType("MT4")
                 .binNumber(Utils.getRandomIntPositive().toString())
                 .brand(data.clientHelper.getBrand().toLowerCase())
                 .checkName("")
-                .clientId(data.clientHelper.getUserId())
+                .clientId(Long.valueOf(data.clientHelper.getUserId()))
                 .eventDate(Instant.now().toString())
                 .expMonth("4")
                 .expYear("2030")
@@ -59,49 +74,80 @@ public class WithdrawalNotificationDataFactory {
                 .schemaVersion("1.0")
                 .type(Event.CRM_WITHDRAWAL_EVENT.getName())
                 .withdrawalAmount(1.0)
-                .withdrawalAmountUSD(1.0)
                 .withdrawalApplicationTime(Instant.now().toString())
                 .withdrawalCurrency("EUR")
                 .withdrawalId(Long.valueOf(getRandomIntPositive()))
-                .status("Risk audit")
                 .build());
         return data;
     }
 
     private static DataHelper getWithdrawalNotificationTest1Data() {
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient1);
-        data.getCrmWithdrawalEventV2().setCheckName("");
+        data.getCrmWithdrawalEvent().setCheckName("");
         return data;
     }
 
     private static DataHelper getWithdrawalNotificationTest2Data() {
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient2);
-        data.getCrmWithdrawalEventV2().setCheckName(null);
+        data.getCrmWithdrawalEvent().setCheckName(null);
         return data;
     }
 
     private static DataHelper getWithdrawalNotificationTest3Data() {
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient3);
-        data.getCrmWithdrawalEventV2().setCheckName("Crypto_Risk");
+        data.getCrmWithdrawalEvent().setCheckName(checkNameCryptoRisk);
 
         return data;
     }
 
-    private static DataHelper getWithdrawalNotificationTest4Data() throws IOException {
+    private static DataHelper getWithdrawalNotificationTest4Data() {
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient4);
-        data.getCrmWithdrawalEventV2().setCheckName("");
+        data.getCrmWithdrawalEvent().setCheckName(checkNameCryptoRisk);
+        data.crmTbAccountObject.sourceIdSt = 9;
+        data.crmTbAccountObject.brandUid = 4;
+        insertMirrorTradeOnWithdrawalData(data.clientHelper);
         return data;
     }
 
-    private static DataHelper getWithdrawalNotificationTest5Data() throws IOException {
+    private static DataHelper getWithdrawalNotificationTest5Data() {
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient5);
-        data.getCrmWithdrawalEventV2().setCheckName("Not_Crypto_Risk");
+        data.getCrmWithdrawalEvent().setCheckName(checkNameCryptoRisk);
+        data.crmTbAccountObject.sourceIdSt = 9;
+        data.crmTbAccountObject.brandUid = 4;
+        CrmTbWithdrawalEntity wd1 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        wd1.setCreateTime(OffsetDateTime.parse(time2025));
+        wd1.setCreateTimeUtc(OffsetDateTime.parse(time2025));
+        wd1.setUpdateTime(OffsetDateTime.parse(time2025));
+        wd1.setUpdateTimeUtc(OffsetDateTime.parse(time2025));
+        CrmTbWithdrawalEntity wd2 = generateCrmTbWithdrawalEntityByClient(data.clientHelper);
+        wd2.setCreateTime(OffsetDateTime.parse(time2026));
+        wd2.setCreateTimeUtc(OffsetDateTime.parse(time2026));
+        wd2.setUpdateTime(OffsetDateTime.parse(time2026));
+        wd2.setUpdateTimeUtc(OffsetDateTime.parse(time2026));
+        data.setCrmTbWithdrawalObjects(List.of(wd1, wd2));
+
+        UcidGeneralScore sc1 = generateUcidGeneralScoreObject(data, OffsetDateTime.parse(time2025), 0.1, 0.1);
+        UcidGeneralScore sc2 = generateUcidGeneralScoreObject(data, OffsetDateTime.parse(time2026), 0.8, 0.8);
+        data.setUcidGeneralScores(List.of(sc1, sc2));
+        insertMirrorTradeOnWithdrawalData(data.clientHelper);
         return data;
     }
 
     private static DataHelper getWithdrawalNotificationTest6Data() throws IOException {
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient6);
-        data.getCrmWithdrawalEventV2().setCheckName("Not_Crypto_Risk");
+        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
+        return data;
+    }
+
+    private static DataHelper getWithdrawalNotificationTest7Data() throws IOException {
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient7);
+        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
+        return data;
+    }
+    //
+    private static DataHelper getWithdrawalNotificationTest8Data() throws IOException {
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient8);
+        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
 
         // set credits
         MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper);
@@ -124,9 +170,9 @@ public class WithdrawalNotificationDataFactory {
         return data;
     }
 
-    private static DataHelper getWithdrawalNotificationTest7Data() {
-        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient7);
-        data.getCrmWithdrawalEventV2().setCheckName("Not_Crypto_Risk");
+    private static DataHelper getWithdrawalNotificationTest9Data() {
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient9);
+        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
 
         // set credits
         MtTbCreditsObject credit = generateCreditsByClient(data.clientHelper);
@@ -149,6 +195,12 @@ public class WithdrawalNotificationDataFactory {
         return data;
     }
 
+    private static DataHelper getWithdrawalNotificationTest10Data() {
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient10);
+        data.getCrmWithdrawalEvent().setCheckName("NT_Blacklist");
+        return data;
+    }
+
     public static Map<String, DataHelper> setupWithdrawalNotificationRuleData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -160,6 +212,9 @@ public class WithdrawalNotificationDataFactory {
         map.put("5", getWithdrawalNotificationTest5Data());
         map.put("6", getWithdrawalNotificationTest6Data());
         map.put("7", getWithdrawalNotificationTest7Data());
+        map.put("8", getWithdrawalNotificationTest8Data());
+        map.put("9", getWithdrawalNotificationTest9Data());
+        map.put("10", getWithdrawalNotificationTest10Data());
         return map;
     }
 }

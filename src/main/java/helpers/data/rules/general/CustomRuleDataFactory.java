@@ -1,7 +1,6 @@
 package helpers.data.rules.general;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.DataHelper.*;
 import static helpers.database.DbHelper.startSshTunnel;
 
 import business_objects.kafka.CustomEvent;
@@ -9,7 +8,6 @@ import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.FraudType;
-import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import java.time.Instant;
 import java.util.HashMap;
@@ -48,7 +46,6 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    @Description("Custom rule. ucid -> fraud type + restriction + alert")
     private static DataHelper getCustomRuleTest1Data() {
         DataHelper data = getCustomRuleData(customRuleTest1Client);
         data.customEvent.setClientId(data.clientHelper.getUserId().toString());
@@ -60,7 +57,6 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    @Description("Custom rule. trading account + server -> fraud type + restriction + alert")
     private static DataHelper getCustomRuleTest2Data() {
         DataHelper data = getCustomRuleData(customRuleTest2Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
@@ -72,7 +68,6 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    @Description("Custom rule. trading account + server -> fraud type")
     private static DataHelper getCustomRuleTest3Data() {
         DataHelper data = getCustomRuleData(customRuleTest3Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
@@ -81,7 +76,6 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    @Description("Custom rule. trading account + server -> restriction")
     private static DataHelper getCustomRuleTest4Data() {
         DataHelper data = getCustomRuleData(customRuleTest4Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
@@ -90,7 +84,6 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    @Description("Custom rule. trading account + server -> alert")
     private static DataHelper getCustomRuleTest5Data() {
         DataHelper data = getCustomRuleData(customRuleTest5Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());
@@ -100,7 +93,6 @@ public class CustomRuleDataFactory {
         return data;
     }
 
-    @Description("Custom rule. trading account + server -> restriction")
     private static DataHelper getCustomRuleTest6Data() {
         DataHelper data = getCustomRuleData(customRuleTest6Client);
         data.customEvent.setServerId(data.clientHelper.getServerId().toString());

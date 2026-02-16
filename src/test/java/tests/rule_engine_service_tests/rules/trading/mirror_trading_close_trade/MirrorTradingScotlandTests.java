@@ -13,7 +13,6 @@ import static utils.Constants.*;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.io.IOException;
@@ -46,7 +45,6 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1432")
     @DisplayName("Mirror trading. Scotland. Exit without alert if trades count > 5. ElementId: Event_end_8")
     void mirrorTradeScotlandRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -59,7 +57,6 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1433")
     @DisplayName(
             "Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. ElementId: Event_end_8")
     void mirrorTradeScotlandRuleTest2() throws Exception {
@@ -73,7 +70,6 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1434")
     @DisplayName("Mirror trading. Scotland. Exit without alert if Leverage < 200. ElementId: Event_12inxex")
     void mirrorTradeScotlandRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
@@ -86,7 +82,6 @@ class MirrorTradingScotlandTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1435")
     @DisplayName(
             "Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
     void mirrorTradeScotlandRuleTest4() throws Exception {

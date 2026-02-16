@@ -42,7 +42,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2076")
+    @AllureId("2233")
     @DisplayName(
             "Clearance rule in router rule. TransferToWA Event. Exit with ruleEndId = 101 if Active WR restriction is set by rule engine")
     void clearanceRuleTransferToWAEventTest1() throws Exception {
@@ -62,7 +62,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2077")
+    @AllureId("2234")
     @DisplayName(
             "Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 102 if grossDeposit > 10 000?")
     void clearanceRuleTransferToWAEventTest2() throws Exception {
@@ -76,7 +76,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2078")
+    @AllureId("2235")
     @DisplayName(
             "Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 401 if checks B and D are true")
     void clearanceRuleTransferToWAEventTest3() throws Exception {
@@ -95,7 +95,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2079")
+    @AllureId("2236")
     @DisplayName(
             "Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 402 if checks B and E are true")
     void clearanceRuleTransferToWAEventTest4() throws Exception {
@@ -109,7 +109,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2080")
+    @AllureId("2237")
     @DisplayName(
             "Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 403 if checks C and D are true")
     void clearanceRuleTransferToWAEventTest5() throws Exception {
@@ -123,7 +123,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2082")
+    @AllureId("2238")
     @DisplayName(
             "Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 103 if ALL checks are false")
     void clearanceRuleTransferToWAEventTest6() throws Exception {
@@ -138,7 +138,6 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
 
     @Disabled("Not easy reachable with default tools")
     @Test
-    @AllureId("2083")
     @DisplayName("Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 200 if error occurred")
     void clearanceRuleTransferToWAEventTest7() throws Exception {
         DataHelper data = dataMap.get("7");
@@ -151,7 +150,7 @@ class ClearanceRuleTransferToWAEventTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2084")
+    @AllureId("2239")
     @DisplayName("Clearance rule in router rule. Transfer to wa event. Exit with ruleEndId = 201 if timeout occurred")
     void clearanceRuleTransferToWAEventTest8() throws Exception {
         DataHelper data = dataMap.get("8");

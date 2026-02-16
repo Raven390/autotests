@@ -14,13 +14,16 @@ public enum Rule {
     LATENCY_ARBITRAGE_RULE("Latency Arbitrage", "latency_arbitrage"),
     MIRROR_TRADE_BYBIT("Mirror trading bybit", "mirror_trade_bybit"),
     ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK("Withdrawal integrity check in Router rule", "withdrawal_integrity_check"),
-    ROUTER_RULE_WITHDRAWAL_NOTIFICATION(
+    ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT(
             "Withdrawal notification review in Router rule", "withdrawal_notification_rr_payment"),
+    ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS(
+            "Withdrawal notification review in Router rule", "withdrawal_notification_rr"),
     CPA_ABUSE_PAYMENT("Client CPA withdrawal(crm-payment)", "client_cpa_withdrawal_payment"),
     NDB_WITHDRAWAL_PAYMENT("Client NDB withdrawal(crm-payment)", "client_ndb_withdrawal_payment"),
     NO_SLIPPAGE_RULE("No slippage rule", "no_slippage"),
     NEWS_TRADE_RULE("News trade rule", "news_trade"),
     MIRROR_TRADE_ML("ML Mirror Trade", "ml_mirror_trade"),
+    MIRROR_TRADE_RR("Mirror trade in router rule", "mirror_trade_rr"),
     MIRROR_TRADE_OPEN_TRADE("Mirror trade on open trade event rule", "openTradeMirrorTrade"),
     GAP_TRADING("Gap trading rule", "gap_trade"),
     LOGIN_RULE("Login rule", "login_rule"),

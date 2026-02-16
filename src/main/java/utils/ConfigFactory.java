@@ -50,8 +50,8 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES =
             CONFIG.clickhouseGetMirrorAccountsByTrades();
 
-    public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
-            CONFIG.clickhouseGetMirrorTradeOnLastWithdrawal();
+    public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_ON_WITHDRAWAL =
+            CONFIG.clickhouseGetMirrorTradeOnWithdrawal();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
     public static final String CLICKHOUSE_API_GET_EFFECTIVE_LEVERAGE = CONFIG.clickhouseGetEffectiveLeverage();
     public static final String CLICKHOUSE_API_GET_CUMULATIVE_NOTIONAL_VALUE =
@@ -96,6 +96,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_CHARGEBACK_SCORE = CONFIG.clickhouseGetChargebackScore();
     public static final String CLICKHOUSE_API_GET_ALERTS = CONFIG.clickhouseGetAlerts();
     public static final String CLICKHOUSE_API_GET_GENERAL_SCORE = CONFIG.clickhouseGetGeneralScore();
+    public static final String CLICKHOUSE_API_GET_GENERAL_SCORE_V2 = CONFIG.clickhouseGetGeneralScoreV2();
     // Rule engine
     public static final String RULE_ENGINE_PATH_TEST_ENV = CONFIG.ruleEngineBasePathTest();
     public static final String RULE_ENGINE_GET_BRANDS = CONFIG.ruleEngineGetBrands();
@@ -354,8 +355,8 @@ public class ConfigFactory {
         @Key("clickhouseGetMirrorAccountsByTrades")
         String clickhouseGetMirrorAccountsByTrades();
 
-        @Key("clickhouseGetMirrorTradeOnLastWithdrawal")
-        String clickhouseGetMirrorTradeOnLastWithdrawal();
+        @Key("clickhouseGetMirrorTradeOnWithdrawal")
+        String clickhouseGetMirrorTradeOnWithdrawal();
 
         @Key("clickhouseGetAbuseTypes")
         String clickhouseGetAbuseTypes();
@@ -473,6 +474,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetGeneralScore")
         String clickhouseGetGeneralScore();
+
+        @Key("clickhouseGetGeneralScoreV2")
+        String clickhouseGetGeneralScoreV2();
 
         @Key("clickhouseGetSymbolGroups")
         String clickhouseGetSymbolGroups();

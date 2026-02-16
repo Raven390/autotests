@@ -51,7 +51,7 @@ class NoSlippageRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1419")
+    @AllureId("2307")
     @DisplayName("No slippage rule. If User is test user -> Exit without alert. ElementId: Event_end_1")
     void noSlippageRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -64,7 +64,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1420")
     @DisplayName("No slippage rule. If account currency is USC -> Exit without alert. ElementId: Event_197txjh")
     void noSlippageRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -77,7 +76,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1421")
     @DisplayName("No slippage rule. Exit without alert if at least 1 resolved alert for user. ElementId: Event_end_12")
     void noSlippageRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
@@ -90,7 +88,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1422")
     @DisplayName(
             "No slippage rule. Exit with alert and restriction if user has 0 resolved alerts. ElementId: Event_0oa6zyc")
     void noSlippageRuleTest4() throws Exception {
@@ -116,7 +113,7 @@ class NoSlippageRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1423")
+    @AllureId("2308")
     @DisplayName("No slippage rule. Exit without alert if traded symbol not in the list. ElementId: Event_1u9lc7r")
     void noSlippageRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
@@ -129,7 +126,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1424")
     @DisplayName("No slippage rule. Exit without alert if deals/fast deals ratio < 0.7. ElementId: Event_034y6nl")
     void noSlippageRuleTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");
@@ -142,7 +138,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1425")
     @DisplayName("No slippage rule. Exit without alert if stopout ratio < 0.75. ElementId: Event_12inxex")
     void noSlippageRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
@@ -155,7 +150,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1426")
     @DisplayName("No slippage rule. Exit without alert if notional value < 3mln. ElementId: Event_0n07x4l")
     void noSlippageRuleTest8() throws Exception {
         DataHelper data = dbDataMap.get("8");
@@ -168,7 +162,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1427")
     @DisplayName("No slippage rule. Exit without alert if count trades < 30. ElementId: Event_13p6x81")
     void noSlippageRuleTest9() throws Exception {
         DataHelper data = dbDataMap.get("9");
@@ -181,7 +174,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1428")
     @DisplayName(
             "No slippage rule. Exit without alert if profit(acc) + rebates(acc) < -10 000$?. ElementId: Event_0jy5i8k")
     void noSlippageRuleTest10() throws Exception {
@@ -195,7 +187,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1429")
     @DisplayName("No slippage rule. Exit without alert if resolved alerts amount > 0. ElementId: Event_1rm136r")
     void noSlippageRuleTest11() throws Exception {
         DataHelper data = dbDataMap.get("11");
@@ -208,7 +199,6 @@ class NoSlippageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1430")
     @DisplayName(
             "No slippage rule. Exit with alert and restriction if resolved alerts amount = 0. ElementId: Event_1k86ppo")
     void noSlippageRuleTest12() throws Exception {

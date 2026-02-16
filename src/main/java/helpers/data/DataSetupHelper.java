@@ -102,6 +102,10 @@ public class DataSetupHelper {
             insertObjectsToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScores);
             insertObjectsToDb(APP_TB_FININDEX_DATA, data.AppTbFinindexData);
 
+            if (data.ucidGeneralScorePythonTest != null) {
+                insertDepositTypeData();
+                insertObjectToDb(UCID_GENERAL_SCORE_PYTHON_TEST_TABLE_NAME, data.ucidGeneralScorePythonTest);
+            }
             if (data.paymentEventsObjects != null) {
                 data.paymentEventsObjects.forEach(
                         pEvent -> insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, pEvent));

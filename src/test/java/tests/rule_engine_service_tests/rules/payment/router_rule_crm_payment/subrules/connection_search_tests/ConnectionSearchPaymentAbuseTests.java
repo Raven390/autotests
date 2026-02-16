@@ -44,9 +44,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1844")
+    @AllureId("2211")
     @DisplayName(
-            "Connection Search in router rule. Exit if no matching connections. ElementId: end_connections_not_found2")
+            "Connection Search(payment branch) in router rule. Exit if no matching connections. ElementId: end_connections_not_found2")
     void connectionSearchPaymentAbuseTest1() throws Exception {
         DataHelper data = dataMap.get("1");
         setupData(data);
@@ -68,8 +68,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1845")
-    @DisplayName("Connection Search in router rule. Exit if no toxic account linked. ElementId: end_cs_no_abuse")
+    @AllureId("2212")
+    @DisplayName(
+            "Connection Search(payment branch) in router rule. Exit if no toxic account linked. ElementId: end_cs_no_abuse")
     void connectionSearchPaymentAbuseTest2() throws Exception {
         DataHelper data = dataMap.get("2");
         setupData(data);
@@ -91,8 +92,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1846")
-    @DisplayName("Connection Search in router rule. Exit if unknown fraud type. ElementId: end_unknown_FT")
+    @AllureId("2213")
+    @DisplayName(
+            "Connection Search(payment branch) in router rule. Exit if unknown fraud type. ElementId: end_unknown_FT")
     void connectionSearchPaymentAbuseTest3() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
@@ -114,8 +116,8 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1847")
-    @DisplayName("Connection Search in router rule. Exit without alert. ElementId: Event_1sc8b2t")
+    @AllureId("2214")
+    @DisplayName("Connection Search(payment branch) in router rule. Exit without alert. ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest4() throws Exception {
         DataHelper data = dataMap.get("4");
         setupData(data);
@@ -137,8 +139,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1848")
-    @DisplayName("Connection Search in router rule. Exit with alert with strong + confirmed. ElementId: Event_0yh59iy")
+    @AllureId("2215")
+    @DisplayName(
+            "Connection Search(payment branch) in router rule. Exit with alert with strong + confirmed. ElementId: Event_0yh59iy")
     void connectionSearchPaymentAbuseTest5() throws Exception {
         DataHelper data = dataMap.get("5");
         setupData(data);
@@ -198,9 +201,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1982")
+    @AllureId("2216")
     @DisplayName(
-            "Connection Search in router rule. Exit with alert with medium confirmed + 0.6 connect(pnl > 2000 or sumWithdrawalsStrPotConnections > 4000). ElementId: Event_0yh59iy")
+            "Connection Search(payment branch) in router rule. Exit with alert with medium confirmed + 0.6 connect(pnl > 2000 or sumWithdrawalsStrPotConnections > 4000). ElementId: Event_0yh59iy")
     void connectionSearchPaymentAbuseTest6() throws Exception {
         DataHelper data = dataMap.get("6");
         setupData(data);
@@ -222,9 +225,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1983")
+    @AllureId("2217")
     @DisplayName(
-            "Connection Search in router rule. Exit with alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_0yh59iy")
+            "Connection Search(payment branch) in router rule. Exit with alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_0yh59iy")
     void connectionSearchPaymentAbuseTest7() throws Exception {
         DataHelper data = dataMap.get("7");
         setupData(data);
@@ -246,9 +249,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1984")
+    @AllureId("2218")
     @DisplayName(
-            "Connection Search in router rule. Exit without alert with medium confirmed + 0.6 connect(pnl < 2000 or sumWithdrawalsStrPotConnections < 4000). ElementId: Event_1sc8b2t")
+            "Connection Search(payment branch) in router rule. Exit without alert with medium confirmed + 0.6 connect(pnl < 2000 or sumWithdrawalsStrPotConnections < 4000). ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest8() throws Exception {
         DataHelper data = dataMap.get("8");
         setupData(data);
@@ -270,9 +273,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1985")
+    @AllureId("2219")
     @DisplayName(
-            "Connection Search in router rule. Exit without alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_1sc8b2t")
+            "Connection Search(payment branch) in router rule. Exit without alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest9() throws Exception {
         DataHelper data = dataMap.get("9");
         setupData(data);
@@ -294,8 +297,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1986")
-    @DisplayName("Connection Search in router rule. Exit without alert with medium potential. ElementId: Event_1sc8b2t")
+    @AllureId("2220")
+    @DisplayName(
+            "Connection Search(payment branch) in router rule. Exit without alert with medium potential. ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest10() throws Exception {
         DataHelper data = dataMap.get("10");
         setupData(data);
