@@ -7,7 +7,6 @@ import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradin
 import static utils.Constants.*;
 
 import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.io.IOException;
@@ -39,7 +38,6 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1431")
     @DisplayName("Mirror trading. Exit without alert if user is test account. ElementId: Event_end_1")
     void mirrorTradeRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -52,7 +50,6 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1705")
     @DisplayName("Mirror trading. Exit without alert if user has no credits. ElementId: Event_end_3")
     void mirrorTradeRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -65,7 +62,6 @@ class MirrorTradingMainBranchTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1706")
     @DisplayName(
             "Mirror trading. Exit without alert if user has no mirrorMatch trades. ElementId: get_matching_opposite_trades_exit")
     void mirrorTradeRuleTest3() throws Exception {

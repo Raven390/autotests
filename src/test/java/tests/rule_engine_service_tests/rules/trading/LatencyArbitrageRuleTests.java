@@ -49,7 +49,7 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1372")
+    @AllureId("2327")
     @DisplayName("Latency arbitrage rule rule. Exit without alert if user is a test/st user")
     void latencyArbitrageRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -62,7 +62,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1373")
     @DisplayName("Latency arbitrage rule. Exit without alert if user has resolved alerts. ElementId: Event_end_12")
     void latencyArbitrageRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -75,7 +74,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1373")
     @DisplayName(
             "Latency arbitrage rule. Exit without alert if user has less that 10 trading days. ElementId: Event_088xwgg")
     void latencyArbitrageRuleTest3() throws Exception {
@@ -126,7 +124,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1374")
     @DisplayName(
             "Latency arbitrage rule. Rebate Latency Branch. Total Profit / Cumulative deposit =< 0.2. ElementId: Event_1jau96v")
     void latencyArbitrageRuleTest4() throws Exception {
@@ -140,7 +137,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1375")
     @DisplayName(
             "Latency arbitrage rule. Rebate Latency Branch. rebates(client) / profit(client) < 0.3?. ElementId: Event_0cyuekk")
     void latencyArbitrageRuleTest5() throws Exception {
@@ -166,7 +162,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1376")
     @DisplayName(
             "Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
     void latencyArbitrageRuleTest7() throws Exception {
@@ -180,7 +175,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1657")
     @DisplayName("Latency arbitrage rule. Rebate Latency Branch. At least 1 resolved Alert. ElementId: Event_0u8x3op")
     void latencyArbitrageRuleTest8() throws Exception {
         DataHelper data = dbDataMap.get("8");
@@ -193,7 +187,6 @@ class LatencyArbitrageRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1658")
     @DisplayName("Latency arbitrage rule. Rebate Latency Branch. No resolved Alerts. ElementId: Event_04a1zpc")
     void latencyArbitrageRuleTest9() throws Exception {
         DataHelper data = dbDataMap.get("9");

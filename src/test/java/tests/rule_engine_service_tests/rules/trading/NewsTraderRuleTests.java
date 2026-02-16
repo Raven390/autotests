@@ -50,7 +50,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1533")
+    @AllureId("2309")
     @DisplayName("News trader on close trade. Exit without alert if user is test or social trader user")
     void newsTradingCloseTradeEventRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -62,7 +62,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1534")
+    @AllureId("2310")
     @DisplayName(
             "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews=0.5 Event_end_5")
     void newsTradingCloseTradeEventRuleTest2() throws Exception {
@@ -77,7 +77,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2071")
+    @AllureId("2311")
     @DisplayName(
             "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews< 0.6 leverage < 50. Event_end_6")
     void newsTradingCloseTradeEventRuleTest21() throws Exception {
@@ -92,7 +92,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2072")
+    @AllureId("2312")
     @DisplayName(
             "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews< 0.6 leverage > 50. ucidScore < 0.7. Event_end_7")
     void newsTradingCloseTradeEventRuleTest22() throws Exception {
@@ -107,7 +107,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2073")
+    @AllureId("2313")
     @DisplayName(
             "News trader on close trade. Exit without alert if user have news trade ratio <0.7 profitTotal/profitNews< 0.6 leverage > 50. ucidScore > 0.7. get_trades_gr_by")
     void newsTradingCloseTradeEventRuleTest23() throws Exception {
@@ -123,7 +123,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1535")
+    @AllureId("2314")
     @DisplayName("News trader on close trade. Exit without alert if user have profit USD <350")
     void newsTradingCloseTradeEventRuleTest3() throws Exception {
         Allure.step("generate test data where ...");
@@ -137,7 +137,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1536")
+    @AllureId("2315")
     @DisplayName("News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4")
     void newsTradingCloseTradeEventRuleTest4() throws Exception {
         Allure.step("generate test data where News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4");
@@ -151,7 +151,7 @@ class NewsTraderRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1537")
+    @AllureId("2316")
     @DisplayName("News Trader. Exit with alert if profit/deposit > 0.5. End_nt_alert")
     void newsTradingCloseTradeEventRuleTest5() throws Exception {
         Allure.step("generate test data where News Trader. Exit without alert if profit/deposit < 0.5. Event_end_4");

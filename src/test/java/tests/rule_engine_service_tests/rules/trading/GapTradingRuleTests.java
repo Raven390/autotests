@@ -48,49 +48,49 @@ class GapTradingRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2018")
+    @AllureId("2328")
     @DisplayName("Gap trading rule. Exit without alert if user is test or social trader user. ElementId: endEvent1")
     void gapTradingOpenTradeEventRuleTest1() throws Exception {
         runGapTradingRuleTest("1", "endEvent1");
     }
 
     @Test
-    @AllureId("2017")
+    @AllureId("2329")
     @DisplayName("Gap trading rule. Exit without alert if market does not close in 30 min. ElementId: endEvent2")
     void gapTradingOpenTradeEventRuleTest2() throws Exception {
         runGapTradingRuleTest("2", "endEvent2");
     }
 
     @Test
-    @AllureId("2019")
+    @AllureId("2330")
     @DisplayName("Gap trading rule. Exit without alert if user has no open trades. ElementId: endEvent3")
     void gapTradingOpenTradeEventRuleTest3() throws Exception {
         runGapTradingRuleTest("3", "endEvent3");
     }
 
     @Test
-    @AllureId("2020")
+    @AllureId("2331")
     @DisplayName("Gap trading rule. Exit without alert if leverage is low. ElementId: endEvent4")
     void gapTradingOpenTradeEventRuleTest4() throws Exception {
         runGapTradingRuleTest("4", "endEvent4");
     }
 
     @Test
-    @AllureId("2036")
+    @AllureId("2332")
     @DisplayName("Gap trading rule. Exit without alert if growth is low. ElementId: endEvent5")
     void gapTradingOpenTradeEventRuleTest5() throws Exception {
         runGapTradingRuleTest("5", "endEvent5");
     }
 
     @Test
-    @AllureId("2037")
+    @AllureId("2333")
     @DisplayName("Gap trading rule. Exit without alert if equity is not enough. ElementId: endEvent6")
     void gapTradingOpenTradeEventRuleTest6() throws Exception {
         runGapTradingRuleTest("6", "endEvent6");
     }
 
     @Test
-    @AllureId("2038")
+    @AllureId("2334")
     @DisplayName(
             "Gap trading rule. Exit without alert if account isn't running near its daily peak exposure. ElementId: endEvent7")
     void gapTradingOpenTradeEventRuleTest7() throws Exception {
@@ -98,7 +98,7 @@ class GapTradingRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2039")
+    @AllureId("2335")
     @DisplayName(
             "Gap trading rule. Exit without alert if trades aren't represented by one symbol for >80%. ElementId: endEvent8")
     void gapTradingOpenTradeEventRuleTest8() throws Exception {
@@ -106,7 +106,7 @@ class GapTradingRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2037")
+    @AllureId("2336")
     @DisplayName("Gap trading rule. Exit with alert. ElementId: endEvent")
     void gapTradingOpenTradeEventRuleTestAlert() throws Exception {
         runGapTradingRuleTest("alert", "endEvent");

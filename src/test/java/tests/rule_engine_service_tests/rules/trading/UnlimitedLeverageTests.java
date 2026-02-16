@@ -44,7 +44,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2050")
+    @AllureId("2297")
     @DisplayName("Unlimited leverage rule. Exit without alert if user is test user. Element Id: Event_0lxjn09")
     void unlimitedLeverageRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -56,7 +56,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2051")
+    @AllureId("2298")
     @DisplayName(
             "Unlimited leverage rule. Exit without alert if unlimited leverage is false. Element Id: Event_0lxjn09")
     void unlimitedLeverageRuleTest2() throws Exception {
@@ -69,7 +69,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2093")
+    @AllureId("2299")
     @DisplayName("Unlimited leverage rule. Exit without alert if unlimited leverage is true. Element Id: Event_07awlre")
     void unlimitedLeverageRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -81,7 +81,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2053")
+    @AllureId("2300")
     @DisplayName("Unlimited leverage rule. Exit without alert if profit < 300usd. Element Id: Event_1tzckgk")
     void unlimitedLeverageRuleTest4() throws Exception {
         DataHelper data = dataMap.get("4");
@@ -93,7 +93,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2054")
+    @AllureId("2301")
     @DisplayName("Unlimited leverage rule. Exit without alert if profit/deposit < 1. Element Id: Event_0urh1rn")
     void unlimitedLeverageRuleTest5() throws Exception {
         DataHelper data = dataMap.get("5");
@@ -105,7 +105,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2055")
+    @AllureId("2302")
     @DisplayName("Unlimited leverage rule. Exit without alert if news trade ration < 0.5. Element Id: Event_1fmnax8")
     void unlimitedLeverageRuleTest6() throws Exception {
         DataHelper data = dataMap.get("6");
@@ -117,7 +117,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2056")
+    @AllureId("2303")
     @DisplayName(
             "Unlimited leverage rule. Exit without alert if DailyNotional Value / NotionalValue < 0.6. Element Id: Event_1antcml")
     void unlimitedLeverageRuleTest7() throws Exception {
@@ -130,7 +130,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2057")
+    @AllureId("2304")
     @DisplayName("Unlimited leverage rule. Exit without alert if leverage < 200. Element Id: Event_0zb1zw6")
     void unlimitedLeverageRuleTest8() throws Exception {
         DataHelper data = dataMap.get("8");
@@ -142,7 +142,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2058")
+    @AllureId("2305")
     @DisplayName(
             "Unlimited leverage rule. Exit without alert if Client have not been detected as Fraud News Abuse. Element Id: Event_0v7avtz")
     void unlimitedLeverageRuleTest9() throws Exception {
@@ -155,7 +155,7 @@ class UnlimitedLeverageTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2059")
+    @AllureId("2306")
     @DisplayName(
             "Unlimited leverage rule. Exit with alert and restriction if Client have not been detected as Fraud News Abuse. Element Id: Event_0tv1x8x")
     void unlimitedLeverageRuleTest10() throws Exception {

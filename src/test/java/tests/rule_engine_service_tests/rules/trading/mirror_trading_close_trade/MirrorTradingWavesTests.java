@@ -46,7 +46,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1620")
+    @AllureId("2337")
     @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
     void mirrorTradeWavesTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -58,7 +58,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1619")
+    @AllureId("2338")
     @DisplayName(
             "Mirror trading. Waves. Exit without alerts if previously at least 1 resolved alert. ElementId: Event_end_5")
     void mirrorTradeWavesTest2() throws Exception {
@@ -71,7 +71,7 @@ class MirrorTradingWavesTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1618")
+    @AllureId("2339")
     @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. ElementId: Event_end_5")
     void mirrorTradeWavesTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");

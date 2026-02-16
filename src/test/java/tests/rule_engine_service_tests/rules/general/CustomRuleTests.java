@@ -18,7 +18,6 @@ import static utils.Constants.*;
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.io.IOException;
@@ -51,7 +50,6 @@ class CustomRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1746")
     @DisplayName("Custom rule. ucid -> fraud type + restriction + alert")
     void customRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -81,7 +79,6 @@ class CustomRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1747")
     @DisplayName("Custom rule. trading account + server -> fraud type + restriction + alert")
     void customRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
@@ -97,7 +94,6 @@ class CustomRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1748")
     @DisplayName("Custom rule. trading account + server -> fraud type")
     void customRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
@@ -114,7 +110,6 @@ class CustomRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1749")
     @DisplayName("Custom rule. trading account + server -> restriction")
     void customRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
@@ -131,7 +126,6 @@ class CustomRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1750")
     @DisplayName("Custom rule. trading account + server -> alert")
     void customRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
@@ -148,7 +142,6 @@ class CustomRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2001")
     @DisplayName("Custom rule. Apply WT restriction")
     void customRuleTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");

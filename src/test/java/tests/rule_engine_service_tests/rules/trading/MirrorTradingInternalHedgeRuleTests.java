@@ -46,7 +46,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1898")
+    @AllureId("2323")
     @DisplayName(
             "Mirror trade internal hedge. Exit without alert if (Is deal profit of the positive leg > 50$?) = false. ElementId: EVENT_END_NO_ALERT")
     void mirrorTradeInternalHedgeTest1() throws Exception {
@@ -60,7 +60,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1899")
+    @AllureId("2324")
     @DisplayName(
             "Mirror trade internal hedge. Exit with alert if (Is deal profit of the positive leg > 50$?) = true. ElementId: EVENT_END_WITH_ALERT")
     void mirrorTradeInternalHedgeTest2() throws Exception {

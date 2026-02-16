@@ -13,7 +13,6 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
-import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.util.HashMap;
@@ -46,7 +45,6 @@ class RegistrationRuleTests extends TestBaseRule {
     @Test
     @DisplayName(
             "Registration rule: Exit without alert if amount of abusers in connections < 10% and lexis score is not high, trueip/deviceid is empty string. ElementId: end_no_alert")
-    @AllureId("155")
     void registrationRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
         setupData(data);
@@ -60,7 +58,6 @@ class RegistrationRuleTests extends TestBaseRule {
     @Test
     @DisplayName(
             "Registration rule. Exit with alert if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
-    @AllureId("156")
     void registrationRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
         setupData(data);
@@ -80,7 +77,6 @@ class RegistrationRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1484")
     @DisplayName("Registration rule. Connection search. Strong hedge confirmed. ElementId: end_registration_rule_cs")
     void registrationRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
@@ -113,7 +109,6 @@ class RegistrationRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1485")
     @DisplayName(
             "Registration rule. Connection search. Medium hedge potential, ln risk rating = low. ElementId: end_no_alert")
     void registrationRuleTest4() throws Exception {

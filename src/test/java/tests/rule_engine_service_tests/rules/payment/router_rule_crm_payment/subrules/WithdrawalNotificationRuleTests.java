@@ -61,12 +61,12 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.getCrmWithdrawalEventV2());
 
         String eventId = data.getCrmWithdrawalEventV2().getId();
-        checkElementId(expectedEnd, eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
-        checkElementId("retrieve_rule_outcomes", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId(expectedEnd, eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
+        checkElementId("Activity_0n9s6ck", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
     @Test
-    @AllureId("1769")
+    @AllureId("2253")
     @DisplayName(
             "Withdrawal notification check in Router rule. Exit without alert if check name is empty and no restriction. ElementId: end_101")
     void withdrawalNotificationRule1Test() throws Exception {
@@ -74,7 +74,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1790")
+    @AllureId("2254")
     @DisplayName(
             "Withdrawal notification check in Router rule. Exit without alert if check name is null and no restriction. ElementId: end_101")
     void withdrawalNotificationRule2Test() throws Exception {
@@ -82,14 +82,14 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1770")
+    @AllureId("2255")
     @DisplayName("Withdrawal notification rule. Exit with alert if check name is not empty. ElementId: end_alert")
     void withdrawalNotificationRule3Test() throws Exception {
         runWithdrawalNotificationTest("3", "end_alert", false);
     }
 
     @Test
-    @AllureId("1771")
+    @AllureId("2256")
     @DisplayName(
             "Withdrawal notification rule. Exit with alert if check name is empty and WR restriction exists. ElementId: end_alert")
     void withdrawalNotificationRule4Test() throws Exception {
@@ -97,7 +97,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1925")
+    @AllureId("2257")
     @DisplayName(
             "Withdrawal notification rule. Exit with alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restrictions >1 . ElementId: end_alert")
     void withdrawalNotificationRuleScotlandPattern5Test() throws Exception {
@@ -111,8 +111,8 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         String eventId = data.getCrmWithdrawalEventV2().getId();
-        checkElementId("end_alert", eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
-        checkElementId("retrieve_rule_outcomes", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId("end_alert", eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
+        checkElementId("Activity_0n9s6ck", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -125,7 +125,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1926")
+    @AllureId("2258")
     @DisplayName(
             "Withdrawal notification rule. Exit with alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restriction count = 1, profit exceeds 60% of total funding (deposit plus credit). ElementId: end_alert")
     void withdrawalNotificationRuleScotlandPattern6Test() throws Exception {
@@ -140,13 +140,15 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         checkElementId(
                 "profit_check",
                 data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
         checkElementId(
                 "end_alert",
                 data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
         checkElementId(
-                "end", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+                "end",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -159,7 +161,7 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1927")
+    @AllureId("2259")
     @DisplayName(
             "Withdrawal notification rule. Exit without alert if check name is not 'Crypto_Risk' and Scotland WR restriction exists, restrictions count = 1, profit does not exceed 60% of total funding. ElementId: end_103")
     void withdrawalNotificationRuleScotlandPattern7Test() throws Exception {
@@ -174,11 +176,15 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         checkElementId(
                 "profit_check",
                 data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
         checkElementId(
-                "end_103", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+                "end_103",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
         checkElementId(
-                "end", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION.getProcessId());
+                "end",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());

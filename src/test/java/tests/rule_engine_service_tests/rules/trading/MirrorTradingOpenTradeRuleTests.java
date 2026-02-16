@@ -48,7 +48,7 @@ class MirrorTradingOpenTradeRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1385")
+    @AllureId("2322")
     @DisplayName(
             "Mirror trading rule with open trade event. Exit without alert if user is test or social trader user. ElementId: endEvent1TestOrSocialTrader")
     void mirrorTradingOpenTradeEventRuleTest1() throws Exception {

@@ -39,7 +39,7 @@ class MarketManipulationRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2002")
+    @AllureId("2326")
     @DisplayName("Market manipulation rule. Exit if test client. ElementId: Event_1dfbkag")
     void MarketManipulationRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");

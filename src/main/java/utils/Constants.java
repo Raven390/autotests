@@ -79,6 +79,8 @@ public class Constants {
             "Clickhouse api. Get mirror trade waves v2";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL =
             "Clickhouse api. Get mirror trade on last withdrawal";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_WITHDRAWAL =
+            "Clickhouse api. Get mirror trade on withdrawal";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME =
             "Clickhouse api. Get swap free volume";
@@ -272,6 +274,8 @@ public class Constants {
     public static final String CRM_TB_ADDRESS_PROOF_TABLE_NAME = "consolidated.crm___tb_address_proof";
     public static final String LEXIS_NEXIS_TABLE_NAME = "lexisnexis.ln_session_parsed";
     public static final String MIRROR_LOGIN_TABLE_NAME = "data_science.mirror_login";
+    public static final String UCID_GENERAL_SCORE_PYTHON_TEST_TABLE_NAME =
+            "data_science.ucid_general_score_python_test";
     public static final String MIRROR_UCID_TABLE_NAME = "consolidated.mirror_ucid";
     public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION = "postgres.mi.client_general_restriction";
     public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION =

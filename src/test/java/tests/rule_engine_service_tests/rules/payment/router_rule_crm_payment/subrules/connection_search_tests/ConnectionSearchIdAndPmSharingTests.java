@@ -44,8 +44,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1835")
-    @DisplayName("Connection Search in router rule. No alert if Email / Phone compare = true. ElementId: end_105")
+    @AllureId("2200")
+    @DisplayName(
+            "Connection Search(id and pm sharing branch) in router rule. No alert if Email / Phone compare = true. ElementId: end_105")
     void connectionSearchRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
         setupData(data);
@@ -65,9 +66,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2015")
+    @AllureId("2201")
     @DisplayName(
-            "Connection Search in router rule. Exit without alert if payment profile verified for another user and name_birth=false. ElementId: end_111")
+            "Connection Search(id and pm sharing branch) in router rule. Exit without alert if payment profile verified for another user and name_birth=false. ElementId: end_111")
     void connectionSearchRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
         DataHelper data2 = dataMap.get("2_1");
@@ -85,9 +86,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2016")
+    @AllureId("2202")
     @DisplayName(
-            "Connection Search in router rule. Exit with alert if payment profile verified for another user and name_birth=true. ElementId: Event_0sdekqs")
+            "Connection Search(id and pm sharing branch) in router rule. Exit with alert if payment profile verified for another user and name_birth=true. ElementId: Event_0sdekqs")
     void connectionSearchRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
@@ -118,9 +119,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1836")
+    @AllureId("2203")
     @DisplayName(
-            "Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = true. ElementId: end_106")
+            "Connection Search(id and pm sharing branch) in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = true. ElementId: end_106")
     void connectionSearchIdAndPmSharingTest4() throws Exception {
         DataHelper data = dataMap.get("4");
         setupData(data);
@@ -140,9 +141,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1837")
+    @AllureId("2204")
     @DisplayName(
-            "Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = false. ElementId: end_202")
+            "Connection Search(id and pm sharing branch) in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = false. ElementId: end_202")
     void connectionSearchIdAndPmSharingTest5() throws Exception {
         DataHelper data = dataMap.get("5");
         setupData(data);
@@ -162,8 +163,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1838")
-    @DisplayName("Connection Search in router rule. Is Crypto withdrawal = false. ElementId: end_107")
+    @AllureId("2205")
+    @DisplayName(
+            "Connection Search(id and pm sharing branch) in router rule. Is Crypto withdrawal = false. ElementId: end_107")
     void connectionSearchIdAndPmSharingTest6() throws Exception {
         DataHelper data = dataMap.get("6");
         setupData(data);
@@ -183,8 +185,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1839")
-    @DisplayName("Connection Search in router rule. payoutConnectionsCount > 19 = true. ElementId: end_203")
+    @AllureId("2206")
+    @DisplayName(
+            "Connection Search(id and pm sharing branch) in router rule. payoutConnectionsCount > 19 = true. ElementId: end_203")
     void connectionSearchIdAndPmSharingTest7() throws Exception {
         DataHelper data = dataMap.get("7");
         setupData(data);
@@ -208,8 +211,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1840")
-    @DisplayName("Connection Search in router rule. payoutConnectionsCount > 5 = false. ElementId: end_110")
+    @AllureId("2207")
+    @DisplayName(
+            "Connection Search(id and pm sharing branch) in router rule. payoutConnectionsCount > 5 = false. ElementId: end_110")
     void connectionSearchIdAndPmSharingTest8() throws Exception {
         DataHelper data = dataMap.get("8");
         setupData(data);
@@ -229,9 +233,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1841")
+    @AllureId("2208")
     @DisplayName(
-            "Connection Search in router rule. Send alert if Single transaction of >= 10K USD = true. ElementId: end_204")
+            "Connection Search(id and pm sharing branch) in router rule. Send alert if Single transaction of >= 10K USD = true. ElementId: end_204")
     void connectionSearchIdAndPmSharingTest9() throws Exception {
         DataHelper data = dataMap.get("9");
         setupData(data);
@@ -292,8 +296,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1842")
-    @DisplayName("Connection Search in router rule. Sum Deposit OR Withdrawal >= 50K USD = true. ElementId: end_205")
+    @AllureId("2209")
+    @DisplayName(
+            "Connection Search(id and pm sharing branch) in router rule. Sum Deposit OR Withdrawal >= 50K USD = true. ElementId: end_205")
     void connectionSearchIdAndPmSharingTest10() throws Exception {
         DataHelper data = dataMap.get("10");
         setupData(data);
@@ -317,8 +322,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1843")
-    @DisplayName("Connection Search in router rule. Sum Deposit OR Withdrawal >= 50K USD = false. ElementId: end_109")
+    @AllureId("2210")
+    @DisplayName(
+            "Connection Search(id and pm sharing branch) in router rule. Sum Deposit OR Withdrawal >= 50K USD = false. ElementId: end_109")
     void connectionSearchIdAndPmSharingTest11() throws Exception {
         DataHelper data = dataMap.get("11");
         setupData(data);

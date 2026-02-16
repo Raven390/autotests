@@ -50,7 +50,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1942")
+    @AllureId("2260")
     @DisplayName("Router Rule transfer to wallet. Transfer manual Approve")
     void routerRuleShadowModeTransferTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -100,7 +100,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1943")
+    @AllureId("2261")
     @DisplayName("Router Rule transfer to wallet. Transfer manual Reject")
     void routerRuleShadowModeTransferTest2() throws Exception {
         DataHelper data = dataMap.get("2");
@@ -126,7 +126,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1944")
+    @AllureId("2262")
     @DisplayName("Router Rule transfer to wallet. Transfer Auto approve")
     void routerRuleShadowModeTransferTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -148,7 +148,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2126")
+    @AllureId("2263")
     @DisplayName("Router Rule transfer to wallet. Exit rule for duplicate event")
     void routerRuleShadowModeTransferTest4() throws Exception {
         DataHelper data = dataMap.get("4");
@@ -169,7 +169,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2127")
+    @AllureId("2264")
     @DisplayName("Router Rule transfer to wallet. No exit for duplicate which need to be reprocessed")
     void routerRuleShadowModeTransferTest5() throws Exception {
         DataHelper data = dataMap.get("5");

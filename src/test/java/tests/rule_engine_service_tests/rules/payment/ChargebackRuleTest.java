@@ -61,7 +61,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1948")
+    @AllureId("2270")
     @DisplayName(
             "Chargeback rule test. client have rule end ALERT for rule 4. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. Event_1tc5so6")
     void chargeback1Test() throws Exception {
@@ -86,7 +86,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1949")
+    @AllureId("2271")
     @DisplayName(
             "Chargeback rule test. client have no deposits for card(profile) in event. callback.data.charge.attributes.status != 'approved' No Chargeback fraud. Event_1en3mz7")
     void chargeback2Test() throws Exception {
@@ -111,7 +111,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1950")
+    @AllureId("2272")
     @DisplayName(
             "Chargeback rule test. client have deposits. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. Event_1en3mz7")
     void chargeback3Test() throws Exception {
@@ -127,7 +127,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1951")
+    @AllureId("2273")
     @DisplayName(
             "Chargeback rule test. client have no deposits for card(profile) in event. callback.data.charge.attributes.status =! 'approved' Chargeback fraud. ")
     void chargeback4Test() throws Exception {
@@ -146,7 +146,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1952")
+    @AllureId("2274")
     @DisplayName(
             "Chargeback rule test. client have no deposits for card(profile) in event. callback.data.charge.attributes.status == 'approved' No Chargeback fraud. ")
     void chargeback5Test() throws Exception {
@@ -162,7 +162,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1953")
+    @AllureId("2275")
     @DisplayName(
             "Chargeback rule test. client sum deposits >5000, 3 cards, no connections. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback6Test() throws Exception {
@@ -248,7 +248,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1954")
+    @AllureId("2276")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 4 cards, no connections. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback7Test() throws Exception {
@@ -334,7 +334,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1955")
+    @AllureId("2277")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback8Test() throws Exception {
@@ -420,7 +420,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1956")
+    @AllureId("2278")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback9Test() throws Exception {
@@ -507,7 +507,6 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1957")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback10Test() throws Exception {
@@ -595,7 +594,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1958")
+    @AllureId("2279")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback11Test() throws Exception {
@@ -692,7 +691,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1959")
+    @AllureId("2280")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback12Test() throws Exception {
@@ -790,7 +789,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1960")
+    @AllureId("2281")
     @DisplayName(
             "Chargeback rule test.cardholder/KYC name similarity is == 1. client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster. Is 3d. No not FTD and no Open Trades.")
     void chargeback13Test() throws Exception {
@@ -825,7 +824,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1961")
+    @AllureId("2282")
     @DisplayName(
             "card is is 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster. Is 3d. No not FTD and no Open Trades.")
     void chargeback14Test() throws Exception {
@@ -860,7 +859,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1962")
+    @AllureId("2283")
     @DisplayName(
             "Score 0. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.  not FTD and no Open Trades.")
     void chargeback15Test() throws Exception {
@@ -895,7 +894,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1963")
+    @AllureId("2284")
     @DisplayName(
             "Score 0. FTD with Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.")
     void chargeback16Test() throws Exception {
@@ -930,7 +929,6 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1964")
     @DisplayName(
             "Score 0. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.")
     void chargeback17Test() throws Exception {
@@ -965,7 +963,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1965")
+    @AllureId("2285")
     @DisplayName(
             "Score 0. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1. Chargeback fraud Card not used by known fraudster.")
     void chargeback18Test() throws Exception {
@@ -1058,7 +1056,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1966")
+    @AllureId("2286")
     @DisplayName("Chargeback fraud Card was used by known fraudster. No segment. no Open Trades. card not 3dS.")
     void chargeback19Test() throws Exception {
         DataHelper data = dbDataMap.get("19");
@@ -1151,7 +1149,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1967")
+    @AllureId("2287")
     @DisplayName("Chargeback fraud Card was used by known fraudster. No segment. Open Trades. card not 3dS. end 202")
     void chargeback20Test() throws Exception {
         DataHelper data = dbDataMap.get("20");
@@ -1244,7 +1242,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1968")
+    @AllureId("2288")
     @DisplayName(
             "Chargeback Segment 'Very High'. Score > 0. fraud Card was used by known fraudster. No segment. Open Trades. card not 3dS. 204")
     void chargeback21Test() throws Exception {
@@ -1286,7 +1284,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1969")
+    @AllureId("2289")
     @DisplayName(
             "Chargeback Segment 'Ultra'. Score = 0. fraud Card was used by known fraudster. No segment. Open Trades. card not 3dS. 102")
     void chargeback22Test() throws Exception {
@@ -1322,7 +1320,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("1970")
+    @AllureId("2290")
     @DisplayName("Chargeback Chargeback. Client have previous alerts from the rule")
     void chargeback23Test() throws Exception {
         DataHelper data = dbDataMap.get("23");
@@ -1356,7 +1354,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("2042")
+    @AllureId("2291")
     @DisplayName("Chargeback Chargeback. Branch 10, segment ultra or very high, score>0. Element_id: end_207")
     void chargeback24Test() throws Exception {
         DataHelper data = dbDataMap.get("24");
@@ -1378,7 +1376,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("2043")
+    @AllureId("2292")
     @DisplayName("Chargeback Chargeback. Branch 10, segment ultra or very high, score0. Element_id: end_103")
     void chargeback25Test() throws Exception {
         DataHelper data = dbDataMap.get("25");
@@ -1399,7 +1397,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("2044")
+    @AllureId("2293")
     @DisplayName(
             "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades >0. Element_id: end_205")
     void chargeback26Test() throws Exception {
@@ -1422,7 +1420,7 @@ class ChargebackRuleTest {
     }
 
     @Test
-    @AllureId("2045")
+    @AllureId("2294")
     @DisplayName(
             "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades =0. Element_id: end_206")
     void chargeback27Test() throws Exception {

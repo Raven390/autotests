@@ -48,7 +48,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1755")
+    @AllureId("2317")
     @DisplayName("ML Mirror trade rule. Exit if user has no credits. ElementId: Event_1flqa1d")
     void MlMirrorTradeRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -60,7 +60,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1755")
+    @AllureId("2318")
     @DisplayName(
             "ML Mirror trade rule.  user has at least 1 closed alert currentPnl - lastPnl < min(5000, 0.8 * depositsUcid). ElementId: Event_1fe3v0e")
     void MlMirrorTradeRuleTest2() throws Exception {
@@ -73,7 +73,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1756")
+    @AllureId("2319")
     @DisplayName(
             "ML Mirror trade rule. ML Mirror trade rule.  user has at least 1 closed alert currentPnl - lastPnl > min(5000, 0.8 * depositsUcid) marked hedger. ElementId: Event_1vz2lns")
     void MlMirrorTradeRuleTest3() throws Exception {
@@ -88,7 +88,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1757")
+    @AllureId("2320")
     @DisplayName(
             "ML Mirror trade rule. ML Mirror trade rule.  user has at least 1 closed alert currentPnl - lastPnl > min(5000, 0.8 * depositsUcid) not marked as hedger ElementId: Event_0pdqol0")
     void MlMirrorTradeRuleTest4() throws Exception {
@@ -147,7 +147,7 @@ class MlMirrorTradeTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2085")
+    @AllureId("2321")
     @DisplayName(
             "No server in account in event .ML Mirror trade rule. ML Mirror trade rule.  user has at least 1 closed alert currentPnl - lastPnl > min(5000, 0.8 * depositsUcid) not marked as hedger ElementId: Event_0pdqol0")
     void MlMirrorTradeRuleTest5() throws Exception {

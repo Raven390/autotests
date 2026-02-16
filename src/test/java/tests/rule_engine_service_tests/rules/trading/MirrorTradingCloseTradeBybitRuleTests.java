@@ -45,7 +45,7 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1445")
+    @AllureId("2325")
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if user has no credits. ElementId: Event_end_3")
     void mirrorTradeBybitRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
@@ -58,7 +58,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1446")
     @DisplayName(
             "Mirror trading rule for Bybit. ML model. Exit without alert if trades amount < 10. ElementId: Event_0vlh2iw")
     void mirrorTradeBybitRuleTest2() throws Exception {
@@ -72,7 +71,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1447")
     @DisplayName(
             "Mirror trading rule for Bybit. ML model. Exit without alert if trades amount > 200. ElementId: Event_0vlh2iw")
     void mirrorTradeBybitRuleTest3() throws Exception {
@@ -86,7 +84,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1448")
     @DisplayName(
             "Mirror trading rule for Bybit. ML model. Exit without alert if mirror score < 0.9. ElementId: Event_1n666vd")
     void mirrorTradeBybitRuleTest4() throws Exception {
@@ -100,7 +97,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1449")
     @DisplayName(
             "Mirror trading rule for Bybit. ML model. Exit without alertif user has no resolved alerts. ElementId: Event_1he561b")
     void mirrorTradeBybitRuleTest5() throws Exception {
@@ -114,7 +110,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1450")
     @DisplayName(
             "Mirror trading rule for Bybit. ML model. Exit with alert if resolved alerts amount for user = 0. ElementId: Flow_1ijudon")
     void mirrorTradeBybitRuleTest6() throws Exception {
@@ -156,7 +151,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1451")
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if deposits > 5000. ElementId: Event_end_2")
     void mirrorTradeBybitRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
@@ -169,7 +163,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1452")
     @DisplayName("Mirror trading rule for Bybit. Exit without alert if count trades > 300. ElementId: Event_end_2")
     void mirrorTradeBybitRuleTest8() throws Exception {
         DataHelper data = dbDataMap.get("8");
@@ -182,7 +175,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1453")
     @DisplayName("Mirror trading rule for Bybit. Scotland. No alert if trades count > 5. ElementId : Event_1cl2uhs")
     void mirrorTradeBybitRuleTest9() throws Exception {
         DataHelper data = dbDataMap.get("9");
@@ -195,7 +187,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1454")
     @DisplayName(
             "Mirror trading rule for Bybit. Scotland. No alert if profit/(deposit+credit) < 0.6. ElementId: Event_1cl2uhs")
     void mirrorTradeBybitRuleTest10() throws Exception {
@@ -209,7 +200,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1455")
     @DisplayName(
             "Mirror trading rule for Bybit. Scotland. Exit without alert if leverage < 200. ElementId: Event_12inxex")
     void mirrorTradeBybitRuleTest11() throws Exception {
@@ -223,7 +213,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1456")
     @DisplayName(
             "Mirror trading rule for Bybit. Scotland. Exit with alert if leverage > 200 and no resolved alerts. ElementId: Event_end_4")
     void mirrorTradeBybitRuleTest12() throws Exception {
@@ -260,7 +249,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled
     @Test
-    @AllureId("1498")
     @DisplayName(
             "Mirror trading rule for Bybit. Scotland. Exit without alert if leverage > 200 and > 0 resolved alerts. ElementId: Event_end_4")
     void mirrorTradeBybitRuleTest13() throws Exception {
@@ -274,7 +262,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled("Not implemented")
     @Test
-    @AllureId("1457")
     @DisplayName(
             "Mirror trading rule for Bybit. Waves. Exit without alert if there is no pattern. ElementId: Event_end_9")
     void mirrorTradeBybitRuleTest14() throws Exception {
@@ -288,7 +275,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled("Not implemented")
     @Test
-    @AllureId("1458")
     @DisplayName(
             "Mirror trading rule for Bybit. Waves. Exit without alert if there is pattern and resolved alerts>0. ElementId: Event_0w3j9pm")
     void mirrorTradeBybitRuleTest15() throws Exception {
@@ -302,7 +288,6 @@ class MirrorTradingCloseTradeBybitRuleTests extends TestBaseRule {
 
     @Disabled("Not implemented")
     @Test
-    @AllureId("1459")
     @DisplayName(
             "Mirror trading rule for Bybit. Waves. Exit with alert if there is pattern and resolved alerts amount = 0. ElementId: Event_0w3j9pm")
     void mirrorTradeBybitRuleTest16() throws Exception {

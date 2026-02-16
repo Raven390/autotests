@@ -40,7 +40,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("")
+    @AllureId("2249")
     @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 100. elementId: end_102")
     void WithdrawalIntegrityCheckRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
@@ -59,7 +59,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1753")
+    @AllureId("2250")
     @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 50000. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
@@ -78,7 +78,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1752")
+    @AllureId("2251")
     @DisplayName("Withdrawal Integrity check in Router rule. general score > 0.9. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
@@ -97,7 +97,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1751")
+    @AllureId("2252")
     @DisplayName(
             "Withdrawal Integrity check in Router rule. Withdrawal Integrity check. general score < 0.9. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest4() throws Exception {
