@@ -189,9 +189,9 @@ job_test_core:
     - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core" && $PROD_TESTS == null'
   variables:
     ALLURE_LAUNCH_NAME: "[Core team] Nightly run at $CI_PIPELINE_CREATED_AT"
-    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_ENDPOINT: https://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
-    ALLURE_RESULTS: allure-results
+    ALLURE_RESULTS: build/allure-results
     RUNNER: "GITLAB_CI"
     TAG: 'team_core'
   before_script:
@@ -208,7 +208,7 @@ job_test_core:
     paths:
       - playwright-report
       - build/reports/
-      - allure-results
+      - build/allure-results
       - test-output/videos
     expire_in: 1 day
 
@@ -223,7 +223,7 @@ job_test_backoffice:
     - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice" && $PROD_TESTS == null'
   variables:
     ALLURE_LAUNCH_NAME: "[Backoffice team] Nightly run at $CI_PIPELINE_CREATED_AT"
-    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_ENDPOINT: https://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
     ALLURE_RESULTS: build/allure-results
     RUNNER: "GITLAB_CI"
@@ -259,10 +259,7 @@ job_test_backoffice:
   artifacts:
     when: always
     paths:
-      - playwright-report
-      - build/reports/
-      - abuild/allure-results
-      - test-output/
+      - build/allure-results
     expire_in: 1 day
 
 job_debug_runner:
@@ -272,7 +269,7 @@ job_debug_runner:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $DEBUG_RUNNER == "true"'
   variables:
     ALLURE_LAUNCH_NAME: "[Debug tests] run at $CI_PIPELINE_CREATED_AT"
-    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_ENDPOINT: https://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
     ALLURE_RESULTS: build/allure-results
     RUNNER: "GITLAB_CI"
@@ -313,7 +310,7 @@ job_test_downstream_end_to_end:
       when: always
   variables:
     ALLURE_LAUNCH_NAME: "[Core team] Triggered by $APP_NAME"
-    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_ENDPOINT: https://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
     RUNNER: "GITLAB_CI"
@@ -366,9 +363,9 @@ job_test_smoke_production:
     - if: '$PROD_TESTS == "true"'
   variables:
     ALLURE_LAUNCH_NAME: "[Core team] Production smoke run at $CI_PIPELINE_CREATED_AT triggered by $APP_NAME"
-    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_ENDPOINT: https://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
-    ALLURE_RESULTS: allure-results
+    ALLURE_RESULTS: build/allure-results
     RUNNER: "GITLAB_CI"
     TAG: 'team_core'
   before_script:
@@ -385,6 +382,6 @@ job_test_smoke_production:
     paths:
       - playwright-report
       - build/reports/
-      - allure-results
+      - build/allure-results
       - test-output/videos
     expire_in: 1 day
