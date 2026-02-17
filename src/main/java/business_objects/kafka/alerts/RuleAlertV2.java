@@ -232,5 +232,11 @@ public class RuleAlertV2 {
 
         @JsonProperty("SR")
         private String SR;
+
+        @JsonProperty("Fraud type")
+        private String fraudType;
+
+        @JsonProperty("Max Connection Score")
+        private String maxConnectionScore;
     }
 }
