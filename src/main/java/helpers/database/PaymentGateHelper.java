@@ -192,7 +192,17 @@ public class PaymentGateHelper {
         }
     }
 
-    public static PaymentGateData generatePaymentWithdrawalPaymentGateData(ClientHelper client)
+    public static PaymentGateData generatePaymentWithdrawalPaymentGateData(
+            ClientHelper client,
+            Double amount,
+            Double amountUsd,
+            String currency,
+            String checkName,
+            String eventDate,
+            String paymentChannelName,
+            String paymentMethodCode,
+            Integer account,
+            String accountType)
             throws JsonProcessingException {
         PaymentGateData paymentGateData = new PaymentGateData();
         paymentGateData.setPaymentEvent(generatePaymentEventsObject(client));
@@ -207,21 +217,21 @@ public class PaymentGateHelper {
                 Map.entry("bankName", "testBankName"),
                 Map.entry("clientId", client.getUserId()),
                 Map.entry("platform", "WEB"),
-                Map.entry("checkName", "Little_Amount"),
-                Map.entry("eventDate", "2025-09-18T06:15:50+03:00"),
+                Map.entry("checkName", checkName),
+                Map.entry("eventDate", eventDate),
                 Map.entry("regulator", client.getRegulator()),
-                Map.entry("mt4Account", client.getTradingAccount()),
-                Map.entry("accountType", "MT4"),
+                Map.entry("mt4Account", account),
+                Map.entry("accountType", accountType),
                 Map.entry("withdrawalId", getRandomIntPositive()),
                 Map.entry("schemaVersion", "1.0"),
                 Map.entry("merchantOrderId", "VU856068920250918061547"),
                 Map.entry("paymentTypeName", "Bank Transfers"),
-                Map.entry("withdrawalAmount", 100),
-                Map.entry("paymentMethodCode", "Brazil Bank Transfer"),
+                Map.entry("withdrawalAmount", amount),
+                Map.entry("paymentMethodCode", paymentMethodCode),
                 Map.entry("paymentChannelCode", "642"),
-                Map.entry("paymentChannelName", "Brazil-CPS"),
-                Map.entry("withdrawalCurrency", "EUR"),
-                Map.entry("withdrawalAmountUSD", 105),
+                Map.entry("paymentChannelName", paymentChannelName),
+                Map.entry("withdrawalCurrency", currency),
+                Map.entry("withdrawalAmountUSD", amountUsd),
                 Map.entry("bankAccountHolderName", "testBankAccountHolderName"),
                 Map.entry("withdrawalApplicationTime", "2025-09-18T06:15:46.379Z"));
         ObjectMapper objectMapper = new ObjectMapper();
@@ -236,9 +246,51 @@ public class PaymentGateHelper {
         return paymentGateData;
     }
 
+    public static PaymentGateData generatePaymentWithdrawalPaymentGateData(ClientHelper client)
+            throws JsonProcessingException {
+        return generatePaymentWithdrawalPaymentGateData(
+                client,
+                100d,
+                105d,
+                "EUR",
+                "Little_Amount",
+                "2025-09-18T06:15:50+03:00",
+                "Brazil-CPS",
+                "Brazil Bank Transfer",
+                client.getTradingAccount(),
+                "MT4");
+    }
+
     public static PaymentGateData generateTradingWithdrawalPaymentGateData(ClientHelper client)
             throws JsonProcessingException {
         PaymentGateData paymentGateData = generatePaymentWithdrawalPaymentGateData(client);
+        paymentGateData.getPaymentDecisions().setDecisionType("risk");
+        return paymentGateData;
+    }
+
+    public static PaymentGateData generateTradingWithdrawalPaymentGateData(
+            ClientHelper client,
+            Double amount,
+            Double amountUsd,
+            String currency,
+            String checkName,
+            String eventDate,
+            String paymentChannelName,
+            String paymentMethodCode,
+            Integer account,
+            String accountType)
+            throws JsonProcessingException {
+        PaymentGateData paymentGateData = generatePaymentWithdrawalPaymentGateData(
+                client,
+                amount,
+                amountUsd,
+                currency,
+                checkName,
+                eventDate,
+                paymentChannelName,
+                paymentMethodCode,
+                account,
+                accountType);
         paymentGateData.getPaymentDecisions().setDecisionType("risk");
         return paymentGateData;
     }
