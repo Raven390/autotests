@@ -1,13 +1,11 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.ui.user.UserFactory.autotestUserOne;
-import static business_objects.ui.user.UserFactory.autotestUserPT;
+import static business_objects.ui.user.UserFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.AlertType.PAYMENT;
 import static helpers.data.enums.AlertType.TRADING;
-import static helpers.data.enums.InvestigationStatus.ACTIVE;
-import static helpers.data.enums.InvestigationStatus.NEW;
+import static helpers.data.enums.InvestigationStatus.*;
 import static helpers.data.enums.deduction.AlertStatus.OPEN;
 import static helpers.database.BoHelper.*;
 import static helpers.database.CleanTableHelper.cleanUserAudit;
@@ -67,15 +65,15 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     void assignAlertListTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateInvestigationTool();
         investigationPage.filterUnassigned();
         investigationPage.investigateUserAlertList(client.getUserId());
         Investigation investigation =
                 getClientsInvestigationsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that investigation is assigned to current user");
-        assertEquals(autotestUserPT().getId(), investigation.getAssignedUserId());
-        assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
+        assertEquals(autotestUserPaymentOps().getId(), investigation.getAssignedUserId());
+        assertEquals(INVESTIGATING.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that alert is assigned to current user");
         assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
@@ -89,14 +87,14 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     void assignClientCardTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         Investigation investigation =
                 getClientsInvestigationsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that investigation is assigned to current user");
-        assertEquals(autotestUserPT().getId(), investigation.getAssignedUserId());
-        assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
+        assertEquals(autotestUserPaymentOps().getId(), investigation.getAssignedUserId());
+        assertEquals(INVESTIGATING.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that alert is assigned to current user");
         assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
@@ -111,47 +109,14 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.investigateClientCard();
         Investigation investigation =
                 getClientsInvestigationsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that payment investigation is assigned to current user");
-        assertEquals(autotestUserPT().getId(), investigation.getAssignedUserId());
-        assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
-        Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
-        Allure.step("check that payment alert is assigned to current user");
-        assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
-        assertEquals(OPEN.getDisplayName(), alert.getStatus());
-        Investigation investigation2 =
-                getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
-        Allure.step("check that trading investigation is not assigned to current user");
-        assertNull(investigation2.getAssignedUserId());
-        assertEquals(NEW.getDisplayName(), investigation2.getStatus());
-        Alert alert2 = getClientsAlertsDb(client.getUcid(), TRADING).getFirst();
-        Allure.step("check that trading alert is not assigned to current user");
-        assertEquals(investigation2.getId().longValue(), alert2.getInvestigationId());
-        assertEquals(OPEN.getDisplayName(), alert2.getStatus());
-    }
-
-    @Test
-    @AllureId("1574")
-    @DisplayName(
-            "BO user with general role can assign suspicious client with the active payment alert to himself to perform investigation from the alert list and not affecting active trading alert")
-    void assignClientCardBothTypesAlertsGeneralRolePaymentTest() throws Exception {
-        sendSimplePaymentAlert(client.getUcid());
-        sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateInvestigationTool();
-        investigationPage.clickSelectInvestigationType("Payments");
-        investigationPage.filterUnassigned();
-        investigationPage.investigateUserAlertList(client.getUserId());
-        Investigation investigation =
-                getClientsInvestigationsDb(client.getUcid(), PAYMENT).getFirst();
-        Allure.step("check that payment investigation is assigned to current user");
-        assertEquals(autotestUserOne().getId(), investigation.getAssignedUserId());
-        assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
+        assertEquals(autotestUserPaymentOps().getId(), investigation.getAssignedUserId());
+        assertEquals(INVESTIGATING.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), PAYMENT).getFirst();
         Allure.step("check that payment alert is assigned to current user");
         assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
@@ -170,21 +135,20 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @Test
     @AllureId("1573")
     @DisplayName(
-            "BO user with general role can assign suspicious client with the active trading alert to himself to perform investigation from the alert list and not affecting active payment alert")
+            "BO user with trading_ops role can assign suspicious client with the active trading alert to himself to perform investigation from the alert list and not affecting active payment alert")
     void assignClientCardBothTypesAlertsGeneralRoleTradingTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateInvestigationTool();
-        investigationPage.clickSelectInvestigationType("Trading");
         investigationPage.filterUnassigned();
         investigationPage.investigateUserAlertList(client.getUserId());
         Investigation investigation =
                 getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that payment investigation is assigned to current user");
-        assertEquals(autotestUserOne().getId(), investigation.getAssignedUserId());
-        assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
+        assertEquals(autotestUserTradingOps().getId(), investigation.getAssignedUserId());
+        assertEquals(INVESTIGATING.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that payment alert is assigned to current user");
         assertEquals(investigation.getId().longValue(), alert.getInvestigationId());
@@ -206,7 +170,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     void dontHaveAlertTypeFilterTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateInvestigationTool();
         investigationPage.investigationTypeSwitchIsNotPresented();
     }
@@ -217,7 +181,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     void canCommentClientTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateInvestigationTool();
         investigationPage.navigateToClient(client.getUcid());
         investigationPage.openCommentForm();
@@ -233,7 +197,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @DisplayName("BO user with Payment Team role can open alert history page")
     void canOpenAlertHistoryTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         alertHistoryPage.navigateAlertHistory();
         alertHistoryPage.waitForPageToLoad();
     }
@@ -243,7 +207,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @DisplayName("BO user with Payment Team role cant view abuse registry")
     void cantOpenDeductionPageTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         deductionPage.navigateDeduction();
         Allure.step("check that deduction page is not opened");
         assertFalse(page.url().contains("abuse-registry"));
@@ -254,7 +218,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @DisplayName("BO user with Payment Team role can view search page")
     void canOpenSearchPageTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         searchPage.navigateToSearchPage();
         Allure.step("check that search page is opened");
         assertTrue(page.url().contains("clients-search"));
@@ -265,7 +229,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @DisplayName("BO user with Payment Team role can't view duty team portal")
     void cantOpenDutyTeamPortalTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         dutyTeamPage.navigateToDutyTeamPage();
         Allure.step("check that duty portal page is not opened");
         assertFalse(page.url().contains("duty-team-portal"));

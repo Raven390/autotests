@@ -13,29 +13,29 @@ import lombok.NoArgsConstructor;
 @Data
 public class DeleteTradingEnvRestrictionRequestBody {
     @JsonProperty("type")
-    private RestrictionType type = null;
+    private RestrictionType type;
 
     @JsonProperty("ucid")
-    private String ucid = null;
+    private String ucid;
 
     @JsonProperty("code")
-    private String code = null;
+    private String code;
 
     @JsonProperty("cancelReason")
-    private String cancelReason = null;
+    private String cancelReason;
 
     @JsonProperty("correlationType")
-    private CorrelationType correlationType = null;
+    private CorrelationType correlationType;
 
     @JsonProperty("correlationId")
-    private String correlationId = null;
+    private String correlationId;
 
     @JsonProperty("updatedBy")
-    private UpdatedBy updatedBy = null;
+    private UpdatedBy updatedBy;
 
     @JsonProperty("accountId")
-    private BigInteger accountId = null;
+    private BigInteger accountId;
 
     @JsonProperty("serverId")
-    private Integer serverId = null;
+    private Integer serverId;
 }

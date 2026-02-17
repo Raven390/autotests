@@ -200,7 +200,7 @@ public class TradingPage extends AbstractPage {
     private final Locator saveIllegalProfitButton;
     private final Locator toastMessage;
     private final Locator selectedTradesCounter;
-    private final Locator selectedIllegalProfitAmout;
+    private final Locator selectedIllegalProfitAmount;
     private final Locator selectedIllegalProfitAccountCount;
     private final Locator illegalProfitSelectAllCheckBox;
 
@@ -589,7 +589,7 @@ public class TradingPage extends AbstractPage {
         this.illegalProfitButton = page.locator("//button[@data-qa='trading_deals__controls__illegal_profit_button']");
         this.checkboxIllegalProfit = page.locator("//input[@type='checkbox']");
         this.illegalProfitAmountLoaded =
-                page.locator("//div[@class='v-trading-tab-deals-multiselect-panel__illegal-profit']");
+                page.locator("//*[@data-qa='trading_deals__multiselect_panel__illegal_profit_amount']");
         this.saveIllegalProfitButton =
                 page.locator("//button[@data-qa='trading_deals__multiselect_panel__save_illegal_profit']");
         this.toastMessage = page.locator("//div[contains(@class,'g-toast__container')]");
@@ -599,7 +599,7 @@ public class TradingPage extends AbstractPage {
         this.scrollOperationsListDownButton =
                 page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[2]");
         this.illegalProfitSelectAllCheckBox = page.locator("//div[@data-qa='trading_deals__table__header__checkbox']");
-        this.selectedIllegalProfitAmout =
+        this.selectedIllegalProfitAmount =
                 page.locator("//span[@data-qa='trading_deals__multiselect_panel__illegal_profit_amount']");
         this.selectedIllegalProfitAccountCount =
                 page.locator("//span[@data-qa='trading_deals__multiselect_panel__account_count_string']");
@@ -2717,12 +2717,7 @@ public class TradingPage extends AbstractPage {
 
     @Step("Get illegal profit amount")
     public String getIllegalProfitAmount() {
-        return illegalProfitAmountLoaded.locator("//span").first().textContent();
-    }
-
-    @Step("Get illegal profit accounts quantity")
-    public String getIllegalProfitAccountsQuantity() {
-        return illegalProfitAmountLoaded.locator("//span").last().textContent();
+        return illegalProfitAmountLoaded.textContent();
     }
 
     @Step("Get selected illegal trades counter")
@@ -2766,7 +2761,7 @@ public class TradingPage extends AbstractPage {
 
     @Step("Get selected illegal profit amount")
     public String getSelectedIllegalProfitAmount() {
-        return selectedIllegalProfitAmout.textContent();
+        return selectedIllegalProfitAmount.textContent();
     }
 
     @Step("Get selected illegal profit accounts quantity")

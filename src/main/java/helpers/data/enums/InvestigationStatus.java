@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum InvestigationStatus {
-    ACTIVE("ACTIVE"),
+    INVESTIGATING("INVESTIGATING"),
+    ASSIGNED("ASSIGNED"),
     COMPLETED("COMPLETED"),
     NEW("NEW");
 

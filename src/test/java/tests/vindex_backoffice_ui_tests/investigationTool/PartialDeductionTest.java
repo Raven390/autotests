@@ -8,7 +8,7 @@ import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCo
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitCommentBuy;
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static business_objects.ui.user.UserFactory.autotestUserOne;
+import static business_objects.ui.user.UserFactory.autotestUserTradingOps;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.EUR;
 import static helpers.data.enums.Currency.USD;
@@ -171,7 +171,7 @@ class PartialDeductionTest extends TestBaseWeb {
     @DisplayName("Verify end to end partial deduction in report fraud")
     void partialDeductionTest1() throws Exception {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         tradingPage.navigateOperations(client.getUcid());
         tradingPage.clickIllegalProfitButton();
         tradingPage.selectIllegalTradeByTicket(trade1.getTicket());
@@ -181,13 +181,14 @@ class PartialDeductionTest extends TestBaseWeb {
                 is(String.format("%s %s", formatter.format(trade1.getProfit()), mtAccount1.currency)));
         assertThat(
                 "Verify quantity of accounts with illegal trades",
-                tradingPage.getIllegalProfitAccountsQuantity(),
+                tradingPage.getSelectedIllegalProfitAccountsQuantity(),
                 is("profit on 1 account"));
         assertThat(
                 "Verify quantity of illegal trades", tradingPage.getSelectedIllegalTradesCounter(), is("1 selected"));
         tradingPage.clickSaveAsIllegalProfit();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraud(LATENCY_ARBITRAGE, CONFIRMED);
+        resolvePage.addFraud(GAP_TRADING, CONFIRMED);
+        resolvePage.selectFraudSource("Vindex");
         assertThat(
                 "Verify total suggested deduction amount",
                 resolvePage.getSuggestedDeductionAmount(),
@@ -209,20 +210,20 @@ class PartialDeductionTest extends TestBaseWeb {
                         formatter.format(trade1.getProfit()),
                         1)));
         assertThat(
-                "Verify 2nd deduction illegal profit and balance",
+                "Verify 3rd deduction illegal profit and balance",
                 deductionItems.get(1),
+                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
+        assertThat(
+                "Verify 4th deduction illegal profit and balance",
+                deductionItems.get(2),
+                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
+        assertThat(
+                "Verify 2nd deduction illegal profit and balance",
+                deductionItems.get(3),
                 is(String.format(
                         SUGGESTED_DEDUCTION_PATTERN_USD,
                         mtAccount5.account,
                         formatter.format(trade9.getProfit() + trade10.getProfit()))));
-        assertThat(
-                "Verify 3rd deduction illegal profit and balance",
-                deductionItems.get(2),
-                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
-        assertThat(
-                "Verify 4th deduction illegal profit and balance",
-                deductionItems.get(3),
-                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
         assertThat(
                 "Verify 5th deduction illegal profit and balance",
                 deductionItems.getLast(),
@@ -242,7 +243,7 @@ class PartialDeductionTest extends TestBaseWeb {
         assertThat(
                 "Verify 2nd suggested deduction value",
                 suggestedDeductionValues.get(1),
-                is(calculateDeduction.apply(trade9.getProfit() + trade10.getProfit())));
+                matchesPattern(REGEX_PATTERN_DEDUCTION));
         assertThat(
                 "Verify 3rd suggested deduction value",
                 suggestedDeductionValues.get(2),
@@ -250,7 +251,7 @@ class PartialDeductionTest extends TestBaseWeb {
         assertThat(
                 "Verify 4th suggested deduction value",
                 suggestedDeductionValues.get(3),
-                matchesPattern(REGEX_PATTERN_DEDUCTION));
+                is(calculateDeduction.apply(trade9.getProfit() + trade10.getProfit())));
         assertThat(
                 "Verify 5th suggested deduction value",
                 suggestedDeductionValues.getLast(),
@@ -301,7 +302,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -336,7 +338,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -371,7 +374,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -406,7 +410,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -441,7 +446,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -469,7 +475,7 @@ class PartialDeductionTest extends TestBaseWeb {
         alert.rule.attributes.account = mtAccount1.account.toString();
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         tradingPage.navigateOperations(client.getUcid());
         tradingPage.clickIllegalProfitButton();
         tradingPage.selectIllegalTradeByTicket(trade1.getTicket());
@@ -479,13 +485,13 @@ class PartialDeductionTest extends TestBaseWeb {
                 is(String.format("%s %s", formatter.format(trade1.getProfit()), mtAccount1.currency)));
         assertThat(
                 "Verify quantity of accounts with illegal trades",
-                tradingPage.getIllegalProfitAccountsQuantity(),
+                tradingPage.getSelectedIllegalProfitAccountsQuantity(),
                 is("profit on 1 account"));
         assertThat(
                 "Verify quantity of illegal trades", tradingPage.getSelectedIllegalTradesCounter(), is("1 selected"));
         tradingPage.clickSaveAsIllegalProfit();
         resolvePage.openResolveSuspicious();
-        resolvePage.addFraud(LATENCY_ARBITRAGE, CONFIRMED);
+        resolvePage.addFraud(GAP_TRADING, CONFIRMED);
         assertThat(
                 "Verify total suggested deduction amount",
                 resolvePage.getSuggestedDeductionAmount(),
@@ -509,18 +515,19 @@ class PartialDeductionTest extends TestBaseWeb {
         assertThat(
                 "Verify 2nd deduction illegal profit and balance",
                 deductionItems.get(1),
+                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
+        assertThat(
+                "Verify 3rd deduction illegal profit and balance",
+                deductionItems.get(2),
+                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
+        assertThat(
+                "Verify 4th deduction illegal profit and balance",
+                deductionItems.get(3),
                 is(String.format(
                         SUGGESTED_DEDUCTION_PATTERN_USD,
                         mtAccount5.account,
                         formatter.format(trade9.getProfit() + trade10.getProfit()))));
-        assertThat(
-                "Verify 3rd deduction illegal profit and balance",
-                deductionItems.get(2),
-                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
-        assertThat(
-                "Verify 4th deduction illegal profit and balance",
-                deductionItems.get(3),
-                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
+
         assertThat(
                 "Verify 5th deduction illegal profit and balance",
                 deductionItems.getLast(),
@@ -540,7 +547,7 @@ class PartialDeductionTest extends TestBaseWeb {
         assertThat(
                 "Verify 2nd suggested deduction value",
                 suggestedDeductionValues.get(1),
-                is(calculateDeduction.apply(trade9.getProfit() + trade10.getProfit())));
+                matchesPattern(REGEX_PATTERN_DEDUCTION));
         assertThat(
                 "Verify 3rd suggested deduction value",
                 suggestedDeductionValues.get(2),
@@ -548,7 +555,7 @@ class PartialDeductionTest extends TestBaseWeb {
         assertThat(
                 "Verify 4th suggested deduction value",
                 suggestedDeductionValues.get(3),
-                matchesPattern(REGEX_PATTERN_DEDUCTION));
+                is(calculateDeduction.apply(trade9.getProfit() + trade10.getProfit())));
         assertThat(
                 "Verify 5th suggested deduction value",
                 suggestedDeductionValues.getLast(),
@@ -599,7 +606,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -634,7 +642,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -669,7 +678,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -704,7 +714,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -739,7 +750,8 @@ class PartialDeductionTest extends TestBaseWeb {
                 null,
                 String.format(
                         "%s %s",
-                        autotestUserOne().getFirstName(), autotestUserOne().getLastName()),
+                        autotestUserTradingOps().getFirstName(),
+                        autotestUserTradingOps().getLastName()),
                 VINDEX_BO_SYSTEM,
                 NO_ILLEGAL_PROFIT.getDisplayName(),
                 null,
@@ -764,7 +776,7 @@ class PartialDeductionTest extends TestBaseWeb {
     @DisplayName("Verify trades are saved correctly to the illegal_trades table")
     void partialDeductionTest3() throws Exception {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         tradingPage.navigateOperations(client.getUcid());
         tradingPage.clickIllegalProfitButton();
         tradingPage.selectIllegalTradeByTicket(trade1.getTicket());
@@ -779,7 +791,7 @@ class PartialDeductionTest extends TestBaseWeb {
                         mtAccount1.currency)));
         assertThat(
                 "Verify quantity of accounts with illegal trades",
-                tradingPage.getIllegalProfitAccountsQuantity(),
+                tradingPage.getSelectedIllegalProfitAccountsQuantity(),
                 is("profit on 2 accounts"));
         assertThat(
                 "Verify quantity of illegal trades", tradingPage.getSelectedIllegalTradesCounter(), is("3 selected"));
@@ -794,7 +806,7 @@ class PartialDeductionTest extends TestBaseWeb {
                 mtAccount1.sourceIdSt,
                 trade1.getProfit() + trade2.getProfit(),
                 trade1.getProfit() + trade2.getProfit(),
-                String.format("[%s, %s]", trade1.getTicket(), trade2.getTicket()),
+                "[]",
                 String.format("[%s]", trade1.getSymbol()),
                 null,
                 client.getUcid(),
@@ -804,7 +816,7 @@ class PartialDeductionTest extends TestBaseWeb {
                 mtAccount1.sourceIdSt,
                 trade1.getProfit() + trade2.getProfit(),
                 trade1.getProfit() + trade2.getProfit(),
-                String.format("[%s, %s]", trade2.getTicket(), trade1.getTicket()),
+                "[]",
                 String.format("[%s]", trade1.getSymbol()),
                 null,
                 client.getUcid(),
@@ -814,7 +826,7 @@ class PartialDeductionTest extends TestBaseWeb {
                 mtAccount2.sourceIdSt,
                 trade3.getProfit(),
                 trade3.getProfit(),
-                String.format("[%s]", trade3.getTicket()),
+                "[]",
                 String.format("[%s]", trade3.getSymbol()),
                 null,
                 client.getUcid(),
@@ -837,7 +849,7 @@ class PartialDeductionTest extends TestBaseWeb {
                 mtAccount3.sourceIdSt,
                 trade5.getProfit(),
                 null,
-                String.format("[%s]", trade5.getTicket()),
+                "[]",
                 String.format("[%s]", trade5.getSymbol()),
                 null,
                 client.getUcid(),
@@ -852,14 +864,14 @@ class PartialDeductionTest extends TestBaseWeb {
     @DisplayName("Verify profit is deducted from the account it's earned on first")
     void partialDeductionTest4() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsUser();
         tradingPage.navigateOperations(client.getUcid());
         tradingPage.clickIllegalProfitButton();
         tradingPage.selectIllegalTradeByTicket(trade2.getTicket());
         tradingPage.selectIllegalTradeByTicket(trade9.getTicket());
         tradingPage.clickSaveAsIllegalProfit();
         resolvePage.openReportFraudForm();
-        resolvePage.addFraud(LATENCY_ARBITRAGE, CONFIRMED);
+        resolvePage.addFraud(GAP_TRADING, CONFIRMED);
         assertThat(
                 "Verify total suggested deduction amount",
                 resolvePage.getSuggestedDeductionAmount(),
