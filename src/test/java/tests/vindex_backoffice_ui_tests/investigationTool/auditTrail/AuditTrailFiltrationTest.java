@@ -31,11 +31,12 @@ import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuditTrailFiltrationTest extends TestBaseWeb {
 
@@ -45,6 +46,7 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
     private static CrmTbAccountObject account;
     private static PaymentEventsObject paymentEventsObject1;
     private static ClientHelper client = getRandomVantageClientAllFields();
+    private static RuleAlert alert;
 
     static PaymentEventsObject setupDataPGS() {
         paymentEventsObject1 = generatePaymentEventsObject(client);
@@ -61,7 +63,7 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
     }
 
     @BeforeAll
-    static void setup() throws ReflectiveOperationException, SQLException, IOException {
+    static void setup() throws IOException {
         crmTbUser = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account = generateCrmTbAccountDataForUi(client);
@@ -76,8 +78,6 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
 
     @Test
     @Order(1)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("618")
     @DisplayName("Audit trail. Setting up data before filtration test")
     void setupData() throws JsonProcessingException {
@@ -94,14 +94,12 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         restrictionPage.removeRestriction(LOGIN_CRM, "Test cancel restriction for audit trail");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove("Test investigation completed action type");
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
+        alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
     @Order(2)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("619")
     @DisplayName("Audit trail. Verify filtration by active alerts")
     void verifyAuditTrailFiltrationActiveAlertTest() {
@@ -116,13 +114,11 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         assertThat(
                 "Assert audit trail item contains active alert",
                 auditTrailItems.getFirst().getHeader(),
-                containsString("Registration"));
+                containsString(alert.rule.name));
     }
 
     @Test
     @Order(3)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("620")
     @DisplayName("Audit trail. Verify filtration by Comment added")
     void verifyAuditTrailFiltrationCommentAddedTest() {
@@ -133,8 +129,10 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailCommentsFilter();
         List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
-        assertThat("Assert that there are 3 audit trail items", auditTrailItems.size(), is(3));
-        String[] alertHeaders = {"Investigation completed", "Restriction management", "Comment added"};
+        assertThat("Assert that there are 3 audit trail items", auditTrailItems.size(), is(4));
+        String[] alertHeaders = {
+            "Investigation completed", "Restriction management", "Comment added", "Restriction management"
+        };
         for (int i = 0; i < auditTrailItems.size(); i++) {
             AuditTrailItemV2 item = auditTrailItems.get(i);
             assertThat(
@@ -146,8 +144,6 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
 
     @Test
     @Order(4)
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1754")
     @DisplayName("Audit trail. Verify filtration by Team")
     void verifyAuditTrailFiltrationTeamTest() throws JsonProcessingException {
@@ -168,7 +164,8 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.clickAuditTrailTeamFilter();
         auditTrailPage.selectAuditTrailTeamFilter("Trading");
         auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
-        String[] alertHeaders = {"Registration", "Investigation completed", "Investigation started", "Withdrawal Review"
+        String[] alertHeaders = {
+            alert.rule.name, "Investigation completed", "Investigation started", "Withdrawal Review"
         };
         for (int i = 0; i < auditTrailItems.size(); i++) {
             AuditTrailItemV2 item = auditTrailItems.get(i);
@@ -183,7 +180,7 @@ class AuditTrailFiltrationTest extends TestBaseWeb {
         assertThat(
                 "Assert audit trail item contains active alert",
                 auditTrailItems.getFirst().getHeader(),
-                containsString("Registration"));
+                containsString(alert.rule.name));
     }
 
     @AfterAll

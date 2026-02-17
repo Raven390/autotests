@@ -107,6 +107,10 @@ public class PaymentsPage extends AbstractPage {
     private final Locator connectedClientsTableRows;
     private final Locator cashflowEmptyStatePlaceholder;
     private final Locator closePopupButton;
+    private final Locator methodCellFamily;
+    private final Locator methodCellProfile;
+    private final Locator transactionRowClickable;
+    private final Locator transactionHistoryDetailsDrawer;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR =
@@ -149,11 +153,9 @@ public class PaymentsPage extends AbstractPage {
     public static final String TRANSACTION_DETAILS_DRAWER =
             "//*[contains(@class,'v-transaction-history-details__drawer')]";
     public static final String TRANSACTION_DETAILS_DRAWER_ATTRIBUTE_VALUE_PATTERN =
-            "//*[contains(@class,'v-transaction-history-details__attribute-label') and (text()='%s')]/following-sibling::*[text()]"; // //*[text()]
-    private final Locator methodCellFamily;
-    private final Locator methodCellProfile;
-    private final Locator transactionRowClickable;
-    private final Locator transactionHistoryDetailsDrawer;
+            "//*[contains(@class,'v-transaction-history-details__attribute-label') and (text()='%s')]/following-sibling::*[text()]";
+    public static final String WITHDRAWAL_CHECKBOX_BY_PAYMENT_ID_PATTERN =
+            "//*[@data-qa='payments_withdrawal__table__rows__%s__id']";
 
     public PaymentsPage(Page page) {
         super(page);
@@ -1383,6 +1385,12 @@ public class PaymentsPage extends AbstractPage {
 
     public void selectAllWithdrawals() {
         checkbox.first().click();
+    }
+
+    @Step("Click on withdrawal checkbox by payment id: {paymentId}")
+    public void clickWithdrawalByPaymentId(String paymentId) {
+        page.locator(String.format(WITHDRAWAL_CHECKBOX_BY_PAYMENT_ID_PATTERN, paymentId))
+                .click();
     }
 
     public String getSubmitPanelCounterText() {
