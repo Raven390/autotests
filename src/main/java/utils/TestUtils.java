@@ -3,7 +3,6 @@ package utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.ConfigFactory.PATH_BASELINE_SCREENSHOT;
 import static utils.ConfigFactory.PATH_TRACE;
-import static utils.Utils.writeLog;
 
 import com.github.romankh3.image.comparison.ImageComparison;
 import com.github.romankh3.image.comparison.ImageComparisonUtil;
@@ -23,33 +22,12 @@ import java.nio.file.Paths;
 
 public class TestUtils {
     @Step("Attach screenshot")
-    public static void attachScreenshot(Page page) {
-        if (page == null) return;
-
+    public static void attachScreenshot(Page page) throws IOException {
         String resultName = Utils.getCurrentDateTime();
-        boolean debug = ConfigFactory.isDebugMode();
+        Path screenshotPath = Paths.get("test-output/screenshots/" + resultName + ".png");
 
-        try {
-            byte[] png = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
-
-            // Attach to Allure (in-memory)
-            attachScreenshotBytesToAllureReport(resultName, png);
-
-            // Save to disk only in debug mode
-            if (debug) {
-                Path screenshotPath = Paths.get("test-output/screenshots/" + resultName + ".png");
-                Files.createDirectories(screenshotPath.getParent());
-                Files.write(screenshotPath, png);
-            }
-
-        } catch (Exception e) {
-            writeLog("Failed to attach screenshot: " + e.getMessage());
-        }
-    }
-
-    @Attachment(value = "{resultName}", type = "image/png")
-    private static byte[] attachScreenshotBytesToAllureReport(String resultName, byte[] png) {
-        return png;
+        page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath).setFullPage(true));
+        attachScreenshotToAllureReport(resultName, screenshotPath);
     }
 
     @Step("Attach traces")
@@ -61,6 +39,11 @@ public class TestUtils {
     @Attachment(type = "other/zip")
     private static void attachPlaywrightTraceToAllureReport(String resultName, Path tracePath) throws IOException {
         Allure.addAttachment(resultName, new ByteArrayInputStream(Files.readAllBytes(tracePath)));
+    }
+
+    @Attachment(type = "image/png")
+    private static void attachScreenshotToAllureReport(String resultName, Path screenshotPath) throws IOException {
+        Allure.addAttachment(resultName, new ByteArrayInputStream(Files.readAllBytes(screenshotPath)));
     }
 
     @Step("Compare page with baseline screenshot")

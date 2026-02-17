@@ -4,12 +4,10 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
 import static utils.ConfigFactory.*;
-import static utils.Utils.writeLog;
 
 import com.microsoft.playwright.*;
 import helpers.kafka.KafkaHelper;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import net.datafaker.Faker;
@@ -23,7 +21,6 @@ import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.backoffice_pages.search.GeneralSearchElements;
 import page_objects.backoffice_pages.search.SearchPage;
-import utils.ConfigFactory;
 import utils.TestResultWatcher;
 import utils.TestUtils;
 import utils.Utils;
@@ -70,7 +67,6 @@ public class TestBaseWeb {
     public static DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.##");
 
     public static Faker faker = new Faker();
-    boolean debug = ConfigFactory.isDebugMode();
 
     @BeforeAll
     static void setupBrowser() throws IOException {
@@ -103,13 +99,7 @@ public class TestBaseWeb {
 
     @BeforeEach
     void setupContextAndPage() {
-        Browser.NewContextOptions options = new Browser.NewContextOptions();
-
-        if (debug) {
-            options.setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO));
-        }
-
-        context = browser.newContext(options);
+        context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO)));
         context.tracing()
                 .start(new Tracing.StartOptions()
                         .setScreenshots(true)
@@ -145,67 +135,15 @@ public class TestBaseWeb {
 
     @AfterEach
     void closeContext() throws IOException {
-        if (context == null) return;
-
         String traceName = timestamp + "-" + n;
-        boolean failed = TestResultWatcher.isFailed();
-        Video video;
-
-        if (debug && page != null) {
-            video = page.video();
-        } else {
-            video = null;
-        }
-        Path traceZip = Paths.get(PATH_TRACE + traceName + ".zip");
-
-        try {
-            // Tracing: run only in debug, save zip only on failure
-            if (debug) {
-                try {
-                    if (failed) {
-                        context.tracing().stop(new Tracing.StopOptions().setPath(traceZip));
-                    } else {
-                        context.tracing().stop(); // do not create zip
-                    }
-                } catch (Throwable t) {
-                    // Don't fail teardown because of tracing
-                    writeLog("Tracing stop failed: " + t.getMessage());
-                }
-            }
-
-            // Allure: screenshot only on failure
-            if (failed) {
-                try {
-                    TestUtils.attachScreenshot(page);
-                } catch (Throwable t) {
-                    writeLog("Failed to attach screenshot: " + t.getMessage());
-                }
-            }
-        } finally {
+        if (context != null) {
+            context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get(PATH_TRACE + traceName + ".zip")));
             n += 1;
-
-            // Close context first to finalize video on disk (if recorded)
-            try {
-                context.close();
-            } catch (Throwable t) {
-                writeLog("Failed to close context: " + t.getMessage());
-            }
-
-            // Keep video only for debug + failed; otherwise delete it
-            if (debug && video != null && !failed) {
-                deleteVideoQuietly(video);
-            }
-        }
-    }
-
-    private void deleteVideoQuietly(Video video) {
-        try {
-            Path videoPath = video.path();
-            if (videoPath != null) {
-                java.nio.file.Files.deleteIfExists(videoPath);
-            }
-        } catch (Throwable t) {
-            writeLog("Failed to delete video: " + t.getMessage());
+            // Start attach
+            TestUtils.attachPlaywrightTrace(traceName);
+            TestUtils.attachScreenshot(page);
+            // End attach
+            context.close();
         }
     }
 }

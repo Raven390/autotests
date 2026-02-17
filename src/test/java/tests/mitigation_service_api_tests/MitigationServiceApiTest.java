@@ -1063,18 +1063,19 @@ class MitigationServiceApiTest extends TestBaseApi {
     void putWorseTradingRestrictionV3() throws Exception {
         var timeout = 20_000;
         var rq1 = new NewTradingEnvRestrictionRequestBody(
-                "Application reason",
-                "LOW",
-                restrictionClient.getServerId(),
-                new BigInteger(restrictionClient.getTradingAccount() + ""),
-                Collections.emptyList(),
-                new UpdatedBy().system("Rule Engine"),
-                UUID.randomUUID().toString(),
-                CorrelationType.RULE_ENGINE,
-                "Comment 1",
-                "23",
+                RestrictionType.TRADING_ENVIRONMENT,
                 restrictionClient.getUcid(),
-                RestrictionType.TRADING_ENVIRONMENT);
+                "23",
+                "Comment 1",
+                CorrelationType.RULE_ENGINE,
+                UUID.randomUUID().toString(),
+                new UpdatedBy().system("Rule Engine"),
+                Collections.emptyList(),
+                new BigInteger(restrictionClient.getTradingAccount() + ""),
+                restrictionClient.getServerId(),
+                "LOW",
+                "Application reason");
+
         try (var response1 = RestrictionHelper.putRestrictionV3(rq1)) {
             Awaitility.await()
                     .pollDelay(Duration.ofMillis(timeout / 20))
@@ -1112,18 +1113,18 @@ class MitigationServiceApiTest extends TestBaseApi {
                         .build())
                 .build());
         var rq2 = new NewTradingEnvRestrictionRequestBody(
-                "Application reason",
-                "LOW",
-                restrictionClient.getServerId(),
-                new BigInteger(restrictionClient.getTradingAccount() + ""),
-                Collections.emptyList(),
-                new UpdatedBy().system("Rule Engine"),
-                UUID.randomUUID().toString(),
-                CorrelationType.RULE_ENGINE,
-                "Comment 1",
-                "23",
+                RestrictionType.TRADING_ENVIRONMENT,
                 restrictionClient.getUcid(),
-                RestrictionType.TRADING_ENVIRONMENT);
+                "23",
+                "Comment 1",
+                CorrelationType.RULE_ENGINE,
+                UUID.randomUUID().toString(),
+                new UpdatedBy().system("Rule Engine"),
+                Collections.emptyList(),
+                new BigInteger(restrictionClient.getTradingAccount() + ""),
+                restrictionClient.getServerId(),
+                "LOW",
+                "Application reason");
         try (var response2 = RestrictionHelper.putRestrictionV3(rq2)) {
             Awaitility.await()
                     .pollDelay(Duration.ofMillis(timeout / 20))

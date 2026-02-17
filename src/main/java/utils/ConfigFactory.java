@@ -213,6 +213,10 @@ public class ConfigFactory {
     public static final String EMAIL_AUTOTEST_TRADING_OPS = CONFIG.emailTradingOpsUser();
     public static final String FIRST_NAME_AUTOTEST_TRADING_OPS = CONFIG.firstNameTradingOpsUser();
     public static final String LAST_NAME_AUTOTEST_TRADING_OPS = CONFIG.lastNameTradingOpsUser();
+    public static final String ID_AUTOTEST_PAYMENT_OPS = CONFIG.idPaymentOpsUser();
+    public static final String EMAIL_AUTOTEST_PAYMENT_OPS = CONFIG.emailPaymentOpsUser();
+    public static final String FIRST_NAME_AUTOTEST_PAYMENT_OPS = CONFIG.firstNamePaymentOpsUser();
+    public static final String LAST_NAME_AUTOTEST_PAYMENT_OPS = CONFIG.lastNamePaymentOpsUser();
 
     public static final String ID_AUTOTEST_TRADING_OPS_SENIOR = CONFIG.idTradingOpsSeniorUser();
     public static final String EMAIL_AUTOTEST_TRADING_OPS_SENIOR_USER = CONFIG.emailTradingOpsSeniorUser();
@@ -267,9 +271,6 @@ public class ConfigFactory {
 
         @Key("pathBaselineScreenshot")
         String pathBaselineScreenshot();
-
-        @Key("debugMode")
-        Boolean debugMode();
 
         // Kafka
 
@@ -806,6 +807,18 @@ public class ConfigFactory {
         @Key("lastNameTradingOpsUser")
         String lastNameTradingOpsUser();
 
+        @Key("idPaymentOpsUser")
+        String idPaymentOpsUser();
+
+        @Key("emailPaymentOpsUser")
+        String emailPaymentOpsUser();
+
+        @Key("firstNamePaymentOpsUser")
+        String firstNamePaymentOpsUser();
+
+        @Key("lastNamePaymentOpsUser")
+        String lastNamePaymentOpsUser();
+
         @Key("emailTradingOpsSeniorUser")
         String emailTradingOpsSeniorUser();
 
@@ -838,15 +851,6 @@ public class ConfigFactory {
         } else {
             writeLog("Set Headless mode to local value in config.properties");
             return CONFIG.headlessMode();
-        }
-    }
-
-    public static Boolean isDebugMode() {
-        if (isGitlab()) {
-            return false;
-        } else {
-            writeLog("Set Debug mode to local value in config.properties");
-            return CONFIG.debugMode();
         }
     }
 }

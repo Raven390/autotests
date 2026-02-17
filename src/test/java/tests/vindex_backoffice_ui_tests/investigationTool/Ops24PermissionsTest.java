@@ -4,7 +4,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.ui.user.UserFactory.autotestUserOPS24;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.AlertType.TRADING;
-import static helpers.data.enums.InvestigationStatus.ACTIVE;
+import static helpers.data.enums.InvestigationStatus.INVESTIGATING;
 import static helpers.data.enums.deduction.AlertStatus.OPEN;
 import static helpers.database.BoHelper.getClientsAlertsDb;
 import static helpers.database.BoHelper.getClientsInvestigationsDb;
@@ -58,7 +58,7 @@ class Ops24PermissionsTest extends TestBaseWeb {
                 getClientsInvestigationsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that investigation is assigned to current user");
         assertEquals(autotestUserOPS24().getId(), investigation.getAssignedUserId());
-        assertEquals(ACTIVE.getDisplayName(), investigation.getStatus());
+        assertEquals(INVESTIGATING.getDisplayName(), investigation.getStatus());
         Alert alert = getClientsAlertsDb(client.getUcid(), TRADING).getFirst();
         Allure.step("check that alert is assigned to current user");
         assertEquals(investigation.getId().toString(), alert.getInvestigationId());
