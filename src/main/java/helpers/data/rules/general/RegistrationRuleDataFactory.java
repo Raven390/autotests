@@ -55,6 +55,7 @@ public class RegistrationRuleDataFactory {
         data.registrationEvent.setEmail(data.clientHelper.getEmail());
         data.registrationEvent.setPhoneNumber(data.clientHelper.getPhoneNumber());
         data.registrationEvent.setType(Event.REGISTRATION_EVENT.getName());
+        data.registrationEvent.setEventDate(convertTimestampToIsoFormat(getCurrentTimestampMillis()));
 
         return data;
     }

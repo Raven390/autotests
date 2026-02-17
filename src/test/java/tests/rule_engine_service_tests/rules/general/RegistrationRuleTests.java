@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.general;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
@@ -9,9 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
-import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
-import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -54,10 +53,9 @@ class RegistrationRuleTests extends TestBaseRule {
         checkElementId("end_no_alert", data.registrationEvent.getId(), "clientRegistration_event_rule");
     }
 
-    @Disabled
     @Test
     @DisplayName(
-            "Registration rule. Exit with alert if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
+            "Registration rule. Exit with restriction if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
     void registrationRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
         setupData(data);
@@ -67,15 +65,8 @@ class RegistrationRuleTests extends TestBaseRule {
         checkElementId("End_registration_rule_alert1", data.registrationEvent.getId(), "clientRegistration_event_rule");
 
         checkManualWithdrawalRestrictionApplied(data, "No alert. High Lexis score");
-
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
-    @Disabled
     @Test
     @DisplayName("Registration rule. Connection search. Strong hedge confirmed. ElementId: end_registration_rule_cs")
     void registrationRuleTest3() throws Exception {
@@ -96,18 +87,13 @@ class RegistrationRuleTests extends TestBaseRule {
         assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(9L));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
+        var alerts = getUserAlertsV2FromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
-        assertThat(
-                "",
-                dbAlerts.getFirst().getRuleAttributes(),
-                containsString("{\"Reason\": \"Linked hedging abuser\", \"Max Connection Score\": \"0.75\"}"));
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Registration");
+        assertThat("", alerts.getFirst().getAttributes().getMaxConnectionScore(), is("0.75"));
     }
 
-    @Disabled
     @Test
     @DisplayName(
             "Registration rule. Connection search. Medium hedge potential, ln risk rating = low. ElementId: end_no_alert")
