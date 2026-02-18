@@ -216,7 +216,7 @@ tasks.register('installDeps', JavaExec) {
 tasks.withType(Test).configureEach {
     if (System.getenv("IS_GITLAB_CI") == "true") {
         retry {
-            maxRetries = 4
+            maxRetries = 2
             failOnPassedAfterRetry = false // If true, fails the build if a test passes after retrying
         }
     }
