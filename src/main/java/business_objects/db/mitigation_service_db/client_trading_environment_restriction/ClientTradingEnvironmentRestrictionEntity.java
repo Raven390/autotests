@@ -1,5 +1,7 @@
 package business_objects.db.mitigation_service_db.client_trading_environment_restriction;
 
+import business_objects.api.mitigation_service.RestrictionStatus;
+import helpers.data.enums.TradingEnvironmentLevel;
 import lombok.*;
 
 @Getter
@@ -7,6 +9,8 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class ClientTradingEnvironmentRestrictionEntity {
 
     private Integer id;
@@ -15,8 +19,8 @@ public class ClientTradingEnvironmentRestrictionEntity {
     private Long accountId;
     private Integer serverId;
     private Integer restrictionId;
-    private String level;
-    private String status;
+    private TradingEnvironmentLevel level;
+    private RestrictionStatus status;
     private String comment;
     private String applicationReason;
     private String cancellationReason;
