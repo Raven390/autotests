@@ -1,6 +1,7 @@
 package helpers.data.rules.general;
 
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.TradingEnvironmentLevel.LOW;
 import static helpers.database.DbHelper.startSshTunnel;
 
 import business_objects.kafka.CustomEvent;
@@ -99,7 +100,7 @@ public class CustomRuleDataFactory {
         data.customEvent.setTradingAccount(data.clientHelper.getTradingAccount().toString());
         data.customEvent.setRestriction("WT");
         data.customEvent.setMessage("WT comment");
-        data.customEvent.setLevel("LOW");
+        data.customEvent.setLevel(LOW);
         return data;
     }
 

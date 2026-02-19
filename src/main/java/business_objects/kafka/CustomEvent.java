@@ -1,6 +1,7 @@
 package business_objects.kafka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import helpers.data.enums.TradingEnvironmentLevel;
 import lombok.*;
 
 @Getter
@@ -47,5 +48,5 @@ public class CustomEvent {
     private String message;
 
     @JsonProperty("level")
-    private String level;
+    private TradingEnvironmentLevel level;
 }

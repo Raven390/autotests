@@ -1,6 +1,7 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import helpers.data.enums.TradingEnvironmentLevel;
 import java.math.BigInteger;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class NewTradingEnvRestrictionRequestBody {
     private Integer serverId;
 
     @JsonProperty("level")
-    private String level;
+    private TradingEnvironmentLevel level;
 
     @JsonProperty("applicationReason")
     private String applicationReason;

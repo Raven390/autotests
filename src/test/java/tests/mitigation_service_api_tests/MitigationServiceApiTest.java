@@ -22,6 +22,7 @@ import static helpers.data.enums.InternalReason.UPGRADER;
 import static helpers.data.enums.Restriction.ACCOUNT_CREATION;
 import static helpers.data.enums.Restriction.DEPOSITS;
 import static helpers.data.enums.Restriction.INTERNAL_TRANSFER;
+import static helpers.data.enums.TradingEnvironmentLevel.LOW;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -1073,7 +1074,7 @@ class MitigationServiceApiTest extends TestBaseApi {
                 Collections.emptyList(),
                 new BigInteger(restrictionClient.getTradingAccount() + ""),
                 restrictionClient.getServerId(),
-                "LOW",
+                LOW,
                 "Application reason");
 
         try (var response1 = RestrictionHelper.putRestrictionV3(rq1)) {
@@ -1123,7 +1124,7 @@ class MitigationServiceApiTest extends TestBaseApi {
                 Collections.emptyList(),
                 new BigInteger(restrictionClient.getTradingAccount() + ""),
                 restrictionClient.getServerId(),
-                "LOW",
+                LOW,
                 "Application reason");
         try (var response2 = RestrictionHelper.putRestrictionV3(rq2)) {
             Awaitility.await()
@@ -1143,7 +1144,7 @@ class MitigationServiceApiTest extends TestBaseApi {
                                     return actual.stream()
                                             .filter(r -> r.getType() == RestrictionType.TRADING_ENVIRONMENT)
                                             .map(ClientTradingEnvironmentRestriction.class::cast)
-                                            .anyMatch(r -> Objects.equals(r.getLevel(), "LOW")
+                                            .anyMatch(r -> Objects.equals(r.getLevel(), LOW.name())
                                                     && Objects.equals(r.getStatus(), RestrictionStatus.APPLIED));
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
