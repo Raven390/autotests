@@ -40,7 +40,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import okhttp3.Response;
-import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.extension.ExtendWith;
 import utils.Constants;
 import utils.TestResultWatcher;
@@ -404,9 +403,8 @@ public class TestBaseRule {
                         () -> {
                             List<ZeebeRulesStarted> startedList = getObjectsFromDB(
                                     DbName.CLICKHOUSE,
-                                    REPORTING_DB_ZEEBE_RULES_STARTED,
                                     String.format(
-                                            "SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'",
+                                            "SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s' ORDER BY timestamp_start DESC LIMIT 1",
                                             REPORTING_DB_ZEEBE_RULES_STARTED, eventId, bpmnProcessId),
                                     ZeebeRulesStarted.class);
 
@@ -420,35 +418,13 @@ public class TestBaseRule {
 
         String runId = started.getRunId();
 
-        // Try to wait until the elementId appears and expect a timeout (meaning it never appeared)
-        try {
-            await().atMost(timeout, TimeUnit.SECONDS)
-                    .pollInterval(1, TimeUnit.SECONDS)
-                    .until(() -> {
-                        List<ZeebeRulesElements> list = getObjectsFromDB(
-                                DbName.CLICKHOUSE,
-                                REPORTING_DB_ZEEBE_RULE_ELEMENTS,
-                                String.format("run_id = '%s'", runId),
-                                ZeebeRulesElements.class);
-                        String joined;
-                        if (list == null || list.isEmpty()) {
-                            joined = "";
-                        } else {
-                            joined = list.stream()
-                                    .map(ZeebeRulesElements::getElementId)
-                                    .filter(Objects::nonNull)
-                                    .filter(s -> !s.isBlank())
-                                    .collect(Collectors.joining(","));
-                        }
-                        System.out.println("Ensuring Element ID is absent: " + elementId + " current list: " + joined);
-                        return joined.contains(elementId);
-                    });
+        // We should wait long enough to ensure the process has reached its natural conclusion
+        // or has passed the point where elementId would have been recorded.
+        // Since we don't have a reliable 'finished' flag, we wait for 'timeout' seconds
+        // to ensure it doesn't appear later during rule execution.
 
-            // If we reach here, the element appeared within the timeout, which is a failure for this check
-            throw new AssertionError(
-                    "Element ID '" + elementId + "' unexpectedly appeared in rule path for runId=" + runId);
-        } catch (ConditionTimeoutException ignored) {
-            // Expected: element never appeared during the waiting period. Verify once more and assert not present.
+        long endTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(timeout);
+        while (System.currentTimeMillis() < endTime) {
             List<ZeebeRulesElements> list = getObjectsFromDB(
                     DbName.CLICKHOUSE,
                     REPORTING_DB_ZEEBE_RULE_ELEMENTS,
@@ -464,7 +440,13 @@ public class TestBaseRule {
                         .filter(s -> !s.isBlank())
                         .collect(Collectors.joining(","));
             }
-            assertThat(joined, not(containsString(elementId)));
+
+            System.out.println("Ensuring Element ID is absent: " + elementId + " current list: " + joined);
+            assertThat(
+                    "Element ID '" + elementId + "' unexpectedly appeared in rule path for runId=" + runId,
+                    joined,
+                    not(containsString(elementId)));
+            Thread.sleep(1000);
         }
     }
 }

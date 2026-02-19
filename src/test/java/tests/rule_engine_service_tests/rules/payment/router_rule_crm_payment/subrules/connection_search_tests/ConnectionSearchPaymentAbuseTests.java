@@ -1,11 +1,11 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules.connection_search_tests;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.AlertsAssertsHelper.assertConnectionSearchPaymentAbuseSubruleAlert;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_payment.connection_search.ConnectionSearchPaymentAbuseDataFactory.setupConnectionSearchPaymentRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
@@ -28,7 +28,7 @@ import tests.TestBaseRule;
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
 class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
-
+    /// cases id 2211-2220
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
@@ -70,56 +70,9 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     @Test
     @AllureId("2212")
     @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit if no toxic account linked. ElementId: end_cs_no_abuse")
+            "Connection Search(payment branch) in router rule. Exit if no required abuseTypes. ElementId: Event_1sc8b2t")
     void connectionSearchPaymentAbuseTest2() throws Exception {
         DataHelper data = dataMap.get("2");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "end_cs_no_abuse",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-    }
-
-    @Test
-    @AllureId("2213")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit if unknown fraud type. ElementId: end_unknown_FT")
-    void connectionSearchPaymentAbuseTest3() throws Exception {
-        DataHelper data = dataMap.get("3");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "end_unknown_FT",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-    }
-
-    @Test
-    @AllureId("2214")
-    @DisplayName("Connection Search(payment branch) in router rule. Exit without alert. ElementId: Event_1sc8b2t")
-    void connectionSearchPaymentAbuseTest4() throws Exception {
-        DataHelper data = dataMap.get("4");
         setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
@@ -139,14 +92,12 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("2215")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit with alert with strong + confirmed. ElementId: Event_0yh59iy")
-    void connectionSearchPaymentAbuseTest5() throws Exception {
-        DataHelper data = dataMap.get("5");
+    @AllureId("2213")
+    @DisplayName("Connection Search(payment branch) in router rule. Alert. ElementId: Event_0yh59iy")
+    void connectionSearchPaymentAbuseTest3() throws Exception {
+        DataHelper data = dataMap.get("3");
         setupData(data);
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode("CRYPTO2");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId(
@@ -163,160 +114,7 @@ class ConnectionSearchPaymentAbuseTests extends TestBaseRule {
                 Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(
-                data.clientHelper, "Connection search with known fraudster", "Used by known EXCHANGER");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert name", alerts.getFirst().getAlertId(), is(data.crmWithdrawalEventV2.getId()));
-        assertThat("Verify alert", alerts.getFirst().getTimestamp(), is(notNullValue()));
-        assertThat("Verify alert", alerts.getFirst().getType(), is("PAYMENT"));
-        assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), is(notNullValue()));
-        assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().getTrigger(), is("Withdrawal"));
-        assertThat("Verify alert", alerts.getFirst().getReason(), is("Used by known EXCHANGER"));
-        assertThat("Verify alert", alerts.getFirst().getAccount(), is(data.clientHelper.getTradingAccount()));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().getPaymentMethod(),
-                is(data.crmWithdrawalEventV2.getPaymentMethodCode()));
-        assertThat("Verify alert", alerts.getFirst().getAmount(), is(data.crmWithdrawalEventV2.getWithdrawalAmount()));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().getAmountUsd(),
-                is(data.crmWithdrawalEventV2.getWithdrawalAmountUSD()));
-        assertThat(
-                "Verify alert", alerts.getFirst().getCurrency(), is(data.crmWithdrawalEventV2.getWithdrawalCurrency()));
-        assertThat("Verify alert", alerts.getFirst().getPaymentEventId(), is(notNullValue()));
-        assertThat(
-                "Verify alert",
-                alerts.getFirst().getMerchantOrderId(),
-                is(data.crmWithdrawalEventV2.getMerchantOrderId()));
-        assertThat("Verify alert", alerts.getFirst().getFraudType(), is("EXCHANGER"));
-        assertThat("Verify alert", alerts.getFirst().getRule().getVer(), is(notNullValue()));
-        assertThat("Verify alert", alerts.getFirst().getRule().getName(), is("Connection search with known fraudster"));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getProfileDeposits(), is(nullValue()));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getProfileWithdrawals(), is(nullValue()));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getCryptoWithdrawal10k(), is(true));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getCryptoDeposit(), is("0 USD"));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getCryptoWithdrawal(), is("10001 USD"));
-        assertThat("Verify alert", alerts.getFirst().getAttributes().getSharedUniqueIdentifier(), is(nullValue()));
-    }
-
-    @Test
-    @AllureId("2216")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit with alert with medium confirmed + 0.6 connect(pnl > 2000 or sumWithdrawalsStrPotConnections > 4000). ElementId: Event_0yh59iy")
-    void connectionSearchPaymentAbuseTest6() throws Exception {
-        DataHelper data = dataMap.get("6");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "Event_0yh59iy",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-    }
-
-    @Test
-    @AllureId("2217")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit with alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_0yh59iy")
-    void connectionSearchPaymentAbuseTest7() throws Exception {
-        DataHelper data = dataMap.get("7");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "Event_0yh59iy",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-    }
-
-    @Test
-    @AllureId("2218")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit without alert with medium confirmed + 0.6 connect(pnl < 2000 or sumWithdrawalsStrPotConnections < 4000). ElementId: Event_1sc8b2t")
-    void connectionSearchPaymentAbuseTest8() throws Exception {
-        DataHelper data = dataMap.get("8");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "Event_1sc8b2t",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-    }
-
-    @Test
-    @AllureId("2219")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit without alert with strong potential + 0.8 connect(pnl < 500 or sumWithdrawalsStrPotConnections < 1000). ElementId: Event_1sc8b2t")
-    void connectionSearchPaymentAbuseTest9() throws Exception {
-        DataHelper data = dataMap.get("9");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "Event_1sc8b2t",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-    }
-
-    @Test
-    @AllureId("2220")
-    @DisplayName(
-            "Connection Search(payment branch) in router rule. Exit without alert with medium potential. ElementId: Event_1sc8b2t")
-    void connectionSearchPaymentAbuseTest10() throws Exception {
-        DataHelper data = dataMap.get("10");
-        setupData(data);
-
-        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
-
-        checkElementId(
-                "Event_1sc8b2t",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "Gateway_154345n",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                data.clientHelper, "Connection search with known fraudster", "Connection to known fraudster");
+        assertConnectionSearchPaymentAbuseSubruleAlert(data, alerts);
     }
 }

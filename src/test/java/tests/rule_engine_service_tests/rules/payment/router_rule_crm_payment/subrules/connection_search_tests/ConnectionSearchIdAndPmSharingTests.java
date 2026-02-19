@@ -2,6 +2,7 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.su
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.DataDeleteHelper.deleteData;
+import static helpers.data.DataHelper.setupAttrConnectionDocumentAttribute;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.rules.payments.router_rule_crm_payment.connection_search.ConnectionSearchIdAndPmSharingDataFactory.setupConnectionSearchPmAndIdSharingRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
@@ -88,10 +89,12 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     @Test
     @AllureId("2202")
     @DisplayName(
-            "Connection Search(id and pm sharing branch) in router rule. Exit with alert if payment profile verified for another user and name_birth=true. ElementId: Event_0sdekqs")
+            "Connection Search(id and pm sharing branch) in router rule. Exit with alert if payment profile verified for another user and name_birth=true. ElementId: end_206")
     void connectionSearchRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
+        setupData(dataMap.get("3_2"));
+        setupData(dataMap.get("3_4"));
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -106,7 +109,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
                 getUserAlertsV2FromKafka(data.clientHelper, "Connection search", "Verified by other client");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify attribute", alerts.getFirst().getAttributes().getSharedUniqueIdentifier(), is("No"));
-        assertThat("Verify attribute", alerts.getFirst().getAttributes().getVerifiedByOtherClient(), is("2 clients"));
+        assertThat("Verify attribute", alerts.getFirst().getAttributes().getVerifiedByOtherClient(), is("1 clients"));
         assertThat("Verify attribute", alerts.getFirst().getAttributes().getSharedPaymentProfile(), is("1 clients"));
         assertThat(
                 "Verify attribute",
@@ -116,6 +119,10 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
                 "Verify attribute",
                 alerts.getFirst().getAttributes().getProfileDeposits(),
                 is("1000 USD for 2 clients"));
+        assertThat(
+                "Verify attribute",
+                alerts.getFirst().getAttributes().getConnectedByPayout(),
+                is(dataMap.get("3_4").getClientHelper().getUcid()));
     }
 
     @Test
@@ -124,7 +131,17 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
             "Connection Search(id and pm sharing branch) in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = true. ElementId: end_106")
     void connectionSearchIdAndPmSharingTest4() throws Exception {
         DataHelper data = dataMap.get("4");
+
+        setupAttrConnectionDocumentAttribute(data, dataMap.get("4_1").clientHelper);
+        setupAttrConnectionDocumentAttribute(data, dataMap.get("4_2").clientHelper);
+        setupAttrConnectionDocumentAttribute(data, dataMap.get("4_3").clientHelper);
+        setupAttrConnectionDocumentAttribute(data, dataMap.get("4_4").clientHelper);
+
         setupData(data);
+        setupData(dataMap.get("4_1"));
+        setupData(dataMap.get("4_2"));
+        setupData(dataMap.get("4_3"));
+        setupData(dataMap.get("4_4"));
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -147,6 +164,10 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     void connectionSearchIdAndPmSharingTest5() throws Exception {
         DataHelper data = dataMap.get("5");
         setupData(data);
+        setupData(dataMap.get("5_1"));
+        setupData(dataMap.get("5_2"));
+        setupData(dataMap.get("5_3"));
+        setupData(dataMap.get("5_4"));
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -191,6 +212,9 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     void connectionSearchIdAndPmSharingTest7() throws Exception {
         DataHelper data = dataMap.get("7");
         setupData(data);
+        for (int i = 1; i <= 20; i++) {
+            setupData(dataMap.get("7_" + i));
+        }
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -239,6 +263,12 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     void connectionSearchIdAndPmSharingTest9() throws Exception {
         DataHelper data = dataMap.get("9");
         setupData(data);
+        setupData(dataMap.get("9_1"));
+        setupData(dataMap.get("9_2"));
+        setupData(dataMap.get("9_3"));
+        setupData(dataMap.get("9_4"));
+        setupData(dataMap.get("9_5"));
+        setupData(dataMap.get("9_6"));
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -302,6 +332,12 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     void connectionSearchIdAndPmSharingTest10() throws Exception {
         DataHelper data = dataMap.get("10");
         setupData(data);
+        setupData(dataMap.get("10_1"));
+        setupData(dataMap.get("10_2"));
+        setupData(dataMap.get("10_3"));
+        setupData(dataMap.get("10_4"));
+        setupData(dataMap.get("10_5"));
+        setupData(dataMap.get("10_6"));
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
@@ -328,6 +364,12 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
     void connectionSearchIdAndPmSharingTest11() throws Exception {
         DataHelper data = dataMap.get("11");
         setupData(data);
+        setupData(dataMap.get("11_1"));
+        setupData(dataMap.get("11_2"));
+        setupData(dataMap.get("11_3"));
+        setupData(dataMap.get("11_4"));
+        setupData(dataMap.get("11_5"));
+        setupData(dataMap.get("11_6"));
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 

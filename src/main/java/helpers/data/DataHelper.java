@@ -490,6 +490,11 @@ public class DataHelper {
         return this;
     }
 
+    public DataHelper addWithdrawal() {
+        this.getCrmTbWithdrawalObjects().add(generateCrmTbWithdrawalEntityByClient(this.getClientHelper()));
+        return this;
+    }
+
     public DataHelper addCreditCard() {
         if (this.getClientCards() == null) {
             this.setClientCards(new ArrayList<>());

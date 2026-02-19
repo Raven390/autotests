@@ -1,7 +1,10 @@
 package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
+import static helpers.api.VerificationServiceHelper.putProfileStatus;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
+import static helpers.data.DataSetupHelper.setupData;
+import static helpers.data.enums.VerificationStatus.VERIFIED;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
@@ -12,6 +15,7 @@ import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Event;
 import io.qameta.allure.Description;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +42,9 @@ public class ConnectionSearchDataFactory {
     private static final ClientHelper client11_4 = getRandomVantageClientAllFields();
     private static final ClientHelper client11_5 = getRandomVantageClientAllFields();
     private static final ClientHelper client11_6 = getRandomVantageClientAllFields();
+    private static final ClientHelper client11_7 = getRandomVantageClientAllFields();
     private static final ClientHelper client12 = getRandomVantageClientAllFields();
+    private static final ClientHelper client12_2 = getRandomVantageClientAllFields();
 
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
@@ -153,7 +159,9 @@ public class ConnectionSearchDataFactory {
     private static DataHelper getTest10Data() {
         DataHelper data = getRuleData(client10);
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
+        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        data.crmWithdrawalEventV2.setCrypto(
+                CrmWithdrawalEventV2.Crypto.builder().walletAddress("1234").build());
 
         data.addDepositSumByCategory(501d);
 
@@ -162,44 +170,112 @@ public class ConnectionSearchDataFactory {
         return data;
     }
 
-    private static DataHelper getTest11Data() {
+    private static DataHelper getTest11Data() throws IOException {
+        String paymentProfileKey = getRandomUuidString();
+
         DataHelper data = getRuleData(client11);
-        DataHelper data2 = getRuleData(client11_1);
-        DataHelper data3 = getRuleData(client11_2);
-        DataHelper data4 = getRuleData(client11_3);
-        DataHelper data5 = getRuleData(client11_4);
-        DataHelper data6 = getRuleData(client11_5);
-        DataHelper data7 = getRuleData(client11_6);
+        DataHelper data2 = getRuleData(client11_2);
+        DataHelper data3 = getRuleData(client11_3);
+        DataHelper data4 = getRuleData(client11_4);
+        DataHelper data5 = getRuleData(client11_5);
+        DataHelper data6 = getRuleData(client11_6);
+        DataHelper data7 = getRuleData(client11_7);
+
+        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        data.crmWithdrawalEventV2.setCrypto(CrmWithdrawalEventV2.Crypto.builder()
+                .walletAddress(paymentProfileKey)
+                .build());
 
         addConnectionByPayoutIdAttribute(data, data2.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data3.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data4.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data5.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data6.clientHelper);
-        addConnectionByPayoutIdAttribute(data, data7.clientHelper);
+        setupAttrConnectionDocumentAttribute(data, data3.clientHelper);
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        // add deposit and withdrawal
+        data.addDepositSumByCategory(499d);
 
-        data.addDepositSumByCategory(501d);
+        data.addWithdrawalSumByCategory(10_001d, 4);
 
-        data.addWithdrawalSumByCategory(50_001d, 4);
+        // add deposit and withdrawal for connection
+        data2.addDepositSumByCategory(501D);
 
+        data2.addWithdrawalSumByCategory(9999D, 4);
+
+        data2.createClient(client11_2).createWithdrawal();
+        data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data2.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data3.createClient(client11_3).createWithdrawal();
+        data3.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data3.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data4.createClient(client11_4).createWithdrawal();
+        data4.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data4.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data5.createClient(client11_5).createWithdrawal();
+        data5.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data5.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data6.createClient(client11_6).createWithdrawal();
+        data6.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data6.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data7.createClient(client11_7).createWithdrawal();
+        data7.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data7.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data.crmTbDepositObjects.getFirst().setPaymentProfileKey(paymentProfileKey);
+        data.crmTbDepositObjects.getFirst().setPaymentProfileMasked(paymentProfileKey);
+        putProfileStatus(
+                VERIFIED,
+                data.crmTbDepositObjects.getFirst().getPaymentProfileKey(),
+                data.crmTbDepositObjects.getFirst().getPaymentProfileMasked(),
+                data.clientHelper);
+
+        setupData(data2);
+        setupData(data3);
+        setupData(data4);
+        setupData(data5);
+        setupData(data6);
+        setupData(data7);
         return data;
     }
 
-    private static DataHelper getTest12Data() {
+    private static DataHelper getTest12Data() throws IOException {
+        String paymentProfileKey2 = getRandomUuidString();
+
         DataHelper data = getRuleData(client12);
-
+        DataHelper data2 = getRuleData(client12_2);
         data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        data.crmWithdrawalEventV2.setCrypto(CrmWithdrawalEventV2.Crypto.builder()
+                .walletAddress(paymentProfileKey2)
+                .build());
 
+        data.createClient(client12).createWithdrawal();
+        data.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        data2.createClient(client12_2).createWithdrawal();
+        data2.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+
+        // add deposit and withdrawal
         data.addDepositSumByCategory(501d);
 
-        data.addWithdrawalSumByCategory(9000d, 4);
+        data.addWithdrawalSumByCategory(10_001d, 4);
 
+        // add deposit and withdrawal for connection
+        data2.addDepositSumByCategory(501D);
+
+        data2.addWithdrawalSumByCategory(9999D, 4);
+
+        data.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey2);
+        data.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey2);
+        data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey2);
+        data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey2);
+
+        setupData(data2);
         return data;
     }
 
-    public static Map<String, DataHelper> setupConnectionSearchRuleData() {
+    public static Map<String, DataHelper> setupConnectionSearchRuleData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
