@@ -230,6 +230,12 @@ public class RuleAlertV2 {
         @JsonProperty("Trigger")
         private String trigger;
 
+        @JsonProperty("Connected fraud types")
+        private String connectedFraudTypes;
+
+        @JsonProperty("Connected fraudsters")
+        private String connectedFraudsters;
+
         @JsonProperty("SR")
         private String SR;
 
@@ -238,5 +244,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("Max Connection Score")
         private String maxConnectionScore;
+
+        @JsonProperty("Connected by payout")
+        private String connectedByPayout;
     }
 }

@@ -1,8 +1,8 @@
 package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.*;
+import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.*;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
@@ -18,7 +18,6 @@ import io.qameta.allure.Description;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import utils.Utils;
 
@@ -28,20 +27,6 @@ public class ConnectionSearchPaymentAbuseDataFactory {
     private static final ClientHelper client2_1 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
     private static final ClientHelper client3_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client4 = getRandomVantageClientAllFields();
-    private static final ClientHelper client4_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client5 = getRandomVantageClientAllFields();
-    private static final ClientHelper client5_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client6 = getRandomVantageClientAllFields();
-    private static final ClientHelper client6_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client7 = getRandomVantageClientAllFields();
-    private static final ClientHelper client7_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client8 = getRandomVantageClientAllFields();
-    private static final ClientHelper client8_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client9 = getRandomVantageClientAllFields();
-    private static final ClientHelper client9_1 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10 = getRandomVantageClientAllFields();
-    private static final ClientHelper client10_1 = getRandomVantageClientAllFields();
 
     @Description("Create data for Connection search rule")
     private static DataHelper getRuleData(ClientHelper client) {
@@ -63,7 +48,7 @@ public class ConnectionSearchPaymentAbuseDataFactory {
                 .mt4Account(data.clientHelper.getTradingAccount())
                 .paymentChannelCode(PAYMENT_PROVIDER_FASAPAY)
                 .paymentChannelName("-")
-                .paymentMethodCode("CREDIT_CARD")
+                .paymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO)
                 .platform("WEB")
                 .regulator(data.clientHelper.getRegulator())
                 .schemaVersion("1.0")
@@ -83,7 +68,9 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         DataHelper data = getRuleData(client1);
         data.addCreditCard();
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
+        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        data.crmWithdrawalEventV2.setCrypto(
+                CrmWithdrawalEventV2.Crypto.builder().walletAddress("1234").build());
 
         data.addDepositSumByCategory(501d);
 
@@ -91,151 +78,53 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         return data;
     }
 
-    private static DataHelper getTest2Data() throws IOException, InterruptedException {
+    private static DataHelper getTest2Data() {
         DataHelper data = getRuleData(client2);
         DataHelper data2 = getRuleData(client2_1);
 
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
+        String paymentProfileKey = getRandomUuidString();
+        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        data.crmWithdrawalEventV2.setCrypto(CrmWithdrawalEventV2.Crypto.builder()
+                .walletAddress(paymentProfileKey)
+                .build());
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
+        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
 
         data.addDepositSumByCategory(501d);
 
         data.addWithdrawalSumByCategory(10_001d, 4);
+
+        data2.createClient(client2_1).createWithdrawal();
+        data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data2.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
+        setupData(data2);
         return data;
     }
 
     private static DataHelper getTest3Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client3);
+        String paymentProfileKey = getRandomUuidString();
         DataHelper data2 = getRuleData(client3_1);
+        DataHelper data = getRuleData(client3);
 
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, HEDGING);
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
+        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO);
+        data.crmWithdrawalEventV2.setCrypto(CrmWithdrawalEventV2.Crypto.builder()
+                .walletAddress(paymentProfileKey)
+                .build());
 
-        // add deposit
         data.addDepositSumByCategory(501d);
 
-        data.addWithdrawalSumByCategory(10_001d, 4);
-        return data;
-    }
+        data.addWithdrawalSumByCategory(9000d, 5);
 
-    private static DataHelper getTest4Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client4);
-        DataHelper data2 = getRuleData(client4_1);
-
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.55);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
-
-        // add deposit
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(10_001d, 4);
-        return data;
-    }
-
-    private static DataHelper getTest5Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client5);
-        DataHelper data2 = getRuleData(client5_1);
+        data2.addWithdrawalSumByCategory(9000d, 5);
+        data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
 
         addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 1d);
         addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
+        setupData(data2);
 
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_CREDIT_CARD);
-
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(10_001d, 4);
-        return data;
-    }
-
-    private static DataHelper getTest6Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client6);
-        DataHelper data2 = getRuleData(client6_1);
-
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.6);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
-
-        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
-        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(2001d);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
-
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(999d, 4);
-
-        return data;
-    }
-
-    private static DataHelper getTest7Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client7);
-        DataHelper data2 = getRuleData(client7_1);
-
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.8);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
-
-        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
-        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(505d);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
-
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(999d, 4);
-
-        return data;
-    }
-
-    private static DataHelper getTest8Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client8);
-        DataHelper data2 = getRuleData(client8_1);
-
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.6);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.CONFIRMED, EXCHANGER);
-
-        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
-        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(100d);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
-
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(999d, 4);
-        return data;
-    }
-
-    private static DataHelper getTest9Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client9);
-        DataHelper data2 = getRuleData(client9_1);
-
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.8);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
-
-        data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
-        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(100d);
-
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(999d, 4);
-        return data;
-    }
-
-    private static DataHelper getTest10Data() throws IOException, InterruptedException {
-        DataHelper data = getRuleData(client10);
-        DataHelper data2 = getRuleData(client10_1);
-
-        addConnectionByEmailPhoneAttribute(data, data2.clientHelper, 0.6);
-        addFraudTypeToConnectedUser(data, FraudTypeStatus.POTENTIAL, EXCHANGER);
-
-        data.crmWithdrawalEventV2.setPaymentMethodCode(PAYMENT_METHOD_CODE_EWALLET);
-
-        data.addDepositSumByCategory(501d);
-
-        data.addWithdrawalSumByCategory(10_001d, 4);
+        data2.createClient(client3_1).createWithdrawal();
+        data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);
+        data2.getCrmTbWithdrawalObjects().getFirst().setStatus("7");
         return data;
     }
 
@@ -246,13 +135,6 @@ public class ConnectionSearchPaymentAbuseDataFactory {
         map.put("1", getTest1Data());
         map.put("2", getTest2Data());
         map.put("3", getTest3Data());
-        map.put("4", getTest4Data());
-        map.put("5", getTest5Data());
-        map.put("6", getTest6Data());
-        map.put("7", getTest7Data());
-        map.put("8", getTest8Data());
-        map.put("9", getTest9Data());
-        map.put("10", getTest10Data());
         return map;
     }
 }

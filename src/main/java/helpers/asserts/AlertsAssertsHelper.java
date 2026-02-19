@@ -260,4 +260,59 @@ public class AlertsAssertsHelper {
                         .getAttributes()
                         .getCardMaskedNumber()));
     }
+
+    @Step("Assert connection search payment abuse subrule alert")
+    public static void assertConnectionSearchPaymentAbuseSubruleAlert(DataHelper data, List<RuleAlertV2> alerts) {
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        assertThat(
+                "Verify alert merchant order id",
+                alert.getMerchantOrderId(),
+                is(data.getCrmWithdrawalEventV2().getMerchantOrderId()));
+        assertThat(
+                "Verify alert payment method",
+                alert.getPaymentMethod(),
+                is(data.getCrmWithdrawalEventV2().getPaymentMethodCode()));
+        assertThat("Verify alert reason", alert.getReason(), is("Connection to known fraudster"));
+        assertThat("Verify alert trigger created time", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert fraud type", alert.getFraudType(), is("EXCHANGER"));
+        assertThat("Verify alert payment event id", alert.getPaymentEventId(), is(notNullValue()));
+        assertThat(
+                "Verify alert currency",
+                alert.getCurrency(),
+                is(data.getCrmWithdrawalEventV2().getWithdrawalCurrency()));
+        assertThat(
+                "Verify alert account",
+                alert.getAccount(),
+                is(data.getCrmWithdrawalEventV2().getMt4Account()));
+        assertThat("Verify alert trigger", alert.getTrigger(), is("Withdrawal"));
+        assertThat(
+                "Verify alert amount",
+                alert.getAmount(),
+                is(data.getCrmWithdrawalEventV2().getWithdrawalAmount()));
+        assertThat(
+                "Verify alert amount usd",
+                alert.getAmountUsd(),
+                is(data.getCrmWithdrawalEventV2().getWithdrawalAmountUSD()));
+        assertThat("Verify alert ucid", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert type", alert.getType(), is("PAYMENT"));
+
+        // alert/rule
+        assertThat("Verify alert rule version", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("Verify alert rule name", alert.getRule().getName(), is("Connection search with known fraudster"));
+
+        // alert/attribute
+        assertThat(
+                "Verify alert attributes connected fraud types",
+                alert.getAttributes().getConnectedFraudTypes(),
+                is(notNullValue()));
+        assertThat(
+                "Verify alert attributes connected fraudsters",
+                alert.getAttributes().getConnectedFraudsters(),
+                is(notNullValue()));
+        assertThat(
+                "Verify alert attributes payment profile",
+                alert.getAttributes().getPaymentProfile(),
+                is(notNullValue()));
+    }
 }

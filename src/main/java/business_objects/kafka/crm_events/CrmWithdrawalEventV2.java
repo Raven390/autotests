@@ -105,6 +105,19 @@ public class CrmWithdrawalEventV2 {
     @JsonProperty("needReprocessing")
     private Boolean needReprocessing;
 
+    @JsonProperty("card")
+    private Card card;
+
+    @Getter
+    @Setter
+    @Builder
+    public static class Card {
+        private int binNumber;
+        private int lastFour;
+        private int expMonth;
+        private int expYear;
+    }
+
     @Getter
     @Setter
     @Builder

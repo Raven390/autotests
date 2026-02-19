@@ -223,7 +223,7 @@ class ConnectionSearchTests extends TestBaseRule {
 
     @Test
     @AllureId("2230")
-    @DisplayName("Connection Search in router rule. At least one rule finished with alert= false. ElementId: end_105")
+    @DisplayName("Connection Search in router rule. No alerts. ElementId: Event_1v8iqld")
     void connectionSearchRuleTest10() throws Exception {
         DataHelper data = dataMap.get("10");
         setupData(data);
@@ -242,8 +242,7 @@ class ConnectionSearchTests extends TestBaseRule {
 
     @Test
     @AllureId("2231")
-    @DisplayName(
-            "Connection Search in router rule. At least one rule finished with alert= true. ElementId: Event_1v8iqld")
+    @DisplayName("Connection Search in router rule. At least one rule finished with alert. ElementId: Event_0aybojb")
     void connectionSearchRuleTest11() throws Exception {
         DataHelper data = dataMap.get("11");
         setupData(data);
@@ -271,6 +270,10 @@ class ConnectionSearchTests extends TestBaseRule {
 
         checkElementId(
                 "Event_1v8iqld",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementIdNotPresent(
+                "Gateway_0u7kmfr",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
         checkElementId(
