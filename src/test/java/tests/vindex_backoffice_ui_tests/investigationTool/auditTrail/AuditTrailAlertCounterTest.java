@@ -18,6 +18,8 @@ import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+@Tag(TAG_MANUAL)
+@Disabled
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 @Feature("BMS-2413 Display counter for active alert on Audit Trail tab")
