@@ -38,6 +38,7 @@ import io.qameta.allure.Description;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,7 @@ public class ChargebackRuleDataFactory {
     private static final ClientHelper chargebackRuleClient4 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient5 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient6 = getRandomVantageClientAllFields();
+    private static final ClientHelper chargebackRuleClient61 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient7 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient8 = getRandomVantageClientAllFields();
     private static final ClientHelper chargebackRuleClient9 = getRandomVantageClientAllFields();
@@ -80,15 +82,21 @@ public class ChargebackRuleDataFactory {
     private static Callback callback;
     private static CallbackEvent callbackEvent;
     private static final String cardExpiration = "1036";
-    private static final String cardMaskedNumber = getRandomCardMaskedNumber();
-    static String cardFirstSixDigits = cardMaskedNumber.substring(0, 6);
-    static String cardLastFourDigits = cardMaskedNumber.substring(cardMaskedNumber.length() - 4);
+    private static String cardMaskedNumber;
+    static String cardFirstSixDigits;
+    static String cardLastFourDigits;
     private static final String baseCurrency = "EUR";
-    private static final String basePaymentProfile = (getPaymentProfileCard(cardMaskedNumber, cardExpiration));
+    private static String basePaymentProfile;
 
     @Description("Create data for Chargeback rule")
     private static DataHelper getChargebackRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
+
+        cardMaskedNumber = getRandomCardMaskedNumber();
+        cardFirstSixDigits = cardMaskedNumber.substring(0, 6);
+        cardLastFourDigits = cardMaskedNumber.substring(cardMaskedNumber.length() - 4);
+        basePaymentProfile = (getPaymentProfileCard(cardMaskedNumber, cardExpiration));
+
         data.createClient(client);
 
         attributes = Attributes.builder()
@@ -96,7 +104,8 @@ public class ChargebackRuleDataFactory {
                 .cardExpiration(cardExpiration)
                 .status("approved")
                 .currency(baseCurrency)
-                .cardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName() + "off")
+                .cardHolderName(
+                        data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName() + "offfmaninderov")
                 .is3d(false)
                 .amount(500.00)
                 .build();
@@ -151,7 +160,7 @@ public class ChargebackRuleDataFactory {
                 generatePaymentDetailsObject(paymentEventsObject1, data.clientHelper);
         PaymentRuleExecutionsObject paymentRuleExecutionsObject1 =
                 generatePaymentRuleExecutionsObject(paymentEventsObject1);
-        paymentRuleExecutionsObject1.setRuleEndId(201);
+        paymentRuleExecutionsObject1.setRuleEndId(202);
         paymentRuleExecutionsObject1.setRuleId(4);
 
         data.paymentDetailsObjects = List.of(paymentDetailsObject1);
@@ -226,37 +235,37 @@ public class ChargebackRuleDataFactory {
         int pcId = getRandomBytePositive();
         String catName = "card cat";
 
-        //        // set deposits
-        //        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        //        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        //        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
-        //        data.crmTbDepositObjects.add(deposit1);
-        //        data.crmTbDepositObjects.add(deposit2);
-        //        data.crmTbDepositObjects.add(deposit3);
-        //        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
-        //        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
-        //        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
-        //        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1700.01)));
-        //        data.crmTbDepositObjects.forEach(
-        //                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
-        //        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
-        //                .id(wdTypeId)
-        //                .sourceIdSt(sourceId)
-        //                .category(2)
-        //                .name(catName)
-        //                .lastUpdated(getCurrentTimestampDbFormat())
-        //                .build();
-        //        data.crmTbDepositTypeObjects = List.of(dType);
-        //        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
-        //                .id(pcId)
-        //                .sourceIdSt(sourceId)
-        //                .channelId(pcId)
-        //                .typeId(wdTypeId)
-        //                .name(catName)
-        //                .isMobileChannel(0)
-        //                .lastUpdated(getCurrentTimestampDbFormat())
-        //                .build();
-        //        data.crmTbDepositChannelObjects = List.of(dChannel);
+        // set deposits
+        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
+        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
+        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1700.01)));
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositTypeObjects = List.of(dType);
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositChannelObjects = List.of(dChannel);
 
         // set ticks
         RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
@@ -270,7 +279,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3);
+        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
 
         // add decline score
         CrmBpCallbacksObject callback1 = generateCrmBpCallbacksObject(data.clientHelper);
@@ -285,6 +295,94 @@ public class ChargebackRuleDataFactory {
 
         data.mt5DealsCoercedObjects = List.of(generateTradeByClient(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setEntry(0);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
+
+        return data;
+    }
+
+    private static DataHelper getChargebackTest61Data() {
+        DataHelper data = getChargebackRuleData(chargebackRuleClient61);
+
+        int wdTypeId = getRandomBytePositive();
+        int sourceId = getRandomBytePositive();
+        int pcId = getRandomBytePositive();
+        String catName = "card cat";
+
+        // set deposits
+        CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
+        data.crmTbDepositObjects.add(deposit1);
+        data.crmTbDepositObjects.add(deposit2);
+        data.crmTbDepositObjects.add(deposit3);
+        data.crmTbDepositObjects.forEach(d -> d.setSourceIdSt(sourceId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentTypeId(wdTypeId));
+        data.crmTbDepositObjects.forEach(d -> d.setPaymentChannelId(pcId));
+        data.crmTbDepositObjects.forEach(d -> d.setAmountUsd(BigDecimal.valueOf(1700.01)));
+        data.crmTbDepositObjects.forEach(
+                d -> d.setPaymentProfileKey(getPaymentProfileCard(cardMaskedNumber, cardExpiration)));
+        CrmTbDepositTypeObject dType = CrmTbDepositTypeObject.builder()
+                .id(wdTypeId)
+                .sourceIdSt(sourceId)
+                .category(2)
+                .name(catName)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositTypeObjects = List.of(dType);
+        CrmTbDepositChannelObject dChannel = CrmTbDepositChannelObject.builder()
+                .id(pcId)
+                .sourceIdSt(sourceId)
+                .channelId(pcId)
+                .typeId(wdTypeId)
+                .name(catName)
+                .isMobileChannel(0)
+                .lastUpdated(getCurrentTimestampDbFormat())
+                .build();
+        data.crmTbDepositChannelObjects = List.of(dChannel);
+
+        // set ticks
+        RatesUsdCurrentObject tick = RatesUsdCurrentObject.builder()
+                .ts(getCurrentTimestampDbFormat())
+                .currency(baseCurrency)
+                .rate(1.1)
+                .build();
+        data.ratesUsdCurrentObjects = List.of(tick);
+
+        // set client cards
+        ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        clientCard4.setCreateTime(OffsetDateTime.now().minusMonths(2));
+        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+
+        // add decline score
+        CrmBpCallbacksObject callback1 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback2 = generateCrmBpCallbacksObject(data.clientHelper);
+        CrmBpCallbacksObject callback3 = generateCrmBpCallbacksObject(data.clientHelper);
+        callback3.setIsFraudDeclined((short) 1);
+        callback3.setBusinessOrderId(callbackEvent.getBusinessOrderId());
+
+        data.callbacksObjects = List.of(callback1, callback2, callback3);
+        data.callbacksObjects.forEach(c -> c.setPaymentProfileKey(basePaymentProfile));
+        data.callbacksObjects.forEach(c -> c.setStatus("declined"));
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
 
         return data;
     }
@@ -343,8 +441,18 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
+        ClientCardsObject clientCard5 = generateClientCardsObject(data.clientHelper);
 
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5);
+
+        // set segment
+        SegmentationTableObject segment = SegmentationTableObject.builder()
+                .date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0))
+                .ucid(data.clientHelper.getUcid())
+                .segment("High")
+                .build();
+
+        data.segmentObjects = List.of(segment);
 
         return data;
     }
@@ -430,7 +538,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
         ClientCardsObject clientCard4 = generateClientCardsObject(connectedClient2);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+        ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient2);
+        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5);
 
         return data;
     }
@@ -526,6 +635,7 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
         ClientCardsObject clientCard4 = generateClientCardsObject(connectedClient2);
+        ClientCardsObject clientCard8 = generateClientCardsObject(connectedClient2);
         ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient3);
         clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
@@ -535,8 +645,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards = List.of(
+                clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7, clientCard8);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -634,6 +744,7 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
         ClientCardsObject clientCard4 = generateClientCardsObject(connectedClient2);
+        ClientCardsObject clientCard8 = generateClientCardsObject(connectedClient2);
         ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient3);
         clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
@@ -643,8 +754,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards = List.of(
+                clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7, clientCard8);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -748,6 +859,7 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
         ClientCardsObject clientCard4 = generateClientCardsObject(connectedClient2);
+        ClientCardsObject clientCard8 = generateClientCardsObject(connectedClient2);
         ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient3);
         clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
@@ -757,8 +869,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards = List.of(
+                clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7, clientCard8);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -864,6 +976,7 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(connectedClient);
         ClientCardsObject clientCard4 = generateClientCardsObject(connectedClient2);
+        ClientCardsObject clientCard8 = generateClientCardsObject(connectedClient2);
         ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient3);
         clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
@@ -873,8 +986,8 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient5);
         clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard7.setCardLastFourDigits(cardLastFourDigits);
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        data.clientCards = List.of(
+                clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7, clientCard8);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
@@ -1191,6 +1304,10 @@ public class ChargebackRuleDataFactory {
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
+        attributes.setCardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName());
+        buildCallbackEvent();
+        data.callbackEvent = callbackEvent;
+
         return data;
     }
 
@@ -1220,6 +1337,10 @@ public class ChargebackRuleDataFactory {
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
 
+        attributes.setCardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName());
+        buildCallbackEvent();
+        data.callbackEvent = callbackEvent;
+
         return data;
     }
 
@@ -1241,6 +1362,10 @@ public class ChargebackRuleDataFactory {
         data.clientCards = List.of(clientCard1, clientCard2);
         data.clientCards.forEach(c -> c.setExpiryMonth((short) 10));
         data.clientCards.forEach(c -> c.setExpiryYear(2036));
+
+        attributes.setCardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName());
+        buildCallbackEvent();
+        data.callbackEvent = callbackEvent;
 
         return data;
     }
@@ -1299,6 +1424,7 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
         data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+
         return data;
     }
 
@@ -1402,7 +1528,24 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+        ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient);
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setExpiryMonth((short) 10);
+        clientCard5.setExpiryYear(2036);
+        ClientCardsObject clientCard6 = generateClientCardsObject(connectedClient2);
+        clientCard6.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard6.setCardLastFourDigits(cardLastFourDigits);
+        clientCard6.setExpiryMonth((short) 10);
+        clientCard6.setExpiryYear(2036);
+        ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient3);
+        clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard7.setCardLastFourDigits(cardLastFourDigits);
+        clientCard7.setExpiryMonth((short) 10);
+        clientCard7.setExpiryYear(2036);
+
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
 
         // set segment
         SegmentationTableObject segment = SegmentationTableObject.builder()
@@ -1515,7 +1658,23 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
-        data.clientCards = List.of(clientCard1, clientCard2, clientCard3, clientCard4);
+        ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient);
+        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard5.setCardLastFourDigits(cardLastFourDigits);
+        clientCard5.setExpiryMonth((short) 10);
+        clientCard5.setExpiryYear(2036);
+        ClientCardsObject clientCard6 = generateClientCardsObject(connectedClient2);
+        clientCard6.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard6.setCardLastFourDigits(cardLastFourDigits);
+        clientCard6.setExpiryMonth((short) 10);
+        clientCard6.setExpiryYear(2036);
+        ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient3);
+        clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard7.setCardLastFourDigits(cardLastFourDigits);
+        clientCard7.setExpiryMonth((short) 10);
+        clientCard7.setExpiryYear(2036);
+        data.clientCards =
+                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
 
         // set open trades
         Mt5DealsCoercedObject trade1 = generateTradeByClient(data.clientHelper, 0, 0, 0, getRandomLongPositive());
@@ -1721,6 +1880,10 @@ public class ChargebackRuleDataFactory {
 
         data.segmentObjects = List.of(segment);
 
+        attributes.setCardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName());
+        buildCallbackEvent();
+        data.callbackEvent = callbackEvent;
+
         return data;
     }
 
@@ -1792,15 +1955,21 @@ public class ChargebackRuleDataFactory {
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard5 = clientCard1;
-        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
-        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
+        ClientCardsObject clientCard5 = generateClientCardsObject(connectedClient);
         clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
-        clientCard5.setUcid(connectedClient.getUcid());
-        clientCard5.setId(Utils.getRandomLongPositive());
+        clientCard5.setExpiryMonth((short) 10);
+        clientCard5.setExpiryYear(2036);
+        ClientCardsObject clientCard6 = generateClientCardsObject(connectedClient2);
+        clientCard6.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard6.setCardLastFourDigits(cardLastFourDigits);
+        clientCard6.setExpiryMonth((short) 10);
+        clientCard6.setExpiryYear(2036);
+        ClientCardsObject clientCard7 = generateClientCardsObject(connectedClient3);
+        clientCard7.setCardBeginSixDigits(cardFirstSixDigits);
+        clientCard7.setCardLastFourDigits(cardLastFourDigits);
+        clientCard7.setExpiryMonth((short) 10);
+        clientCard7.setExpiryYear(2036);
         data.clientCards =
                 List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
 
@@ -1896,19 +2065,22 @@ public class ChargebackRuleDataFactory {
         // set client cards
         ClientCardsObject clientCard1 = generateClientCardsObject(data.clientHelper);
         ClientCardsObject clientCard2 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard3 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard4 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard6 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard7 = generateClientCardsObject(data.clientHelper);
-        ClientCardsObject clientCard5 = clientCard1;
-        clientCard5.setExpiryYear(2000 + Integer.valueOf(cardExpiration.substring(2)));
-        clientCard5.setExpiryMonth(Short.valueOf(cardExpiration.substring(0, 2)));
-        clientCard5.setCardBeginSixDigits(cardFirstSixDigits);
-        clientCard5.setCardLastFourDigits(cardLastFourDigits);
-        clientCard5.setUcid(connectedClient.getUcid());
-        clientCard5.setId(Utils.getRandomLongPositive());
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        ClientCardsObject connectionCard1 = generateClientCardsObject(connectedClient);
+        connectionCard1.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard1.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard1.setExpiryMonth((short) 10);
+        connectionCard1.setExpiryYear(2036);
+        ClientCardsObject connectionCard2 = generateClientCardsObject(connectedClient2);
+        connectionCard2.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard2.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard2.setExpiryMonth((short) 10);
+        connectionCard2.setExpiryYear(2036);
+        ClientCardsObject connectionCard3 = generateClientCardsObject(connectedClient3);
+        connectionCard3.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard3.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard3.setExpiryMonth((short) 10);
+        connectionCard3.setExpiryYear(2036);
+        data.clientCards = List.of(clientCard1, clientCard2, connectionCard1, connectionCard2, connectionCard3);
 
         // set segment
         SegmentationTableObject segment = SegmentationTableObject.builder()
@@ -1925,6 +2097,11 @@ public class ChargebackRuleDataFactory {
                 + "/20" + cardExpiration.substring(2);
 
         putProfileStatus(VERIFIED, paymentProfileKey, paymentProfileKey, data.connectedClientHelpers.getFirst());
+
+        attributes.setCardHolderName(data.clientHelper.getFirstName() + " " + data.clientHelper.getLastName());
+        buildCallbackEvent();
+        data.callbackEvent = callbackEvent;
+
         return data;
     }
 
@@ -1999,8 +2176,32 @@ public class ChargebackRuleDataFactory {
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
         clientCard5.setUcid(connectedClient.getUcid());
         clientCard5.setId(Utils.getRandomLongPositive());
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        ClientCardsObject connectionCard1 = generateClientCardsObject(connectedClient);
+        connectionCard1.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard1.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard1.setExpiryMonth((short) 10);
+        connectionCard1.setExpiryYear(2036);
+        ClientCardsObject connectionCard2 = generateClientCardsObject(connectedClient2);
+        connectionCard2.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard2.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard2.setExpiryMonth((short) 10);
+        connectionCard2.setExpiryYear(2036);
+        ClientCardsObject connectionCard3 = generateClientCardsObject(connectedClient3);
+        connectionCard3.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard3.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard3.setExpiryMonth((short) 10);
+        connectionCard3.setExpiryYear(2036);
+        data.clientCards = List.of(
+                clientCard1,
+                clientCard2,
+                clientCard3,
+                clientCard4,
+                clientCard5,
+                clientCard6,
+                clientCard7,
+                connectionCard1,
+                connectionCard2,
+                connectionCard3);
 
         // set segment
         SegmentationTableObject segment = SegmentationTableObject.builder()
@@ -2094,8 +2295,32 @@ public class ChargebackRuleDataFactory {
         clientCard5.setCardLastFourDigits(cardLastFourDigits);
         clientCard5.setUcid(connectedClient.getUcid());
         clientCard5.setId(Utils.getRandomLongPositive());
-        data.clientCards =
-                List.of(clientCard1, clientCard2, clientCard3, clientCard4, clientCard5, clientCard6, clientCard7);
+        ClientCardsObject connectionCard1 = generateClientCardsObject(connectedClient);
+        connectionCard1.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard1.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard1.setExpiryMonth((short) 10);
+        connectionCard1.setExpiryYear(2036);
+        ClientCardsObject connectionCard2 = generateClientCardsObject(connectedClient2);
+        connectionCard2.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard2.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard2.setExpiryMonth((short) 10);
+        connectionCard2.setExpiryYear(2036);
+        ClientCardsObject connectionCard3 = generateClientCardsObject(connectedClient3);
+        connectionCard3.setCardBeginSixDigits(cardFirstSixDigits);
+        connectionCard3.setCardLastFourDigits(cardLastFourDigits);
+        connectionCard3.setExpiryMonth((short) 10);
+        connectionCard3.setExpiryYear(2036);
+        data.clientCards = List.of(
+                clientCard1,
+                clientCard2,
+                clientCard3,
+                clientCard4,
+                clientCard5,
+                clientCard6,
+                clientCard7,
+                connectionCard1,
+                connectionCard2,
+                connectionCard3);
 
         // set segment
         SegmentationTableObject segment = SegmentationTableObject.builder()
@@ -2121,19 +2346,15 @@ public class ChargebackRuleDataFactory {
         Map<String, DataHelper> map = new HashMap<>();
         //         Put all the db data for setup in a map
         map.put("1", getChargebackTest1Data());
-        map.put("2", getChargebackTest2Data());
-        map.put("3", getChargebackTest3Data());
-        map.put("4", getChargebackTest4Data());
         map.put("5", getChargebackTest5Data());
         map.put("6", getChargebackTest6Data());
+        map.put("61", getChargebackTest61Data());
         map.put("7", getChargebackTest7Data());
         map.put("8", getChargebackTest8Data());
         map.put("9", getChargebackTest9Data());
         map.put("10", getChargebackTest10Data());
         map.put("11", getChargebackTest11Data());
         map.put("12", getChargebackTest12Data());
-        map.put("13", getChargebackTest13Data());
-        map.put("14", getChargebackTest14Data());
         map.put("15", getChargebackTest15Data());
         map.put("16", getChargebackTest16Data());
         map.put("17", getChargebackTest17Data());
@@ -2147,6 +2368,11 @@ public class ChargebackRuleDataFactory {
         map.put("25", getChargebackTest25Data());
         map.put("26", getChargebackTest26Data());
         map.put("27", getChargebackTest27Data());
+        //        map.put("2", getChargebackTest2Data());
+        //        map.put("3", getChargebackTest3Data());
+        //        map.put("4", getChargebackTest4Data());
+        //        map.put("13", getChargebackTest13Data());
+        //        map.put("14", getChargebackTest14Data());
         return map;
     }
 }

@@ -42,7 +42,7 @@ public class PaymentGateHelper {
         List<PaymentRuleExecutionsObject> objects = getObjectsFromDB(
                 POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE,
-                "payment_id='%s'".replace("%s", paymentId),
+                "payment_id='%s' ORDER BY date_created DESC LIMIT 1".replace("%s", paymentId),
                 PaymentRuleExecutionsObject.class,
                 60);
         writeLog(objects);
@@ -91,7 +91,7 @@ public class PaymentGateHelper {
         List<PaymentEventsObject> objects = getObjectsFromDB(
                 POSTGRES,
                 PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE,
-                "ucid='%s'".replace("%s", ucid) + " ORDER BY date_updated DESC",
+                "ucid='%s'".replace("%s", ucid) + " ORDER BY date_created DESC LIMIT 1",
                 PaymentEventsObject.class,
                 60);
         writeLog(objects);
