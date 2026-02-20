@@ -170,6 +170,9 @@ public class RuleAlertV2 {
         @JsonProperty("1st deposit and no open trades")
         private String firstDepositNoOpenTrades;
 
+        @JsonProperty("1st deposit")
+        private String firstDeposit;
+
         @JsonProperty("Fraud score")
         private Integer fraudScore;
 
@@ -212,9 +215,6 @@ public class RuleAlertV2 {
         @JsonProperty("Internal hedge time")
         private String internalHedgeTime;
 
-        @JsonProperty("1st deposit")
-        private String firstDeposit;
-
         @JsonProperty("Ticket ID")
         private String ticketId;
 
@@ -230,14 +230,14 @@ public class RuleAlertV2 {
         @JsonProperty("Trigger")
         private String trigger;
 
+        @JsonProperty("SR")
+        private String SR;
+
         @JsonProperty("Connected fraud types")
         private String connectedFraudTypes;
 
         @JsonProperty("Connected fraudsters")
         private String connectedFraudsters;
-
-        @JsonProperty("SR")
-        private String SR;
 
         @JsonProperty("Fraud type")
         private String fraudType;
