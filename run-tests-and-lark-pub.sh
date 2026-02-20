@@ -5,10 +5,11 @@
 # -----------------------------
 
 TEST_TASK="$1"
+GRADLE_PROPS="${2:-}"  # Optional: gradle properties like -Dsequential.tests=true
 
 if [ -z "$TEST_TASK" ]; then
   echo "Error: No test task specified."
-  echo "Usage: $0 <gradle-test-task>"
+  echo "Usage: $0 <gradle-test-task> [gradle-properties]"
   exit 1
 fi
 
@@ -19,7 +20,7 @@ fi
 
 set +e  # allow command failure
 
-./allurectl watch -- gradle clean "$TEST_TASK"
+./allurectl watch -- gradle clean $GRADLE_PROPS "$TEST_TASK"
 WATCH_EXIT_CODE=$?
 
 set -e  # restore strict mode

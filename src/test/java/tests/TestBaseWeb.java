@@ -10,6 +10,7 @@ import helpers.kafka.KafkaHelper;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,7 @@ import utils.TestUtils;
 import utils.Utils;
 
 @ExtendWith(TestResultWatcher.class)
+@Timeout(value = 10, unit = TimeUnit.MINUTES)
 public class TestBaseWeb {
     // Shared between all tests in this class.
     public String timestamp = String.valueOf(Utils.getCurrentTimestampSeconds());
@@ -134,6 +136,7 @@ public class TestBaseWeb {
     }
 
     @AfterEach
+    @Timeout(value = 2, unit = TimeUnit.MINUTES)
     void closeContext() throws IOException {
         String traceName = timestamp + "-" + n;
         if (context != null) {

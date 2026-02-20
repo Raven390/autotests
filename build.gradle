@@ -188,16 +188,16 @@ tasks.register('createConsumerGroupsFile') {
 
 tasks.withType(Test) {
     dependsOn(createConsumerGroupsFile)
-    // Enable parallel test execution
-    maxParallelForks = 2// Set to the number of available processors
 
-    // Optional: Configure parallel execution for classes and methods
-    forkEvery = 0 // 0 means it forks once per class. Increase for larger suites.
-    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true' // Enable JUnit 5 parallelism
+    // Allow override via system property (e.g., -Dsequential.tests=true to run sequentially)
+    def runSequential = System.getProperty('sequential.tests', 'false').toBoolean()
+    maxParallelForks = runSequential ? 1 : 2
 
     // Other options
     testLogging {
-        events "passed", "failed", "skipped"
+        events "started", "passed", "failed", "skipped"
+        // Do not show standard streams to avoid huge CI logs
+        showStandardStreams = false
     }
 }
 

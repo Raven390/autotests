@@ -201,7 +201,7 @@ job_test_core:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean testSmokeCore
+    - ./allurectl watch -- gradle clean -Dsequential.tests=false testSmokeCore
     - echo "TEST SUCCESS"
   artifacts:
     when: always
@@ -235,7 +235,7 @@ job_test_backoffice:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./run-tests-and-lark-pub.sh testSmokeBackoffice
+    - ./run-tests-and-lark-pub.sh testSmokeBackoffice "-Dsequential.tests=true"
   artifacts:
     when: always
     paths:
@@ -246,6 +246,7 @@ job_test_backoffice:
     expire_in: 1 day
 
 job_debug_runner:
+  timeout: 1 hour
   stage: test
   image: gradle:8.10.0-jdk22
   rules:
@@ -263,7 +264,7 @@ job_debug_runner:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean testRunnerDebug
+    - ./allurectl watch -- gradle clean testRunnerDebug -Dsequential.tests=true
     - echo "TEST SUCCESS"
   artifacts:
     when: always
@@ -295,9 +296,9 @@ job_test_downstream_end_to_end:
     - echo "Running tests"
     - |
       if [ "$APP_NAME" == "event-generator" ]; then
-        ./allurectl watch -- gradle clean testEventGeneratorService
+        ./allurectl watch -- gradle clean -Dsequential.tests=false testEventGeneratorService
       elif [ "$APP_NAME" == "connection-search-service" ]; then
-        ./allurectl watch -- gradle clean testConnectionSearchApiService
+        ./allurectl watch -- gradle clean -Dsequential.tests=false testConnectionSearchApiService
       fi
     - echo "TEST SUCCESS"
   artifacts:
@@ -328,7 +329,7 @@ job_test_smoke_production:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean testSuiteSmokeProduction
+    - ./allurectl watch -- gradle clean -Dsequential.tests=false testSuiteSmokeProduction
     - echo "TEST SUCCESS"
   artifacts:
     when: always
