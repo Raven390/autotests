@@ -203,6 +203,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST = "account.deduction.request";
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE = "account.deduction.requestResponse";
     public static final String KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE = "payment.acknowledge";
+    public static final String KAFKA_TOPIC_AI_DECISIONS = "test-ai-agent.ai-decisions";
     // TABLES
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "consolidated.account_ib_relation_snapshot";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "consolidated.account_ib_relation";
@@ -222,6 +223,9 @@ public class Constants {
     public static final String PAYMENT_EVENT_TABLE_NAME = "postgres.paymentgate.payment_events";
     public static final String BO_INVESTIGATION_TABLE_NAME = "postgres.bo.investigation";
     public static final String BO_INVESTIGATION_HISTORY_TABLE_NAME = "postgres.bo.investigation_history";
+    public static final String BO_AI_ALERT_RESULT_TABLE_NAME = "postgres.bo.ai_alert_result";
+    public static final String BO_AI_ALERT_RESULT_CLASSIFICATION_TABLE_NAME =
+            "postgres.bo.ai_alert_result_classification";
     public static final String CLICKHOUSE_BO_ALERTS_TABLE_NAME = "consolidated.bo___alerts";
     public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "consolidated.bo___alert";
     public static final String CLICKHOUSE_OZ_TRADES_TABLE_NAME = "consolidated.oz___trades";

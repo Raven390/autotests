@@ -230,4 +230,15 @@ public class BoHelper {
                         InvestigationHistoryObject.class)
                 .getFirst();
     }
+
+    @Step("Delete AI decicions from client with ucid '{ucid}' in BO")
+    public static void deleteAiDecisionsByUcid(String ucid) {
+        deleteObjectFromDb(
+                POSTGRES,
+                BO_AI_ALERT_RESULT_CLASSIFICATION_TABLE_NAME,
+                String.format(
+                        "ai_alert_result_id IN (SELECT id FROM %s WHERE ucid = '%s')",
+                        BO_AI_ALERT_RESULT_TABLE_NAME, ucid));
+        deleteObjectFromDb(POSTGRES, BO_AI_ALERT_RESULT_TABLE_NAME, String.format("ucid = '%s'", ucid));
+    }
 }
