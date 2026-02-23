@@ -13,12 +13,14 @@ import static utils.Constants.LAYER_WEB;
 import static utils.Utils.getCurrentTimestampSeconds;
 
 import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.audit_service_db.EventOld;
+import business_objects.db.audit_service_db.AuditEvent;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.*;
 import helpers.database.ArHelper;
+import helpers.database.DbHelper;
 import helpers.database.DbName;
+import helpers.database.DbQuery;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -130,13 +132,15 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
         assertEquals(source, fraud.getFraudSource());
 
-        List<EventOld> events = getObjectsFromDB(
+        List<AuditEvent> events = DbHelper.getObjectsFromDB(
                 DbName.POSTGRES,
-                AUDIT_EVENT_OLD,
-                "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'",
-                EventOld.class);
+                DbQuery.from(AUDIT_EVENT_TABLE)
+                        .whereEquals("ucid", client1.getUcid())
+                        .whereEquals("type", COMMENT_ADDED_TYPE)
+                        .orderBy("id", "DESC"),
+                AuditEvent.class);
 
-        EventOld event = events.getFirst();
+        AuditEvent event = events.getFirst();
         assertEquals("Batch operation. " + commentary, event.getComment());
 
         checkUserHaveRestrictionGeneral(client1.getUcid(), restriction.getId(), "APPLIED");
