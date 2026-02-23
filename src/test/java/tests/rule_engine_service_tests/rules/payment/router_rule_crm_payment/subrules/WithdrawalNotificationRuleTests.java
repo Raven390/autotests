@@ -61,7 +61,11 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.getCrmWithdrawalEventV2());
 
         String eventId = data.getCrmWithdrawalEventV2().getId();
-        checkElementId(expectedEnd, eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
+        checkElementIdSubrule(
+                expectedEnd,
+                eventId,
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
         checkElementId("Activity_0n9s6ck", eventId, Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
@@ -203,5 +207,12 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         GetRestrictionResponseBody restriction = clientRestrictions.getFirst();
         assertEquals(MANUAL_WITHDRAWAL_REVIEW.getCode(), restriction.getCode());
         assertEquals("CANCELLED", restriction.getStatus());
+    }
+
+    @Test
+    @AllureId("2411")
+    @DisplayName("Withdrawal notification check in Router rule. Exit with end 206 ai flag = true. ElementId: end_206")
+    void withdrawalNotificationRule8Test() throws Exception {
+        runWithdrawalNotificationTest("8", "end_206", false);
     }
 }

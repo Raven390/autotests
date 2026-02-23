@@ -43,6 +43,7 @@ public class WithdrawalNotificationDataFactory {
     private static final ClientHelper withdrawalNotificationRuleClient8 = getRandomVantageClientAllFields();
     private static final ClientHelper withdrawalNotificationRuleClient9 = getRandomVantageClientAllFields();
     private static final ClientHelper withdrawalNotificationRuleClient10 = getRandomVantageClientAllFields();
+    private static final ClientHelper withdrawalNotificationRuleClient11 = getRandomVantageClientAllFields();
 
     private static final String checkNameCryptoRisk = "Crypto_Risk";
     private static final String checkNameNotCryptoRisk = "Not_Crypto_Risk";
@@ -201,6 +202,19 @@ public class WithdrawalNotificationDataFactory {
         return data;
     }
 
+    private static DataHelper getWithdrawalNotificationTest11Data() throws IOException {
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient11);
+        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
+        String newId = data.clientHelper
+                        .getUserId()
+                        .toString()
+                        .substring(0, data.clientHelper.getUserId().toString().length() - 2)
+                + "99";
+        data.clientHelper.setUserId(Integer.parseInt(newId));
+        data.getCrmWithdrawalEvent().setClientId((long) data.clientHelper.getUserId());
+        return data;
+    }
+
     public static Map<String, DataHelper> setupWithdrawalNotificationRuleData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -215,6 +229,7 @@ public class WithdrawalNotificationDataFactory {
         map.put("8", getWithdrawalNotificationTest8Data());
         map.put("9", getWithdrawalNotificationTest9Data());
         map.put("10", getWithdrawalNotificationTest10Data());
+        map.put("11", getWithdrawalNotificationTest11Data());
         return map;
     }
 }

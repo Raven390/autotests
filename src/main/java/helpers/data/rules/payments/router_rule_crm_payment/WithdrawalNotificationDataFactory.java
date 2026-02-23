@@ -33,6 +33,7 @@ public class WithdrawalNotificationDataFactory {
     private static final ClientHelper withdrawalNotificationRuleClient5 = getRandomVantageClientAllFields();
     private static final ClientHelper withdrawalNotificationRuleClient6 = getRandomVantageClientAllFields();
     private static final ClientHelper withdrawalNotificationRuleClient7 = getRandomVantageClientAllFields();
+    private static final ClientHelper withdrawalNotificationRuleClient8 = getRandomVantageClientAllFields();
 
     @Description("Create data for Withdrawal Notification rule")
     private static DataHelper getWithdrawalNotificationRuleData(ClientHelper client) {
@@ -149,6 +150,19 @@ public class WithdrawalNotificationDataFactory {
         return data;
     }
 
+    private static DataHelper getWithdrawalNotificationTest8Data() {
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient8);
+        data.getCrmWithdrawalEventV2().setCheckName("");
+        String newId = data.clientHelper
+                        .getUserId()
+                        .toString()
+                        .substring(0, data.clientHelper.getUserId().toString().length() - 2)
+                + "99";
+        data.clientHelper.setUserId(Integer.parseInt(newId));
+        data.crmWithdrawalEventV2.setClientId(data.clientHelper.getUserId());
+        return data;
+    }
+
     public static Map<String, DataHelper> setupWithdrawalNotificationRuleData() throws IOException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -160,6 +174,7 @@ public class WithdrawalNotificationDataFactory {
         map.put("5", getWithdrawalNotificationTest5Data());
         map.put("6", getWithdrawalNotificationTest6Data());
         map.put("7", getWithdrawalNotificationTest7Data());
+        map.put("8", getWithdrawalNotificationTest8Data());
         return map;
     }
 }
