@@ -721,6 +721,16 @@ public class DbHelper {
         throw new RuntimeException("Operation failed after " + retries + " attempts");
     }
 
+    @Step("Get objects from {dbName} using Query Builder")
+    public static <T> List<T> getObjectsFromDB(DbName dbName, DbQuery query, Class<T> className) {
+        return executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                String sql = query.build();
+                return fetchObjects(connection, sql, className);
+            }
+        });
+    }
+
     // Functional interface for retry logic
     @FunctionalInterface
     private interface DatabaseOperation<T> {
