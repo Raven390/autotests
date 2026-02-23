@@ -379,6 +379,81 @@ public class TestBaseRule {
         assertThat(elementIdsDb, containsString(elementId));
     }
 
+    @Step("Check {elementId} presented in rule path")
+    public static void checkElementIdSubrule(
+            String elementId, String eventId, String ParentBpmnProcessId, String bpmnProcessId) {
+
+        // Wait until runId appears in zeebe_rules_started
+        ZeebeRulesStarted startedParent = await().atMost(120, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(
+                        () -> {
+                            List<ZeebeRulesStarted> startedList = getObjectsFromDB(
+                                    DbName.CLICKHOUSE,
+                                    String.format(
+                                            "SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s' ORDER BY timestamp_start DESC LIMIT 1",
+                                            REPORTING_DB_ZEEBE_RULES_STARTED, eventId, ParentBpmnProcessId),
+                                    ZeebeRulesStarted.class);
+
+                            if (startedList != null && !startedList.isEmpty()) {
+                                return startedList.getFirst();
+                            } else {
+                                return null;
+                            }
+                        },
+                        Objects::nonNull);
+
+        String parentRunId = startedParent.getRunId();
+
+        ZeebeRulesStarted started = await().atMost(120, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(
+                        () -> {
+                            List<ZeebeRulesStarted> startedList = getObjectsFromDB(
+                                    DbName.CLICKHOUSE,
+                                    String.format(
+                                            "SELECT run_id FROM %s WHERE parent_run_id = '%s' and rule_name = '%s' ORDER BY timestamp_start DESC LIMIT 1",
+                                            REPORTING_DB_ZEEBE_RULES_STARTED, parentRunId, bpmnProcessId),
+                                    ZeebeRulesStarted.class);
+
+                            if (startedList != null && !startedList.isEmpty()) {
+                                return startedList.getFirst();
+                            } else {
+                                return null;
+                            }
+                        },
+                        Objects::nonNull);
+
+        String runId = started.getRunId();
+
+        // Wait until the elementId appears in the elements string for the runId
+        String elementIdsDb = await().atMost(120, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(
+                        () -> {
+                            List<ZeebeRulesElements> list = getObjectsFromDB(
+                                    DbName.CLICKHOUSE,
+                                    REPORTING_DB_ZEEBE_RULE_ELEMENTS,
+                                    String.format("run_id = '%s'", runId),
+                                    ZeebeRulesElements.class);
+                            String joined;
+                            if (list == null || list.isEmpty()) {
+                                joined = "";
+                            } else {
+                                joined = list.stream()
+                                        .map(ZeebeRulesElements::getElementId)
+                                        .filter(Objects::nonNull)
+                                        .filter(s -> !s.isBlank())
+                                        .collect(Collectors.joining(","));
+                            }
+                            System.out.println("Looking for Element ID: " + elementId + " in list: " + joined);
+                            return joined;
+                        },
+                        ids -> ids != null && ids.contains(elementId));
+
+        assertThat(elementIdsDb, containsString(elementId));
+    }
+
     public static List<Acknowledge> getPaymentAcknowledgeFromKafka(UUID paymentId) throws Exception {
         return Arrays.stream(objectMapper.readValue(
                         kafka.consumeMessages(KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE, paymentId.toString())
