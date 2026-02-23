@@ -6,6 +6,7 @@ import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
 public class AssignDrawer extends AbstractPage {
@@ -21,6 +22,7 @@ public class AssignDrawer extends AbstractPage {
     private final Locator commentInput;
     private final Locator cancelButton;
     private final Locator confirmAssignButton;
+    private final Locator assignDrawerTitle;
 
     public AssignDrawer(Page page) {
         super(page);
@@ -31,6 +33,8 @@ public class AssignDrawer extends AbstractPage {
                 + "//input[@placeholder='You can write a reason or leave a note for your colleague']");
         this.cancelButton = page.locator("//button[@data-qa='assign_user_drawer__cancel_button']");
         this.confirmAssignButton = page.locator("//button[@data-qa='assign_user_drawer__apply_changes_button']");
+        this.assignDrawerTitle = page.locator(
+                "//div[@class='v-drawer-header__title-container']/descendant::*[text()='Manage assignment']");
     }
 
     public void openAssignDrawer() {
@@ -106,5 +110,10 @@ public class AssignDrawer extends AbstractPage {
 
     public void assignClientToUser(String userPreset) {
         assignClientToUser(userPreset, null);
+    }
+
+    @Step("Wait for assign drawer to load")
+    public void waitForAssignDrawerToLoad() {
+        assignDrawerTitle.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 }

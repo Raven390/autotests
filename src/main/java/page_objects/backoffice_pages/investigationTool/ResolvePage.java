@@ -107,6 +107,12 @@ public class ResolvePage extends AbstractPage {
     private final Locator popup;
     private final Locator selectAllAccountsCheckbox;
 
+    private final Locator fraudAiDecision;
+    private final Locator tooltip;
+    private final Locator fraudAiDecisionMismatchConfirmationText;
+    private final Locator fraudAiDecisionMismatchConfirmButton;
+    private final Locator fraudAiDecisionMismatchReassignButton;
+
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
     private static final String REMOVE_BUTTON_LOCATOR = "//button[@data-qa='selected_fraud_type_item__remove_button']";
@@ -236,6 +242,14 @@ public class ResolvePage extends AbstractPage {
         this.paymentWithdrawals = page.locator("//div[@class='v-withdrawal__info']");
         this.selectAllAccountsCheckbox =
                 page.locator("//div[@class='v-checkbox-list-with-select-all__select-all']/descendant::input");
+        this.fraudAiDecision = page.locator("//div[@class='v-detected-fraud-ai-decision']");
+        this.tooltip = page.locator("//div[@role='tooltip']");
+        this.fraudAiDecisionMismatchConfirmationText =
+                page.locator("//div[contains(@class,'v-button-with-confirmation__confirmation-text')]");
+        this.fraudAiDecisionMismatchConfirmButton =
+                page.locator("//button[@data-qa='client_resolving_drawer__complete_investigation_button__confirm']");
+        this.fraudAiDecisionMismatchReassignButton =
+                page.locator("//button[@data-qa='client_resolving_drawer__complete_investigation_button__cancel']");
     }
 
     String bigLorem =
@@ -865,5 +879,36 @@ public class ResolvePage extends AbstractPage {
 
     public void waitForPopupToClose() {
         popup.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
+    @Step("Get ai decision text")
+    public String getAiDecisionText() {
+        return fraudAiDecision.innerText();
+    }
+
+    @Step("Get ai decision tooltip text")
+    public String getAiDecisionTooltipText() {
+        fraudAiDecision.hover();
+        return tooltip.innerText();
+    }
+
+    @Step("Wait for success toast visibility after resolution")
+    public void waitForSuccessToastVisibility() {
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Get fraud AI decision mismatch confirmation text")
+    public String getFraudAiDecisionMismatchConfirmationText() {
+        return fraudAiDecisionMismatchConfirmationText.innerText();
+    }
+
+    @Step("Click confirm button on fraud AI decision mismatch confirmation")
+    public void clickFraudAiDecisionMismatchConfirmButton() {
+        fraudAiDecisionMismatchConfirmButton.click();
+    }
+
+    @Step("Click reassign button on fraud AI decision mismatch confirmation")
+    public void clickFraudAiDecisionMismatchReassignButton() {
+        fraudAiDecisionMismatchReassignButton.click();
     }
 }
