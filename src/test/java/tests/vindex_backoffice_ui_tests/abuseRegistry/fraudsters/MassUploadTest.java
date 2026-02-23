@@ -90,7 +90,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
@@ -158,7 +158,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
@@ -207,7 +207,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
@@ -259,7 +259,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
@@ -311,7 +311,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
@@ -363,7 +363,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
@@ -421,7 +421,7 @@ class MassUploadTest extends TestBaseWeb {
         ArHelper.deleteUserFromAbuseRegistry(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openUploadDrawer();
         fraudstersPage.clickUploadByClientId();
