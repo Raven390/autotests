@@ -125,8 +125,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         sleep(20_000);
         sendRiskRejectDecision(paymentId);
 
-        checkElementId(
-                "Activity_0jjuzkg", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId("send_to_crm", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
     @Test

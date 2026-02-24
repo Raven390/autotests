@@ -120,9 +120,7 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
         sendRiskRejectDecision(paymentId);
 
         checkElementId(
-                "Activity_0jjuzkg",
-                data.transferToWaEvent.getId().toString(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+                "send_to_crm", data.transferToWaEvent.getId().toString(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
     @Test
