@@ -3,6 +3,7 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.su
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.getRestrictionsByUcid;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
+import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.Restriction.DEPOSITS;
@@ -19,6 +20,7 @@ import static utils.Constants.*;
 import business_objects.api.mitigation_service.GetRestrictionResponseBody;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
+import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Rule;
 import io.qameta.allure.*;
@@ -211,8 +213,43 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("2411")
-    @DisplayName("Withdrawal notification check in Router rule. Exit with end 206 ai flag = true. ElementId: end_206")
+    @DisplayName(
+            "Withdrawal notification check in Router rule. Exit with end 206 ai flag = true. ElementId: Event_1g3nnu4")
     void withdrawalNotificationRule8Test() throws Exception {
-        runWithdrawalNotificationTest("8", "end_206", false);
+
+        DataHelper data = dataMap.get("8");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+        checkElementIdSubrule(
+                "Event_1g3nnu4",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
+        checkElementIdSubrule(
+                "process_instance_key",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
+        checkElementIdSubrule(
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_PAYMENT.getProcessId());
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "5");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(5));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(206));
+
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Withdrawal Review");
+        assertThat("Verify alert count", alerts.size(), is(1));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Withdrawal Review");
     }
 }
