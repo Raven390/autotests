@@ -4,6 +4,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.enums.FraudType.CPA_ABUSE;
 import static helpers.data.enums.FraudType.HEDGING;
+import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.deleteUserBO;
@@ -88,12 +89,12 @@ class MassDeleteTest extends TestBaseWeb {
         cleanUserRestriction(client3.getUcid());
         deleteUserFromAbuseRegistry(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
-        addFraudsForClient(client1, List.of(HEDGING, CPA_ABUSE), FraudTypeStatus.POTENTIAL);
-        addFraudsForClient(client2, List.of(HEDGING), FraudTypeStatus.POTENTIAL);
-        addFraudsForClient(client3, List.of(HEDGING), FraudTypeStatus.POTENTIAL);
+        addFraudsForClient(client1, List.of(HEDGING, CPA_ABUSE), POTENTIAL);
+        addFraudsForClient(client2, List.of(HEDGING), POTENTIAL);
+        addFraudsForClient(client3, List.of(HEDGING), POTENTIAL);
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsTradingOpsSeniorUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
@@ -101,9 +102,7 @@ class MassDeleteTest extends TestBaseWeb {
                 client1.getUserId().toString(),
                 client2.getUserId().toString(),
                 client3.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.HEDGING;
-        fraudstersPage.addSelectedFraudDelete(fraudTypeOld.getDisplayName());
+        fraudstersPage.addFraud(HEDGING, POTENTIAL);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
@@ -116,7 +115,7 @@ class MassDeleteTest extends TestBaseWeb {
         Allure.step("Assert that there two records in ar.abuser_fraud_type for the first client");
         assertEquals(2, fraudsFirst.size());
 
-        Allure.step("Find among frauds of firs user fraud with time CPA Abuse (that that we not deleted)");
+        Allure.step("Find among frauds of first user fraud with time CPA Abuse (that that we not deleted)");
 
         AbuserFraudType fraudFirst = fraudsFirst.stream()
                 .filter(fraud -> fraud.getFraudTypeCode().equals(CPA_ABUSE.getCode()))
@@ -127,70 +126,7 @@ class MassDeleteTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("POTENTIAL", fraudFirst.getStatus());
 
-        Allure.step("Find among frauds of firs user fraud with time CPA Abuse (that that we not deleted)");
-
-        AbuserFraudType fraudSecond = fraudsFirst.stream()
-                .filter(fraud -> fraud.getFraudTypeCode().equals(HEDGING.getCode()))
-                .findFirst()
-                .orElse(null);
-        Assertions.assertNotNull(fraudSecond);
-
-        Allure.step("Assert that record in ar.abuser_fraud_type have right status");
-        assertEquals("CLEANED", fraudSecond.getStatus());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
-    @AllureId("1377")
-    @DisplayName("Abuse registry mass delete can delete only potential")
-    void abuseRegistryMassCanDeleteOnlyPotential() throws Exception {
-
-        cleanClientAudit(client1.getUcid(), client2.getUcid());
-        deleteUserBO(client1.getUcid());
-        cleanUserRestriction(client1.getUcid());
-        deleteUserFromAbuseRegistry(client1.getUcid());
-
-        addFraudsForClient(client1, List.of(HEDGING), FraudTypeStatus.POTENTIAL);
-        addFraudsForClient(client1, List.of(CPA_ABUSE), FraudTypeStatus.CONFIRMED);
-
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        fraudstersPage.navigateAbuseRegistryFraudsters();
-        fraudstersPage.openRemoveDrawer();
-        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
-        fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld1 = FraudTypeOld.HEDGING;
-        FraudTypeOld fraudTypeOld2 = FraudTypeOld.CPA_ABUSE;
-        fraudstersPage.addSelectedFraudDelete(fraudTypeOld1.getDisplayName());
-        fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudDelete(fraudTypeOld2.getDisplayName());
-        String commentary = "test" + getCurrentTimestampSeconds();
-        fraudstersPage.fillCommentary(commentary);
-        fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
-
-        page.waitForTimeout(1000);
-
-        List<AbuserFraudType> fraudsFirst = getObjectsFromDB(
-                DbName.POSTGRES, "ar.abuser_fraud_type", "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
-        Allure.step("Assert that there two records in ar.abuser_fraud_type for the first client");
-        assertEquals(2, fraudsFirst.size());
-
-        Allure.step("Find among frauds of firs user fraud with time CPA Abuse (that that we not deleted)");
-
-        AbuserFraudType fraudFirst = fraudsFirst.stream()
-                .filter(fraud -> fraud.getFraudTypeCode().equals(CPA_ABUSE.getCode()))
-                .findFirst()
-                .orElse(null);
-        Assertions.assertNotNull(fraudFirst);
-
-        Allure.step("Assert that record in ar.abuser_fraud_type have right status");
-        assertEquals("CONFIRMED", fraudFirst.getStatus());
-
-        Allure.step("Find among frauds of firs user fraud with time CPA Abuse (that that we not deleted)");
+        Allure.step("Find among frauds of first user fraud with time CPA Abuse (that we not deleted)");
 
         AbuserFraudType fraudSecond = fraudsFirst.stream()
                 .filter(fraud -> fraud.getFraudTypeCode().equals(HEDGING.getCode()))

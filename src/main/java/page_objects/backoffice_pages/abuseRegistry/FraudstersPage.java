@@ -22,22 +22,9 @@ public class FraudstersPage extends AbstractPage {
 
     private final Locator uploadListButton;
     private final Locator uploadDrawer;
-    private final String uploadDrawerLocator = "//*[@data-qa='drawer_body']";
-    private final String brandSelectButtonLocatorPattern =
-            uploadDrawerLocator + "//*[@class='v-label-list__list']/button/*[text()='%s']";
-    private final String fraudTypeSelectionSection = uploadDrawerLocator + "//*[@class='v-fraud-type-selector']";
-    private final String restrictionSelectionSection =
-            uploadDrawerLocator + "//*[@class='v-client-restrictions-selector']";
     private final Locator clientIdInput;
     private final Locator addFraudButton;
     private final Locator fraudTypeInput;
-    private final String fraudDropoutListElementLocatorPattern =
-            "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
-    private final String sourceSelectButtonLocatorPattern = "[data-qa='buttons_list__item__%s']";
-    private final String restrictionPopupListElementLocatorPattern =
-            "//*[@class='g-select-list__option-default-label'][text()='%s']";
-    private final String restrictionWorseTradingPopupListElementLocatorPattern =
-            "//*[@class='v-menuitem']//*[text()='%s']";
     private final Locator validationList;
     private final Locator addRestrictionButton;
     private final Locator selectPopup;
@@ -59,16 +46,30 @@ public class FraudstersPage extends AbstractPage {
     private final Locator uploadByIdButton;
     private final Locator uploadByAccountButton;
 
+    private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN =
+            "//*[contains(@class,'v-dropdown-select__menu-container')]//div[@data-dd-value='%s']";
+    private static final String SOURCE_SELECT_BUTTON_LOCATOR_PATTERN = "[data-qa='buttons_list__item__%s']";
+    private static final String RESTRICTION_POPUP_LIST_ELEMENT_LOCATOR_PATTERN =
+            "//*[@class='g-select-list__option-default-label'][text()='%s']";
+    private static final String RESTRICTION_WORSE_TRADING_POPUP_LIST_ELEMENT_LOCATOR_PATTERN =
+            "//*[@class='v-menuitem']//*[text()='%s']";
+    private static final String UPLOAD_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
+    private static final String FRAUD_TYPE_SELECTION_SECTION =
+            UPLOAD_DRAWER_LOCATOR + "//*[@class='v-fraud-type-selector']";
+    private static final String RESTRICTION_SELECTION_SECTION =
+            UPLOAD_DRAWER_LOCATOR + "//*[@class='v-client-restrictions-selector']";
+    private static final String BRAND_SELECT_BUTTON_LOCATOR_PATTERN =
+            UPLOAD_DRAWER_LOCATOR + "//*[@class='v-label-list__list']/button/*[text()='%s']";
     private static final String FRAUD_SUBTYPE_FORMAT =
             "//*[(@class='v-menuitem') and contains(@data-qa, '_fraud_type_selector__submenu_')]/*[text()='%s']";
     private static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
-    private static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT = "//*[@class='v-sub-menu']/*[text()='%s']";
+    private static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT =
+            "//*[@data-qa='fraud_type_selector__dropdown__item__submenu__%s:%s']//div[text()='%s']";
     private static final String FRAUD_BY_TEXT_PATTERN =
             "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content') or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[text()='%s']";
     private static final String FRAUD_STATUS_PATTERN =
             "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')  or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[contains(@data-qa,'fraud_type_selector__dropdown__item__submenu__%s:%s')]";
     private static final String FRAUD_SOURCE_PATTERN = "//button[@data-qa='buttons_list__item__%s']";
-
     public static final String FRAUD_TYPE_SELECTOR_STATUS =
             "//*[@data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__item_%s__%s']";
 
@@ -76,27 +77,27 @@ public class FraudstersPage extends AbstractPage {
         super(page);
         this.uploadListButton = page.locator("//button/*[text()='Add']");
         this.removeListButton = page.locator("//button/*[text()='Remove']");
-        this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
-        this.removeDrawer = page.locator(uploadDrawerLocator + "//*[text()='Remove fraud types or restrictions']");
-        this.clientIdInput = page.locator(uploadDrawerLocator
+        this.uploadDrawer = page.locator(UPLOAD_DRAWER_LOCATOR + "//*[text()='Add clients to abuse registry']");
+        this.removeDrawer = page.locator(UPLOAD_DRAWER_LOCATOR + "//*[text()='Remove fraud types or restrictions']");
+        this.clientIdInput = page.locator(UPLOAD_DRAWER_LOCATOR
                 + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons or new lines']");
         this.serverAccInput = page.locator(
-                uploadDrawerLocator
+                UPLOAD_DRAWER_LOCATOR
                         + "//textarea[@placeholder='Enter a list of accounts with servers (e.g.: MT5-PUG2 123456789), separated with spaces, commas, semicolons or new lines']");
         this.addFraudButton = page.locator(
-                uploadDrawerLocator
+                UPLOAD_DRAWER_LOCATOR
                         + "//*[@data-qa='fraud_type_selector__add_button' or @data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__anchor']");
         this.validationList = page.locator(".v-abuse-registry-batch-delete-errors__list");
         this.validationListItem = page.locator(".v-abuse-registry-batch-delete-errors-item__item");
-        this.addRestrictionButton = page.locator(restrictionSelectionSection + "//button");
-        this.restrictionApplyButton = page.locator(restrictionSelectionSection + "//button/*[text()='Apply']");
+        this.addRestrictionButton = page.locator(RESTRICTION_SELECTION_SECTION + "//button");
+        this.restrictionApplyButton = page.locator(RESTRICTION_SELECTION_SECTION + "//button/*[text()='Apply']");
         this.fraudTypeInput = page.locator("//input[@placeholder='Type fraud name']");
         this.selectPopup = page.locator("[data-qa=\"select-popup\"]");
         this.selectPopupApplyButton = page.locator("[data-qa='client_restrictions_selector__apply']");
         this.commentaryField = page.locator("//textarea[@placeholder='Describe your decision']");
-        this.applyUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Apply']");
-        this.clientIdsButton = page.locator(uploadDrawerLocator + "//div/*[@title='Client IDs']");
-        this.deleteUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Remove']");
+        this.applyUploadButton = page.locator(UPLOAD_DRAWER_LOCATOR + "//button/*[text()='Apply']");
+        this.clientIdsButton = page.locator(UPLOAD_DRAWER_LOCATOR + "//div/*[@title='Client IDs']");
+        this.deleteUploadButton = page.locator(UPLOAD_DRAWER_LOCATOR + "//button/*[text()='Remove']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
         this.warningToast = page.locator("//*[contains(@class, 'g-toast_theme_warning')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
@@ -150,11 +151,11 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void selectBrandToUpload(String brandName) {
-        page.click(String.format(brandSelectButtonLocatorPattern, brandName));
+        page.click(String.format(BRAND_SELECT_BUTTON_LOCATOR_PATTERN, brandName));
     }
 
     public void selectFraudSource(String sourceName) {
-        page.click(String.format(sourceSelectButtonLocatorPattern, sourceName));
+        page.click(String.format(SOURCE_SELECT_BUTTON_LOCATOR_PATTERN, sourceName));
     }
 
     public void clickVindexFraudSource() {
@@ -164,7 +165,7 @@ public class FraudstersPage extends AbstractPage {
     public void selectClientIdsAndBrandToUpload(String brandName) {
         clientIdsButton.hover();
         clientIdsButton.click();
-        page.click(String.format(brandSelectButtonLocatorPattern, brandName));
+        page.click(String.format(BRAND_SELECT_BUTTON_LOCATOR_PATTERN, brandName));
     }
 
     public void typeClientID(String clientID) {
@@ -224,7 +225,7 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void addSelectedFraudAdd(String fraud, String status) {
-        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
         page.locator(element).hover();
         page.locator(element).hover();
         String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
@@ -233,7 +234,7 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void addSelectedFraud(FraudType fraud, FraudTypeStatus status) {
-        String element = String.format(fraudDropoutListElementLocatorPattern, fraud.getName());
+        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud.getName());
         page.locator(element).hover();
         page.locator(element).hover();
         String subelement = String.format(
@@ -267,7 +268,7 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void addSelectedFraudAddWithSource(String fraud, String status, String source) {
-        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
         page.locator(element).hover();
         page.locator(element).hover();
         String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
@@ -277,7 +278,7 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void addSelectedFraudDelete(String fraud) {
-        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
         page.locator(element).hover();
         page.locator(element).hover();
         page.locator(element).click();
@@ -296,7 +297,7 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void selectRestriction(String restriction) {
-        String locator = String.format(restrictionPopupListElementLocatorPattern, restriction);
+        String locator = String.format(RESTRICTION_POPUP_LIST_ELEMENT_LOCATOR_PATTERN, restriction);
         page.locator(locator).click();
     }
 
@@ -304,7 +305,7 @@ public class FraudstersPage extends AbstractPage {
      * @param level "Medium", "Low", etc.
      */
     public void selectRestrictionWorseTradingLevel(String level) {
-        String locator = String.format(restrictionWorseTradingPopupListElementLocatorPattern, level);
+        String locator = String.format(RESTRICTION_WORSE_TRADING_POPUP_LIST_ELEMENT_LOCATOR_PATTERN, level);
         page.locator(locator).click();
     }
 
@@ -398,5 +399,19 @@ public class FraudstersPage extends AbstractPage {
         page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName()))
                 .hover();
         page.locator(FRAUD_SUBTYPE_FORMAT.formatted(subtype.getName())).click();
+    }
+
+    public void addFraud(FraudType fraud, FraudTypeStatus status) {
+        addFraudButton.click();
+        page.locator(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN.formatted(fraud.name()))
+                .hover();
+        page.locator(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN.formatted(fraud.name()))
+                .click();
+        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(
+                        fraud.getCode(), status.getStatus(), status.getDisplayName()))
+                .hover();
+        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(
+                        fraud.getCode(), status.getStatus(), status.getDisplayName()))
+                .click();
     }
 }
