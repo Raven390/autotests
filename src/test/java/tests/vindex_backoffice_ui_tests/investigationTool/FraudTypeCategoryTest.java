@@ -135,7 +135,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Login and navigate
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsOps24User();
+        keycloackPage.loginAsTradingOpsUser();
         investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.navigateToClient(tradingCrmUser.ucid);
@@ -178,7 +178,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
 
         // Login and navigate
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.navigateToClient(paymentCrmUser.ucid);
@@ -251,7 +251,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
         kafka.produceMessage(tradingAlert.alertId, objectMapper.writeValueAsString(tradingAlert), KAFKA_TOPIC_ALERTS);
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsOps24User();
+        keycloackPage.loginAsTradingOpsUser();
 
         // Check Trading mode
         investigationPage.navigateToMain();
@@ -279,7 +279,7 @@ class FraudTypeCategoryTest extends TestBaseWeb {
                 paymentAlert.getId().toString(), objectMapper.writeValueAsString(paymentAlert), KAFKA_TOPIC_ALERTS);
 
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
 
         // Check Trading mode
         investigationPage.navigateToMain();

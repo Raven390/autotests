@@ -2,6 +2,7 @@ package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.data.enums.FraudSource.*;
+import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
@@ -101,7 +102,7 @@ class MassUploadTest extends TestBaseWeb {
                 client3.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
         String source = getRandomFraudSource().getDisplayName();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
@@ -166,7 +167,7 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
         String source = VINDEX.getDisplayName();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
@@ -215,7 +216,7 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
         String source = RA_RAISE.getDisplayName();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
@@ -267,7 +268,7 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
         String source = ADDITIONAL_REVIEW.getDisplayName();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
@@ -319,7 +320,7 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
         String source = INSIGHT.getDisplayName();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
@@ -371,7 +372,7 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(client1.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
         String source = FRONTEND.getDisplayName();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
@@ -431,7 +432,7 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAddWithSource(fraudTypeOld.getDisplayName(), "Confirmed", source);
+        fraudstersPage.addSelectedFraudAddWithSource(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName(), source);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();

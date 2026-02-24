@@ -15,8 +15,11 @@ import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 
@@ -96,7 +99,7 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
     @DisplayName("Payment Team can manage PAYMENT fraud type without active payment alerts - verify UI blocks")
     void paymentTeamManagePaymentFraudWithoutAlerts() throws Exception {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsPaymentOpsUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
@@ -110,11 +113,7 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
 
         // Verify that "Detected fraud" section is visible (selected fraud should be displayed)
         String selectedFraud = resolvePage.getSelectedFraud();
-        assertThat(
-                "Verify that detected fraud section shows selected fraud",
-                selectedFraud.contains("Chargeback"),
-                is(true));
-
+        assertThat("Verify that detected fraud section shows selected fraud", selectedFraud, is(CHARGEBACK.getName()));
         // Verify that "Restrictions" section is visible1
         List<String> restrictionsList = resolvePage.getRestrictionsList();
         assertThat("Verify that restrictions section is accessible", restrictionsList.isEmpty(), is(false));
@@ -123,8 +122,20 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
         boolean isSuggestedDeductionVisible = resolvePage.isSuggestedDeductionSectionVisible();
         assertThat("Verify that Suggested Deduction block is NOT displayed", isSuggestedDeductionVisible, is(false));
 
-        resolvePage.checkDisplayedFraudSources(getFraudSourceNames(getPaymentFraudSourcesList()));
-        resolvePage.checkHiddenFraudSources(getFraudSourceNames(getTradingOnlyFraudSourcesList()));
+        List<String> displayedSources = resolvePage.getDisplayedFraudSources();
+        assertThat(
+                "Verify that payment fraud sources are displayed",
+                displayedSources,
+                containsInAnyOrder(
+                        getFraudSourceNames(getPaymentFraudSourcesList()).toArray()));
+
+        List<String> tradingSources = getFraudSourceNames(getTradingOnlyFraudSourcesList());
+        for (String source : tradingSources) {
+            assertThat(
+                    "Verify that trading fraud source is NOT displayed: " + source,
+                    displayedSources,
+                    not(hasItem(source)));
+        }
 
         // Verify that comment input is visible
         resolvePage.fillCommentAndApply("Payment fraud management test");
