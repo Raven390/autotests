@@ -63,6 +63,7 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_COUNT_TRADING_DAYS =
             "Clickhouse api. Get count trading days";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS = "Clickhouse api. Get deposits";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CRYPTO_DEPOSITS = "Clickhouse api. Get crypto deposits";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FAST_TRADES = "Clickhouse api. Get fast trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY =
             "Clickhouse api. Get floating trades group by";
