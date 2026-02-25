@@ -1,10 +1,11 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment.subrules;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.api.RestrictionHelper.setRestrictionAPITrade;
 import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
-import static helpers.data.enums.FraudType.EXCHANGER;
+import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.Restriction.*;
 import static helpers.data.rules.payments.router_rule_crm_payment.EnoughTradesDataFactory.setupEnoughTradesRuleData;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
@@ -20,6 +21,7 @@ import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecu
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataDeleteHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.FraudTypeStatus;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -135,10 +137,14 @@ class EnoughTradesRuleTest {
     }
 
     @Test
-    @AllureId("2157")
-    @DisplayName("Enough trades rule. Client have Deposits amd Close Only restrictions . Element id: Event_1o3t1d2")
-    void enoughTradesTest4() throws Exception {
-        DataHelper data = dbDataMap.get("4");
+    @AllureId("2413")
+    @DisplayName(
+            "Enough trades rule. Client have Deposits amd Close Only restrictions. fraud EXCHANGER. Element id: Event_1o3t1d2")
+    void enoughTradesTest401() throws Exception {
+        DataHelper data = dbDataMap.get("401");
+
+        addFraudForClient(data.clientHelper, EXCHANGER, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
 
         setRestrictionAPIGeneral(data.clientHelper.getUcid(), DEPOSITS.getCode());
         setRestrictionAPITrade(
@@ -149,8 +155,216 @@ class EnoughTradesRuleTest {
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1o3t1d2", data.crmWithdrawalEventV2.getId(), "enough_trades");
-        checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementIdSubrule(
+                "Event_1o3t1d2",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(109));
+    }
+
+    @Test
+    @AllureId("2414")
+    @DisplayName(
+            "Enough trades rule. Client have Deposits amd Close Only restrictions. fraud UPGRADER . Element id: Event_1o3t1d2")
+    void enoughTradesTest402() throws Exception {
+        DataHelper data = dbDataMap.get("402");
+
+        addFraudForClient(data.clientHelper, UPGRADER, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), DEPOSITS.getCode());
+        setRestrictionAPITrade(
+                data.clientHelper.getUcid(),
+                data.crmTbAccountForMtObject.getAccount(),
+                data.crmTbAccountForMtObject.getServerIdSt(),
+                CLOSE_ONLY_MODE.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1o3t1d2",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(109));
+    }
+
+    @Test
+    @AllureId("2415")
+    @DisplayName(
+            "Enough trades rule. Client have Deposits amd Close Only restrictions. fraud CHARGEBACK . Element id: Event_1o3t1d2")
+    void enoughTradesTest403() throws Exception {
+        DataHelper data = dbDataMap.get("403");
+
+        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), DEPOSITS.getCode());
+        setRestrictionAPITrade(
+                data.clientHelper.getUcid(),
+                data.crmTbAccountForMtObject.getAccount(),
+                data.crmTbAccountForMtObject.getServerIdSt(),
+                CLOSE_ONLY_MODE.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1o3t1d2",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(109));
+    }
+
+    @Test
+    @AllureId("2416")
+    @DisplayName(
+            "Enough trades rule. Client have Deposits amd Close Only restrictions. fraud MONEY_LAUNDRY . Element id: Event_1o3t1d2")
+    void enoughTradesTest404() throws Exception {
+        DataHelper data = dbDataMap.get("404");
+
+        addFraudForClient(data.clientHelper, MONEY_LAUNDRY, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), DEPOSITS.getCode());
+        setRestrictionAPITrade(
+                data.clientHelper.getUcid(),
+                data.crmTbAccountForMtObject.getAccount(),
+                data.crmTbAccountForMtObject.getServerIdSt(),
+                CLOSE_ONLY_MODE.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1o3t1d2",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(109));
+    }
+
+    @Test
+    @AllureId("2417")
+    @DisplayName(
+            "Enough trades rule. Client have Deposits amd Close Only restrictions. fraud CLAIMER . Element id: Event_1o3t1d2")
+    void enoughTradesTest405() throws Exception {
+        DataHelper data = dbDataMap.get("405");
+
+        addFraudForClient(data.clientHelper, CLAIMER, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), DEPOSITS.getCode());
+        setRestrictionAPITrade(
+                data.clientHelper.getUcid(),
+                data.crmTbAccountForMtObject.getAccount(),
+                data.crmTbAccountForMtObject.getServerIdSt(),
+                CLOSE_ONLY_MODE.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1o3t1d2",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(109));
+    }
+
+    @Test
+    @AllureId("2418")
+    @DisplayName(
+            "Enough trades rule. Client have Deposits amd Close Only restrictions. fraud ATO . Element id: Event_1o3t1d2")
+    void enoughTradesTest406() throws Exception {
+        DataHelper data = dbDataMap.get("406");
+
+        addFraudForClient(data.clientHelper, ATO, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), DEPOSITS.getCode());
+        setRestrictionAPITrade(
+                data.clientHelper.getUcid(),
+                data.crmTbAccountForMtObject.getAccount(),
+                data.crmTbAccountForMtObject.getServerIdSt(),
+                CLOSE_ONLY_MODE.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1o3t1d2",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -205,7 +419,6 @@ class EnoughTradesRuleTest {
     @DisplayName("Enough trades rule. Client not have any deposits . Element id: Event_1mskm4k")
     void enoughTradesTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
-
         setRestrictionAPIGeneral(data.clientHelper.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
