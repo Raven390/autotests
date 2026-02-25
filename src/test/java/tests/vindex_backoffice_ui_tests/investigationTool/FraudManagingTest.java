@@ -13,8 +13,11 @@ import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteObjectFromDb;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
@@ -271,8 +274,20 @@ class FraudManagingTest extends TestBaseWeb {
         boolean isSuggestedDeductionVisible = resolvePage.isNoDeductionBlockVisible();
         assertThat("Verify that Suggested Deduction block is displayed", isSuggestedDeductionVisible, is(true));
 
-        resolvePage.checkDisplayedFraudSources(getFraudSourceNames(getTradingFraudSourcesList()));
-        resolvePage.checkHiddenFraudSources(getFraudSourceNames(getPaymentOnlyFraudSourcesList()));
+        List<String> displayedSources = resolvePage.getDisplayedFraudSources();
+        assertThat(
+                "Verify that trading fraud sources are displayed",
+                displayedSources,
+                containsInAnyOrder(
+                        getFraudSourceNames(getTradingFraudSourcesList()).toArray()));
+
+        List<String> paymentOnlySources = getFraudSourceNames(getPaymentOnlyFraudSourcesList());
+        for (String source : paymentOnlySources) {
+            assertThat(
+                    "Verify that payment-only fraud source is NOT displayed: " + source,
+                    displayedSources,
+                    not(hasItem(source)));
+        }
 
         Allure.step("Verify that comment input is visible");
         resolvePage.fillCommentAndApply("Payment fraud management test");

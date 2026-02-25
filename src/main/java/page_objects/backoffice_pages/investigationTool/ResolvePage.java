@@ -1,5 +1,6 @@
 package page_objects.backoffice_pages.investigationTool;
 
+import static helpers.data.enums.FraudSource.VINDEX;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -20,23 +21,6 @@ import java.util.List;
 import page_objects.backoffice_pages.AbstractPage;
 
 public class ResolvePage extends AbstractPage {
-
-    private static final String INVESTIGATION_COMPLETED = "Investigation completed";
-    private static final String FRAUD_MANAGEMENT_COMPLETED = "Fraud management completed";
-    public static final String FRAUD_TYPE_STATUS_SELECTOR_FORMATTER =
-            "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
-    public static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
-    public static final String FRAUD_TYPE_STATUS_FORMAT = "//*[@class='v-menuitem']/*[text()='%s']";
-    public static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT = "//*[@class='v-sub-menu']/*[text()='%s']";
-    public static final String FRAUD_SUBTYPE_FORMAT =
-            "//*[(@class='v-menuitem') and contains(@data-qa, '_fraud_type_selector__submenu_')]/*[text()='%s']";
-    public static final String REJECTION_REASON_INPUT_SELECTOR = ".v-rejection-reason-plain-input__input";
-    public static final String FRAUD_MENU_ITEM_SELECTOR = "div.g-popup__content div.v-sub-menu__anchor";
-    public static final String DRAWER_HEADER_SELECTOR = "[data-qa='drawer_header']";
-    public static final String RESOLUTION = "Resolution";
-    public static final String CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR =
-            "div[data-qa='client_report_fraud_drawer__fraud_type_selector__item_%s__%s']";
-    private static final String sourceSelectButtonLocatorPattern = "[data-qa='buttons_list__item__%s']";
 
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
@@ -112,6 +96,24 @@ public class ResolvePage extends AbstractPage {
     private final Locator fraudAiDecisionMismatchConfirmationText;
     private final Locator fraudAiDecisionMismatchConfirmButton;
     private final Locator fraudAiDecisionMismatchReassignButton;
+
+    private static final String INVESTIGATION_COMPLETED = "Investigation completed";
+    private static final String FRAUD_MANAGEMENT_COMPLETED = "Fraud management completed";
+    public static final String FRAUD_TYPE_STATUS_SELECTOR_FORMATTER =
+            "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
+    public static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
+    public static final String FRAUD_TYPE_STATUS_FORMAT = "//*[@class='v-menuitem']/*[text()='%s']";
+    public static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT = "//*[@class='v-sub-menu']/*[text()='%s']";
+    public static final String FRAUD_SUBTYPE_FORMAT =
+            "//*[(@class='v-menuitem') and contains(@data-qa, '_fraud_type_selector__submenu_')]/*[text()='%s']";
+    public static final String REJECTION_REASON_INPUT_SELECTOR = ".v-rejection-reason-plain-input__input";
+    public static final String FRAUD_MENU_ITEM_SELECTOR = "//div[@class='g-popup__content']//div[text()='%s']";
+    public static final String DRAWER_HEADER_SELECTOR = "[data-qa='drawer_header']";
+    public static final String RESOLUTION = "Resolution";
+    public static final String CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR =
+            "div[data-qa='client_report_fraud_drawer__fraud_type_selector__item_%s__%s']";
+    private static final String SOURCE_SELECT_BUTTON_LOCATOR = "//div[@data-qa ='buttons_list']//button";
+    private static final String SOURCE_SELECT_BUTTON_LOCATOR_PATTERN = "[data-qa='buttons_list__item__%s']";
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -314,14 +316,14 @@ public class ResolvePage extends AbstractPage {
         }
     }
 
+    @Step("Click Investigate button")
     public void clickInvestigateButton() {
-        Allure.step("Click Investigate button");
         investigateButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         investigateButton.click();
     }
 
+    @Step("Click Investigate button")
     public void clickInvestigateButtonIfPresented() {
-        Allure.step("Click Investigate button");
         waitForPageToLoad();
         page.waitForTimeout(200);
         while (!investigateButton.isVisible()) {
@@ -371,9 +373,9 @@ public class ResolvePage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
+    @Step("Select fraud source")
     public void selectFraudSourceManage(String sourceName) {
-        Allure.step("select fraud source");
-        page.click(String.format(sourceSelectButtonLocatorPattern, sourceName));
+        page.click(String.format(SOURCE_SELECT_BUTTON_LOCATOR_PATTERN, sourceName));
     }
 
     @Step("Resolve and reject all withdrawals")
@@ -431,20 +433,12 @@ public class ResolvePage extends AbstractPage {
         completeInvestigationButton.click();
     }
 
-    public void checkDisplayedFraudSources(List<String> sources) {
-        Allure.step("Check that expected fraud sources is displayed");
-        for (String source : sources) {
-            Locator sourceButton = page.locator(String.format(sourceSelectButtonLocatorPattern, source));
-            sourceButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        }
-    }
-
-    public void checkHiddenFraudSources(List<String> sources) {
-        Allure.step("Check that some fraud sources is hidden as expected");
-        for (String source : sources) {
-            Locator sourceButton = page.locator(String.format(sourceSelectButtonLocatorPattern, source));
-            sourceButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
-        }
+    @Step("Get displayed fraud sources")
+    public List<String> getDisplayedFraudSources() {
+        return page.locator(SOURCE_SELECT_BUTTON_LOCATOR).all().stream()
+                .filter(Locator::isVisible)
+                .map(Locator::innerText)
+                .toList();
     }
 
     void clickConfirmFinishPaymentInvestigationButton() {
@@ -494,11 +488,11 @@ public class ResolvePage extends AbstractPage {
 
     public void reportFraud(FraudType fraud, FraudTypeStatus status) {
         fraudListButton.click();
-        page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
+        page.locator(FRAUD_MENU_ITEM_SELECTOR.formatted(fraud.getName())).hover();
         page.locator(CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR.formatted(
                         fraud.getCode(), status.getDisplayName().toLowerCase()))
                 .click();
-        selectFraudSourceManage("Vindex");
+        selectFraudSourceManage(VINDEX.getDisplayName());
     }
 
     public void addRestriction(String... addedRestriction) {
@@ -510,18 +504,18 @@ public class ResolvePage extends AbstractPage {
         applyButton.click();
     }
 
+    @Step("Click add deduction button")
     public void previouslyReportedFraudAddDeduction() {
-        Allure.step("Click add deduction button");
         addDeductionButton.click();
     }
 
+    @Step("Click 'Reset fraud changes' button")
     public void resetFraudsChanges() {
-        Allure.step("click 'Reset fraud changes' button");
         resetFraudChangesButton.click();
     }
 
+    @Step("Click 'Reset restriction changes' button")
     public void resetRestrictionChanges() {
-        Allure.step("click 'Reset restriction changes' button");
         resetRestrictionsChangesButton.click();
     }
 
@@ -574,7 +568,6 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Click delete fraud and confirm the popup")
     public void deleteFraudByName(String fraudName) {
-        Allure.step("Click delete fraud and confirm the popup");
         page.locator(String.format(DELETE_FRAUD_BY_NAME_PATTERN, fraudName)).click();
         com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(fraudDeletionPopup)
                 .containsText("Are you sure that the client should not be identified with this fraud anymore?");
@@ -783,8 +776,8 @@ public class ResolvePage extends AbstractPage {
         addRestrictionButton.click();
     }
 
+    @Step("Check symbol dropdown is not visible")
     public void checkSymbolDropdownIsNotVisible() {
-        Allure.step("Check symbol dropdown is not visible");
         waitForPageToLoad();
         page.waitForTimeout(200);
         waitForPageToLoad();

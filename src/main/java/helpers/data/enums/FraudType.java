@@ -116,7 +116,13 @@ public enum FraudType {
             "Account takeover",
             "Fraudster gains unauthorized access to a legitimate client account and uses it to withdraw or move funds.",
             PAYMENT),
-    RAF_ABUSE("RAF_ABUSE", "RAF abuse", "", false, PAYMENT);
+    RAF_ABUSE("RAF_ABUSE", "RAF abuse", "", false, PAYMENT),
+    INSUFFICIENT_TRADING_ACTIVITY(
+            "INSUFFICIENT_TRADING_ACTIVITY",
+            "Insufficient Trading Activity",
+            "Insufficient Trading Activity",
+            true,
+            PAYMENT);
 
     private final String code;
     private final String name;
