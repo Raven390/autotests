@@ -151,14 +151,12 @@ public class WithdrawalNotificationDataFactory {
     }
 
     private static DataHelper getWithdrawalNotificationTest8Data() {
+        withdrawalNotificationRuleClient8.setUserId(Integer.valueOf(Utils.getRandomIntPositive()
+                        .toString()
+                        .substring(0, Utils.getRandomIntPositive().toString().length() - 2)
+                + "99"));
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient8);
         data.getCrmWithdrawalEventV2().setCheckName("");
-        String newId = data.clientHelper
-                        .getUserId()
-                        .toString()
-                        .substring(0, data.clientHelper.getUserId().toString().length() - 2)
-                + "99";
-        data.clientHelper.setUserId(Integer.parseInt(newId));
         data.crmWithdrawalEventV2.setClientId(data.clientHelper.getUserId());
         return data;
     }
