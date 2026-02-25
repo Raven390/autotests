@@ -2,8 +2,7 @@ package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.payment_gate.payments.PaymentsRequests.postPayments;
-import static helpers.api.PaymentGateHelper.sendRiskApproveDecision;
-import static helpers.api.PaymentGateHelper.sendRiskRejectDecision;
+import static helpers.api.PaymentGateHelper.*;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.asserts.AcknowledgeAssertsHelper.assertAcknowledge;
 import static helpers.asserts.AlertsAssertsHelper.assertRiskWithdrawalAlert;
@@ -69,10 +68,6 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
                 "post_pending_decision",
                 data.crmWithdrawalEventV2.getId(),
                 Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
-        checkElementId(
-                "payment_branch_end_for_withdrawal",
-                data.crmWithdrawalEventV2.getId(),
-                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
         assertPaymentEvent(data, paymentId, "withdrawal", "PENDING");
         assertPaymentDetails(data, paymentId, "Risk Audit");
@@ -89,6 +84,8 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         sleep(30_000);
         sendRiskApproveDecision(paymentId);
 
+        checkElementId(
+                "Gateway_0g4c17j", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
         checkElementId(
                 "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
 
@@ -125,6 +122,8 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         sleep(20_000);
         sendRiskRejectDecision(paymentId);
 
+        checkElementIdNotPresent(
+                "Gateway_0g4c17j", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
         checkElementId("send_to_crm", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
@@ -144,6 +143,19 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
 
         checkElementId(
                 "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Disabled("Now we don't have exits with 3xx code")
+    @Test
+    @AllureId("")
+    @DisplayName("Router Rule shadow mode. Withdrawal auto reject. ElementId: XXX")
+    void routerRuleShadowModeWithdrawalTest7() throws Exception {
+        DataHelper data = dataMap.get("7");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("XXX", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 
     @Test
@@ -172,5 +184,19 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
 
         checkElementId(
                 "send_acknowledge", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Disabled("Not implemented")
+    @Test
+    @AllureId("7")
+    @DisplayName(
+            "Router Rule shadow mode. Don't wait payment branch if brand is in shadow mode brands list. ElementId: Flow_1tqyroi")
+    void routerRuleShadowModeWithdrawalTest6() throws Exception {
+        DataHelper data = dataMap.get("6");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("Flow_1tqyroi", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 }
