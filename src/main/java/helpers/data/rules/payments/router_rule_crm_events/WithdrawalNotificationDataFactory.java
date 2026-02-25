@@ -202,16 +202,14 @@ public class WithdrawalNotificationDataFactory {
         return data;
     }
 
-    private static DataHelper getWithdrawalNotificationTest11Data() throws IOException {
-        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient11);
-        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
-        String newId = data.clientHelper
-                        .getUserId()
+    private static DataHelper getWithdrawalNotificationTest11Data() {
+        withdrawalNotificationRuleClient11.setUserId(Integer.valueOf(Utils.getRandomIntPositive()
                         .toString()
-                        .substring(0, data.clientHelper.getUserId().toString().length() - 2)
-                + "99";
-        data.clientHelper.setUserId(Integer.parseInt(newId));
-        data.getCrmWithdrawalEvent().setClientId((long) data.clientHelper.getUserId());
+                        .substring(0, Utils.getRandomIntPositive().toString().length() - 2)
+                + "99"));
+        DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient11);
+        data.getCrmWithdrawalEventV2().setCheckName("");
+        data.crmWithdrawalEventV2.setClientId(data.clientHelper.getUserId());
         return data;
     }
 
