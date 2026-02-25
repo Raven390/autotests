@@ -182,4 +182,21 @@ class CrmPaymentShadowModeTransferToWATests extends TestBaseRule {
                 data.transferToWaEvent.getId().toString(),
                 Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
+
+    @Disabled("Not implemented")
+    @Test
+    @AllureId("")
+    @DisplayName(
+            "Router Rule transfer to wallet. Exit if brand is shadow brands list and Auto approve/reject . ElementId: payment_branch_end_for_withdrawal")
+    void routerRuleShadowModeTransferTest6() throws Exception {
+        DataHelper data = dataMap.get("6");
+        setupData(data);
+
+        produceTransferToWaMessageToCrmPaymentTopic(data.transferToWaEvent);
+
+        checkElementId(
+                "payment_branch_end_for_withdrawal",
+                data.transferToWaEvent.getId().toString(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
 }

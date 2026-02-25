@@ -21,6 +21,8 @@ public class RouterRuleCrmPaymentShadowModeFactory {
     private static final ClientHelper testClient3 = getRandomVantageClientAllFields();
     private static final ClientHelper testClient4 = getRandomVantageClientAllFields();
     private static final ClientHelper testClient5 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient6 = getRandomVantageClientAllFields();
+    private static final ClientHelper testClient7 = getRandomVantageClientAllFields();
 
     @Description("Create data for Shadow mode Router rule on withdrawal event")
     private static DataHelper getTest(ClientHelper client) {
@@ -88,6 +90,18 @@ public class RouterRuleCrmPaymentShadowModeFactory {
         return data;
     }
 
+    private static DataHelper getTest6Data() {
+        DataHelper data = getTest(testClient6);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1d);
+        return data;
+    }
+
+    private static DataHelper getTest7Data() {
+        DataHelper data = getTest(testClient7);
+        data.crmWithdrawalEventV2.setWithdrawalAmountUSD(1d);
+        return data;
+    }
+
     public static Map<String, DataHelper> setupRouterRuleShadowModeWithdrawalData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -97,6 +111,8 @@ public class RouterRuleCrmPaymentShadowModeFactory {
         map.put("3", getTest3Data());
         map.put("4", getTest4Data());
         map.put("5", getTest5Data());
+        map.put("6", getTest6Data());
+        map.put("7", getTest7Data());
         return map;
     }
 }
