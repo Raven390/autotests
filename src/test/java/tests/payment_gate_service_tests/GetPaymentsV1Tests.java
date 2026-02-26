@@ -233,7 +233,7 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat(
                 "Assert decisions list present",
                 decision.getAttributes().getFirst().getCode(),
-                is("1"));
+                is("PAYMENT_PROFILE_CURRENT"));
         assertThat(
                 "Assert decisions list present",
                 decision.getAttributes().getFirst().getValue(),
