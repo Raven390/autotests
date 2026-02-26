@@ -105,6 +105,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(client.getUcid());
         deleteUserFromAbuseRegistry(client.getUcid());
         cleanUserRestrictionGeneral(client.getUcid());
+        cleanUserRestrictionTrading(client.getUcid());
     }
 
     @Test
@@ -430,7 +431,6 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
-        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(
@@ -476,7 +476,6 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.BONUS_ABUSE);
-        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(
@@ -499,7 +498,6 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
-        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -592,7 +590,6 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
-        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -624,7 +621,6 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
-        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(
@@ -655,7 +651,6 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
-        resolvePage.selectAllAccountsAsIllegalProfit();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
         waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(

@@ -20,6 +20,7 @@ import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
+import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.backoffice_db.user_action_audit.UserActionAudit;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_kyc_files.CrmTbKycFilesObject;
@@ -152,9 +153,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
                 null,
                 "VIEW",
                 "KYC_DATA",
-                String.format(
-                        "{\"%s\": \"%s\", \"%s\": \"%s\"}",
-                        "ucid", crmTbUser.ucid, "fileName", FILE_KYC_NAME.substring(1)));
+                String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "fileName", FILE_KYC_NAME));
         assertThat(
                 "Assert that user_action_audit table contains expected data",
                 userActionAudits,
@@ -277,7 +276,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
                 "ROUTING",
                 String.format(
                         "{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}",
-                        "path", "/investigation/", crmTbUser.ucid, "/connections", "ucid", crmTbUser.ucid));
+                        "path", "/investigation/", crmTbUser.ucid, "/connections/graph", "ucid", crmTbUser.ucid));
         assertThat(
                 "Assert that user_action_audit table contains expected data",
                 userActionAudits,
@@ -307,10 +306,24 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.waitForPageToLoad();
         investigationPage.navigateToClient(crmTbUser.ucid);
         investigationPage.investigateClientCard();
+        Integer investigationId = getObjectsFromDB(
+                        POSTGRES,
+                        BO_INVESTIGATION_TABLE_NAME,
+                        "client_ucid = '%s'".formatted(crmTbUser.getUcid()),
+                        Investigation.class)
+                .getFirst()
+                .getId();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 POSTGRES, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class);
         UserActionAudit expectedUserActionAudit = new UserActionAudit(
-                null, userId, null, "ASSIGN", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+                null,
+                userId,
+                null,
+                "START_INVESTIGATION",
+                "CLIENT",
+                String.format(
+                        "{\"%s\": \"%s\", \"%s\": \"%s\"}",
+                        "ucid", crmTbUser.ucid, "investigationId", investigationId));
         assertThat(
                 "Assert that user_action_audit table contains expected data",
                 userActionAudits,
