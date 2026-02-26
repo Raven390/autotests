@@ -158,6 +158,6 @@ class CustomRuleTests extends TestBaseRule {
         checkElementIdNotPresent("setRestriction", data.customEvent.getId(), CUSTOM_RULE.getProcessId());
 
         // Verify restriction
-        checkWorseTradingRestrictionApplied(data, data.customEvent.getMessage());
+        checkWorseTradingRestrictionApplied(data, data.customEvent.getMessage(), "LOW");
     }
 }

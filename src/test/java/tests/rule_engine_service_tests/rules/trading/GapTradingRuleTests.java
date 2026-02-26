@@ -116,8 +116,7 @@ class GapTradingRuleTests extends TestBaseRule {
         checkTradingAlert(
                 data,
                 alerts,
-                "Client has open trades with " + data.getTradeEvent().symbol
-                        + " and has open positions after market close",
+                "Client traded with " + data.getTradeEvent().symbol + " and has open positions after market close",
                 "GAP_TRADING",
                 "Open trade",
                 "Gap trading");

@@ -19,11 +19,11 @@ public class PaymentsRequestBodyFactory {
         PostDecisionsRequestBody body = new PostDecisionsRequestBody();
         body.setDecisionType(Decision.FINAL_REJECT.getType());
         body.setDecisionCode(Decision.FINAL_REJECT.getCode());
-        body.setRejectionCode(0);
+        body.setRejectionCode(2);
         body.setDecidedAt(getRandomDateTimeIsoUtc());
         // Insert example attributes for rejection body
         ArrayList<PostDecisionsRequestBody.Attribute> attrs = new ArrayList<>();
-        attrs.add(new PostDecisionsRequestBody.Attribute("ID", "Passport"));
+        attrs.add(new PostDecisionsRequestBody.Attribute("PAYMENT_PROFILE_CURRENT", "Payment profile"));
         body.setAttributes(attrs);
         return body;
     }
@@ -41,11 +41,11 @@ public class PaymentsRequestBodyFactory {
         PutDecisionsRequestBody body = new PutDecisionsRequestBody();
         body.setDecisionType(Decision.FINAL_REJECT.getType());
         body.setDecisionCode(Decision.FINAL_REJECT.getCode());
-        body.setRejectionCode(0);
+        body.setRejectionCode(2);
         body.setDecidedAt(getRandomDateTimeIsoUtc());
         // Insert example attributes for rejection body
         ArrayList<PutDecisionsRequestBody.Attribute> attrs = new ArrayList<>();
-        attrs.add(new PutDecisionsRequestBody.Attribute("ID", "Passport"));
+        attrs.add(new PutDecisionsRequestBody.Attribute("PAYMENT_PROFILE_CURRENT", "Payment profile"));
         body.setAttributes(attrs);
         return body;
     }

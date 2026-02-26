@@ -53,7 +53,8 @@ public class RestrictionsAssertsHelper {
     }
 
     @Step("Check that worse trading restriction is applied")
-    public static void checkWorseTradingRestrictionApplied(DataHelper data, String comment) throws Exception {
+    public static void checkWorseTradingRestrictionApplied(DataHelper data, String comment, String level)
+            throws Exception {
         List<ClientTradingEnvironmentRestrictionEntity> restriction = getObjectsFromDB(
                 DbName.POSTGRES,
                 MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION,
@@ -73,9 +74,11 @@ public class RestrictionsAssertsHelper {
                 ASSERT_RESTRICTION_TITLE,
                 restriction.getFirst().getRestrictionId(),
                 is(Restriction.WORSE_TRADING.getId()));
-        assertThat(ASSERT_RESTRICTION_TITLE, restriction.getFirst().getLevel(), is("LOW"));
+        assertThat(ASSERT_RESTRICTION_TITLE, restriction.getFirst().getLevel().toString(), is(level));
         assertThat(
-                ASSERT_RESTRICTION_TITLE, restriction.getFirst().getStatus(), is(RestrictionStatus.APPLIED.getValue()));
+                ASSERT_RESTRICTION_TITLE,
+                restriction.getFirst().getStatus().getValue(),
+                is(RestrictionStatus.APPLIED.getValue()));
         assertThat(ASSERT_RESTRICTION_TITLE, restriction.getFirst().getComment(), is(comment));
         assertThat(ASSERT_RESTRICTION_TITLE, restriction.getFirst().getApplicationReason(), is(nullValue()));
         assertThat(ASSERT_RESTRICTION_TITLE, restriction.getFirst().getCancellationReason(), is(nullValue()));
