@@ -11,6 +11,7 @@ import static helpers.asserts.WithdrawalApprovalAssertsHelper.assertWithdrawalAp
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.Restriction.LOGIN_CRM;
+import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
 import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmPaymentShadowModeFactory.setupRouterRuleShadowModeWithdrawalData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
@@ -42,7 +43,7 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
     private static Map<String, DataHelper> dataMap = new HashMap<>();
 
     @BeforeAll
-    static void setup() throws IOException {
+    static void setup() throws IOException, InterruptedException {
         startSshTunnel();
         enableCRMEmulator();
         dataMap = setupRouterRuleShadowModeWithdrawalData();
@@ -147,7 +148,6 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
 
     @Disabled("Now we don't have exits with 3xx code")
     @Test
-    @AllureId("")
     @DisplayName("Router Rule shadow mode. Withdrawal auto reject. ElementId: XXX")
     void routerRuleShadowModeWithdrawalTest7() throws Exception {
         DataHelper data = dataMap.get("7");
@@ -188,7 +188,6 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
 
     @Disabled("Not implemented")
     @Test
-    @AllureId("7")
     @DisplayName(
             "Router Rule shadow mode. Don't wait payment branch if brand is in shadow mode brands list. ElementId: Flow_1tqyroi")
     void routerRuleShadowModeWithdrawalTest6() throws Exception {
@@ -198,5 +197,116 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
         checkElementId("Flow_1tqyroi", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2421")
+    @DisplayName("Router Rule shadow mode. Risk Reject decision NEVER waits for Payment decision.")
+    void routerRuleShadowModeWithdrawalTest8() throws Exception {
+        DataHelper data = dataMap.get("8");
+        setupData(data);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("send_alert", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId("sendCsAlerts", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementIdNotPresent(
+                "send_to_crm", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
+                .getPaymentId();
+        sendRiskRejectDecision(paymentId);
+
+        checkElementId("send_to_crm", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementIdNotPresent(
+                "Gateway_0l8mqgq", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2422")
+    @DisplayName("Router Rule shadow mode. Payment decision ALWAYS waits for Risk decision.")
+    void routerRuleShadowModeWithdrawalTest9() throws Exception {
+        DataHelper data = dataMap.get("9");
+        setupData(data);
+
+        setRestrictionAPIGeneral(data.clientHelper.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId("send_alert", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId(
+                "Activity_06e7z5l", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId(
+                "Gateway_0l8mqgq", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementIdNotPresent(
+                "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
+                .getPaymentId();
+        sendRiskApproveDecision(paymentId);
+
+        checkElementId(
+                "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementIdNotPresent(
+                "payment_branch_end_for_withdrawal",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2423")
+    @DisplayName("Router Rule shadow mode. Risk Approve decision ALWAYS waits for Payment decision.")
+    void routerRuleShadowModeWithdrawalTest10() throws Exception {
+        DataHelper data = dataMap.get("10");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "put_approve_decision", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId(
+                "risk_flow_append_gateway",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementIdNotPresent(
+                "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
+                .getPaymentId();
+        sendPaymentApproveDecision(paymentId);
+
+        checkElementId(
+                "Activity_197u1ti", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+    }
+
+    @Test
+    @AllureId("2424")
+    @DisplayName("Router Rule shadow mode. Payment rejection flow")
+    void routerRuleShadowModeWithdrawalTest11() throws Exception {
+        DataHelper data = dataMap.get("11");
+        setupData(data);
+
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementId(
+                "put_approve_decision", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId(
+                "risk_flow_append_gateway",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementIdNotPresent(
+                "Gateway_1lxpiqn", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid()))
+                .getPaymentId();
+        sendPaymentRejectDecision(paymentId);
+
+        checkElementId(
+                "script_fill_decisionMsg_reject_payment",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
+        checkElementId("send_to_crm", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
 }
