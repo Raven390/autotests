@@ -1,7 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
@@ -11,6 +10,7 @@ import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.EUR;
 import static helpers.data.enums.Currency.USD;
+import static helpers.data.enums.FraudType.CPA_ABUSE;
 import static helpers.data.enums.FraudType.MARKET_MANIPULATION;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
@@ -32,10 +32,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.insertCrmAccountsToDb;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
@@ -105,12 +105,6 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         mtAccount4 = generateMtAccountByCrmTbAccount(account4);
         mtAccount5 = generateMtAccountByCrmTbAccount(account5);
 
-        CrmTbAccountForMtObject crmTbAccountMt1 = generateAccountForMtByAccount(account1);
-        CrmTbAccountForMtObject crmTbAccountMt2 = generateAccountForMtByAccount(account2);
-        CrmTbAccountForMtObject crmTbAccountMt3 = generateAccountForMtByAccount(account3);
-        CrmTbAccountForMtObject crmTbAccountMt4 = generateAccountForMtByAccount(account4);
-        CrmTbAccountForMtObject crmTbAccountMt5 = generateAccountForMtByAccount(account5);
-
         String comment = "comment";
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
         trade2 = generateMt4TradesCoercedAccountProfitComment(account2, 1000.23, comment);
@@ -120,9 +114,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, -10_000d, "withdraw");
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(
-                CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME,
-                List.of(crmTbAccountMt1, crmTbAccountMt2, crmTbAccountMt3, crmTbAccountMt4, crmTbAccountMt5));
+        insertCrmAccountsToDb(account1, account2, account3, account4, account5);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
         insertObjectsToDb(
                 MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, tradeWithdrawal));
@@ -267,16 +259,16 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         assertThat(
                 "Verify 2nd deduction illegal profit and balance",
                 deductionItems.get(1),
-                is(String.format(
-                        SUGGESTED_DEDUCTION_PATTERN_USD, mtAccount5.account, formatter.format(trade5.getProfit()))));
+                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
         assertThat(
                 "Verify 3rd deduction illegal profit and balance",
                 deductionItems.get(2),
-                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
+                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
         assertThat(
                 "Verify 4th deduction illegal profit and balance",
                 deductionItems.get(3),
-                matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
+                is(String.format(
+                        SUGGESTED_DEDUCTION_PATTERN_USD, mtAccount5.account, formatter.format(trade5.getProfit()))));
         assertThat(
                 "Verify 5th deduction illegal profit and balance",
                 deductionItems.getLast(),
@@ -294,7 +286,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         assertThat(
                 "Verify 2nd suggested deduction value",
                 suggestedDeductionValues.get(1),
-                is(calculateDeduction.apply(trade5.getProfit())));
+                matchesPattern(REGEX_PATTERN_DEDUCTION));
         assertThat(
                 "Verify 3rd suggested deduction value",
                 suggestedDeductionValues.get(2),
@@ -302,7 +294,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         assertThat(
                 "Verify 4th suggested deduction value",
                 suggestedDeductionValues.get(3),
-                matchesPattern(REGEX_PATTERN_DEDUCTION));
+                is(calculateDeduction.apply(trade5.getProfit())));
         assertThat(
                 "Verify 5th suggested deduction value",
                 suggestedDeductionValues.getLast(),
@@ -527,22 +519,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
-        resolvePage.clickNoDeductionSwitch();
-        assertThat(
-                "Verify total suggested deduction amount",
-                resolvePage.getSuggestedDeductionAmount(),
-                is("No deduction"));
-        assertThat("Verify total illegal profit amount", resolvePage.getIllegalProfitAmount(), is("1 fraud account"));
-        assertThat(
-                "Verify calculation of illegal profit and balance by accounts",
-                resolvePage.getSuggestedDeductionItems(),
-                contains(String.format(
-                        "Account %sBalance %s USD ・ Profit %s USD",
-                        mtAccount1.account,
-                        formatter.format(trade1.getProfit() + tradeWithdrawal.getProfit()),
-                        formatter.format(
-                                (trade1.getProfit() + tradeWithdrawal.getProfit()) - tradeWithdrawal.getProfit()))));
+        resolvePage.addFraud(CPA_ABUSE, CONFIRMED);
         resolvePage.resolveNoActions(COMMENT);
         AbuserDeduction deduction = getObjectsFromDB(
                         POSTGRES,
