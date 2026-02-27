@@ -5,8 +5,7 @@ import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.ConfigFactory.ENTER_PAGE_E2E;
+import static utils.ConfigFactory.*;
 import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
 import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
@@ -106,6 +105,10 @@ public class InvestigationPage extends AbstractPage {
     private final Locator filterAmountTo;
     private final Locator amountFilterPresets;
     private final Locator resetAmountFilterButton;
+    private final Locator unassignedSuspiciousClientsCounter;
+    private final Locator mySuspiciousClientsCounter;
+    private final Locator allSuspiciousClientsCounter;
+    private final Locator tabTitle;
 
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
@@ -126,10 +129,10 @@ public class InvestigationPage extends AbstractPage {
     private static final String ASSIGN_USER_INPUT_LIST_ELEMENT = "//descendant::div[@class='v-assign-user-item']";
     private static final String ASSIGN_USER_INPUT_COMMENT = "//descendant::textarea[@class='g-text-area__control']";
     private static final String ASSIGN_USER_TO_ME_BUTTON = "//descendant::span[text()='Assign to me']";
-    private final Locator unassignedSuspiciousClientsCounter;
-    private final Locator mySuspiciousClientsCounter;
-    private final Locator allSuspiciousClientsCounter;
-    private final Locator tabTitle;
+    private static final String LABEL_LOCATOR_PATTERN =
+            "//div[contains(@class, 'suspicious-client-card') and contains(., '%s')]//div[contains(@class, 'g-label__content') and normalize-space(.)='%s']";
+    private static final String V_WALLET_BADGE_LOCATOR =
+            "//div[contains(@class, 'g-label__content') and normalize-space(.)='V-Wallet']";
 
     public InvestigationPage(Page page) {
         super(page);
@@ -244,6 +247,8 @@ public class InvestigationPage extends AbstractPage {
         this.resetAmountFilterButton =
                 page.locator("//button[@data-qa='suspicious_clients__filters__amount__input__title__reset']");
     }
+
+    public record CardVWalletInfo(String clientId, boolean hasVWalletBadge) {}
 
     @Step("Open the autotest login page main page")
     public void navigateEnterPage() {
@@ -622,6 +627,7 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("Verify each client card has a brand image")
     public void verifyEachClientHasBrandImg() {
+        clientContainer.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertThat(clientContainer.count(), greaterThan(0));
         for (int i = 0; i < clientContainer.count(); i++) {
             Locator child = clientContainer.nth(i).locator(brandImage);
@@ -1174,6 +1180,42 @@ public class InvestigationPage extends AbstractPage {
         result.put("from", from == null ? "" : from);
         result.put("to", to == null ? "" : to);
         return result;
+    }
+
+    @Step("Check if label '{expectedLabel}' is visible for card ID '{cardId}'")
+    public boolean isCardLabelVisible(int cardId, String expectedLabel) {
+        Locator label = page.locator(String.format(LABEL_LOCATOR_PATTERN, cardId, expectedLabel));
+        try {
+            label.waitFor(new Locator.WaitForOptions()
+                    .setState(WaitForSelectorState.VISIBLE)
+                    .setTimeout(TIMEOUT));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Step("Get client IDs and V-Wallet badge presence from visible client cards")
+    public List<CardVWalletInfo> getCardsVWalletInfo() {
+        Allure.step("Extracting V-Wallet badge information from all loaded client cards");
+        List<CardVWalletInfo> cardsInfoList = new ArrayList<>();
+
+        if (clientContainer.count() > 0) {
+            for (int i = 0; i < clientContainer.count(); i++) {
+                Locator card = clientContainer.nth(i);
+
+                String id = "Unknown ID";
+                if (card.locator(clientIdElement).count() > 0) {
+                    id = card.locator(clientIdElement).textContent().trim();
+                }
+
+                // Checking presence of the V-Wallet badge inside this specific card
+                boolean hasBadge = card.locator(V_WALLET_BADGE_LOCATOR).count() > 0;
+
+                cardsInfoList.add(new CardVWalletInfo(id, hasBadge));
+            }
+        }
+        return cardsInfoList;
     }
 
     @Step("Click amount preset by visible name: {presetName}")

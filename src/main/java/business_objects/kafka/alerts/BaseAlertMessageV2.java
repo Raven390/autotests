@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -22,6 +22,7 @@ import lombok.Setter;
 })
 @Getter
 @Setter
+@SuperBuilder
 public class BaseAlertMessageV2 {
     @JsonProperty(value = "alertId", required = true)
     public UUID id;
@@ -77,6 +78,9 @@ public class BaseAlertMessageV2 {
         this.attributes = attributes;
     }
 
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Rule {
         @JsonProperty(value = "name", required = true)
         public String name;

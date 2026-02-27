@@ -5,9 +5,11 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
+@SuperBuilder
 public class PaymentAlertMessageV2 extends BaseAlertMessageV2 {
     @JsonProperty(value = "account", required = true)
     public String account;

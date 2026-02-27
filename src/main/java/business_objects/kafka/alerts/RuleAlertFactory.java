@@ -9,9 +9,13 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class RuleAlertFactory {
+
+    public static final String VERSION = "1.0.0";
+
     @Step("Generate rule alert for client with ucid '{ucid}'")
     public static RuleAlert generateRuleAlertByUcid(String ucid) {
         RuleAlert alert = new RuleAlert();
@@ -20,7 +24,7 @@ public class RuleAlertFactory {
         alert.ucid = ucid;
         alert.rule = new RuleAlert.Rule();
         alert.rule.code = 11;
-        alert.rule.ver = "01";
+        alert.rule.ver = VERSION;
         alert.rule.name = "Registration";
         alert.rule.trigger = "clientRegistration";
         alert.rule.fraudType = "MARKET_MANIPULATION";
@@ -37,7 +41,7 @@ public class RuleAlertFactory {
         alert.ucid = ucid;
         alert.rule = new RuleAlert.Rule();
         alert.rule.code = 11;
-        alert.rule.ver = "01";
+        alert.rule.ver = VERSION;
         alert.rule.name = "Registration";
         alert.rule.trigger = trigger;
         alert.rule.fraudType = "MARKET_MANIPULATION";
@@ -54,7 +58,7 @@ public class RuleAlertFactory {
         alert.ucid = client.getUcid();
         alert.rule = new RuleAlert.Rule();
         alert.rule.code = 11;
-        alert.rule.ver = "01";
+        alert.rule.ver = VERSION;
         alert.rule.name = "Mirror Trading";
         alert.rule.trigger = "openTrade";
         alert.rule.fraudType = FraudType.HEDGING.getCode();
@@ -70,7 +74,7 @@ public class RuleAlertFactory {
         alert.timestamp = Instant.now().toString();
         alert.ucid = client.getUcid();
         alert.rule = new RuleAlert.Rule();
-        alert.rule.ver = "0.1";
+        alert.rule.ver = VERSION;
         alert.rule.name = "Withdrawal Review";
         alert.rule.trigger = "Withdrawal";
         alert.rule.fraudType = "POTENTIAL_ABUSE";
@@ -98,7 +102,7 @@ public class RuleAlertFactory {
         alert.timestamp = Instant.now().toString();
         alert.ucid = client.getUcid();
         alert.rule = new RuleAlert.Rule();
-        alert.rule.ver = "0.1";
+        alert.rule.ver = VERSION;
         alert.rule.name = "Withdrawal Review";
         alert.rule.trigger = "Withdrawal";
         alert.rule.fraudType = "POTENTIAL_ABUSE";
@@ -129,7 +133,7 @@ public class RuleAlertFactory {
         alert.type = "TRADING";
         alert.triggerCreatedTime = Instant.now().toString();
         alert.rule = new RuleAlert.Rule();
-        alert.rule.ver = "0.1.8";
+        alert.rule.ver = VERSION;
         alert.rule.name = "Withdrawal Review";
         alert.rule.trigger = "Withdrawal";
         alert.rule.fraudType = "POTENTIAL_ABUSE";
@@ -162,7 +166,7 @@ public class RuleAlertFactory {
                 new PaymentAlertMessage.Rule(
                         "Payment Fraud Detection",
                         "MARKET_MANIPULATION",
-                        "1.0",
+                        VERSION,
                         "Payment Initiated",
                         Collections.emptyMap()),
                 "123456",
@@ -177,7 +181,7 @@ public class RuleAlertFactory {
     public static PaymentAlertMessageV2 generatePaymentAlertByUcidByTrigger(String ucid, String trigger) {
         BaseAlertMessageV2.Rule paymentRule = new BaseAlertMessageV2.Rule();
         paymentRule.name = "fraud_detection";
-        paymentRule.ver = "1.0.0";
+        paymentRule.ver = VERSION;
         return new PaymentAlertMessageV2(
                 UUID.randomUUID(),
                 AlertMessageType.PAYMENT,
@@ -204,7 +208,7 @@ public class RuleAlertFactory {
             String ucid, String trigger, String paymentId) {
         BaseAlertMessageV2.Rule rule = new BaseAlertMessageV2.Rule();
         rule.name = "fraud_detection";
-        rule.ver = "1.0.0";
+        rule.ver = VERSION;
         return new PaymentAlertMessageV2(
                 UUID.randomUUID(),
                 AlertMessageType.TRADING,
@@ -224,5 +228,40 @@ public class RuleAlertFactory {
                 "USD",
                 "D987654321",
                 paymentId);
+    }
+
+    @Step("Generate TRADING withdrawal review alert for ucid '{ucid}'")
+    public static PaymentAlertMessageV2 generateTradingWithdrawalAlert(String ucid, String paymentEventId) {
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("Platform", "MT5");
+        attributes.put("Payment channel", "-");
+        attributes.put("Check", "WR_Blacklist");
+        attributes.put("Withdrawal ID", "40004079311");
+        attributes.put("Regulator", "VFSC");
+        attributes.put("Brand", "vantage");
+
+        return PaymentAlertMessageV2.builder()
+                .id(UUID.randomUUID())
+                .type(AlertMessageType.TRADING)
+                .dateTime(OffsetDateTime.now())
+                .triggerCreatedTime(OffsetDateTime.now())
+                .ucid(ucid)
+                .fraudType("POTENTIAL_ABUSE")
+                .trigger("withdrawal")
+                .reason("Potential fraud detected")
+                .rule(BaseAlertMessageV2.Rule.builder()
+                        .name("Withdrawal Review")
+                        .ver(VERSION)
+                        .build())
+                .attributes(attributes)
+                .account("1398842012")
+                .paymentMethod("CREDIT_CARD")
+                .amount("5")
+                .currency("USD")
+                .paymentEventId(paymentEventId)
+                .amountUSD(String.valueOf(50_000.0))
+                .merchantOrderId("AU603771220250201005757")
+                .build();
     }
 }
