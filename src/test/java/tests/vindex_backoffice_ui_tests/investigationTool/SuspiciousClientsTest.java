@@ -10,6 +10,8 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 
@@ -21,6 +23,7 @@ import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import java.util.List;
 import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.investigationTool.InvestigationPage;
 import tests.TestBaseWeb;
 
 @Tag(TEAM_BACKOFFICE)
@@ -44,11 +47,13 @@ class SuspiciousClientsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser3);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser4);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser5);
+
         RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid, "transferToWA");
         RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid, "withdrawalFromWA");
         PaymentAlertMessageV2 alertPayment1 = generatePaymentAlertByUcidByTrigger(crmTbUser3.ucid, "Registration");
         PaymentAlertMessageV2 alertPayment2 = generatePaymentAlertByUcidByTrigger(crmTbUser4.ucid, "transfertowA");
         PaymentAlertMessageV2 alertPayment3 = generatePaymentAlertByUcidByTrigger(crmTbUser5.ucid, "withdrawalFromwA");
+        PaymentAlertMessageV2 alertPayment4 = generateTradingWithdrawalAlert(crmTbUser4.ucid, "Open Trade");
         kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(alert2.alertId, objectMapper.writeValueAsString(alert2), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(
@@ -57,6 +62,8 @@ class SuspiciousClientsTest extends TestBaseWeb {
                 alertPayment2.id.toString(), objectMapper.writeValueAsString(alertPayment2), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(
                 alertPayment3.id.toString(), objectMapper.writeValueAsString(alertPayment3), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(
+                alertPayment4.id.toString(), objectMapper.writeValueAsString(alertPayment4), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -149,8 +156,10 @@ class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.waitForPageToLoad();
         investigationPage.filterAll();
         investigationPage.waitForPageToLoad();
+
         List<String> clientIdsFromClientCards = investigationPage.getClientIdsFromClientCards();
         List<Boolean> priorityFromClientCards = investigationPage.getPriorityFromClientCards();
+
         assertThat("Assert that there is 3 payment suspicious clients", clientIdsFromClientCards.size(), is(3));
         assertThat(
                 "Assert that payment suspicious clients in order",
@@ -160,6 +169,28 @@ class SuspiciousClientsTest extends TestBaseWeb {
                 "Assert that payment suspicious clients in order",
                 priorityFromClientCards,
                 containsInRelativeOrder(true, true, false));
+
+        List<InvestigationPage.CardVWalletInfo> vWalletInfoList = investigationPage.getCardsVWalletInfo();
+        boolean seenRegularCard = false;
+
+        for (InvestigationPage.CardVWalletInfo cardInfo : vWalletInfoList) {
+            if (cardInfo.hasVWalletBadge()) {
+                assertFalse(
+                        seenRegularCard,
+                        String.format(
+                                "Sorting error: V-Wallet card (ID: %s) is located below a regular card!",
+                                cardInfo.clientId()));
+            } else {
+                seenRegularCard = true;
+            }
+        }
+
+        assertTrue(
+                investigationPage.isCardLabelVisible(crmTbUser4.userId, "V-Wallet"),
+                "Label V-Wallet should be visible for the Payment alert with trigger transferToWA");
+        assertTrue(
+                investigationPage.isCardLabelVisible(crmTbUser5.userId, "V-Wallet"),
+                "Label V-Wallet should be visible for Payment alert with trigger transferFromWA");
     }
 
     @Test
@@ -176,7 +207,8 @@ class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.waitForPageToLoad();
         List<String> clientIdsFromClientCards = investigationPage.getClientIdsFromClientCards();
         List<Boolean> priorityFromClientCards = investigationPage.getPriorityFromClientCards();
-        assertThat("Assert that there is 2 trading suspicious clients", clientIdsFromClientCards.size(), is(2));
+
+        assertThat("Assert that there is 2 trading suspicious clients", clientIdsFromClientCards.size(), is(3));
         assertThat(
                 "Assert that payment suspicious clients in order",
                 clientIdsFromClientCards.stream().map(Integer::parseInt).toList(),
@@ -185,6 +217,28 @@ class SuspiciousClientsTest extends TestBaseWeb {
                 "Assert that payment suspicious clients in order",
                 priorityFromClientCards,
                 containsInRelativeOrder(true, true));
+
+        List<InvestigationPage.CardVWalletInfo> vWalletInfoList = investigationPage.getCardsVWalletInfo();
+        boolean seenRegularCard = false;
+
+        for (InvestigationPage.CardVWalletInfo cardInfo : vWalletInfoList) {
+            if (cardInfo.hasVWalletBadge()) {
+                assertFalse(
+                        seenRegularCard,
+                        String.format(
+                                "Sorting error: V-Wallet card (ID: %s) is located below a regular card!",
+                                cardInfo.clientId()));
+            } else {
+                seenRegularCard = true;
+            }
+        }
+
+        assertTrue(
+                investigationPage.isCardLabelVisible(crmTbUser1.userId, "V-Wallet"),
+                "Label V-Wallet should be visible for the Payment alert with trigger transferToWA");
+        assertTrue(
+                investigationPage.isCardLabelVisible(crmTbUser2.userId, "V-Wallet"),
+                "Label V-Wallet should be visible for Payment alert with trigger transferFromWA");
     }
 
     @AfterAll
