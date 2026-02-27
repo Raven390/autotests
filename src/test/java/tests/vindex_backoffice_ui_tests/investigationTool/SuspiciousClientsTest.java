@@ -249,5 +249,7 @@ class SuspiciousClientsTest extends TestBaseWeb {
         closeAlert(crmTbUser1.ucid);
         closeAlert(crmTbUser2.ucid);
         closeAlert(crmTbUser3.ucid);
+        closeAlert(crmTbUser4.ucid);
+        closeAlert(crmTbUser5.ucid);
     }
 }
