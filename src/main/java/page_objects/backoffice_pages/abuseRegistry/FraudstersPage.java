@@ -47,7 +47,7 @@ public class FraudstersPage extends AbstractPage {
     private final Locator uploadByAccountButton;
 
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN =
-            "//*[contains(@class,'v-dropdown-select__menu-container')]//div[@data-dd-value='%s']";
+            "//div[contains(@class,'v-drop-down-menu')]//div[contains(@class,'v-sub-menu__anchor') and text()='%s']";
     private static final String SOURCE_SELECT_BUTTON_LOCATOR_PATTERN = "[data-qa='buttons_list__item__%s']";
     private static final String RESTRICTION_POPUP_LIST_ELEMENT_LOCATOR_PATTERN =
             "//*[@class='g-select-list__option-default-label'][text()='%s']";
