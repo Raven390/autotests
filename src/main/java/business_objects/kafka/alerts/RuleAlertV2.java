@@ -57,7 +57,7 @@ public class RuleAlertV2 {
     private String currency;
 
     @JsonProperty("account")
-    private Integer account;
+    private String account;
 
     @JsonProperty("symbol")
     private String symbol;

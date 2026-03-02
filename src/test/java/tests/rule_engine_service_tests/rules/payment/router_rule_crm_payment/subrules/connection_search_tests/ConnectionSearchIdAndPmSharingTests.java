@@ -295,7 +295,7 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().getType(), is("PAYMENT"));
         assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), is(notNullValue()));
         assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().getTrigger(), is("Withdrawal"));
+        assertThat("Verify alert", alerts.getFirst().getTrigger(), is("withdrawal"));
         assertThat("Verify alert", alerts.getFirst().getReason(), is("Crypto withdrawal > 10k"));
         assertThat("Verify alert", alerts.getFirst().getAccount(), is(data.clientHelper.getTradingAccount()));
         assertThat(

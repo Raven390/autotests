@@ -9,6 +9,7 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEventV2;
+import business_objects.kafka.crm_events.CrmWithdrawalFromWaEvent;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 import helpers.data.enums.rule_engine.Event;
@@ -115,6 +116,36 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
                 .eWallet(CrmWithdrawalEventV2.EWallet.builder().build())
                 .crypto(CrmWithdrawalEventV2.Crypto.builder().build())
                 .build();
+
+        data.setCrmWithdrawalFromWaEvent(CrmWithdrawalFromWaEvent.builder()
+                .id(Utils.getRandomUuidString())
+                .eventDate(Instant.now().toString())
+                .regulator(data.clientHelper.getRegulator().toLowerCase())
+                .brand(data.clientHelper.getBrand().toLowerCase())
+                .server("crm_au")
+                .clientId(data.clientHelper.getUserId())
+                .type("withdrawalFromWA")
+                .merchantOrderId("VTSG" + getRandomIntPositive())
+                .walletAccount("AUVF" + Utils.getRandomIntPositive() + "USDC")
+                .walletWithdrawTaskOrderNo("AUVF" + Utils.getRandomIntPositive() + "USDC"
+                        + Instant.now().toEpochMilli())
+                .walletApplyChain("Ethereum")
+                .walletSymbol("ETH")
+                .walletAddress("T" + Utils.getRandomUuidString().replace("-", ""))
+                .statusId(7)
+                .status("Completed")
+                .withdrawalApplicationTime(Instant.now().toString())
+                .withdrawalCurrency("USD")
+                .withdrawalAmount(10_001.0)
+                .actualAmount(10_001.0)
+                .withdrawalAmountUSD(10_001.0)
+                .cost(0.56)
+                .paymentMethodCode(PAYMENT_METHOD_CODE_CRYPTO)
+                .paymentChannelCode("1251")
+                .paymentChannelName("Cryptocurrency-USDC-Bybit-CPS")
+                .paymentTypeCode("125")
+                .paymentTypeName("Cryptocurrency-USDC-Bybit")
+                .build());
         return data;
     }
 
@@ -507,6 +538,8 @@ public class ConnectionSearchIdAndPmSharingDataFactory {
         data.crmWithdrawalEventV2.setCrypto(CrmWithdrawalEventV2.Crypto.builder()
                 .walletAddress(paymentProfileKey)
                 .build());
+
+        data.getCrmWithdrawalFromWaEvent().setWalletAddress(paymentProfileKey);
 
         data2.createClient(data2.getClientHelper()).createWithdrawal();
         data2.getCrmTbWithdrawalObjects().getFirst().setCryptoWalletAddress(paymentProfileKey);

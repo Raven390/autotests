@@ -168,7 +168,7 @@ public class AlertsAssertsHelper {
         assertThat("assert alert", alert.getUcid(), is(data.clientHelper.getUcid()));
         assertThat("assert alert", alert.getTrigger(), is("Close Trade"));
         assertThat("assert alert", alert.getReason(), is("News trading pattern with Unlimited Leverage"));
-        assertThat("assert alert", alert.getAccount().longValue(), is(data.tradeEvent.tradingAccount));
+        assertThat("assert alert", Long.valueOf(alert.getAccount()), is(data.tradeEvent.tradingAccount));
         assertThat("assert alert", alert.getServerId(), is(data.tradeEvent.serverId));
         assertThat("assert alert", alert.getFraudType(), is("NEWS_TRADER"));
         assertThat("assert alert", alert.getRule().getVer(), is(notNullValue()));

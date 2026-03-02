@@ -68,8 +68,14 @@ public class TestBaseRule {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
     }
 
-    @Step("Produce withdrawal v2 event to crm-events topic")
+    @Step("Produce withdrawal v2 event to crm-payment topic")
     public static void produceWithdrawalMessageV2ToCrmPaymentTopic(CrmWithdrawalEventV2 event)
+            throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
+    }
+
+    @Step("Produce withdrawalFromWA event to crm-payment topic")
+    public static void produceWithdrawalFromWaToCrmPaymentTopic(CrmWithdrawalFromWaEvent event)
             throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
     }
