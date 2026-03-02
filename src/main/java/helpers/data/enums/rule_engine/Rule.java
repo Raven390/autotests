@@ -8,6 +8,8 @@ public enum Rule {
     ROUTER_RULE_CRM_EVENTS("Router Rule for crm_payment topic", "router_rule"),
     ROUTER_RULE_TRANSFER_TO_WA("Router Rule for crm_payment topic", "router_rule_crm_payment_transfer_to_wa"),
     ROUTER_RULE_SHADOW_MODE("Router Rule for crm_payment topic (shadow mode)", "router_rule_crm_payment_shadow_mode"),
+    ROUTER_RULE_WITHDRAWAL_FROM_WA(
+            "Router Rule for crm_payment topic (withdrawalFromWA)", "router_rule_withdrawal_from_wa"),
     CONNECTION_SEARCH_IN_ROUTER_RULE("Connection Search Withdrawal", "cs_on_withdrawal"),
     MIRROR_TRADE_INTERNAL_HEDGE("Mirror trading (Internal Hedge)", "internal_hedge"),
     MARKET_MANIPULATION_RULE("marketManipulation_rule", "marketManipulation_rule"),

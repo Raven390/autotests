@@ -171,6 +171,7 @@ public class DataHelper {
     public List<AppTbFinindexData> AppTbFinindexData;
     public CrmWithdrawalEvent crmWithdrawalEvent;
     public CrmWithdrawalEventV2 crmWithdrawalEventV2;
+    private CrmWithdrawalFromWaEvent crmWithdrawalFromWaEvent;
     public CustomEvent customEvent;
     public MirrorScoreEvent mirrorScoreEvent;
     public InternalHedgeEvent internalHedgeEvent;
