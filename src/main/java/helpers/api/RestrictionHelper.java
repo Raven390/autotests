@@ -1,18 +1,30 @@
 package helpers.api;
 
+import static business_objects.api.mitigation_service.CorrelationType.RESTRICTION_MANAGEMENT;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.cancelRestriction;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
+import static helpers.data.enums.Restriction.WORSE_TRADING;
+import static helpers.database.DbHelper.getObjectsFromDB;
+import static helpers.database.DbName.POSTGRES;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static utils.Constants.MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION;
+import static utils.Constants.VINDEX_BO_SYSTEM;
 
 import business_objects.api.mitigation_service.*;
+import business_objects.db.mitigation_service_db.client_trading_environment_restriction.ClientTradingEnvironmentRestrictionEntity;
 import helpers.data.ClientHelper;
+import helpers.data.enums.TradingEnvironmentLevel;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.time.Duration;
+import java.util.List;
 import okhttp3.Response;
 
 public class RestrictionHelper {
@@ -200,5 +212,69 @@ public class RestrictionHelper {
         assertNotNull(response);
         assertEquals(204, response.code());
         return response;
+    }
+
+    public static void putWorseTradingRestriction(
+            String clientUCid,
+            BigInteger accountID,
+            String correlationId,
+            Integer serverIdSt,
+            TradingEnvironmentLevel level,
+            String comment,
+            String user)
+            throws IOException {
+        NewTradingEnvRestrictionRequestBody putRestriction = new NewTradingEnvRestrictionRequestBody();
+        putRestriction.setType(RestrictionType.TRADING_ENVIRONMENT);
+        putRestriction.setUcid(clientUCid);
+        putRestriction.setCode(WORSE_TRADING.getCode());
+        putRestriction.setComment(comment);
+        putRestriction.setUpdatedBy(new UpdatedBy().system(VINDEX_BO_SYSTEM).user(user));
+        putRestriction.setAccountId(accountID);
+        putRestriction.setCorrelationId(correlationId);
+        putRestriction.setCorrelationType(RESTRICTION_MANAGEMENT);
+        putRestriction.setServerId(serverIdSt);
+        putRestriction.setLevel(level);
+        putRestrictionV3(putRestriction);
+    }
+
+    public static void deleteWorseTradingRestriction(
+            String clientUCid,
+            BigInteger accountID,
+            String correlationId,
+            Integer serverIdSt,
+            String comment,
+            String user)
+            throws IOException {
+        DeleteTradingEnvRestrictionRequestBody deleteRestriction = DeleteTradingEnvRestrictionRequestBody.builder()
+                .type(RestrictionType.TRADING_ENVIRONMENT)
+                .ucid(clientUCid)
+                .code(WORSE_TRADING.getCode())
+                .cancelReason(comment)
+                .correlationType(RESTRICTION_MANAGEMENT)
+                .correlationId(correlationId)
+                .updatedBy(new UpdatedBy().system(VINDEX_BO_SYSTEM).user(user))
+                .accountId(accountID)
+                .serverId(serverIdSt)
+                .build();
+        deleteRestrictionV3(deleteRestriction);
+    }
+
+    public static void waitUntilWorseTradingRestrictionHasStatusAndLevel(
+            BigInteger accountID, TradingEnvironmentLevel level, RestrictionStatus status) {
+        await().atMost(Duration.ofSeconds(60))
+                .pollInterval(Duration.ofMillis(200))
+                .until(() -> {
+                    List<ClientTradingEnvironmentRestrictionEntity> entities = getObjectsFromDB(
+                            POSTGRES,
+                            MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION,
+                            String.format("account_id=%s", accountID),
+                            ClientTradingEnvironmentRestrictionEntity.class);
+
+                    if (entities == null || entities.isEmpty()) {
+                        return false;
+                    }
+
+                    return entities.stream().anyMatch(e -> e.getStatus() == status && e.getLevel() == level);
+                });
     }
 }
