@@ -18,8 +18,7 @@ import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.POSTGRES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 import static utils.Utils.getRandomIntPositive;
@@ -83,11 +82,13 @@ class RemoveWorseTradingByBulkOperationTest extends TestBaseWeb {
         fraudstersPage.typeClientID(client.getUserId().toString());
         fraudstersPage.clickAddRestrictionButton();
         fraudstersPage.selectRestriction(WORSE_TRADING.getDescription());
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
         String commentary = "Delete 'Worse trading' restriction " + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, LOW, CANCELLED);
 

@@ -10,8 +10,10 @@ import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObje
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.USD;
+import static helpers.data.enums.FraudSource.VINDEX;
 import static helpers.data.enums.FraudType.MARKET_MANIPULATION;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
+import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
 import static helpers.data.enums.deduction.DeductionStatusApproval.*;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.NO_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.TO_BE_DEDUCTED;
@@ -21,6 +23,7 @@ import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -126,15 +129,18 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
+        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
-        fraudstersPage.verifyWarningMessageUpload(2);
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
+        assertTrue(
+                fraudstersPage.isWarningManualProcessMessageDisplayed(2),
+                "The warning message for 1 pending deduction was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -146,7 +152,7 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         assertThat(pendingProcessing.size(), is(1));
         PendingProcessing pending = pendingProcessing.getFirst();
         assertThat(pending.getUcid(), is(client1.getUcid()));
-        assertThat(pending.getFraudTypeCode(), is(fraudTypeOld.getCode()));
+        assertThat(pending.getFraudTypeCode(), is(fraudType.getCode()));
         assertThat(pendingProcessing.getFirst().getFraudSubtypeCode(), nullValue());
     }
 
@@ -165,16 +171,20 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
         FraudType fraudType = FraudType.BONUS_ABUSE;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
-        fraudstersPage.verifyWarningMessageUpload(1);
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 3 created deductions was not displayed or the text is incorrect!");
+        assertTrue(
+                fraudstersPage.isWarningManualProcessMessageDisplayed(1),
+                "The warning message for 1 pending deduction was not displayed or the text is incorrect!");
+
         page.waitForTimeout(1000);
 
         List<PendingProcessing> pendingProcessing = getObjectsFromDB(
@@ -271,16 +281,19 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
         FraudType fraudType = FraudType.BONUS_ABUSE;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
-        fraudstersPage.verifyWarningMessageUpload(1);
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 3 created deductions was not displayed or the text is incorrect!");
+        assertTrue(
+                fraudstersPage.isWarningManualProcessMessageDisplayed(1),
+                "The warning message for 1 pending deduction was not displayed or the text is incorrect!");
         page.waitForTimeout(1000);
 
         List<PendingProcessing> pendingProcessing = getObjectsFromDB(
@@ -378,16 +391,19 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
         FraudType fraudType = FraudType.REBATE_CHURNING;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
-        fraudstersPage.verifyWarningMessageUpload(1);
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 3 created deductions was not displayed or the text is incorrect!");
+        assertTrue(
+                fraudstersPage.isWarningManualProcessMessageDisplayed(1),
+                "The warning message for 1 pending deduction was not displayed or the text is incorrect!");
         page.waitForTimeout(1000);
 
         List<PendingProcessing> pendingProcessing = getObjectsFromDB(
@@ -477,16 +493,19 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
         FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudType.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
-        fraudstersPage.verifyWarningMessageUpload(1);
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
+        assertTrue(
+                fraudstersPage.isWarningManualProcessMessageDisplayed(1),
+                "The warning message for 1 pending deduction was not displayed or the text is incorrect!");
         page.waitForTimeout(1000);
 
         List<PendingProcessing> pendingProcessing2 = getObjectsFromDB(
@@ -541,15 +560,16 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
         FraudType fraudType = FraudType.PRICING_ERROR;
         // Partial Deduction
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudType.getName(), "Potential", FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, POTENTIAL);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
         page.waitForTimeout(1000);
 
         List<PendingProcessing> pendingProcessing = getObjectsFromDB(
@@ -590,13 +610,14 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client4.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraud(MARKET_MANIPULATION, CONFIRMED);
-        fraudstersPage.clickVindexFraudSource();
+        fraudstersPage.addFraud(MARKET_MANIPULATION, CONFIRMED);
+        fraudstersPage.selectFraudSource(FraudSource.VINDEX);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(2000);
 

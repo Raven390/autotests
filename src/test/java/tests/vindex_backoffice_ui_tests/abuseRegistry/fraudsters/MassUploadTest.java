@@ -2,11 +2,14 @@ package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.data.enums.FraudSource.*;
+import static helpers.data.enums.FraudSubtype.EXTERNAL;
+import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.checkUserHaveRestrictionGeneral;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
@@ -68,7 +71,7 @@ class MassUploadTest extends TestBaseWeb {
     }
 
     @BeforeAll
-    static void setup() throws Exception {
+    static void setup() {
         CrmTbUserObject crmClient1 = generateStaticUserByClient(client1);
         CrmTbUserObject crmClient2 = generateStaticUserByClient(client2);
         CrmTbUserObject crmClient3 = generateStaticUserByClient(client3);
@@ -100,19 +103,20 @@ class MassUploadTest extends TestBaseWeb {
                 client1.getUserId().toString(),
                 client2.getUserId().toString(),
                 client3.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
-        String source = getRandomFraudSource().getDisplayName();
+        FraudType fraudType = FraudType.BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        FraudSource source = getRandomFraudSource();
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -127,11 +131,11 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(source.getDisplayName(), fraud.getFraudSource());
 
         List<AuditEvent> events = DbHelper.getObjectsFromDB(
                 DbName.POSTGRES,
@@ -165,16 +169,17 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
-        String source = VINDEX.getDisplayName();
+        FraudType fraudType = FraudType.BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        FraudSource source = VINDEX;
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -189,11 +194,11 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(source.getDisplayName(), fraud.getFraudSource());
     }
 
     @Test
@@ -214,19 +219,20 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
-        String source = RA_RAISE.getDisplayName();
+        FraudType fraudType = FraudType.BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        FraudSource source = RA_RAISE;
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -241,11 +247,11 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(source.getDisplayName(), fraud.getFraudSource());
     }
 
     @Test
@@ -266,19 +272,20 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
-        String source = ADDITIONAL_REVIEW.getDisplayName();
+        FraudType fraudType = FraudType.BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        FraudSource source = ADDITIONAL_REVIEW;
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -293,11 +300,11 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(source.getDisplayName(), fraud.getFraudSource());
     }
 
     @Test
@@ -318,19 +325,20 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
-        String source = INSIGHT.getDisplayName();
+        FraudType fraudType = FraudType.BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        FraudSource source = INSIGHT;
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -345,11 +353,11 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(source.getDisplayName(), fraud.getFraudSource());
     }
 
     @Test
@@ -370,19 +378,20 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName());
-        String source = FRONTEND.getDisplayName();
+        FraudType fraudType = BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        FraudSource source = FRONTEND;
         fraudstersPage.selectFraudSource(source);
         fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -397,11 +406,11 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(source.getDisplayName(), fraud.getFraudSource());
     }
 
     @Disabled("Deprecated. source now is mandatory")
@@ -428,15 +437,15 @@ class MassUploadTest extends TestBaseWeb {
         fraudstersPage.clickUploadByClientId();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        String source = getRandomFraudSource().getDisplayName();
-        fraudstersPage.selectFraudSource(source);
-        fraudstersPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudAddWithSource(fraudTypeOld.getDisplayName(), CONFIRMED.getDisplayName(), source);
+        fraudstersPage.selectFraudSource(getRandomFraudSource());
+        FraudType fraudType = FraudType.BONUS_ABUSE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED, EXTERNAL);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 
@@ -451,10 +460,10 @@ class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudType.name(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
-        assertEquals(source, fraud.getFraudSource());
+        assertEquals(EXTERNAL.name(), fraud.getFraudSource());
     }
 }

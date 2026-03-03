@@ -718,7 +718,7 @@ class PaymentsSummaryPanelTest extends TestBaseWeb {
                 decimalFormat.format(roundDouble(historyMetrics.getSalesCommission(), 2)) + " USD");
         paymentsPage.verifyPaymentSummaryPanelValue(
                 "Rewards",
-                "CPA commissions",
+                "CPA commissions (client)",
                 decimalFormat.format(roundDouble(cpaCommission.getCommission(), 2)) + " USD");
     }
 

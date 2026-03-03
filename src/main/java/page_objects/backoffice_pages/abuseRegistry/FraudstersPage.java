@@ -1,77 +1,70 @@
 package page_objects.backoffice_pages.abuseRegistry;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.enums.FraudSource;
 import helpers.data.enums.FraudSubtype;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
-import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import page_objects.backoffice_pages.AbstractPage;
 
 public class FraudstersPage extends AbstractPage {
 
     private final Locator uploadListButton;
+    private final Locator removeListButton;
     private final Locator uploadDrawer;
+    private final Locator removeDrawer;
     private final Locator clientIdInput;
+    private final Locator serverAccInput;
     private final Locator addFraudButton;
     private final Locator fraudTypeInput;
     private final Locator validationList;
+    private final Locator validationListItem;
     private final Locator addRestrictionButton;
     private final Locator selectPopup;
     private final Locator selectPopupApplyButton;
     private final Locator commentaryField;
     private final Locator applyUploadButton;
+    private final Locator clientIdsButton;
+    private final Locator deleteUploadButton;
     private final Locator successToast;
     private final Locator warningToast;
-    private final Locator restrictionListButton;
-    private final Locator restrictionApplyButton;
-    private final Locator deleteUploadButton;
-    private final Locator removeListButton;
-    private final Locator clientIdsButton;
-    private final Locator removeDrawer;
     private final Locator pendingProcessingToggleLocator;
     private final Locator pendingProcessingCells;
-    private final Locator validationListItem;
-    private final Locator serverAccInput;
     private final Locator uploadByIdButton;
     private final Locator uploadByAccountButton;
 
+    private static final String UPLOAD_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
+    private static final String RESTRICTION_SELECTION_SECTION =
+            UPLOAD_DRAWER_LOCATOR + "//*[@class='v-client-restrictions-selector']";
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN =
-            "//div[contains(@class,'v-drop-down-menu')]//div[contains(@class,'v-sub-menu__anchor') and text()='%s']";
+            "//div[contains(@class,'g-popup')]//div[text()='%s']";
     private static final String SOURCE_SELECT_BUTTON_LOCATOR_PATTERN = "[data-qa='buttons_list__item__%s']";
     private static final String RESTRICTION_POPUP_LIST_ELEMENT_LOCATOR_PATTERN =
             "//*[@class='g-select-list__option-default-label'][text()='%s']";
     private static final String RESTRICTION_WORSE_TRADING_POPUP_LIST_ELEMENT_LOCATOR_PATTERN =
             "//*[@class='v-menuitem']//*[text()='%s']";
-    private static final String UPLOAD_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
-    private static final String FRAUD_TYPE_SELECTION_SECTION =
-            UPLOAD_DRAWER_LOCATOR + "//*[@class='v-fraud-type-selector']";
-    private static final String RESTRICTION_SELECTION_SECTION =
-            UPLOAD_DRAWER_LOCATOR + "//*[@class='v-client-restrictions-selector']";
     private static final String BRAND_SELECT_BUTTON_LOCATOR_PATTERN =
             UPLOAD_DRAWER_LOCATOR + "//*[@class='v-label-list__list']/button/*[text()='%s']";
     private static final String FRAUD_SUBTYPE_FORMAT =
             "//*[(@class='v-menuitem') and contains(@data-qa, '_fraud_type_selector__submenu_')]/*[text()='%s']";
-    private static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
-    private static final String FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT =
-            "//*[@data-qa='fraud_type_selector__dropdown__item__submenu__%s:%s']//div[text()='%s']";
-    private static final String FRAUD_BY_TEXT_PATTERN =
-            "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content') or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[text()='%s']";
     private static final String FRAUD_STATUS_PATTERN =
-            "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')  or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[contains(@data-qa,'fraud_type_selector__dropdown__item__submenu__%s:%s')]";
+            "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content') or contains(@data-qa,'fraud_type_selector__dropdown')]/descendant::div[contains(@data-qa,'fraud_type_selector__dropdown__item__submenu__%s:%s')]";
+    private static final String FRAUD_TYPE_SELECTOR_FORMAT = "//div[contains(@class,'g-popup')]//div[text()='%s']";
+    private static final String FRAUD_TYPE_SELECTOR_STATUS =
+            "//div[contains(@data-menu-role,'submenu-container')]//div[text()='%s']";
     private static final String FRAUD_SOURCE_PATTERN = "//button[@data-qa='buttons_list__item__%s']";
-    public static final String FRAUD_TYPE_SELECTOR_STATUS =
-            "//*[@data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__item_%s__%s']";
+
+    public static final String MSG_UPLOAD_SUCCESS = "Request received";
+    public static final String MSG_DELETE_SUCCESS = "Selected actions are now being processed";
+    public static final String MSG_WARNING_MANUAL_PROCESS =
+            "illegal profit and suggested deduction need to be processed manually";
 
     public FraudstersPage(Page page) {
         super(page);
@@ -90,7 +83,6 @@ public class FraudstersPage extends AbstractPage {
         this.validationList = page.locator(".v-abuse-registry-batch-delete-errors__list");
         this.validationListItem = page.locator(".v-abuse-registry-batch-delete-errors-item__item");
         this.addRestrictionButton = page.locator(RESTRICTION_SELECTION_SECTION + "//button");
-        this.restrictionApplyButton = page.locator(RESTRICTION_SELECTION_SECTION + "//button/*[text()='Apply']");
         this.fraudTypeInput = page.locator("//input[@placeholder='Type fraud name']");
         this.selectPopup = page.locator("[data-qa=\"select-popup\"]");
         this.selectPopupApplyButton = page.locator("[data-qa='client_restrictions_selector__apply']");
@@ -100,7 +92,6 @@ public class FraudstersPage extends AbstractPage {
         this.deleteUploadButton = page.locator(UPLOAD_DRAWER_LOCATOR + "//button/*[text()='Remove']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
         this.warningToast = page.locator("//*[contains(@class, 'g-toast_theme_warning')]");
-        this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
         this.pendingProcessingToggleLocator =
                 page.locator("//*[@data-qa=\"abuse_registry__controls__pending_processing_switch\"]");
         this.pendingProcessingCells = page.locator(
@@ -109,310 +100,282 @@ public class FraudstersPage extends AbstractPage {
         this.uploadByAccountButton = page.locator("[title='Accounts']");
     }
 
-    public void navigateAbuseRegistry() {
-        Allure.step("navigate abuse registry page");
-        page.navigate(BASE_URL_E2E + "abuse-registry/");
+    @Step("Navigate to {path}")
+    private void navigateTo(String path) {
+        page.navigate(BASE_URL_E2E + "abuse-registry/" + path);
         waitForPageToLoad();
     }
 
+    @Step("Navigate to abuse-registry/fraudsters")
     public void navigateAbuseRegistryFraudsters() {
-        Allure.step("navigate abuse to registry page / fraudsters");
-        page.navigate(BASE_URL_E2E + "abuse-registry/fraudsters");
-        waitForPageToLoad();
+        navigateTo("fraudsters");
     }
 
+    @Step("Navigate to abuse-registry/deductions")
     public void navigateAbuseRegistryDeductions() {
-        Allure.step("navigate abuse to registry page / deductions");
-        page.navigate(BASE_URL_E2E + "abuse-registry/deductions");
-        waitForPageToLoad();
+        navigateTo("deductions");
     }
 
+    @Step("Open drawer to {action}")
+    private void openDrawer(Locator button, Locator drawer) {
+        button.click();
+        drawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Open upload to drawer")
+    public void openUploadDrawer() {
+        openDrawer(uploadListButton, uploadDrawer);
+    }
+
+    @Step("Open remove to drawer")
     public void openRemoveDrawer() {
-        Allure.step("open upload remove by click to remove list button");
-        removeListButton.click();
-        removeDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openDrawer(removeListButton, removeDrawer);
     }
 
-    public void openRemoveDrawerButtonIsHidden() {
+    @Step("Check if remove drawer button is hidden")
+    public boolean isRemoveDrawerButtonHidden() {
         waitForPageToLoad();
         removeListButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
-        assertTrue(removeListButton.isHidden());
+        return removeListButton.isHidden();
     }
 
-    public void openRemoveDrawerButtonIsDisabled() {
+    @Step("Check if remove drawer button is disabled")
+    public boolean isRemoveDrawerButtonDisabled() {
         waitForPageToLoad();
-        assertTrue(uploadListButton.isDisabled());
+        return removeListButton.isDisabled();
     }
 
-    public void openUploadDrawer() {
-        Allure.step("open upload drawer by click to upload list button");
-        uploadListButton.click();
-        uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    @Step("Click upload by client ID")
+    public void clickUploadByClientId() {
+        uploadByIdButton.click();
     }
 
+    @Step("Click upload by account")
+    public void clickUploadByAccount() {
+        uploadByAccountButton.click();
+    }
+
+    @Step("Select brand '{brandName}' to upload")
     public void selectBrandToUpload(String brandName) {
-        // selectClientIdsAndBrandToUpload and change to Brand
         page.click(String.format(BRAND_SELECT_BUTTON_LOCATOR_PATTERN, brandName));
     }
 
-    public void selectFraudSource(String sourceName) {
-        page.click(String.format(SOURCE_SELECT_BUTTON_LOCATOR_PATTERN, sourceName));
+    @Step("Select fraud source '{sourceName}'")
+    public void selectFraudSource(FraudSource sourceName) {
+        page.click(String.format(SOURCE_SELECT_BUTTON_LOCATOR_PATTERN, sourceName.getDisplayName()));
     }
 
-    public void clickVindexFraudSource() {
-        selectFraudSource("Vindex");
-    }
-
+    @Step("Select client IDs and brand '{brandName}' to upload")
     public void selectClientIdsAndBrandToUpload(String brandName) {
         clientIdsButton.hover();
         clientIdsButton.click();
-        page.click(String.format(BRAND_SELECT_BUTTON_LOCATOR_PATTERN, brandName));
+        selectBrandToUpload(brandName);
     }
 
-    public void typeClientID(String clientID) {
-        clientIdInput.fill(clientID);
-        boolean assertion = clientIdInput.textContent().contains(clientID);
-        int iterator = 0;
-        while (!assertion && iterator < 50) {
-            page.waitForTimeout(100);
-            assertion = clientIdInput.textContent().contains(clientID);
-            iterator++;
-        }
+    @Step("Type single client ID: {clientId}")
+    public void typeClientID(String clientId) {
+        typeClientsID(clientId);
     }
 
-    public void typeServerAcc(String serverAcc) {
-        serverAccInput.fill(serverAcc);
-        boolean assertion = serverAccInput.textContent().contains(serverAcc);
-        int iterator = 0;
-        while (!assertion && iterator < 50) {
-            page.waitForTimeout(100);
-            assertion = serverAccInput.textContent().contains(serverAcc);
-            iterator++;
-        }
+    @Step("Type client IDs: {clientIds}")
+    public void typeClientsID(String... clientIds) {
+        String input = String.join(",", clientIds);
+        clientIdInput.fill(input);
     }
 
-    public void typeClientsID(String... clientId) {
-        String input = null;
-        if (clientId.length > 1) {
-            input = String.join(",", clientId);
-        } else {
-            input = clientId[0];
-        }
-        typeClientID(input);
-    }
-
+    @Step("Type server accounts: {serverNameAcc}")
     public void typeServerNameAcc(String... serverNameAcc) {
         StringBuilder inputBuilder = new StringBuilder();
-
         for (int i = 0; i < serverNameAcc.length; i++) {
             if (i > 0) {
-                if (i % 2 == 0) {
-                    inputBuilder.append(",");
-                } else {
-                    inputBuilder.append(" ");
-                }
+                inputBuilder.append(i % 2 == 0 ? "," : " ");
             }
             inputBuilder.append(serverNameAcc[i]);
         }
-
-        String input = inputBuilder.toString();
-        typeServerAcc(input);
+        serverAccInput.fill(inputBuilder.toString());
     }
 
+    @Step("Fill commentary: {commentary}")
+    public void fillCommentary(String commentary) {
+        commentaryField.fill(commentary);
+    }
+
+    @Step("Click pending processing toggle")
+    public void clickPendingProcessingToggle() {
+        pendingProcessingToggleLocator.click();
+    }
+
+    @Step("Click to add fraud button")
     public void clickAddFraudButton() {
-        Allure.step("click to plus button in 'Detected fraud' section");
         addFraudButton.click();
         fraudTypeInput.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
-    public void addSelectedFraudAdd(String fraud, String status) {
-        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
-        page.locator(element).hover();
-        page.locator(element).hover();
-        String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
-        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        page.locator(subelement).click();
-    }
-
-    public void addSelectedFraud(FraudType fraud, FraudTypeStatus status) {
-        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud.getName());
-        page.locator(element).hover();
-        page.locator(element).hover();
-        String subelement = String.format(
-                FRAUD_TYPE_SELECTOR_STATUS,
-                fraud.getCode(),
-                status.getDisplayName().toLowerCase(Locale.ROOT));
-        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        page.locator(subelement).click();
-    }
-
+    @Step("Add fraud {fraud} for delete with status {status}")
     public boolean addFraudForDeleteWithStatus(FraudType fraud, FraudTypeStatus status) {
-        clickAddFraudButton();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
+        addFraud(fraud);
 
-        Locator locator = page.locator(String.format(FRAUD_STATUS_PATTERN, fraud.getCode(), status.getStatus()));
-        if (locator.isVisible()) {
-            locator.click();
+        Locator statusLocator = page.locator(String.format(FRAUD_STATUS_PATTERN, fraud.getCode(), status.getStatus()));
+        if (statusLocator.isVisible()) {
+            statusLocator.hover();
+            statusLocator.click();
             return true;
         }
         return false;
     }
 
-    public List<String> getValidationList() {
-        validationList.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < validationListItem.count(); i++) {
-            list.add(validationListItem.nth(i).textContent());
-        }
-        return list;
-    }
-
-    public void addSelectedFraudAddWithSource(String fraud, String status, String source) {
-        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
-        page.locator(element).hover();
-        page.locator(element).hover();
-        String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
-        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        page.locator(subelement).click();
-        page.locator(String.format(FRAUD_SOURCE_PATTERN, source)).click();
-    }
-
-    public void addSelectedFraudDelete(String fraud) {
-        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
-        page.locator(element).hover();
-        page.locator(element).hover();
-        page.locator(element).click();
-        page.waitForTimeout(500);
-    }
-
+    @Step("Click to add restriction")
     public void clickAddRestrictionButton() {
-        Allure.step("click to add restriction");
         addRestrictionButton.click();
         selectPopup.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
-    public void clickPendingProcessingToggle() {
-        Allure.step("click to toggle pending processing");
-        pendingProcessingToggleLocator.click();
-    }
-
+    @Step("Select restriction: {restriction}")
     public void selectRestriction(String restriction) {
-        String locator = String.format(RESTRICTION_POPUP_LIST_ELEMENT_LOCATOR_PATTERN, restriction);
-        page.locator(locator).click();
+        page.locator(String.format(RESTRICTION_POPUP_LIST_ELEMENT_LOCATOR_PATTERN, restriction))
+                .click();
     }
 
-    /**
-     * @param level "Medium", "Low", etc.
-     */
+    @Step("Select restriction worse trading level: {level}")
     public void selectRestrictionWorseTradingLevel(String level) {
-        String locator = String.format(RESTRICTION_WORSE_TRADING_POPUP_LIST_ELEMENT_LOCATOR_PATTERN, level);
-        page.locator(locator).click();
+        page.locator(String.format(RESTRICTION_WORSE_TRADING_POPUP_LIST_ELEMENT_LOCATOR_PATTERN, level))
+                .click();
     }
 
-    public void clickApplyselectedRestrictions() {
-        Allure.step("click to apply restrictions");
+    @Step("Apply selected restrictions")
+    public void clickApplySelectedRestrictions() {
         selectPopupApplyButton.click();
     }
 
-    public void fillCommentary(String commentary) {
-        commentaryField.fill(commentary);
-    }
-
+    @Step("Click apply upload")
     public void clickApplyUpload() {
         applyUploadButton.click();
         uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
+    @Step("Click delete upload")
     public void clickDeleteUpload() {
         deleteUploadButton.click();
         uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
-    public void clickUploadByClientId() {
-        uploadByIdButton.click();
+    @Step("Get validation error messages from the list")
+    public List<String> getValidationErrors() {
+        validationList.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        return validationListItem.allTextContents().stream()
+                .map(String::trim)
+                .filter(text -> !text.isEmpty())
+                .toList();
     }
 
-    public void clickUploadByAccount() {
-        uploadByAccountButton.click();
-    }
-
-    public void verifySuccessMessageUpload() {
+    @Step("Get success toast message text")
+    public String getSuccessToastMessage() {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertThat(successToast.textContent(), containsString("Request received"));
+        return successToast.textContent();
     }
 
-    public void verifySuccessMessageUpload(int deductionsCount) {
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String s = successToast.textContent();
-        assertThat(s, containsString("Request received"));
-        if (deductionsCount > 1) {
-            assertThat(s, containsString(String.format("%d deductions were created automatically", deductionsCount)));
-        } else if (deductionsCount == 1) {
-            assertThat(s, containsString(String.format("%d deduction was created automatically", deductionsCount)));
-        }
-    }
-
-    public void verifyWarningMessageUpload(int pendingProcessingCount) {
+    @Step("Get warning toast message text")
+    public String getWarningToastMessage() {
         warningToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String s = warningToast.textContent();
-        assertThat(s, containsString("illegal profit and suggested deduction need to be processed manually"));
-        if (pendingProcessingCount > 1) {
-            assertThat(s, containsString(String.format("%d deductions require calculation", pendingProcessingCount)));
-        } else if (pendingProcessingCount == 1) {
-            assertThat(s, containsString(String.format("%d deduction requires calculation", pendingProcessingCount)));
-        }
+        return warningToast.textContent();
     }
 
-    public void verifySuccessMessageDelete() {
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertTrue(successToast.textContent().contains("Selected actions are now being processed"));
-    }
-
+    @Step("Get pending processing content for UCID: {ucid}")
     public String getClientInPendingProcessingContent(String ucid) {
         return page.locator(String.format("//*[@data-qa='virtualized_table__rows__%s__pending_processing']", ucid))
                 .textContent();
     }
 
+    @Step("Get all pending processing cells content")
     public List<String> getPendingProcessingCellsContent() {
-        var list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < pendingProcessingCells.count(); i++) {
-            list.add(pendingProcessingCells.nth(i).textContent());
+            list.add(pendingProcessingCells.nth(i).textContent().trim());
         }
         return list;
     }
 
-    public void addRestriction(String... addedRestriction) {
-        Allure.step("add fraud on resolve screen");
-        restrictionListButton.click();
-        for (String i : addedRestriction) {
-            page.getByRole(AriaRole.OPTION).getByText(i).click();
+    @Step("Check if upload success message is displayed")
+    public boolean isUploadSuccessMessageDisplayed() {
+        String toastText = getSuccessToastMessage();
+        return toastText.contains(MSG_UPLOAD_SUCCESS);
+    }
+
+    @Step("Check if delete success message is displayed")
+    public boolean isDeleteSuccessMessageDisplayed() {
+        String toastText = getSuccessToastMessage();
+        return toastText.contains(MSG_DELETE_SUCCESS);
+    }
+
+    @Step("Verify success toast contains expected count: {count}")
+    public boolean verifySuccessMessageUpload(int count) {
+        String actualText = getSuccessToastMessage();
+        String expectedSubstring;
+        if (count > 1) {
+            expectedSubstring = "deductions were created automatically";
+        } else {
+            expectedSubstring = "deduction was created automatically";
         }
-        restrictionApplyButton.click();
+        return actualText.contains(String.valueOf(count)) && actualText.contains(expectedSubstring);
     }
 
-    public void addFraud(FraudType fraud, FraudTypeStatus status, FraudSubtype subtype) {
-        addFraudButton.click();
-        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
-        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
-        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName()))
-                .hover();
-        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(status.getDisplayName()))
-                .hover();
-        page.locator(FRAUD_SUBTYPE_FORMAT.formatted(subtype.getName())).click();
+    @Step("Check if warning manual process message is displayed for {pendingProcessingCount} deductions")
+    public boolean isWarningManualProcessMessageDisplayed(int pendingProcessingCount) {
+        String toastText = getWarningToastMessage();
+        boolean containsBaseText = toastText.contains(MSG_WARNING_MANUAL_PROCESS);
+
+        if (pendingProcessingCount > 1) {
+            return containsBaseText
+                    && toastText.contains(String.format("%d deductions require calculation", pendingProcessingCount));
+        } else if (pendingProcessingCount == 1) {
+            return containsBaseText
+                    && toastText.contains(String.format("%d deduction requires calculation", pendingProcessingCount));
+        }
+        return containsBaseText;
     }
 
-    public void addFraud(FraudType fraud, FraudTypeStatus status) {
-        addFraudButton.click();
-        page.locator(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN.formatted(fraud.name()))
-                .hover();
-        page.locator(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN.formatted(fraud.name()))
+    @Step("Add detected fraud: {fraudType}")
+    public void addFraud(FraudType fraudType) {
+        clickAddFraudButton();
+        selectFraudType(fraudType);
+    }
+
+    @Step("Add detected fraud: {fraudType} with status: {status}")
+    public void addFraud(FraudType fraudType, FraudTypeStatus status) {
+        addFraud(fraudType);
+        selectFraudStatus(status);
+    }
+
+    @Step("Add detected fraud: {fraudType} with status: {status} and subtype: {subtype}")
+    public void addFraud(FraudType fraudType, FraudTypeStatus status, FraudSubtype subtype) {
+        addFraud(fraudType, status);
+        selectFraudSubtype(subtype);
+    }
+
+    @Step("Select fraud type: {type}")
+    private void selectFraudType(FraudType type) {
+        hoverAndClick(FRAUD_TYPE_SELECTOR_FORMAT, type.getName());
+    }
+
+    @Step("Select status: {status}")
+    private void selectFraudStatus(FraudTypeStatus status) {
+        hoverAndClick(FRAUD_TYPE_SELECTOR_STATUS, status.getDisplayName());
+    }
+
+    @Step("Select subtype: {subtype}")
+    private void selectFraudSubtype(FraudSubtype subtype) {
+        hoverAndClick(FRAUD_SUBTYPE_FORMAT, subtype.getName());
+    }
+
+    @Step("Select fraud: {fraud} with status: {status} and source: {source}")
+    public void selectSource(FraudSource source) {
+        page.locator(String.format(FRAUD_SOURCE_PATTERN, source.getDisplayName()))
                 .click();
-        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(
-                        fraud.getCode(), status.getStatus(), status.getDisplayName()))
-                .hover();
-        page.locator(FRAUD_TYPE_STATUS_FOR_SUBTYPE_FORMAT.formatted(
-                        fraud.getCode(), status.getStatus(), status.getDisplayName()))
-                .click();
+    }
+
+    @Step("Hover and click on element: {values}")
+    public void hoverAndClick(String locator, String pattern) {
+        page.locator(String.format(locator, pattern)).hover();
+        page.locator(String.format(locator, pattern)).click();
     }
 }

@@ -4,6 +4,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.FraudSource.VINDEX;
 import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
@@ -118,7 +119,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         fraudstersPage.openUploadDrawer();
         fraudstersPage.typeServerNameAcc(account1.serverName, account1.account.toString());
         fraudstersPage.addFraud(HEDGING, CONFIRMED, FraudSubtype.EXTERNAL);
-        fraudstersPage.selectFraudSource("Vindex");
+        fraudstersPage.selectFraudSource(VINDEX);
         fraudstersPage.fillCommentary("test comment");
         fraudstersPage.clickApplyUpload();
 
@@ -141,7 +142,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         fraudstersPage.openUploadDrawer();
         fraudstersPage.typeServerNameAcc(account1.serverName, account1.account.toString());
         fraudstersPage.addFraud(HEDGING, CONFIRMED, FraudSubtype.INTERNAL);
-        fraudstersPage.selectFraudSource("Vindex");
+        fraudstersPage.selectFraudSource(VINDEX);
         fraudstersPage.fillCommentary("test comment");
         fraudstersPage.clickApplyUpload();
         fraudstersPage.clickPendingProcessingToggle();
@@ -160,7 +161,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.previouslyReportedFraudAddDeduction();
-        resolvePage.selectFraudSource("Vindex");
+        resolvePage.selectFraudSource(VINDEX.getDisplayName());
         resolvePage.fillCommentAndApply("test comment");
 
         var deductionList = getObjectsFromDB(
@@ -183,7 +184,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientID(ucid.split("-")[1]);
         fraudstersPage.selectBrandToUpload(client.getBrand());
         fraudstersPage.addFraud(HEDGING, CONFIRMED, FraudSubtype.EXTERNAL);
-        fraudstersPage.selectFraudSource("Vindex");
+        fraudstersPage.selectFraudSource(VINDEX);
         fraudstersPage.fillCommentary("test comment");
         fraudstersPage.clickApplyUpload();
         fraudstersPage.clickPendingProcessingToggle();
@@ -193,7 +194,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.previouslyReportedFraudAddDeduction();
-        resolvePage.selectFraudSource("Vindex");
+        resolvePage.selectFraudSource(VINDEX.getDisplayName());
         resolvePage.clickIllegalProfitAccountsDropdown();
         resolvePage.clickAccountInDropdown(account1.account.toString());
         resolvePage.clickAccountInDropdown(account2.account.toString());
@@ -228,7 +229,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientID(ucid.split("-")[1]);
         fraudstersPage.selectBrandToUpload(client.getBrand());
         fraudstersPage.addFraud(HEDGING, CONFIRMED, FraudSubtype.INTERNAL);
-        fraudstersPage.selectFraudSource("Vindex");
+        fraudstersPage.selectFraudSource(VINDEX);
         fraudstersPage.fillCommentary("test comment");
         fraudstersPage.clickApplyUpload();
         fraudstersPage.clickPendingProcessingToggle();
@@ -247,7 +248,7 @@ public class DeductionTypeMassUploadTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         resolvePage.previouslyReportedFraudAddDeduction();
-        resolvePage.selectFraudSource("Vindex");
+        resolvePage.selectFraudSource(VINDEX.getDisplayName());
         resolvePage.fillCommentAndApply("test comment");
 
         var deductionList = getObjectsFromDB(
