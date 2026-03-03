@@ -791,6 +791,25 @@ class EnoughTradesRuleTest {
     }
 
     @Test
+    @AllureId("2470")
+    @DisplayName("Enough trades rule.No Alert. Previous end = 202, decision 2 . Element id: Event_1en3mz7")
+    void enoughTradesTest28() throws Exception {
+        DataHelper data = dbDataMap.get("28");
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1en3mz7",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "put_rule_execution",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+    }
+
+    @Test
     @AllureId("2182")
     @DisplayName("Enough trades rule. Alert 1  . Element id: Event_1gmc8xt")
     void enoughTradesTestAlert1() throws Exception {
@@ -927,6 +946,53 @@ class EnoughTradesRuleTest {
         assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
         assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
+    }
+
+    @Test
+    @AllureId("2471")
+    @DisplayName("Enough trades rule. Alert4. Previous end = 202, decision !=2 . Element id: Event_1gmc8xt")
+    void enoughTradesTestAlert4() throws Exception {
+        DataHelper data = dbDataMap.get("773");
+        produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
+
+        checkElementIdSubrule(
+                "Event_1gmc8xt",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString(), "3");
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(3));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(202));
+
+        // Verify alert kafka
+        Allure.step("Get alerts kafka messages");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlertV2 alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlertV2.class);
+        assertThat("Verify alert id not null", alert.getAlertId(), notNullValue());
+        assertThat("Verify timestamp not null", alert.getTimestamp(), notNullValue());
+        assertThat("Verify ucid is correct", alert.getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.getRule(), notNullValue());
+        assertThat("Verify rule ver not null", alert.getRule().getVer(), notNullValue());
+        assertThat("Verify rule name is correct", alert.getRule().getName(), equalTo("Enough Trades"));
+        assertThat("Verify rule trigger is correct", alert.getTrigger(), equalTo("Withdrawal"));
+        assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
+        assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes().getStage(), is("1"));
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
     }
