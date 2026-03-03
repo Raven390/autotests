@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.payment;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static business_objects.api.mitigation_service.MitigationServiceRequest.getRestrictionsByUcid;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
@@ -10,6 +11,7 @@ import static helpers.asserts.AlertsAssertsHelper.assertThatAlertNotFailed;
 import static helpers.data.DataDeleteHelper.deleteData;
 import static helpers.data.DataSetupHelper.setupData;
 import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.Restriction.*;
 import static helpers.data.rules.payments.ChargebackRuleDataFactory.setupChargebackData;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
@@ -17,9 +19,13 @@ import static helpers.database.PaymentGateHelper.getPaymentRuleExecution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tests.TestBaseRule.*;
 import static utils.Constants.*;
 
+import business_objects.api.mitigation_service.GetGeneralRestrictionResponseBody;
+import business_objects.api.mitigation_service.GetRestrictionResponseBody;
+import business_objects.api.mitigation_service.GetTradingRestrictionResponseBody;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
@@ -34,10 +40,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import org.junit.jupiter.api.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -1074,7 +1077,7 @@ class ChargebackRuleTest {
     @Test
     @AllureId("2285")
     @DisplayName(
-            "Score 1. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is = 1. Chargeback fraud Card not used by known fraudster.")
+            "Score 1. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1. Chargeback fraud Card not used by known fraudster. event.regulator != ASIC or FCA")
     void chargeback18Test() throws Exception {
         DataHelper data = dbDataMap.get("18");
         setupData(data);
@@ -1083,7 +1086,7 @@ class ChargebackRuleTest {
         Thread.sleep(1000);
         produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
 
-        checkElementId("Event_0nx74ci", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("Event_1z0wqcj", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
         checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
         checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
         checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
@@ -1117,7 +1120,7 @@ class ChargebackRuleTest {
                 alert.getMerchantOrderId(),
                 is(data.callbackEvent.getCallback().getData().getOrderId()));
         assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
-        assertThat("Verify alert ", alert.getReason(), is("Multi-condition match"));
+        assertThat("Verify alert ", alert.getReason(), is("Same name: Card & KYC"));
         assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
         assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
         assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
@@ -1164,11 +1167,274 @@ class ChargebackRuleTest {
                         .getCardMaskedNumber()));
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(3, clientRestrictions.size());
+
+        GetTradingRestrictionResponseBody restriction1 = (GetTradingRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(CLOSE_ONLY_MODE.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction1);
+        for (GetTradingRestrictionResponseBody.TradingStatus status : restriction1.getStatus()) {
+            assertEquals("APPLIED", status.getStatus());
+        }
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
+    }
+
+    @Test
+    @AllureId("2443")
+    @DisplayName(
+            "Score 1. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1. Chargeback fraud Card not used by known fraudster. event.regulator = ASIC")
+    void chargeback181Test() throws Exception {
+        DataHelper data = dbDataMap.get("181");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("Event_1z0wqcj", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(4));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(208));
+
+        // validate payment decision
+        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb(paymentId);
+        assertThat("Verify amount of decisions in DB", decision.size(), is(1));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionType(), is("payment"));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
+
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getName());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        // alert root
+        assertThat(
+                "Verify alert rule",
+                alert.getMerchantOrderId(),
+                is(data.callbackEvent.getCallback().getData().getOrderId()));
+        assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
+        assertThat("Verify alert ", alert.getReason(), is("Same name: Card & KYC"));
+        assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
+        assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
+        assertThat(
+                "Verify alert ",
+                alert.getCurrency(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCurrency()));
+        assertThat("Verify alert ", alert.getAccount(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getTrigger(), is("Deposit"));
+        assertThat(
+                "Verify alert ",
+                alert.getAmount(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getAmount()));
+        assertThat("Verify alert ", alert.getAmountUsd(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert ", alert.getType(), is("PAYMENT"));
+
+        // alert/rule
+        assertThat("Verify alert rule", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
+
+        // alert/attribute
+        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), nullValue());
+        assertThat("Verify alert attributes", alert.getAttributes().getThreeDs(), is("No"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
+        assertThat(
+                "Verify alert attributes",
+                alert.getAttributes().getPaymentProfile(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCardMaskedNumber()));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(2, clientRestrictions.size());
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
+    }
+
+    @Test
+    @AllureId("2438")
+    @DisplayName(
+            "Score 1. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is != 1. Chargeback fraud Card not used by known fraudster. event.regulator = FCA")
+    void chargeback182Test() throws Exception {
+        DataHelper data = dbDataMap.get("182");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("Event_1z0wqcj", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(4));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(208));
+
+        // validate payment decision
+        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb(paymentId);
+        assertThat("Verify amount of decisions in DB", decision.size(), is(1));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionType(), is("payment"));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
+
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getName());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        // alert root
+        assertThat(
+                "Verify alert rule",
+                alert.getMerchantOrderId(),
+                is(data.callbackEvent.getCallback().getData().getOrderId()));
+        assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
+        assertThat("Verify alert ", alert.getReason(), is("Same name: Card & KYC"));
+        assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
+        assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
+        assertThat(
+                "Verify alert ",
+                alert.getCurrency(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCurrency()));
+        assertThat("Verify alert ", alert.getAccount(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getTrigger(), is("Deposit"));
+        assertThat(
+                "Verify alert ",
+                alert.getAmount(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getAmount()));
+        assertThat("Verify alert ", alert.getAmountUsd(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert ", alert.getType(), is("PAYMENT"));
+
+        // alert/rule
+        assertThat("Verify alert rule", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
+
+        // alert/attribute
+        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), nullValue());
+        assertThat("Verify alert attributes", alert.getAttributes().getThreeDs(), is("No"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
+        assertThat(
+                "Verify alert attributes",
+                alert.getAttributes().getPaymentProfile(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCardMaskedNumber()));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(2, clientRestrictions.size());
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
     }
 
     @Test
     @AllureId("2286")
-    @DisplayName("Chargeback fraud Card was used by known fraudster. No segment. no Open Trades. card not 3dS.")
+    @DisplayName(
+            "Chargeback fraud Card was used by known fraudster. No segment. no Open Trades. card not 3dS. event.regulator != ASIC or FCA")
     void chargeback19Test() throws Exception {
         DataHelper data = dbDataMap.get("19");
         setupData(data);
@@ -1249,7 +1515,7 @@ class ChargebackRuleTest {
         // alert/attribute
         assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
         assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
-        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(2));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
         assertThat(
                 "Verify alert attributes",
                 alert.getAttributes().getPaymentProfile(),
@@ -1261,6 +1527,274 @@ class ChargebackRuleTest {
                         .getCardMaskedNumber()));
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(3, clientRestrictions.size());
+
+        GetTradingRestrictionResponseBody restriction1 = (GetTradingRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(CLOSE_ONLY_MODE.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction1);
+        for (GetTradingRestrictionResponseBody.TradingStatus status : restriction1.getStatus()) {
+            assertEquals("APPLIED", status.getStatus());
+        }
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
+    }
+
+    @Test
+    @AllureId("2439")
+    @DisplayName(
+            "Chargeback fraud Card was used by known fraudster. No segment. no Open Trades. card not 3dS. event.regulator = ASIC")
+    void chargeback191Test() throws Exception {
+        DataHelper data = dbDataMap.get("191");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+        for (ClientHelper i : data.connectedClientHelpers) {
+            addFraudForClient(i, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        }
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_203", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(4));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(203));
+
+        // validate payment decision
+        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb(paymentId);
+        assertThat("Verify amount of decisions in DB", decision.size(), is(1));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionType(), is("payment"));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
+
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getName());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        // alert root
+        assertThat(
+                "Verify alert rule",
+                alert.getMerchantOrderId(),
+                is(data.callbackEvent.getCallback().getData().getOrderId()));
+        assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
+        assertThat("Verify alert ", alert.getReason(), is("Card used by known fraudster"));
+        assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
+        assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
+        assertThat(
+                "Verify alert ",
+                alert.getCurrency(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCurrency()));
+        assertThat("Verify alert ", alert.getAccount(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getTrigger(), is("Deposit"));
+        assertThat(
+                "Verify alert ",
+                alert.getAmount(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getAmount()));
+        assertThat("Verify alert ", alert.getAmountUsd(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert ", alert.getType(), is("PAYMENT"));
+
+        // alert/rule
+        assertThat("Verify alert rule", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
+
+        // alert/attribute
+        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
+        assertThat(
+                "Verify alert attributes",
+                alert.getAttributes().getPaymentProfile(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCardMaskedNumber()));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(2, clientRestrictions.size());
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
+    }
+
+    @Test
+    @AllureId("2440")
+    @DisplayName(
+            "Chargeback fraud Card was used by known fraudster. No segment. no Open Trades. card not 3dS. event.regulator = FCA")
+    void chargeback192Test() throws Exception {
+        DataHelper data = dbDataMap.get("192");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        Thread.sleep(1000);
+        for (ClientHelper i : data.connectedClientHelpers) {
+            addFraudForClient(i, CHARGEBACK, FraudTypeStatus.POTENTIAL, List.of(""));
+        }
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_203", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("get_deposits_by_order_id", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("send_alert", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_decision_not_applicable", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+
+        Allure.step("Retrieve payment id");
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
+        Assertions.assertNotNull(paymentEventsObject);
+        UUID paymentId = paymentEventsObject.getPaymentId();
+        PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(4));
+        assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(203));
+
+        // validate payment decision
+        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb(paymentId);
+        assertThat("Verify amount of decisions in DB", decision.size(), is(1));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionType(), is("payment"));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionCode(), is(3));
+
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getName());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        RuleAlertV2 alert = alerts.getFirst();
+        // alert root
+        assertThat(
+                "Verify alert rule",
+                alert.getMerchantOrderId(),
+                is(data.callbackEvent.getCallback().getData().getOrderId()));
+        assertThat("Verify alert rule", alert.getPaymentMethod(), is(data.callbackEvent.getPaymentMethodCode()));
+        assertThat("Verify alert ", alert.getReason(), is("Card used by known fraudster"));
+        assertThat("Verify alert ", alert.getTriggerCreatedTime(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getFraudType(), is("CHARGEBACK"));
+        assertThat("Verify alert ", alert.getPaymentEventId(), is(notNullValue()));
+        assertThat(
+                "Verify alert ",
+                alert.getCurrency(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCurrency()));
+        assertThat("Verify alert ", alert.getAccount(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getTrigger(), is("Deposit"));
+        assertThat(
+                "Verify alert ",
+                alert.getAmount(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getAmount()));
+        assertThat("Verify alert ", alert.getAmountUsd(), is(notNullValue()));
+        assertThat("Verify alert ", alert.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert ", alert.getType(), is("PAYMENT"));
+
+        // alert/rule
+        assertThat("Verify alert rule", alert.getRule().getVer(), is(notNullValue()));
+        assertThat("Verify alert rule", alert.getRule().getName(), is("Chargeback"));
+
+        // alert/attribute
+        assertThat("Verify alert attributes", alert.getAttributes().getHighValueMultiCard(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getCardUsedByKnownFraudster(), is("Yes"));
+        assertThat("Verify alert attributes", alert.getAttributes().getFraudScore(), is(1));
+        assertThat(
+                "Verify alert attributes",
+                alert.getAttributes().getPaymentProfile(),
+                is(data.callbackEvent
+                        .getCallback()
+                        .getData()
+                        .getCharge()
+                        .getAttributes()
+                        .getCardMaskedNumber()));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(2, clientRestrictions.size());
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
     }
 
     @Test
@@ -1544,7 +2078,7 @@ class ChargebackRuleTest {
     @Test
     @AllureId("2294")
     @DisplayName(
-            "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades =0. Element_id: end_206")
+            "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades =0.regulator != ASIC or FCA. Element_id: end_206regulator != ASIC or FCA")
     void chargeback27Test() throws Exception {
         DataHelper data = dbDataMap.get("27");
         setupData(data);
@@ -1564,5 +2098,127 @@ class ChargebackRuleTest {
         assertThat("Verify alert ", alerts.getFirst().getReason(), is("Card verified by other client"));
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(3, clientRestrictions.size());
+
+        GetTradingRestrictionResponseBody restriction1 = (GetTradingRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(CLOSE_ONLY_MODE.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction1);
+        for (GetTradingRestrictionResponseBody.TradingStatus status : restriction1.getStatus()) {
+            assertEquals("APPLIED", status.getStatus());
+        }
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
+    }
+
+    @Test
+    @AllureId("2441")
+    @DisplayName(
+            "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades =0.regulator = ASIC. Element_id: end_206")
+    void chargeback271Test() throws Exception {
+        DataHelper data = dbDataMap.get("271");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_206", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getName());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert ", alerts.getFirst().getReason(), is("Card verified by other client"));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(2, clientRestrictions.size());
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
+    }
+
+    @Test
+    @AllureId("2442")
+    @DisplayName(
+            "Chargeback Chargeback. Branch 10, segment is not ultra or very high, unclosed trades =0.regulator = FCA. Element_id: end_206")
+    void chargeback272Test() throws Exception {
+        DataHelper data = dbDataMap.get("272");
+        setupData(data);
+
+        addFraudForClient(data.clientHelper, HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+        addFraudForClient(data.connectedClientHelpers.getFirst(), HFT_ABUSE, FraudTypeStatus.POTENTIAL, List.of(""));
+
+        produceCallbackMessageToCrmPaymentTopic(data.callbackEvent);
+
+        checkElementId("end_206", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("process_instance_key", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("put_rule_execution", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        checkElementId("end", data.callbackEvent.getId(), Rule.CHARGEBACK.getProcessId());
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, Rule.CHARGEBACK.getName());
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert ", alerts.getFirst().getReason(), is("Card verified by other client"));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Chargeback");
+
+        // validate restrictions
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(objectMapper.readValue(
+                getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(),
+                GetRestrictionResponseBody[].class));
+        assertEquals(2, clientRestrictions.size());
+
+        GetGeneralRestrictionResponseBody restriction2 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody -> getRestrictionResponseBody.code.equals(DEPOSITS.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction2);
+        assertEquals("APPLIED", restriction2.getStatus());
+
+        GetGeneralRestrictionResponseBody restriction3 = (GetGeneralRestrictionResponseBody) clientRestrictions.stream()
+                .filter(getRestrictionResponseBody ->
+                        getRestrictionResponseBody.code.equals(INTERNAL_TRANSFER.getCode()))
+                .findFirst()
+                .orElse(null);
+        Assertions.assertNotNull(restriction3);
+        assertEquals("APPLIED", restriction3.getStatus());
     }
 }

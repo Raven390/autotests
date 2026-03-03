@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 
+import business_objects.api.mitigation_service.GetGeneralRestrictionResponseBody;
 import business_objects.api.mitigation_service.GetRestrictionResponseBody;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
@@ -206,7 +207,8 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
                 GetRestrictionResponseBody[].class));
         assertEquals(1, clientRestrictions.size());
 
-        GetRestrictionResponseBody restriction = clientRestrictions.getFirst();
+        GetGeneralRestrictionResponseBody restriction =
+                (GetGeneralRestrictionResponseBody) clientRestrictions.getFirst();
         assertEquals(MANUAL_WITHDRAWAL_REVIEW.getCode(), restriction.getCode());
         assertEquals("CANCELLED", restriction.getStatus());
     }

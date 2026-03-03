@@ -247,5 +247,8 @@ public class RuleAlertV2 {
 
         @JsonProperty("Connected by payout")
         private String connectedByPayout;
+
+        @JsonProperty("Stage")
+        private String stage;
     }
 }
