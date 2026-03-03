@@ -797,8 +797,16 @@ class EnoughTradesRuleTest {
         DataHelper data = dbDataMap.get("770");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1gmc8xt", data.crmWithdrawalEventV2.getId(), "enough_trades");
-        checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementIdSubrule(
+                "Event_1gmc8xt",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -824,6 +832,7 @@ class EnoughTradesRuleTest {
         assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
         assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes().getStage(), is("1"));
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
     }
@@ -835,9 +844,21 @@ class EnoughTradesRuleTest {
         DataHelper data = dbDataMap.get("771");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1mzlm7b", data.crmWithdrawalEventV2.getId(), "enough_trades");
-        checkElementId("createETAlertVariable", data.crmWithdrawalEventV2.getId(), "enough_trades");
-        checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementIdSubrule(
+                "Event_1mzlm7b",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "createETAlertVariable",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
+        checkElementIdSubrule(
+                "Event_0sg27lc",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -863,6 +884,7 @@ class EnoughTradesRuleTest {
         assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(EXCHANGER.getCode()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
         assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+        assertThat("Verify rule attributes not null", alert.getAttributes().getStage(), is("3"));
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "Enough Trades");
     }
@@ -874,7 +896,11 @@ class EnoughTradesRuleTest {
         DataHelper data = dbDataMap.get("772");
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1gmc8xt", data.crmWithdrawalEventV2.getId(), "enough_trades");
+        checkElementIdSubrule(
+                "Event_1gmc8xt",
+                data.crmWithdrawalEventV2.getId(),
+                "router_rule_crm_payment_shadow_mode",
+                "enough_trades");
         checkElementId("Event_0sg27lc", data.crmWithdrawalEventV2.getId(), "enough_trades");
 
         Allure.step("Retrieve payment id");
