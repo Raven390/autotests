@@ -112,7 +112,7 @@ public class MitigationHelper {
                 DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, where, ClientTradingRestriction.class);
     }
 
-    public static void deleteTradingEnvironmentRestrictions(String ucid) throws Exception {
+    public static void deleteTradingEnvironmentRestrictions(String ucid) {
         String whereRestrictionId = String.format(
                 "client_restriction_id IN (SELECT id from %s where ucid = '%s')",
                 MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION, ucid);

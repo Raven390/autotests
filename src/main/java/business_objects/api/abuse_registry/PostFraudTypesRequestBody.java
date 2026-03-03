@@ -3,7 +3,11 @@ package business_objects.api.abuse_registry;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class PostFraudTypesRequestBody {
 
     @JsonProperty("actor")
@@ -25,38 +29,6 @@ public class PostFraudTypesRequestBody {
         this.actor = actor;
         this.system = system;
         this.comment = comment;
-        this.fraudTypes = fraudTypes;
-    }
-
-    public String getActor() {
-        return actor;
-    }
-
-    public void setActor(String actor) {
-        this.actor = actor;
-    }
-
-    public String getSystem() {
-        return system;
-    }
-
-    public void setSystem(String system) {
-        this.system = system;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public List<FraudTypeWithStatus> getFraudTypes() {
-        return fraudTypes;
-    }
-
-    public void setFraudTypes(List<FraudTypeWithStatus> fraudTypes) {
         this.fraudTypes = fraudTypes;
     }
 

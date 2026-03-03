@@ -151,6 +151,7 @@ public class FraudstersPage extends AbstractPage {
     }
 
     public void selectBrandToUpload(String brandName) {
+        // selectClientIdsAndBrandToUpload and change to Brand
         page.click(String.format(BRAND_SELECT_BUTTON_LOCATOR_PATTERN, brandName));
     }
 

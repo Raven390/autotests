@@ -15,8 +15,6 @@ import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbName.POSTGRES;
-import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -24,7 +22,6 @@ import static utils.Utils.*;
 
 import business_objects.api.mitigation_service.*;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.mitigation_service_db.client_trading_environment_restriction.ClientTradingEnvironmentRestrictionEntity;
 import business_objects.ui.audit_trail.AuditTrailItemV2;
 import helpers.data.ClientHelper;
 import helpers.data.enums.TradingEnvironmentLevel;
@@ -32,7 +29,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.time.Duration;
 import java.util.List;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -233,25 +229,57 @@ class AuditTrailWorseTradingTest extends TestBaseWeb {
         BigInteger accountID4 = BigInteger.valueOf(account4.account);
         BigInteger accountID5 = BigInteger.valueOf(account5.account);
         BigInteger accountID6 = BigInteger.valueOf(account6.account);
-        addChangeWorseTradingLevel(accountID, correlationId, account.getServerIdSt(), MEDIUM, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(accountID2, correlationId, account2.getServerIdSt(), MEDIUM, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID2, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID, correlationId, account.getServerIdSt(), MEDIUM, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID2, correlationId, account2.getServerIdSt(), MEDIUM, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID2, MEDIUM, APPLIED);
 
         // test
         String correlationId2 = getRandomUuidString();
-        deleteWorseTradingLevel(accountID, correlationId2, account.getServerIdSt(), applyAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID, MEDIUM, CANCELLED);
-        deleteWorseTradingLevel(accountID2, correlationId2, account2.getServerIdSt(), applyAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID2, MEDIUM, CANCELLED);
-        addChangeWorseTradingLevel(accountID3, correlationId2, account3.getServerIdSt(), MEDIUM, applyAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID3, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(accountID4, correlationId2, account4.getServerIdSt(), MEDIUM, applyAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID4, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(accountID5, correlationId2, account5.getServerIdSt(), HIGH, applyAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID5, HIGH, APPLIED);
-        addChangeWorseTradingLevel(accountID6, correlationId2, account6.getServerIdSt(), HIGH, applyAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID6, HIGH, APPLIED);
+        deleteWorseTradingRestriction(
+                client.getUcid(), accountID, correlationId2, account.getServerIdSt(), applyAndDeleteComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, MEDIUM, CANCELLED);
+        deleteWorseTradingRestriction(
+                client.getUcid(), accountID2, correlationId2, account2.getServerIdSt(), applyAndDeleteComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID2, MEDIUM, CANCELLED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID3,
+                correlationId2,
+                account3.getServerIdSt(),
+                MEDIUM,
+                applyAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID3, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID4,
+                correlationId2,
+                account4.getServerIdSt(),
+                MEDIUM,
+                applyAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID4, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID5,
+                correlationId2,
+                account5.getServerIdSt(),
+                HIGH,
+                applyAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID5, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID6,
+                correlationId2,
+                account6.getServerIdSt(),
+                HIGH,
+                applyAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID6, HIGH, APPLIED);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -296,31 +324,57 @@ class AuditTrailWorseTradingTest extends TestBaseWeb {
         BigInteger accountID3 = BigInteger.valueOf(account3.account);
         BigInteger accountID4 = BigInteger.valueOf(account4.account);
         BigInteger accountID5 = BigInteger.valueOf(account5.account);
-        addChangeWorseTradingLevel(accountID, correlationId, account.getServerIdSt(), HIGH, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID, HIGH, APPLIED);
-        addChangeWorseTradingLevel(accountID2, correlationId, account2.getServerIdSt(), HIGH, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID2, HIGH, APPLIED);
-        addChangeWorseTradingLevel(accountID3, correlationId, account3.getServerIdSt(), LOW, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID3, LOW, APPLIED);
-        addChangeWorseTradingLevel(accountID4, correlationId, account4.getServerIdSt(), HIGH, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID4, HIGH, APPLIED);
-        addChangeWorseTradingLevel(accountID5, correlationId, account5.getServerIdSt(), HIGH, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID5, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID, correlationId, account.getServerIdSt(), HIGH, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID2, correlationId, account2.getServerIdSt(), HIGH, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID2, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID3, correlationId, account3.getServerIdSt(), LOW, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID3, LOW, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID4, correlationId, account4.getServerIdSt(), HIGH, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID4, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID5, correlationId, account5.getServerIdSt(), HIGH, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID5, HIGH, APPLIED);
 
         // test
         String correlationId2 = getRandomUuidString();
-        addChangeWorseTradingLevel(accountID, correlationId2, account.getServerIdSt(), MEDIUM, changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(
-                accountID2, correlationId2, account2.getServerIdSt(), MEDIUM, changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID2, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(
-                accountID3, correlationId2, account3.getServerIdSt(), MEDIUM, changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID3, MEDIUM, APPLIED);
-        deleteWorseTradingLevel(accountID4, correlationId2, account4.getServerIdSt(), changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID4, HIGH, CANCELLED);
-        deleteWorseTradingLevel(accountID5, correlationId2, account5.getServerIdSt(), changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID5, HIGH, CANCELLED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID,
+                correlationId2,
+                account.getServerIdSt(),
+                MEDIUM,
+                changeAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID2,
+                correlationId2,
+                account2.getServerIdSt(),
+                MEDIUM,
+                changeAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID2, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID3,
+                correlationId2,
+                account3.getServerIdSt(),
+                MEDIUM,
+                changeAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID3, MEDIUM, APPLIED);
+        deleteWorseTradingRestriction(
+                client.getUcid(), accountID4, correlationId2, account4.getServerIdSt(), changeAndDeleteComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID4, HIGH, CANCELLED);
+        deleteWorseTradingRestriction(
+                client.getUcid(), accountID5, correlationId2, account5.getServerIdSt(), changeAndDeleteComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID5, HIGH, CANCELLED);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -366,30 +420,54 @@ class AuditTrailWorseTradingTest extends TestBaseWeb {
         BigInteger accountID3 = BigInteger.valueOf(account3.account);
         BigInteger accountID4 = BigInteger.valueOf(account4.account);
         BigInteger accountID5 = BigInteger.valueOf(account5.account);
-        addChangeWorseTradingLevel(accountID, correlationId, account.getServerIdSt(), LOW, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID, LOW, APPLIED);
-        addChangeWorseTradingLevel(accountID2, correlationId, account2.getServerIdSt(), MEDIUM, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID2, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(accountID3, correlationId, account3.getServerIdSt(), HIGH, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID3, HIGH, APPLIED);
-        addChangeWorseTradingLevel(accountID4, correlationId, account4.getServerIdSt(), HIGH, addLevelComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID4, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID, correlationId, account.getServerIdSt(), LOW, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, LOW, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID2, correlationId, account2.getServerIdSt(), MEDIUM, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID2, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID3, correlationId, account3.getServerIdSt(), HIGH, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID3, HIGH, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(), accountID4, correlationId, account4.getServerIdSt(), HIGH, addLevelComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID4, HIGH, APPLIED);
 
         // test
         String correlationId2 = getRandomUuidString();
-        deleteWorseTradingLevel(accountID, correlationId2, account.getServerIdSt(), changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID, LOW, CANCELLED);
-        deleteWorseTradingLevel(accountID2, correlationId2, account2.getServerIdSt(), changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID2, MEDIUM, CANCELLED);
-        addChangeWorseTradingLevel(
-                accountID3, correlationId2, account3.getServerIdSt(), MEDIUM, changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID3, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(
-                accountID4, correlationId2, account4.getServerIdSt(), MEDIUM, changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID4, MEDIUM, APPLIED);
-        addChangeWorseTradingLevel(
-                accountID5, correlationId2, account5.getServerIdSt(), MEDIUM, changeAndDeleteComment);
-        waitUntilRestrictionHasStatusAndLevel(accountID5, MEDIUM, APPLIED);
+        deleteWorseTradingRestriction(
+                client.getUcid(), accountID, correlationId2, account.getServerIdSt(), changeAndDeleteComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID, LOW, CANCELLED);
+        deleteWorseTradingRestriction(
+                client.getUcid(), accountID2, correlationId2, account2.getServerIdSt(), changeAndDeleteComment, USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID2, MEDIUM, CANCELLED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID3,
+                correlationId2,
+                account3.getServerIdSt(),
+                MEDIUM,
+                changeAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID3, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID4,
+                correlationId2,
+                account4.getServerIdSt(),
+                MEDIUM,
+                changeAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID4, MEDIUM, APPLIED);
+        putWorseTradingRestriction(
+                client.getUcid(),
+                accountID5,
+                correlationId2,
+                account5.getServerIdSt(),
+                MEDIUM,
+                changeAndDeleteComment,
+                USER);
+        waitUntilWorseTradingRestrictionHasStatusAndLevel(accountID5, MEDIUM, APPLIED);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -416,61 +494,5 @@ class AuditTrailWorseTradingTest extends TestBaseWeb {
                         WORSE_TRADING.getName(),
                         accountID,
                         accountID2)));
-    }
-
-    public void addChangeWorseTradingLevel(
-            BigInteger accountID,
-            String correlationId,
-            Integer serverIdSt,
-            TradingEnvironmentLevel level,
-            String comment)
-            throws IOException {
-        NewTradingEnvRestrictionRequestBody putRestriction = new NewTradingEnvRestrictionRequestBody();
-        putRestriction.setType(RestrictionType.TRADING_ENVIRONMENT);
-        putRestriction.setUcid(client.getUcid());
-        putRestriction.setCode(WORSE_TRADING.getCode());
-        putRestriction.setComment(comment);
-        putRestriction.setUpdatedBy(new UpdatedBy().system(VINDEX_BO_SYSTEM).user(USER));
-        putRestriction.setAccountId(accountID);
-        putRestriction.setCorrelationId(correlationId);
-        putRestriction.setCorrelationType(RESTRICTION_MANAGEMENT);
-        putRestriction.setServerId(serverIdSt);
-        putRestriction.setLevel(level);
-        putRestrictionV3(putRestriction);
-    }
-
-    public void deleteWorseTradingLevel(BigInteger accountID, String correlationId, Integer serverIdSt, String comment)
-            throws IOException {
-        DeleteTradingEnvRestrictionRequestBody deleteRestriction = DeleteTradingEnvRestrictionRequestBody.builder()
-                .type(RestrictionType.TRADING_ENVIRONMENT)
-                .ucid(client.getUcid())
-                .code(WORSE_TRADING.getCode())
-                .cancelReason(comment)
-                .correlationType(RESTRICTION_MANAGEMENT)
-                .correlationId(correlationId)
-                .updatedBy(new UpdatedBy().system(VINDEX_BO_SYSTEM).user(USER))
-                .accountId(accountID)
-                .serverId(serverIdSt)
-                .build();
-        deleteRestrictionV3(deleteRestriction);
-    }
-
-    public void waitUntilRestrictionHasStatusAndLevel(
-            BigInteger accountID, TradingEnvironmentLevel level, RestrictionStatus status) {
-        await().atMost(Duration.ofSeconds(60))
-                .pollInterval(Duration.ofMillis(200))
-                .until(() -> {
-                    List<ClientTradingEnvironmentRestrictionEntity> entities = getObjectsFromDB(
-                            POSTGRES,
-                            MITIGATION_CLIENT_TRADING_ENVIRONMENT_RESTRICTION,
-                            String.format("account_id=%s", accountID),
-                            ClientTradingEnvironmentRestrictionEntity.class);
-
-                    if (entities == null || entities.isEmpty()) {
-                        return false;
-                    }
-
-                    return entities.stream().anyMatch(e -> e.getStatus() == status && e.getLevel() == level);
-                });
     }
 }
