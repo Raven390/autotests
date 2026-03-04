@@ -1,12 +1,14 @@
 package business_objects.api.clickhouse_api_service.get_withdrawals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Objects;
 
 public class GetWithdrawalsResponse {
 
     @JsonProperty("transferId")
-    public Integer transferId;
+    public BigInteger transferId;
 
     @JsonProperty("createTime")
     public String createTime;
@@ -15,10 +17,10 @@ public class GetWithdrawalsResponse {
     public String clientId;
 
     @JsonProperty("actualAmountUSD")
-    public Double actualAmountUsd;
+    public BigDecimal actualAmountUsd;
 
     @JsonProperty("actualAmount")
-    public Double actualAmount;
+    public BigDecimal actualAmount;
 
     @JsonProperty("paymentChannel")
     public String paymentChannel;
@@ -26,11 +28,11 @@ public class GetWithdrawalsResponse {
     public GetWithdrawalsResponse() {}
 
     public GetWithdrawalsResponse(
-            Integer transferId,
+            BigInteger transferId,
             String createTime,
             String clientId,
-            Double actualAmountUsd,
-            Double actualAmount,
+            BigDecimal actualAmountUsd,
+            BigDecimal actualAmount,
             String paymentChannel) {
         this.transferId = transferId;
         this.createTime = createTime;

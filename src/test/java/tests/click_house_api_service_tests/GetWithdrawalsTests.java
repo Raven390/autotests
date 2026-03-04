@@ -20,7 +20,6 @@ import io.qameta.allure.Story;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,16 @@ class GetWithdrawalsTests extends TestBaseApi {
         ClientHelper client = getRandomVantageClient();
         withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         withdrawal2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        withdrawal2.setCreateTime(OffsetDateTime.now().plusDays(1));
+        var time1 = OffsetDateTime.now().minusHours(1);
+        var time2 = OffsetDateTime.now().plusHours(1);
+        withdrawal1.setCreateTime(time1);
+        withdrawal1.setCreateTimeUtc(time1);
+        withdrawal1.setUpdateTime(time1);
+        withdrawal1.setUpdateTimeUtc(time1);
+        withdrawal2.setCreateTime(time2);
+        withdrawal2.setCreateTimeUtc(time2);
+        withdrawal2.setUpdateTime(time2);
+        withdrawal2.setUpdateTimeUtc(time2);
         withdrawal2.setAmountUsd(BigDecimal.valueOf(3.0));
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2));
     }
@@ -76,14 +84,17 @@ class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.getTransferId()));
         assertThat(
                 "Assert createTime",
-                mappedResponse[0].createTime,
-                is(withdrawal2
-                        .getCreateTime()
-                        .atZoneSameInstant(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ISO_DATE_TIME)));
+                OffsetDateTime.parse(mappedResponse[0].createTime).toInstant().getEpochSecond(),
+                is(withdrawal2.getCreateTime().toInstant().getEpochSecond()));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.getUcid()));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.getAmountUsd()));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.getAmount()));
+        assertThat(
+                "Assert actualAmountUSD",
+                mappedResponse[0].actualAmountUsd.doubleValue(),
+                is(withdrawal2.getAmountUsd().doubleValue()));
+        assertThat(
+                "Assert actualAmount",
+                mappedResponse[0].actualAmount.doubleValue(),
+                is(withdrawal2.getAmount().doubleValue()));
     }
 
     @Test
@@ -144,14 +155,17 @@ class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.getTransferId()));
         assertThat(
                 "Assert createTime",
-                mappedResponse[0].createTime,
-                is(withdrawal2
-                        .getCreateTime()
-                        .atZoneSameInstant(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ISO_DATE_TIME)));
+                OffsetDateTime.parse(mappedResponse[0].createTime).toInstant().getEpochSecond(),
+                is(withdrawal2.getCreateTime().toInstant().getEpochSecond()));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.getUcid()));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.getAmountUsd()));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.getAmount()));
+        assertThat(
+                "Assert actualAmountUSD",
+                mappedResponse[0].actualAmountUsd.doubleValue(),
+                is(withdrawal2.getAmountUsd().doubleValue()));
+        assertThat(
+                "Assert actualAmount",
+                mappedResponse[0].actualAmount.doubleValue(),
+                is(withdrawal2.getAmount().doubleValue()));
     }
 
     @Test
@@ -172,14 +186,17 @@ class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal1.getTransferId()));
         assertThat(
                 "Assert createTime",
-                mappedResponse[0].createTime,
-                is(withdrawal1
-                        .getCreateTime()
-                        .atZoneSameInstant(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ISO_DATE_TIME)));
+                OffsetDateTime.parse(mappedResponse[0].createTime).toInstant().getEpochSecond(),
+                is(withdrawal1.getCreateTime().toInstant().getEpochSecond()));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal1.getUcid()));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.getAmountUsd()));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal1.getAmount()));
+        assertThat(
+                "Assert actualAmountUSD",
+                mappedResponse[0].actualAmountUsd.doubleValue(),
+                is(withdrawal1.getAmountUsd().doubleValue()));
+        assertThat(
+                "Assert actualAmount",
+                mappedResponse[0].actualAmount.doubleValue(),
+                is(withdrawal1.getAmount().doubleValue()));
     }
 
     @Test
@@ -198,7 +215,10 @@ class GetWithdrawalsTests extends TestBaseApi {
                 objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.getAmountUsd()));
+        assertThat(
+                "Assert actualAmountUSD",
+                mappedResponse[0].actualAmountUsd.doubleValue(),
+                is(withdrawal1.getAmountUsd().doubleValue()));
     }
 
     @Test

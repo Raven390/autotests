@@ -165,23 +165,27 @@ class NewsTraderRuleTests extends TestBaseRule {
 
         // Verify alert kafka
         Allure.step("Get alerts kafka messages");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
-        RuleAlertV2 alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlertV2.class);
-        assertThat("Verify alert id not null", alert.getAlertId(), notNullValue());
-        assertThat("Verify timestamp not null", alert.getTimestamp(), notNullValue());
-        assertThat("Verify ucid is correct", alert.getUcid(), equalTo(data.clientHelper.getUcid()));
-        assertThat("Verify rule not null", alert.getRule(), notNullValue());
-        assertThat("Verify rule ver not null", alert.getRule().getVer(), notNullValue());
-        assertThat("Verify rule name is correct", alert.getRule().getName(), equalTo("News Trading"));
-        assertThat("Verify rule trigger is correct", alert.getTrigger(), equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.getFraudType(), equalTo(NEWS_TRADER.getCode()));
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data, "News Trading");
+        assertThat("Verify that there is only 1 alert", alerts.size(), equalTo(1));
+        assertThat("Verify alert id not null", alerts.getFirst().getAlertId(), notNullValue());
+        assertThat("Verify timestamp not null", alerts.getFirst().getTimestamp(), notNullValue());
+        assertThat("Verify ucid is correct", alerts.getFirst().getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alerts.getFirst().getRule(), notNullValue());
+        assertThat("Verify rule ver not null", alerts.getFirst().getRule().getVer(), notNullValue());
+        assertThat("Verify rule name is correct", alerts.getFirst().getRule().getName(), equalTo("News Trading"));
+        assertThat("Verify rule trigger is correct", alerts.getFirst().getTrigger(), equalTo("Close Trade"));
+        assertThat(
+                "Verify rule fraud type is correct", alerts.getFirst().getFraudType(), equalTo(NEWS_TRADER.getCode()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
-        assertThat("Verify rule attributes not null", alert.getAttributes(), notNullValue());
+        assertThat("Verify rule attributes not null", alerts.getFirst().getAttributes(), notNullValue());
 
         assertThatAlertNotFailed(data.clientHelper.getUcid(), "News Trading");
 
         // Verify restriction
         checkManualWithdrawalRestrictionApplied(data, "News trading pattern");
+        // TODO enable after implementig for rule
+        //        List<AiAlert> aiAlerts = getUserAiAlertFromKafka(data, "News Trading", "News trading pattern
+        // detected");
+        //        assertAiAlert(data, aiAlerts, "News Trading", NEWS_TRADER.getCode(), "News trading pattern detected");
     }
 }

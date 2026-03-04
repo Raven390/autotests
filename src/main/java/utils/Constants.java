@@ -187,6 +187,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_TRADING_ENV_RESTRICTIONS_APPLY = "env.restrictions.apply";
     public static final String KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL = "account.restrictions.cancel";
     public static final String KAFKA_TOPIC_ALERTS = "alerts";
+    public static final String KAFKA_TOPIC_AI_ALERTS = "ai-alert-publisher.alerts";
     public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY = "client.restrictions.apply";
     public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL = "client.restrictions.cancel";
     public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";

@@ -5,6 +5,7 @@ import static business_objects.api.payment_gate.payments.PaymentsRequests.postPa
 import static helpers.api.PaymentGateHelper.*;
 import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.asserts.AcknowledgeAssertsHelper.assertAcknowledge;
+import static helpers.asserts.AiAlertAssertHelper.assertAiAlert;
 import static helpers.asserts.AlertsAssertsHelper.assertRiskWithdrawalAlert;
 import static helpers.asserts.PaymentGateAssertsHelper.*;
 import static helpers.asserts.WithdrawalApprovalAssertsHelper.assertWithdrawalApprovalV2;
@@ -19,6 +20,7 @@ import static utils.Constants.*;
 import static utils.Utils.sleep;
 
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
+import business_objects.kafka.ai_alerts.AiAlert;
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
@@ -101,6 +103,9 @@ class CrmPaymentShadowModeWithdrawalTests extends TestBaseRule {
         List<WithdrawalApprovalsV2> withdrawalApprovals =
                 getWithdrawalApprovalsV2FromKafka(String.valueOf(data.crmWithdrawalEventV2.getWithdrawalId()));
         assertWithdrawalApprovalV2(data, paymentId, withdrawalApprovals.getFirst());
+
+        List<AiAlert> aiAlerts = getUserAiAlertFromKafka(data, "Withdrawal Review", "Potential fraud detected");
+        assertAiAlert(data, aiAlerts, "Withdrawal Review", "POTENTIAL_ABUSE", "Potential fraud detected");
     }
 
     @Test
