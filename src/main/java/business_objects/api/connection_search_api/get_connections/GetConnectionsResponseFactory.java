@@ -262,7 +262,7 @@ public class GetConnectionsResponseFactory {
         return new GetConnectionsResponseError(
                 null,
                 400,
-                "Unknown attribute provided: test. Valid values are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute, digital, device, session, webSession, nameBirth, nameBirthNoKyc, fuzzyDevice, browserStringHash, mtCid]",
+                "Unknown attribute provided: test. Valid values are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute, digital, device, session, webSession, nameBirth, nameBirthNoKyc, fuzzyDevice, browserStringHash, mtCid, onchainw]",
                 null,
                 null,
                 null,

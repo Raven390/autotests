@@ -18,6 +18,9 @@ import business_objects.kafka.CrmAcknowledgeEvent;
 import business_objects.kafka.CustomEvent;
 import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
+import business_objects.kafka.ai_alerts.AiAlert;
+import business_objects.kafka.ai_alerts.AiTradingAlert;
+import business_objects.kafka.ai_alerts.AiWithdrawalAlert;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.crm_events.*;
@@ -28,8 +31,10 @@ import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.data.DataHelper;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Step;
@@ -173,11 +178,34 @@ public class TestBaseRule {
                 .toList();
     }
 
+    @Deprecated
     @Step("Get User Alerts from Kafka topic 'alerts' by rule")
     public static List<RuleAlertV2> getUserAlertsV2FromKafka(ClientHelper client, String ruleName)
             throws InterruptedException, JsonProcessingException {
         return Arrays.stream(objectMapper.readValue(
                         kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid())
+                                .toString(),
+                        RuleAlertV2[].class))
+                .filter(alert -> {
+                    RuleAlertV2.Rule rule = alert.getRule();
+                    String actual;
+                    if (rule != null) {
+                        actual = rule.getName();
+                    } else {
+                        actual = null;
+                    }
+                    return actual != null && actual.trim().equalsIgnoreCase(ruleName.trim());
+                })
+                .toList();
+    }
+
+    @Step("Get User Alerts from Kafka topic 'alerts' by rule")
+    public static List<RuleAlertV2> getUserAlertsV2FromKafka(DataHelper data, String ruleName)
+            throws InterruptedException, JsonProcessingException {
+        return Arrays.stream(objectMapper.readValue(
+                        kafka.consumeMessages(
+                                        KAFKA_TOPIC_ALERTS,
+                                        data.getClientHelper().getUcid())
                                 .toString(),
                         RuleAlertV2[].class))
                 .filter(alert -> {
@@ -209,6 +237,39 @@ public class TestBaseRule {
                     } else {
                         actualRuleName = null;
                     }
+                    boolean ruleMatches =
+                            actualRuleName != null && actualRuleName.trim().equalsIgnoreCase(ruleName.trim());
+                    if (!ruleMatches) return false;
+
+                    // If reason filter is provided, match it too (case-insensitive, trimmed)
+                    if (reason == null || reason.isBlank()) return true;
+                    String actualReason = alert.getReason();
+                    return actualReason != null && actualReason.trim().equalsIgnoreCase(reason.trim());
+                })
+                .toList();
+    }
+
+    /// "alertType":"TRADING_ALERT"
+    /// "alertType":"WITHDRAW_ALERT"
+    @Step("Get User Alerts from Kafka topic 'ai-alerts-publisher.alerts' by user/rule/reason")
+    public static List<AiAlert> getUserAiAlertFromKafka(DataHelper data, String ruleName, String reason)
+            throws InterruptedException, JsonProcessingException {
+        List<String> messages = kafka.consumeMessages(
+                KAFKA_TOPIC_AI_ALERTS, data.getClientHelper().getUcid());
+        List<AiAlert> result = new java.util.ArrayList<>();
+        for (String msg : messages) {
+            JsonNode node = objectMapper.readTree(msg);
+            String alertType = node.get("alertType").asText();
+            if ("TRADING_ALERT".equalsIgnoreCase(alertType)) {
+                result.add(objectMapper.treeToValue(node, AiTradingAlert.class));
+            } else if ("WITHDRAW_ALERT".equalsIgnoreCase(alertType)) {
+                result.add(objectMapper.treeToValue(node, AiWithdrawalAlert.class));
+            }
+        }
+
+        return result.stream()
+                .filter(alert -> {
+                    String actualRuleName = alert.getRule();
                     boolean ruleMatches =
                             actualRuleName != null && actualRuleName.trim().equalsIgnoreCase(ruleName.trim());
                     if (!ruleMatches) return false;

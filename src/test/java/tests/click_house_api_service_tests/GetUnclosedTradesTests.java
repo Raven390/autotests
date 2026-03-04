@@ -182,7 +182,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assertThat(
                 "Assert response error",
                 mappedResponse.getError(),
-                is("Required request parameter 'serverId' for method parameter type String is not present"));
+                is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
@@ -201,7 +201,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assertThat(
                 "Assert response error",
                 mappedResponse.getError(),
-                is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+                is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 

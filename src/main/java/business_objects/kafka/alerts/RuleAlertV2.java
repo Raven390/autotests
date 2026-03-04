@@ -20,6 +20,12 @@ public class RuleAlertV2 {
     @JsonProperty("timestamp")
     private String timestamp;
 
+    @JsonProperty("id")
+    private String id;
+
+    @JsonProperty("eventId")
+    private String eventId;
+
     @JsonProperty("alertId")
     private String alertId;
 

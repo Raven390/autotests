@@ -31,7 +31,7 @@ class GetMarketCloseTests extends TestBaseApi {
         Response response = getMarketClose("AAPL", "1", "2025-10-13T08:07:09.002338Z");
         GetMarketCloseResponse mappedResponse =
                 objectMapper.readValue(response.body().string(), GetMarketCloseResponse.class);
-        assertThat("Check close time", mappedResponse.getMarketCloseTime(), is("2025-10-13T23:00:00Z"));
+        assertThat("Check close time", mappedResponse.getMarketCloseTime(), is("2025-10-13T12:51:00Z"));
     }
 
     @Test
@@ -41,7 +41,7 @@ class GetMarketCloseTests extends TestBaseApi {
         Response response = getMarketClose("AAPL", "1", "2025-10-13T08:07:09Z");
         GetMarketCloseResponse mappedResponse =
                 objectMapper.readValue(response.body().string(), GetMarketCloseResponse.class);
-        assertThat("Check close time", mappedResponse.getMarketCloseTime(), is("2025-10-13T23:00:00Z"));
+        assertThat("Check close time", mappedResponse.getMarketCloseTime(), is("2025-10-13T12:51:00Z"));
     }
 
     @Test

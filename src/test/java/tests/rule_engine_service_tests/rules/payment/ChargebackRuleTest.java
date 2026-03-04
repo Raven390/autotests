@@ -611,6 +611,7 @@ class ChargebackRuleTest {
     }
 
     @Test
+    @AllureId("2468")
     @DisplayName(
             "Chargeback rule test. client sum deposits <5000, 5 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card Chargeback fraud Card not used by known fraudster. Client is not cardholder. Is not 3d. No not FTD and no Open Trades. end_209")
     void chargeback10Test() throws Exception {
@@ -1041,6 +1042,7 @@ class ChargebackRuleTest {
     }
 
     @Test
+    @AllureId("2469")
     @DisplayName(
             "Score 0. FTD. no Open Trades. card not 3dS. Chargeback rule test.cardholder/KYC name similarity is = 1 . client sum deposits <5000, 4 cards between connections, 2 connections. 3 by payout/card. 4 callbacks fo 24h. 3 failed attempts with same card. 1 fraud decline. Chargeback fraud Card not used by known fraudster.")
     void chargeback17Test() throws Exception {
