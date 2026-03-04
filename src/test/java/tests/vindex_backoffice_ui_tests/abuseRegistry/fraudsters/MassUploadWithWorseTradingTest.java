@@ -9,6 +9,7 @@ import static helpers.data.enums.Currency.USD;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampSeconds;
 import static utils.Utils.getRandomIntPositive;
@@ -89,12 +90,14 @@ class MassUploadWithWorseTradingTest extends TestBaseWeb {
         Restriction restriction = Restriction.WORSE_TRADING;
         fraudstersPage.selectRestriction(restriction.getName());
         fraudstersPage.selectRestrictionWorseTradingLevel("Medium");
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
 
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         restrictionPage.navigate(client1.getUcid());
         restrictionPage.isPageLoaded();
@@ -130,12 +133,14 @@ class MassUploadWithWorseTradingTest extends TestBaseWeb {
         Restriction restriction = Restriction.WORSE_TRADING;
         fraudstersPage.selectRestriction(restriction.getName());
         fraudstersPage.selectRestrictionWorseTradingLevel("Medium");
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
 
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         restrictionPage.navigate(client1.getUcid());
         restrictionPage.isPageLoaded();
@@ -171,12 +176,14 @@ class MassUploadWithWorseTradingTest extends TestBaseWeb {
         Restriction restriction = Restriction.WORSE_TRADING;
         fraudstersPage.selectRestriction(restriction.getName());
         fraudstersPage.selectRestrictionWorseTradingLevel("High");
-        fraudstersPage.clickApplyselectedRestrictions();
+        fraudstersPage.clickApplySelectedRestrictions();
 
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         restrictionPage.navigate(client3.getUcid());
         restrictionPage.isPageLoaded();

@@ -23,7 +23,7 @@ import tests.TestBaseWeb;
 @Feature("BMS-1872 [Q3] Role based model")
 class ViewerRolePermissionsTest extends TestBaseWeb {
     static ClientHelper client = getRandomVantageClient();
-    private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
+    private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -123,14 +123,18 @@ class ViewerRolePermissionsTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsViewerUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
-        fraudstersPage.openRemoveDrawerButtonIsHidden();
-        fraudstersPage.openRemoveDrawerButtonIsDisabled();
+        assertTrue(
+                fraudstersPage.isRemoveDrawerButtonHidden(),
+                "The 'Remove' drawer button should be hidden, but it is still visible!");
+        assertTrue(
+                fraudstersPage.isRemoveDrawerButtonDisabled(),
+                "The 'Remove' drawer button should be disabled, but it is currently enabled!");
     }
 
     @Test
     @AllureId("1717")
     @DisplayName("BO user with viewer role can open alert history page")
-    void canOpenAlertHistoryTest() throws Exception {
+    void canOpenAlertHistoryTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsViewerUser();
         alertHistoryPage.navigateAlertHistory();
@@ -173,7 +177,7 @@ class ViewerRolePermissionsTest extends TestBaseWeb {
     @Test
     @AllureId("1713")
     @DisplayName("BO user with viewer role dont have QC funtions on alerts")
-    void notHaveQcTest() throws Exception {
+    void notHaveQcTest() {
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsViewerUser();

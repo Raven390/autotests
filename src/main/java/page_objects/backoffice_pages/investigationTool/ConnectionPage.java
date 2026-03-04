@@ -199,7 +199,7 @@ public class ConnectionPage extends AbstractPage {
         this.connectionTableAttribute = page.locator("//div[@class='v-table-view-v2__attributes-list']/div");
         this.unmaskConnectionTableDataButton =
                 page.locator("//div[contains(@class,'v-table-view-v2__custom-header-cell')]");
-        this.filterButton = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/button");
+        this.filterButton = page.locator("//button[@data-qa='connections__filter_button__open']");
         this.filterOptionButton = page.locator("//span[@class='g-button__text']");
         this.filterCheckboxListOption = page.locator("//span[@class='g-control-label__text']/div");
         this.filterSliderRange = page.locator("//div[contains(@class,'g-text_ws_nowrap')]");
@@ -232,7 +232,7 @@ public class ConnectionPage extends AbstractPage {
         this.attributesFilterSelectedItems = page.locator("//div[@class='v-drop-down-menu__checked-values']");
         this.resetAllButton = page.locator("//span[text()='Reset all']/parent::button");
         this.graphNodesUnhidden = page.locator("//div[contains(@class,'v-graph-node-v2__title-text')]");
-        this.applyFiltersButton = page.locator("//div[@data-qa='drawer_body']/div/button");
+        this.applyFiltersButton = page.locator("//button[@data-qa='connections__filter__apply']");
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
         this.connectionTableUserIds = page.locator(
                 String.format(
@@ -252,7 +252,8 @@ public class ConnectionPage extends AbstractPage {
         this.multiselectSelectAllCheckbox =
                 page.locator("//input[@type='checkbox']").first();
         this.multiselectCounter = page.locator("//div[@class='v-multiselect-panel__counter']");
-        this.multiselectCommentButton = page.locator("//div[@class='v-multiselect-panel__body']/button");
+        this.multiselectCommentButton =
+                page.locator("//button[@data-qa='connections__multiselect_panel__toggle_comment']");
         this.multiselectCommentInput =
                 page.locator("//div[@class='v-connection-search-multiselect-panel-v2__input']/descendant::input");
         this.multiselectAddCommentButton =

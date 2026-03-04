@@ -58,7 +58,7 @@ public class AlertsPage extends AbstractPage {
                 .first();
         this.loadedAlertsCount =
                 page.locator("//div[@class='v-investigation-tools-client-alerts-tab__refresher']/div[text()!='']");
-        this.alertsTab = page.locator("[role=\"tab\"][title=\"Alerts\"]");
+        this.alertsTab = page.locator("//div[@data-qa='investigation__tools__tab__ALERTS']");
     }
 
     @Step("Open Alerts tab")

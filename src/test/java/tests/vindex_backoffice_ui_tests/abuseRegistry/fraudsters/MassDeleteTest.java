@@ -11,6 +11,7 @@ import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampSeconds;
@@ -102,11 +103,13 @@ class MassDeleteTest extends TestBaseWeb {
                 client1.getUserId().toString(),
                 client2.getUserId().toString(),
                 client3.getUserId().toString());
-        fraudstersPage.addFraud(HEDGING, POTENTIAL);
+        fraudstersPage.addFraud(HEDGING);
         String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         page.waitForTimeout(1000);
 

@@ -7,12 +7,17 @@ import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCo
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.USD;
+import static helpers.data.enums.FraudSource.VINDEX;
+import static helpers.data.enums.FraudType.LATENCY_ARBITRAGE;
+import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
+import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.ArHelper.waitForClientToChangeStatus;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteObjectFromDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -38,7 +43,7 @@ import tests.TestBaseWeb;
 @Tag(LAYER_WEB)
 @Tag(ABUSE_REGISTRY)
 @Feature("BMS-2293 Delete confirmed fraud in bulk operations")
-class MassDeleteWithConfrimedTest extends TestBaseWeb {
+class MassDeleteWithConfirmedTest extends TestBaseWeb {
 
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
@@ -93,26 +98,30 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.LATENCY_ARBITRAGE;
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(), "Confirmed", FraudSource.VINDEX.getDisplayName());
+        FraudType fraudType = LATENCY_ARBITRAGE;
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
-        fraudstersPage.verifyWarningMessageUpload(1);
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 3 created deductions was not displayed or the text is incorrect!");
+        assertTrue(
+                fraudstersPage.isWarningManualProcessMessageDisplayed(1),
+                "The warning message for 1 pending deduction was not displayed or the text is incorrect!");
 
         // delete
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
+        fraudstersPage.addFraudForDeleteWithStatus(fraudType, CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         waitForClientToChangeStatus(client1.getUcid(), FraudTypeStatus.CLEANED);
 
@@ -173,27 +182,27 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(),
-                FraudTypeStatus.POTENTIAL.getDisplayName(),
-                FraudSource.VINDEX.getDisplayName());
+        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
+        fraudstersPage.addFraud(fraudType, POTENTIAL);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         // delete
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.POTENTIAL);
+        fraudstersPage.addFraudForDeleteWithStatus(fraudType, POTENTIAL);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         waitForClientToChangeStatus(client1.getUcid(), FraudTypeStatus.CLEANED);
 
@@ -241,41 +250,39 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        FraudType fraudTypeOld = FraudType.LATENCY_ARBITRAGE;
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(),
-                FraudTypeStatus.POTENTIAL.getDisplayName(),
-                FraudSource.VINDEX.getDisplayName());
+        FraudType fraudType = LATENCY_ARBITRAGE;
+        fraudstersPage.addFraud(fraudType, POTENTIAL);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
         // set confirmed
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(),
-                FraudTypeStatus.CONFIRMED.getDisplayName(),
-                FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
-        // delete
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 3 created deductions was not displayed or the text is incorrect!"); // delete
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
+        fraudstersPage.addFraudForDeleteWithStatus(LATENCY_ARBITRAGE, CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
-        waitForClientToChangeStatus(client1.getUcid(), FraudTypeStatus.POTENTIAL);
+        waitForClientToChangeStatus(client1.getUcid(), POTENTIAL);
 
         List<PendingProcessing> pendingProcessing = getObjectsFromDB(
                 DbName.POSTGRES,
@@ -296,16 +303,14 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
                 AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
                 String.format("ucid='%s'", client1.getUcid()),
                 AbuserFraudType.class);
-        assertThat(
-                "Verify fraud is potential", frauds1.getFirst().getStatus(), is(FraudTypeStatus.POTENTIAL.getStatus()));
+        assertThat("Verify fraud is potential", frauds1.getFirst().getStatus(), is(POTENTIAL.getStatus()));
 
         List<AbuserFraudType> frauds2 = getObjectsFromDB(
                 DbName.POSTGRES,
                 AR_ABUSER_FRAUD_TYPE_TABLE_NAME,
                 String.format("ucid='%s'", client2.getUcid()),
                 AbuserFraudType.class);
-        assertThat(
-                "Verify fraud is potential", frauds2.getFirst().getStatus(), is(FraudTypeStatus.POTENTIAL.getStatus()));
+        assertThat("Verify fraud is potential", frauds2.getFirst().getStatus(), is(POTENTIAL.getStatus()));
 
         Abuser abuser1 = getObjectsFromDB(
                         DbName.POSTGRES,
@@ -313,7 +318,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
                         String.format("ucid='%s'", client1.getUcid()),
                         Abuser.class)
                 .getFirst();
-        assertThat("Verify abuser is potential", abuser1.getStatus(), is(FraudTypeStatus.POTENTIAL.getStatus()));
+        assertThat("Verify abuser is potential", abuser1.getStatus(), is(POTENTIAL.getStatus()));
 
         Abuser abuser2 = getObjectsFromDB(
                         DbName.POSTGRES,
@@ -321,7 +326,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
                         String.format("ucid='%s'", client2.getUcid()),
                         Abuser.class)
                 .getFirst();
-        assertThat("Verify abuser is potential", abuser2.getStatus(), is(FraudTypeStatus.POTENTIAL.getStatus()));
+        assertThat("Verify abuser is potential", abuser2.getStatus(), is(POTENTIAL.getStatus()));
     }
 
     @Test
@@ -332,41 +337,40 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsDutyOpsUser();
         fraudstersPage.navigateAbuseRegistryFraudsters();
-        FraudType fraudTypeOld = FraudType.LATENCY_ARBITRAGE;
+        FraudType fraudTypeOld = LATENCY_ARBITRAGE;
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         // set 2 confirmed
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(),
-                FraudTypeStatus.CONFIRMED.getDisplayName(),
-                FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudTypeOld, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
-        waitForClientToChangeStatus(client1.getUcid(), FraudTypeStatus.CONFIRMED);
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 1 created deductions was not displayed or the text is incorrect!");
+        waitForClientToChangeStatus(client1.getUcid(), CONFIRMED);
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(),
-                FraudTypeStatus.CONFIRMED.getDisplayName(),
-                FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudTypeOld, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
         // delete
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
+        fraudstersPage.addFraudForDeleteWithStatus(LATENCY_ARBITRAGE, CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         waitForClientToChangeStatus(client1.getUcid(), FraudTypeStatus.CLEANED);
 
@@ -404,16 +408,17 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.navigateAbuseRegistryFraudsters();
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         // upload 1 for deduction
-        FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
+        FraudType fraudType = LATENCY_ARBITRAGE;
         fraudstersPage.openUploadDrawer();
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(client1.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudType.getName(), FraudTypeStatus.CONFIRMED.getDisplayName(), FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudType, CONFIRMED);
+        fraudstersPage.selectSource(VINDEX);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload(1);
+        assertTrue(
+                fraudstersPage.verifySuccessMessageUpload(1),
+                "The success message for 3 created deductions was not displayed or the text is incorrect!");
         // change status for deduction
         executeQueryToDb(
                 DbName.POSTGRES,
@@ -426,10 +431,10 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED);
+        fraudstersPage.addFraudForDeleteWithStatus(fraudType, CONFIRMED);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        List<String> validationList = fraudstersPage.getValidationList();
+        List<String> validationList = fraudstersPage.getValidationErrors();
         assertThat("Verify validation list is not empty", validationList.size(), is(2));
         assertThat(
                 "Verify contains validation text",
@@ -451,16 +456,15 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.selectClientIdsAndBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.clickAddFraudButton();
         FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addSelectedFraudAddWithSource(
-                fraudTypeOld.getName(),
-                FraudTypeStatus.POTENTIAL.getDisplayName(),
-                FraudSource.VINDEX.getDisplayName());
+        fraudstersPage.addFraud(fraudTypeOld, POTENTIAL);
+        fraudstersPage.selectSource(VINDEX);
         String commentary = String.format("test%s", getCurrentTimestampSeconds());
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
-        fraudstersPage.verifySuccessMessageUpload();
+        assertTrue(
+                fraudstersPage.isUploadSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
 
         // delete
         fraudstersPage.openRemoveDrawer();
@@ -468,21 +472,23 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
         FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.POTENTIAL);
+        fraudstersPage.addFraudForDeleteWithStatus(fraudType, POTENTIAL);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
-        fraudstersPage.verifySuccessMessageDelete();
+        assertTrue(
+                fraudstersPage.isDeleteSuccessMessageDisplayed(),
+                "The upload success message was not displayed or the text is incorrect!");
         waitForClientToChangeStatus(client1.getUcid(), FraudTypeStatus.CLEANED);
         // delete 2nd time
         fraudstersPage.openRemoveDrawer();
         fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         fraudstersPage.typeClientsID(
                 client1.getUserId().toString(), client2.getUserId().toString());
-        fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.POTENTIAL);
+        fraudstersPage.addFraudForDeleteWithStatus(fraudType, POTENTIAL);
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
 
-        List<String> validationList = fraudstersPage.getValidationList();
+        List<String> validationList = fraudstersPage.getValidationErrors();
         assertThat("Verify validation list is not empty", validationList.size(), is(2));
         assertThat(
                 "Verify contains validation text",
@@ -504,7 +510,7 @@ class MassDeleteWithConfrimedTest extends TestBaseWeb {
         FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
         assertThat(
                 "Verify status is not visible",
-                fraudstersPage.addFraudForDeleteWithStatus(fraudType, FraudTypeStatus.CONFIRMED),
+                fraudstersPage.addFraudForDeleteWithStatus(fraudType, CONFIRMED),
                 is(false));
     }
 }
