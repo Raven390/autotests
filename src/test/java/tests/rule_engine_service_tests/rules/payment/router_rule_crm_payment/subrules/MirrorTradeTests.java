@@ -49,7 +49,11 @@ class MirrorTradeTests extends TestBaseRule {
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1gdl5i3", data.crmWithdrawalEventV2.getId(), Rule.MIRROR_TRADE_RR.getProcessId());
+        checkElementIdSubrule(
+                "Event_1gdl5i3",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.MIRROR_TRADE_RR.getProcessId());
         checkElementId(
                 "Activity_0n9s6ck", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
@@ -57,14 +61,18 @@ class MirrorTradeTests extends TestBaseRule {
     @Test
     @AllureId("2247")
     @DisplayName(
-            "Mirror trade in router rule. Exit with alert if mirror trade flag is true and Is ucidScoreLatest > ucidScorePenultimate?. ElementId: Event_1waht3m")
+            "Mirror trade in router rule. Exit with alert if mirror trade flag is true and Is ucidScoreLatest > ucidScorePenultimate?. ElementId: Event_1k3vtxl")
     void mirrorTradeRule2Test() throws Exception {
         DataHelper data = dataMap.get("2");
         setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1k3vtxl", data.crmWithdrawalEventV2.getId(), Rule.MIRROR_TRADE_RR.getProcessId());
+        checkElementIdSubrule(
+                "Event_1k3vtxl",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.MIRROR_TRADE_RR.getProcessId());
         checkElementId(
                 "Activity_0n9s6ck", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
@@ -72,14 +80,18 @@ class MirrorTradeTests extends TestBaseRule {
     @Test
     @AllureId("2248")
     @DisplayName(
-            "Mirror trade in router rule. Exit without alert if mirror trade flag is true and (Is ucidScoreLatest > ucidScorePenultimate?) is false. ElementId: Event_1waht3m")
+            "Mirror trade in router rule. Exit without alert if mirror trade flag is true and (Is ucidScoreLatest > ucidScorePenultimate?) is false. ElementId: Event_1gdl5i3")
     void mirrorTradeRule3Test() throws Exception {
         DataHelper data = dataMap.get("3");
         setupData(data);
 
         produceWithdrawalMessageV2ToCrmPaymentTopic(data.crmWithdrawalEventV2);
 
-        checkElementId("Event_1ew6ptk", data.crmWithdrawalEventV2.getId(), Rule.MIRROR_TRADE_RR.getProcessId());
+        checkElementIdSubrule(
+                "Event_1gdl5i3",
+                data.crmWithdrawalEventV2.getId(),
+                Rule.ROUTER_RULE_SHADOW_MODE.getProcessId(),
+                Rule.MIRROR_TRADE_RR.getProcessId());
         checkElementId(
                 "Activity_0n9s6ck", data.crmWithdrawalEventV2.getId(), Rule.ROUTER_RULE_SHADOW_MODE.getProcessId());
     }
