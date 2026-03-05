@@ -203,13 +203,18 @@ public class WithdrawalNotificationDataFactory {
     }
 
     private static DataHelper getWithdrawalNotificationTest11Data() {
-        withdrawalNotificationRuleClient11.setUserId(Integer.valueOf(Utils.getRandomIntPositive()
+        String fraudId = (Utils.getRandomIntPositive()
                         .toString()
                         .substring(0, Utils.getRandomIntPositive().toString().length() - 2)
-                + "99"));
+                + "99");
+
+        if (fraudId.length() > 9) {
+            fraudId = fraudId.substring(fraudId.length() - 8, fraudId.length());
+        }
+        withdrawalNotificationRuleClient11.setUserId(Integer.valueOf(fraudId));
         DataHelper data = getWithdrawalNotificationRuleData(withdrawalNotificationRuleClient11);
-        data.getCrmWithdrawalEventV2().setCheckName("");
-        data.crmWithdrawalEventV2.setClientId(data.clientHelper.getUserId());
+        data.getCrmWithdrawalEvent().setCheckName(checkNameNotCryptoRisk);
+        data.crmWithdrawalEvent.setClientId(Long.valueOf(data.clientHelper.getUserId()));
         return data;
     }
 
