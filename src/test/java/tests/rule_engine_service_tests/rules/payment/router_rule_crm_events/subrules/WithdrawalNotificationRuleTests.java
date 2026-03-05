@@ -137,7 +137,11 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         String eventId = data.getCrmWithdrawalEvent().getId();
-        checkElementId("alert", eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
+        checkElementIdSubrule(
+                "Event_0kmxtqw",
+                eventId,
+                Rule.ROUTER_RULE_CRM_EVENTS.getProcessId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
         checkElementId("get_rule_executions", eventId, Rule.ROUTER_RULE_CRM_EVENTS.getProcessId());
 
         Allure.step("Retrieve payment id");
@@ -148,6 +152,12 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getPaymentId(), is(paymentId));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(5));
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleEndId(), is(202));
+
+        // check alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Withdrawal Review");
+        assertThat("Verify alert count", alerts.size(), is(1));
+
+        assertThatAlertNotFailed(data.clientHelper.getUcid(), "Withdrawal Review");
     }
 
     @Test
@@ -165,7 +175,11 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         String eventId = data.getCrmWithdrawalEvent().getId();
-        checkElementId("alert", eventId, Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
+        checkElementIdSubrule(
+                "Event_0kmxtqw",
+                eventId,
+                Rule.ROUTER_RULE_CRM_EVENTS.getProcessId(),
+                Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
         checkElementId("get_rule_executions", eventId, Rule.ROUTER_RULE_CRM_EVENTS.getProcessId());
 
         Allure.step("Retrieve payment id");
@@ -191,13 +205,15 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
-        checkElementId(
+        checkElementIdSubrule(
                 "alert_after_profit_check",
                 data.crmWithdrawalEvent.getId(),
+                Rule.ROUTER_RULE_CRM_EVENTS.getProcessId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
-        checkElementId(
+        checkElementIdSubrule(
                 "Event_0kmxtqw",
                 data.crmWithdrawalEvent.getId(),
+                Rule.ROUTER_RULE_CRM_EVENTS.getProcessId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
         checkElementId(
                 "get_rule_executions", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_CRM_EVENTS.getProcessId());
@@ -225,13 +241,15 @@ class WithdrawalNotificationRuleTests extends TestBaseRule {
 
         produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
-        checkElementId(
+        checkElementIdSubrule(
                 "Event_0hvwbs7",
                 data.crmWithdrawalEvent.getId(),
+                Rule.ROUTER_RULE_CRM_EVENTS.getProcessId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
-        checkElementId(
+        checkElementIdSubrule(
                 "scotland_no_alert",
                 data.crmWithdrawalEvent.getId(),
+                Rule.ROUTER_RULE_CRM_EVENTS.getProcessId(),
                 Rule.ROUTER_RULE_WITHDRAWAL_NOTIFICATION_CRM_EVENTS.getProcessId());
         checkElementId(
                 "get_rule_executions", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_CRM_EVENTS.getProcessId());
