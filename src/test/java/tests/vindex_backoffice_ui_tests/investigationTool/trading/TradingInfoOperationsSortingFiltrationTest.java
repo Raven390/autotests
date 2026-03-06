@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -57,6 +58,10 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
         trade2.setProfitUsd(101.22);
         trade2.setNotionalValueUsd(123.44);
         trade2.setReasonName("API");
+        trade2.setOpenPrice(2026.16);
+        trade2.setClosePrice(2026.18);
+        trade2.setComment("My test comments.");
+        trade2.setVolumeLots(100.77);
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
     }
 
@@ -75,8 +80,21 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("575")
-    @DisplayName("Verify sorting by open column in trading - operations tab")
-    public void verifyTradingInfoDealsOpenSortingTest() {
+    @DisplayName("Verify sorting by open price column in trading - operations tab")
+    void verifyTradingInfoDealsOpenPriceSortingTest() {
+        assertThat(
+                "Assert sort by open price popup text",
+                tradingPage.getSortByOpenPricePopupText(),
+                equalTo("Sort by open price:Descending"));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
+        tradingPage.sortByOpenPrice();
         assertThat(
                 "Assert value in account column for the 1st operation is as expected",
                 tradingPage.getOperationAccountByIndex(0),
@@ -86,10 +104,18 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
                 tradingPage.getOperationAccountByIndex(1),
                 equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
         assertThat(
-                "Assert sort by open popup text",
-                tradingPage.getSortByOpenPopupText(),
-                equalTo("Sorted:Oldest → Newest"));
-        tradingPage.sortByOpen();
+                "Assert value in open price column for the 1st operation is as expected",
+                tradingPage.getOperationOpenPriceByIndex(0),
+                equalTo(new DecimalFormat("#,##0.00").format(trade2.getOpenPrice())));
+        assertThat(
+                "Assert value in open price column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenPriceByIndex(1),
+                equalTo(new DecimalFormat("#,##0.00").format(trade1.getOpenPrice())));
+        assertThat(
+                "Assert sort by open price popup text",
+                tradingPage.getSortByOpenPricePopupText(),
+                equalTo("Sorted:Descending"));
+        tradingPage.sortByOpenPrice();
         assertThat(
                 "Assert value in account column for the 1st operation is as expected",
                 tradingPage.getOperationAccountByIndex(0),
@@ -99,21 +125,400 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
                 tradingPage.getOperationAccountByIndex(1),
                 equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
         assertThat(
-                "Assert sort by open popup text",
-                tradingPage.getSortByOpenPopupText(),
-                equalTo("Sorted:Newest → Oldest"));
+                "Assert value in open price column for the 1st operation is as expected",
+                tradingPage.getOperationOpenPriceByIndex(0),
+                equalTo(new DecimalFormat("#,##0.00").format(trade1.getOpenPrice())));
+        assertThat(
+                "Assert value in open price column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenPriceByIndex(1),
+                equalTo(new DecimalFormat("#,##0.00").format(trade2.getOpenPrice())));
+        assertThat(
+                "Assert sort by open price popup text",
+                tradingPage.getSortByOpenPricePopupText(),
+                equalTo("Sorted:Ascending"));
+        tradingPage.sortByOpenPrice();
+        assertThat(
+                "Assert value in open price column for the 1st operation is as expected",
+                tradingPage.getOperationOpenPriceByIndex(0),
+                equalTo(new DecimalFormat("#,##0.00").format(trade2.getOpenPrice())));
+        assertThat(
+                "Assert value in open price column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenPriceByIndex(1),
+                equalTo(new DecimalFormat("#,##0.00").format(trade1.getOpenPrice())));
+        assertThat(
+                "Assert sort by open price popup text",
+                tradingPage.getSortByOpenPricePopupText(),
+                equalTo("Sort by open price:Descending"));
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("1058")
+    @AllureId("588")
+    @DisplayName("Verify sorting by open time column in trading - operations tab")
+    void verifyTradingInfoDealsOpenTimeSortingTest() {
+        assertThat(
+                "Assert sort by open time popup text",
+                tradingPage.getSortByOpenTimePopupText(),
+                equalTo("Sorted:Oldest → Newest"));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
+        tradingPage.sortByOpenTime();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade1.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert sort by open time popup text",
+                tradingPage.getSortByOpenTimePopupText(),
+                equalTo("Sorted:Newest → Oldest"));
+        tradingPage.sortByOpenTime();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
+        assertThat(
+                "Assert sort by open time popup text",
+                tradingPage.getSortByOpenTimePopupText(),
+                equalTo("Sorted:Oldest → Newest"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("597")
+    @DisplayName("Verify sorting by close price column in trading - operations tab")
+    void verifyTradingInfoDealsClosePriceSortingTest() {
+        assertThat(
+                "Assert sort by close price popup text",
+                tradingPage.getSortByClosePricePopupText(),
+                equalTo("Sort by close price:Descending"));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
+        tradingPage.sortByClosePrice();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in close price column for the 1st operation is as expected",
+                tradingPage.getOperationClosePriceByIndex(0),
+                equalTo(new DecimalFormat("#,##0.00").format(trade2.getClosePrice())));
+        assertThat(
+                "Assert value in close price column for the 2nd operation is as expected",
+                tradingPage.getOperationClosePriceByIndex(1),
+                equalTo(new DecimalFormat("#,##0.00").format(trade1.getClosePrice())));
+        assertThat(
+                "Assert sort by close price popup text",
+                tradingPage.getSortByClosePricePopupText(),
+                equalTo("Sorted:Descending"));
+        tradingPage.sortByClosePrice();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in close price column for the 1st operation is as expected",
+                tradingPage.getOperationClosePriceByIndex(0),
+                equalTo(new DecimalFormat("#,##0.00").format(trade1.getClosePrice())));
+        assertThat(
+                "Assert value in close price column for the 2nd operation is as expected",
+                tradingPage.getOperationClosePriceByIndex(1),
+                equalTo(new DecimalFormat("#,##0.00").format(trade2.getClosePrice())));
+        assertThat(
+                "Assert sort by close price popup text",
+                tradingPage.getSortByClosePricePopupText(),
+                equalTo("Sorted:Ascending"));
+        tradingPage.sortByClosePrice();
+        assertThat(
+                "Assert value in close price column for the 1st operation is as expected",
+                tradingPage.getOperationClosePriceByIndex(0),
+                equalTo(new DecimalFormat("#,##0.00").format(trade2.getClosePrice())));
+        assertThat(
+                "Assert value in close price column for the 2nd operation is as expected",
+                tradingPage.getOperationClosePriceByIndex(1),
+                equalTo(new DecimalFormat("#,##0.00").format(trade1.getClosePrice())));
+        assertThat(
+                "Assert sort by close price popup text",
+                tradingPage.getSortByClosePricePopupText(),
+                equalTo("Sort by close price:Descending"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("607")
+    @DisplayName("Verify sorting by close time column in trading - operations tab")
+    void verifyTradingInfoDealsCloseTimeSortingTest() {
+        assertThat(
+                "Assert sort by close time popup text",
+                tradingPage.getSortByCloseTimePopupText(),
+                equalTo("Sort by close time:Newest → Oldest"));
+        assertThat(
+                "Assert value in close time column for the 1st operation is as expected",
+                tradingPage.getOperationCloseTimeByIndex(0),
+                equalTo(trade2.getCloseTime()));
+        assertThat(
+                "Assert value in close time column for the 2nd operation is as expected",
+                tradingPage.getOperationCloseTimeByIndex(1),
+                equalTo(trade1.getCloseTime()));
+        tradingPage.sortByCloseTime();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in close time column for the 1st operation is as expected",
+                tradingPage.getOperationCloseTimeByIndex(0),
+                equalTo(trade1.getCloseTime()));
+        assertThat(
+                "Assert value in close time column for the 2nd operation is as expected",
+                tradingPage.getOperationCloseTimeByIndex(1),
+                equalTo(trade2.getCloseTime()));
+        assertThat(
+                "Assert sort by close time popup text",
+                tradingPage.getSortByCloseTimePopupText(),
+                equalTo("Sorted:Newest → Oldest"));
+        tradingPage.sortByCloseTime();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in close time column for the 1st operation is as expected",
+                tradingPage.getOperationCloseTimeByIndex(0),
+                equalTo(trade2.getCloseTime()));
+        assertThat(
+                "Assert value in close time column for the 2nd operation is as expected",
+                tradingPage.getOperationCloseTimeByIndex(1),
+                equalTo(trade1.getCloseTime()));
+        assertThat(
+                "Assert sort by open time popup text",
+                tradingPage.getSortByCloseTimePopupText(),
+                equalTo("Sorted:Oldest → Newest"));
+        tradingPage.sortByCloseTime();
+        assertThat(
+                "Assert sort by close time popup text",
+                tradingPage.getSortByCloseTimePopupText(),
+                equalTo("Sort by close time:Newest → Oldest"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("608")
+    @DisplayName("Verify sorting by volume column in trading - operations tab")
+    void verifyTradingInfoDealsVolumeSortingTest() {
+        assertThat(
+                "Assert sort volume popup text",
+                tradingPage.getSortByVolumePopupText(),
+                equalTo("Sort by volume:Descending"));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
+        tradingPage.sortByVolume();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in volume column for the 1st operation is as expected",
+                tradingPage.getOperationVolumeLotsByIndex(0),
+                equalTo(String.format("%s %s", trade2.getVolumeLots(), "lots")));
+        assertThat(
+                "Assert value in volume column for the 2nd operation is as expected",
+                tradingPage.getOperationVolumeLotsByIndex(1),
+                equalTo(String.format("%s %s", trade1.getVolumeLots(), "lots")));
+        assertThat(
+                "Assert sort by volume popup text",
+                tradingPage.getSortByVolumePopupText(),
+                equalTo("Sorted:Descending"));
+        tradingPage.sortByVolume();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in volume column for the 1st operation is as expected",
+                tradingPage.getOperationVolumeLotsByIndex(0),
+                equalTo(String.format("%s %s", trade1.getVolumeLots(), "lots")));
+        assertThat(
+                "Assert value in volume column for the 2nd operation is as expected",
+                tradingPage.getOperationVolumeLotsByIndex(1),
+                equalTo(String.format("%s %s", trade2.getVolumeLots(), "lots")));
+        assertThat(
+                "Assert sort by volume popup text",
+                tradingPage.getSortByVolumePopupText(),
+                equalTo("Sorted:Ascending"));
+        tradingPage.sortByVolume();
+        assertThat(
+                "Assert value in volume column for the 1st operation is as expected",
+                tradingPage.getOperationVolumeLotsByIndex(0),
+                equalTo(String.format("%s %s", trade2.getVolumeLots(), "lots")));
+        assertThat(
+                "Assert value in volume column for the 2nd operation is as expected",
+                tradingPage.getOperationVolumeLotsByIndex(1),
+                equalTo(String.format("%s %s", trade1.getVolumeLots(), "lots")));
+        assertThat(
+                "Assert sort by volume popup text",
+                tradingPage.getSortByVolumePopupText(),
+                equalTo("Sort by volume:Descending"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("609")
+    @DisplayName("Verify sorting by comment in trading - operations tab")
+    void verifyTradingInfoDealsCommentSortingTest() {
+        assertThat(
+                "Assert sort comment popup text",
+                tradingPage.getSortByCommentPopupText(),
+                equalTo("Sort by comment:Z → A"));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
+        tradingPage.sortByComment();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in comment column for the 1st operation is as expected",
+                tradingPage.getOperationCommentByIndex(0),
+                equalTo(trade2.getComment()));
+        assertThat(
+                "Assert value in comment column for the 2nd operation is as expected",
+                tradingPage.getOperationCommentByIndex(1),
+                equalTo(trade1.getComment()));
+        assertThat(
+                "Assert sort by comment popup text", tradingPage.getSortByCommentPopupText(), equalTo("Sorted:Z → A"));
+        tradingPage.sortByComment();
+        assertThat(
+                "Assert value in account column for the 1st operation is as expected",
+                tradingPage.getOperationAccountByIndex(0),
+                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
+        assertThat(
+                "Assert value in account column for the 2nd operation is as expected",
+                tradingPage.getOperationAccountByIndex(1),
+                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
+        assertThat(
+                "Assert value in comment column for the 1st operation is as expected",
+                tradingPage.getOperationCommentByIndex(0),
+                equalTo(trade1.getComment()));
+        assertThat(
+                "Assert value in comment column for the 2nd operation is as expected",
+                tradingPage.getOperationCommentByIndex(1),
+                equalTo(trade2.getComment()));
+        assertThat(
+                "Assert sort by comment popup text", tradingPage.getSortByCommentPopupText(), equalTo("Sorted:A → Z"));
+        tradingPage.sortByComment();
+        assertThat(
+                "Assert value in comment column for the 1st operation is as expected",
+                tradingPage.getOperationCommentByIndex(0),
+                equalTo(trade2.getComment()));
+        assertThat(
+                "Assert value in ocomment column for the 2nd operation is as expected",
+                tradingPage.getOperationCommentByIndex(1),
+                equalTo(trade1.getComment()));
+        assertThat(
+                "Assert sort by comment popup text",
+                tradingPage.getSortByCommentPopupText(),
+                equalTo("Sort by comment:Z → A"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("610")
     @DisplayName("Verify sorting by profit column in trading - operations tab")
-    public void verifyTradingInfoDealsProfitSortingTest() {
+    void verifyTradingInfoDealsProfitSortingTest() {
         assertThat(
                 "Assert sort by profit popup text",
                 tradingPage.getSortByProfitPopupText(),
                 equalTo("Sort by profit:Descending"));
+        assertThat(
+                "Assert value in open time column for the 1st operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(0),
+                equalTo(trade2.getOpenTime()));
+        assertThat(
+                "Assert value in open time column for the 2nd operation is as expected",
+                tradingPage.getOperationOpenTimeByIndex(1),
+                equalTo(trade1.getOpenTime()));
         tradingPage.sortByProfit();
         assertThat(
                 "Assert value in account column for the 1st operation is as expected",
@@ -141,53 +546,6 @@ public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
                 tradingPage.getSortByProfitPopupText(),
                 equalTo("Sorted:Ascending"));
         tradingPage.sortByProfit();
-        assertThat(
-                "Assert value in account column for the 1st operation is as expected",
-                tradingPage.getOperationAccountByIndex(0),
-                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat(
-                "Assert value in account column for the 2nd operation is as expected",
-                tradingPage.getOperationAccountByIndex(1),
-                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("1059")
-    @DisplayName("Verify sorting by close column in trading - operations tab")
-    public void verifyTradingInfoDealsCloseSortingTest() {
-        assertThat(
-                "Assert sort by close popup text",
-                tradingPage.getSortByClosePopupText(),
-                equalTo("Sort by close time:Newest → Oldest"));
-        tradingPage.sortByClose();
-        assertThat(
-                "Assert value in account column for the 1st operation is as expected",
-                tradingPage.getOperationAccountByIndex(0),
-                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat(
-                "Assert value in account column for the 2nd operation is as expected",
-                tradingPage.getOperationAccountByIndex(1),
-                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat(
-                "Assert sort by close popup text",
-                tradingPage.getSortByClosePopupText(),
-                equalTo("Sorted:Newest → Oldest"));
-        tradingPage.sortByClose();
-        assertThat(
-                "Assert value in account column for the 1st operation is as expected",
-                tradingPage.getOperationAccountByIndex(0),
-                equalTo(String.format("%s%s", trade2.getAccount(), trade2.getPlatform())));
-        assertThat(
-                "Assert value in account column for the 2nd operation is as expected",
-                tradingPage.getOperationAccountByIndex(1),
-                equalTo(String.format("%s%s", trade1.getAccount(), trade1.getPlatform())));
-        assertThat(
-                "Assert sort by close popup text",
-                tradingPage.getSortByClosePopupText(),
-                equalTo("Sorted:Oldest → Newest"));
-        tradingPage.sortByClose();
         assertThat(
                 "Assert value in account column for the 1st operation is as expected",
                 tradingPage.getOperationAccountByIndex(0),

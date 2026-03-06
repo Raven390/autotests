@@ -611,4 +611,32 @@ public class Utils {
     public static void sleep(long millis) throws InterruptedException {
         Thread.sleep(millis);
     }
+
+    public static String generateRandomString() {
+        String characterPool = ".,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678 9";
+        StringBuilder comment = new StringBuilder();
+        int poolLength = random.nextInt(63) + 1;
+        for (int i = 0; i < poolLength; i++) {
+            int randomIndex = random.nextInt(poolLength);
+            comment.append(characterPool.charAt(randomIndex));
+        }
+        return comment.toString();
+    }
+
+    public static String camelToUnderline(String camelName) {
+        if (camelName == null || camelName.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(Character.toLowerCase(camelName.charAt(0)));
+        for (int i = 1; i < camelName.length(); i++) {
+            char c = camelName.charAt(i);
+            if (Character.isUpperCase(c)) {
+                sb.append("_").append(Character.toLowerCase(c));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
 }
