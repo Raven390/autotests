@@ -5,17 +5,16 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static helpers.database.DbHelper.deleteObjectFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
-import static utils.Utils.*;
+import static utils.Utils.getPrevious30DaysDate;
+import static utils.Utils.writeLog;
 
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import com.microsoft.playwright.APIResponse;
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Route;
+import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.ClientHelper;
@@ -39,8 +38,10 @@ public class TradingPage extends AbstractPage {
     private final Locator typeColumnHeader;
     private final Locator volumeColumnHeader;
     private final Locator profitColumnHeader;
-    private final Locator openColumnHeader;
-    private final Locator closeColumnHeader;
+    private final Locator openPriceColumnHeader;
+    private final Locator openTimeColumnHeader;
+    private final Locator closePriceColumnHeader;
+    private final Locator closeTimeColumnHeader;
     private final Locator tpslColumnHeader;
     private final Locator swapColumnHeader;
     private final Locator srColumnHeader;
@@ -48,17 +49,21 @@ public class TradingPage extends AbstractPage {
     private final Locator methodColumnHeader;
     private final Locator commentColumnHeader;
     private final Locator accountColumnCell;
-    private final Locator typeValue;
-    private final Locator profitColumnCell;
-    private final Locator volumeLotsValue;
-    private final Locator openColumnCell;
-    private final Locator closeColumnCell;
-    private final Locator tpslColumnCell;
-    private final Locator swapColumnCell;
-    private final Locator srColumnCell;
-    private final Locator commissionColumnCell;
-    private final Locator methodColumnCell;
-    private final Locator commentColumnCell;
+    public final Locator typeValue;
+    public final Locator filterTypeValue;
+    public final Locator filterAccountsValue;
+    public final Locator profitColumnCell;
+    public final Locator volumeLotsValue;
+    public final Locator openPriceColumnCell;
+    public final Locator closePriceColumnCell;
+    public final Locator openTimeColumnCell;
+    public final Locator closeTimeColumnCell;
+    public final Locator tpslColumnCell;
+    public final Locator swapColumnCell;
+    public final Locator srColumnCell;
+    public final Locator commissionColumnCell;
+    public final Locator methodColumnCell;
+    public final Locator commentColumnCell;
     private final Locator filterButton;
     private final Locator filterMenu;
     private final Locator checkboxItem;
@@ -348,8 +353,10 @@ public class TradingPage extends AbstractPage {
         this.typeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='TYPE')]");
         this.volumeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='VOLUME')]");
         this.profitColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='PROFIT')]");
-        this.openColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='OPEN')]");
-        this.closeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='CLOSE')]");
+        this.openPriceColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='OPEN PRICE')]");
+        this.openTimeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='OPEN TIME')]");
+        this.closePriceColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='CLOSE PRICE')]");
+        this.closeTimeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='CLOSE TIME')]");
         this.tpslColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='TP/SL')]");
         this.swapColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='SWAP')]");
         this.srColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='SR')]");
@@ -359,6 +366,8 @@ public class TradingPage extends AbstractPage {
         this.accountColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__account')]");
         this.typeValue = page.locator(
                 "//*[@class='v-body-cell'][contains(@data-qa, '__type')]//*[contains(@class,'v-trading-tab-deals__deal-type')]");
+        this.filterTypeValue = page.locator("//label[contains(@data-qa, 'filters__types__item')]/span[2]");
+        this.filterAccountsValue = page.locator("//label[contains(@data-qa, 'filters__accounts__item')]/span[2]");
         this.typeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__type')]");
         this.profitColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__profit')]");
         this.volumeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]");
@@ -370,8 +379,10 @@ public class TradingPage extends AbstractPage {
                 String.format("//*[@class='v-body-cell'][contains(@data-qa, '__open')]//%s", PRIMARY_TEXT));
         this.closeColumnCellDate = page.locator(
                 String.format("//*[@class='v-body-cell'][contains(@data-qa, '__close')]//%s", PRIMARY_TEXT));
-        this.openColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__open')]");
-        this.closeColumnCell = page.locator("//*[@class='v-body-cell'][5]");
+        this.openPriceColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__open_price')]");
+        this.closePriceColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__close_price')]");
+        this.openTimeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__open_time')]");
+        this.closeTimeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__close_time')]");
         this.tpslColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__tp/sl')]");
         this.swapColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__swap')]");
         this.srColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__sr')]");
@@ -668,10 +679,12 @@ public class TradingPage extends AbstractPage {
         volumeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         profitColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         profitColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        openColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        openColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        closeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        closeColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openPriceColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openTimeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closeTimeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closePriceColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openPriceColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closePriceColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         tpslColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         tpslColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         tpslColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -698,9 +711,17 @@ public class TradingPage extends AbstractPage {
         profitColumnHeader
                 .getByText("PROFIT")
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        openColumnHeader.getByText("OPEN").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        closeColumnHeader
-                .getByText("CLOSE")
+        openPriceColumnHeader
+                .getByText("OPEN PRICE")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openTimeColumnHeader
+                .getByText("OPEN TIME")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closePriceColumnHeader
+                .getByText("CLOSE PRICE")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openTimeColumnHeader
+                .getByText("CLOSE TIME")
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         tpslColumnHeader
                 .getByText("TP/SL")
@@ -725,8 +746,10 @@ public class TradingPage extends AbstractPage {
         assertThat(accountColumnHeader).isVisible();
         assertThat(typeColumnHeader).isVisible();
         assertThat(volumeColumnHeader).isVisible();
-        assertThat(openColumnHeader).isVisible();
-        assertThat(closeColumnHeader).isVisible();
+        assertThat(openPriceColumnHeader).isVisible();
+        assertThat(closePriceColumnHeader).isVisible();
+        assertThat(openTimeColumnHeader).isVisible();
+        assertThat(openTimeColumnHeader).isVisible();
         assertThat(tpslColumnHeader).isVisible();
         assertThat(profitColumnHeader).isVisible();
         assertThat(swapColumnHeader).isVisible();
@@ -1260,6 +1283,11 @@ public class TradingPage extends AbstractPage {
     }
 
     @Step("Get volume cell value for operation by index")
+    public String getOperationVolumeLotsByIndex(int index) {
+        return volumeLotsValue.nth(index).textContent();
+    }
+
+    @Step("Get volume cell value for operation by index")
     public String getOperationVolumeByIndex(int index) {
         return volumeColumnCell.nth(index).textContent();
     }
@@ -1269,14 +1297,24 @@ public class TradingPage extends AbstractPage {
         return profitColumnCell.nth(index).textContent();
     }
 
-    @Step("Get open cell value for operation by index")
-    public String getOperationOpenByIndex(int index) {
-        return openColumnCell.nth(index).textContent();
+    @Step("Get open price cell value for operation by index")
+    public String getOperationOpenPriceByIndex(int index) {
+        return openPriceColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get open time cell value for operation by index")
+    public String getOperationOpenTimeByIndex(int index) {
+        return openTimeColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get open time cell value for operation by index")
+    public String getOperationCloseTimeByIndex(int index) {
+        return closeTimeColumnCell.nth(index).textContent();
     }
 
     @Step("Get close cell value for operation by index")
-    public String getOperationCloseByIndex(int index) {
-        return closeColumnCell.nth(index).textContent();
+    public String getOperationClosePriceByIndex(int index) {
+        return closePriceColumnCell.nth(index).textContent();
     }
 
     @Step("Get tp/sl cell value for operation by index")
@@ -1314,24 +1352,20 @@ public class TradingPage extends AbstractPage {
         return accountColumnCell.count();
     }
 
-    @Step("Change sorting by open")
-    public void sortByOpen() {
-        openColumnHeader.click();
-    }
-
     @Step("Change sorting by profit")
     public void sortByProfit() {
         profitColumnHeader.click();
     }
 
-    @Step("Change sorting by close")
-    public void sortByClose() {
-        closeColumnHeader.click();
+    @Step("Get text of popup when hovering over sorting by open price element")
+    public String getSortByOpenPricePopupText() {
+        openPriceColumnHeader.hover();
+        return operationsTableTooltip.textContent();
     }
 
-    @Step("Get text of popup when hovering over sorting by open element")
-    public String getSortByOpenPopupText() {
-        openColumnHeader.hover();
+    @Step("Get text of popup when hovering over sorting by open price element")
+    public String getSortByOpenTimePopupText() {
+        openTimeColumnHeader.hover();
         return operationsTableTooltip.textContent();
     }
 
@@ -1341,9 +1375,27 @@ public class TradingPage extends AbstractPage {
         return operationsTableTooltip.textContent();
     }
 
-    @Step("Get text of popup when hovering over sorting by close element")
-    public String getSortByClosePopupText() {
-        closeColumnHeader.hover();
+    @Step("Get text of popup when hovering over sorting by close price element")
+    public String getSortByClosePricePopupText() {
+        closePriceColumnHeader.hover();
+        return operationsTableTooltip.textContent();
+    }
+
+    @Step("Get text of popup when hovering over sorting by close time element")
+    public String getSortByCloseTimePopupText() {
+        closeTimeColumnHeader.hover();
+        return operationsTableTooltip.textContent();
+    }
+
+    @Step("Get text of popup when hovering over sorting by volume element")
+    public String getSortByVolumePopupText() {
+        volumeColumnHeader.hover();
+        return operationsTableTooltip.textContent();
+    }
+
+    @Step("Get text of popup when hovering over sorting by comment element")
+    public String getSortByCommentPopupText() {
+        commentColumnHeader.hover();
         return operationsTableTooltip.textContent();
     }
 
@@ -2767,5 +2819,35 @@ public class TradingPage extends AbstractPage {
     @Step("Get selected illegal profit accounts quantity")
     public String getSelectedIllegalProfitAccountsQuantity() {
         return selectedIllegalProfitAccountCount.textContent();
+    }
+
+    @Step("Click the volume field in the table header to sort")
+    public void sortByVolume() {
+        volumeColumnHeader.click();
+    }
+
+    @Step("Click the comment field in the table header to sort")
+    public void sortByComment() {
+        commentColumnHeader.click();
+    }
+
+    @Step("Click the open price field in the table header to sort")
+    public void sortByOpenPrice() {
+        openPriceColumnHeader.click();
+    }
+
+    @Step("Click the open time field in the table header to sort")
+    public void sortByOpenTime() {
+        openTimeColumnHeader.click();
+    }
+
+    @Step("Click the close price field in the table header to sort")
+    public void sortByClosePrice() {
+        closePriceColumnHeader.click();
+    }
+
+    @Step("Click the close time field in the table header to sort")
+    public void sortByCloseTime() {
+        closeTimeColumnHeader.click();
     }
 }
