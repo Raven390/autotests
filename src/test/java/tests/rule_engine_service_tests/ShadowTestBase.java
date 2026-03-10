@@ -28,7 +28,7 @@ public abstract class ShadowTestBase extends TestBaseRule {
         Awaitility.await()
                 .atMost(60, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
-                .until(() -> isCamundaFinished(correlationId, ruleName, finalCamundaNode) && isNewEngineFinished(correlationId));
+                .until(() -> isCamundaFinished(correlationId, ruleName, finalCamundaNode) && isNewEngineFinished(correlationId, ruleName));
     }
 
     private boolean isCamundaFinished(String correlationId, String ruleName, String finalCamundaNode) throws Exception {
@@ -51,12 +51,17 @@ public abstract class ShadowTestBase extends TestBaseRule {
         return errorsList != null && !errorsList.isEmpty();
     }
 
-    private boolean isNewEngineFinished(String correlationId) throws Exception {
-        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' LIMIT 1", correlationId);
+    private boolean isNewEngineFinished(String correlationId, String ruleName) throws Exception {
+        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND JSONExtractString(variables, 'event', 'rule') = '%s' LIMIT 1", correlationId, ruleName);
         List<AuditRaw> instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
 
+        // Fallback: If ruleName isn't strictly under variables->event->rule, attempt to filter by correlationId alone and verify instanceId
         if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
-            return false;
+            instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND ruleName = '%s' LIMIT 1", correlationId, ruleName);
+            instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
+            if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
+                return false;
+            }
         }
         String instanceId = instanceList.get(0).getInstanceId();
 
@@ -90,7 +95,7 @@ public abstract class ShadowTestBase extends TestBaseRule {
         waitForEnginesCompletion(correlationId, ruleName, finalCamundaNode);
 
         List<String> rawCamundaPath = extractCamundaPath(correlationId, ruleName);
-        List<String> rawNewEnginePath = extractNewEnginePath(correlationId);
+        List<String> rawNewEnginePath = extractNewEnginePath(correlationId, ruleName);
 
         List<String> normalizedCamundaPath = normalizer.normalizeCamundaPath(rawCamundaPath);
         List<String> normalizedNewEnginePath = normalizer.normalizeNewEnginePath(rawNewEnginePath);
@@ -100,12 +105,16 @@ public abstract class ShadowTestBase extends TestBaseRule {
     }
 
     @Step("Extract New Engine Execution Path")
-    protected List<String> extractNewEnginePath(String correlationId) throws Exception {
-        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' LIMIT 1", correlationId);
+    protected List<String> extractNewEnginePath(String correlationId, String ruleName) throws Exception {
+        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND JSONExtractString(variables, 'event', 'rule') = '%s' LIMIT 1", correlationId, ruleName);
         List<AuditRaw> instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
 
         if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
-            return new ArrayList<>();
+            instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND ruleName = '%s' LIMIT 1", correlationId, ruleName);
+            instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
+            if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
+                return new ArrayList<>();
+            }
         }
 
         String instanceId = instanceList.get(0).getInstanceId();
