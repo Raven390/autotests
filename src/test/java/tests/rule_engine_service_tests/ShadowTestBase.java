@@ -118,7 +118,7 @@ public abstract class ShadowTestBase extends TestBaseRule {
 
         List<String> path = new ArrayList<>();
         for (AuditRaw transition : transitionsList) {
-            if (path.isEmpty() || !path.get(path.size() - 1).equals(transition.getFromId())) {
+            if (path.isEmpty()) {
                 path.add(transition.getFromId());
             }
             path.add(transition.getToId());

@@ -58,9 +58,7 @@ class NewsTradingShadowTest extends ShadowTestBase {
     private static final PathNormalizer NORMALIZER = new PathNormalizer() {
         @Override
         public List<String> normalizeCamundaPath(List<String> camundaPath) {
-            List<String> normalized = camundaPath.stream()
-                .map(id -> id.equals("get_verify_trading_account") ? "get_verify_account" : id)
-                .collect(Collectors.toList());
+            List<String> normalized = new java.util.ArrayList<>(camundaPath);
 
             // Camunda execution does not append the rule_name as the final exit node,
             // but the new engine does ("news_trade"). To match them, we append the rule_name
