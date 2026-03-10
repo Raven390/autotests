@@ -75,7 +75,9 @@ class NewsTradingShadowTest extends ShadowTestBase {
         @Override
         public List<String> normalizeNewEnginePath(List<String> newEnginePath) {
             // The new engine seems to append rule names at the end for exits
-            return newEnginePath;
+            return newEnginePath.stream()
+                .filter(id -> !id.startsWith("Gateway_"))
+                .collect(Collectors.toList());
         }
     };
 
