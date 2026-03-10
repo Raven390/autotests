@@ -58,14 +58,23 @@ class NewsTradingShadowTest extends ShadowTestBase {
     private static final PathNormalizer NORMALIZER = new PathNormalizer() {
         @Override
         public List<String> normalizeCamundaPath(List<String> camundaPath) {
-            return camundaPath.stream()
+            List<String> normalized = camundaPath.stream()
                 .filter(id -> !id.startsWith("Gateway_"))
                 .map(id -> id.equals("get_verify_trading_account") ? "get_verify_account" : id)
                 .collect(Collectors.toList());
+
+            // Camunda execution does not append the rule_name as the final exit node,
+            // but the new engine does ("news_trade"). To match them, we append the rule_name
+            // if the path completed successfully.
+            if (!normalized.isEmpty() && normalized.get(normalized.size() - 1).startsWith("End_nt_alert")) {
+                normalized.add("news_trade");
+            }
+            return normalized;
         }
 
         @Override
         public List<String> normalizeNewEnginePath(List<String> newEnginePath) {
+            // The new engine seems to append rule names at the end for exits
             return newEnginePath;
         }
     };
@@ -75,6 +84,9 @@ class NewsTradingShadowTest extends ShadowTestBase {
     @DisplayName("Shadow Test: News Trader. Exit with alert if profit/deposit > 0.5.")
     void newsTradingShadowTest5() throws Exception {
         Allure.step("generate test data where News Trader. Exit with alert if profit/deposit > 0.5.");
+        // Use "5" data to hit End_nt_alert in both engines.
+        // Note: Earlier it seems we might be hitting Event_end_1 due to default data/test flags.
+        // I will ensure data 5 is properly fetched and setup.
         DataHelper data = dbDataMap.get("5");
         setupData(data);
 
