@@ -52,20 +52,15 @@ public abstract class ShadowTestBase extends TestBaseRule {
     }
 
     private boolean isNewEngineFinished(String correlationId, String ruleName) throws Exception {
-        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND JSONExtractString(variables, 'event', 'rule') = '%s' LIMIT 1", correlationId, ruleName);
+        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND ruleName = '%s' LIMIT 1", correlationId, ruleName);
         List<AuditRaw> instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
 
-        // Fallback: If ruleName isn't strictly under variables->event->rule, attempt to filter by correlationId alone and verify instanceId
         if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
-            instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND ruleName = '%s' LIMIT 1", correlationId, ruleName);
-            instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
-            if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
-                return false;
-            }
+            return false;
         }
         String instanceId = instanceList.get(0).getInstanceId();
 
-        String query = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE instanceId = '%s' AND nodePhase = 'exit' LIMIT 1", instanceId);
+        String query = String.format("SELECT instanceId FROM reporting.tre___audit_raw WHERE instanceId = '%s' AND nodePhase = 'exit' LIMIT 1", instanceId);
         List<AuditRaw> auditList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, query, AuditRaw.class);
         return auditList != null && !auditList.isEmpty();
     }
@@ -106,19 +101,15 @@ public abstract class ShadowTestBase extends TestBaseRule {
 
     @Step("Extract New Engine Execution Path")
     protected List<String> extractNewEnginePath(String correlationId, String ruleName) throws Exception {
-        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND JSONExtractString(variables, 'event', 'rule') = '%s' LIMIT 1", correlationId, ruleName);
+        String instanceIdQuery = String.format("SELECT instanceId FROM reporting.tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND ruleName = '%s' LIMIT 1", correlationId, ruleName);
         List<AuditRaw> instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
 
         if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
-            instanceIdQuery = String.format("SELECT instanceId FROM reporting.lt_tre___audit_raw WHERE JSONExtractString(variables, 'event', 'id') = '%s' AND ruleName = '%s' LIMIT 1", correlationId, ruleName);
-            instanceList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, instanceIdQuery, AuditRaw.class);
-            if (instanceList == null || instanceList.isEmpty() || instanceList.get(0).getInstanceId() == null) {
-                return new ArrayList<>();
-            }
+            return new ArrayList<>();
         }
 
         String instanceId = instanceList.get(0).getInstanceId();
-        String pathQuery = String.format("SELECT fromId, toId FROM reporting.lt_tre___audit_raw WHERE instanceId = '%s' AND nodePhase = 'transition' ORDER BY startedAt ASC, ts ASC", instanceId);
+        String pathQuery = String.format("SELECT fromId, toId FROM reporting.tre___audit_raw WHERE instanceId = '%s' AND nodePhase = 'transition' ORDER BY startedAt ASC, ts ASC", instanceId);
 
         List<AuditRaw> transitionsList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, pathQuery, AuditRaw.class);
         if (transitionsList == null || transitionsList.isEmpty()) {
