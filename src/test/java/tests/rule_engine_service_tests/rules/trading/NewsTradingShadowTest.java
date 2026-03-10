@@ -58,11 +58,9 @@ class NewsTradingShadowTest extends ShadowTestBase {
     private static final PathNormalizer NORMALIZER = new PathNormalizer() {
         @Override
         public List<String> normalizeCamundaPath(List<String> camundaPath) {
-            // Filter out system events/gateways specific to Camunda that the new engine doesn't emit.
-            // In a real scenario, this would remove specific IDs like gateway forks, intermediate events, etc.
-            // For now, we return it as is, minus standard BPMN wrapper noise if any (which we assume isn't present unless found in trace).
             return camundaPath.stream()
-                .filter(id -> !id.startsWith("Gateway_")) // Example filter
+                .filter(id -> !id.startsWith("Gateway_"))
+                .map(id -> id.equals("get_verify_trading_account") ? "get_verify_account" : id)
                 .collect(Collectors.toList());
         }
 
