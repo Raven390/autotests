@@ -24,15 +24,15 @@ public abstract class ShadowTestBase extends TestBaseRule {
     }
 
     @Step("Wait for engines to complete execution")
-    protected void waitForEnginesCompletion(String correlationId, String finalCamundaNode) {
+    protected void waitForEnginesCompletion(String correlationId, String ruleName, String finalCamundaNode) {
         Awaitility.await()
                 .atMost(60, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
-                .until(() -> isCamundaFinished(correlationId, finalCamundaNode) && isNewEngineFinished(correlationId));
+                .until(() -> isCamundaFinished(correlationId, ruleName, finalCamundaNode) && isNewEngineFinished(correlationId));
     }
 
-    private boolean isCamundaFinished(String correlationId, String finalCamundaNode) throws Exception {
-        String runIdQuery = String.format("SELECT run_id FROM reporting.zeebe_rules_started WHERE event_id = '%s' LIMIT 1", correlationId);
+    private boolean isCamundaFinished(String correlationId, String ruleName, String finalCamundaNode) throws Exception {
+        String runIdQuery = String.format("SELECT run_id FROM reporting.zeebe_rules_started WHERE event_id = '%s' AND rule_name = '%s' LIMIT 1", correlationId, ruleName);
         List<ZeebeRulesStarted> startedList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, runIdQuery, ZeebeRulesStarted.class);
 
         if (startedList == null || startedList.isEmpty() || startedList.get(0).getRunId() == null) {
@@ -66,8 +66,8 @@ public abstract class ShadowTestBase extends TestBaseRule {
     }
 
     @Step("Extract Camunda Execution Path")
-    protected List<String> extractCamundaPath(String correlationId) throws Exception {
-        String runIdQuery = String.format("SELECT run_id FROM reporting.zeebe_rules_started WHERE event_id = '%s' LIMIT 1", correlationId);
+    protected List<String> extractCamundaPath(String correlationId, String ruleName) throws Exception {
+        String runIdQuery = String.format("SELECT run_id FROM reporting.zeebe_rules_started WHERE event_id = '%s' AND rule_name = '%s' LIMIT 1", correlationId, ruleName);
         List<ZeebeRulesStarted> startedList = DbHelper.getObjectsFromDB(DbName.CLICKHOUSE, runIdQuery, ZeebeRulesStarted.class);
 
         if (startedList == null || startedList.isEmpty() || startedList.get(0).getRunId() == null) {
@@ -86,10 +86,10 @@ public abstract class ShadowTestBase extends TestBaseRule {
     }
 
     @Step("Assert Execution Path Match")
-    protected void assertShadowExecutionPath(String correlationId, String finalCamundaNode, PathNormalizer normalizer) throws Exception {
-        waitForEnginesCompletion(correlationId, finalCamundaNode);
+    protected void assertShadowExecutionPath(String correlationId, String ruleName, String finalCamundaNode, PathNormalizer normalizer) throws Exception {
+        waitForEnginesCompletion(correlationId, ruleName, finalCamundaNode);
 
-        List<String> rawCamundaPath = extractCamundaPath(correlationId);
+        List<String> rawCamundaPath = extractCamundaPath(correlationId, ruleName);
         List<String> rawNewEnginePath = extractNewEnginePath(correlationId);
 
         List<String> normalizedCamundaPath = normalizer.normalizeCamundaPath(rawCamundaPath);

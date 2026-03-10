@@ -86,6 +86,6 @@ class NewsTradingShadowTest extends ShadowTestBase {
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
         Allure.step("Assert shadow execution path");
-        assertShadowExecutionPath(correlationId, "End_nt_alert", NORMALIZER);
+        assertShadowExecutionPath(correlationId, "news_trade", "End_nt_alert", NORMALIZER);
     }
 }
