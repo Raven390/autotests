@@ -19,8 +19,8 @@ import tests.TestBaseRule;
 public abstract class ShadowTestBase extends TestBaseRule {
 
     public interface PathNormalizer {
-        List<String> normalizeCamundaPath(List<String> camundaPath);
-        List<String> normalizeNewEnginePath(List<String> newEnginePath);
+        List<String> normalizeCamundaPath(List<String> camundaPath, String finalNode);
+        List<String> normalizeNewEnginePath(List<String> newEnginePath, String finalNode);
     }
 
     @Step("Wait for engines to complete execution")
@@ -92,8 +92,8 @@ public abstract class ShadowTestBase extends TestBaseRule {
         List<String> rawCamundaPath = extractCamundaPath(correlationId, ruleName);
         List<String> rawNewEnginePath = extractNewEnginePath(correlationId, ruleName);
 
-        List<String> normalizedCamundaPath = normalizer.normalizeCamundaPath(rawCamundaPath);
-        List<String> normalizedNewEnginePath = normalizer.normalizeNewEnginePath(rawNewEnginePath);
+        List<String> normalizedCamundaPath = normalizer.normalizeCamundaPath(rawCamundaPath, finalCamundaNode);
+        List<String> normalizedNewEnginePath = normalizer.normalizeNewEnginePath(rawNewEnginePath, finalCamundaNode);
 
         org.hamcrest.MatcherAssert.assertThat("Normalized execution paths should strictly match",
                 normalizedNewEnginePath, org.hamcrest.Matchers.equalTo(normalizedCamundaPath));

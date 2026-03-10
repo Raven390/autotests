@@ -57,21 +57,27 @@ class NewsTradingShadowTest extends ShadowTestBase {
 
     private static final PathNormalizer NORMALIZER = new PathNormalizer() {
         @Override
-        public List<String> normalizeCamundaPath(List<String> camundaPath) {
-            List<String> normalized = new java.util.ArrayList<>(camundaPath);
-
-            // Camunda execution does not append the rule_name as the final exit node,
-            // but the new engine does ("news_trade"). To match them, we append the rule_name
-            // if the path completed successfully.
-            if (!normalized.isEmpty() && normalized.get(normalized.size() - 1).startsWith("End_nt_alert")) {
-                normalized.add("news_trade");
+        public List<String> normalizeCamundaPath(List<String> camundaPath, String finalNode) {
+            List<String> normalized = new java.util.ArrayList<>();
+            for (String node : camundaPath) {
+                normalized.add(node);
+                if (node.equals(finalNode)) {
+                    break;
+                }
             }
             return normalized;
         }
 
         @Override
-        public List<String> normalizeNewEnginePath(List<String> newEnginePath) {
-            return newEnginePath;
+        public List<String> normalizeNewEnginePath(List<String> newEnginePath, String finalNode) {
+            List<String> normalized = new java.util.ArrayList<>();
+            for (String node : newEnginePath) {
+                normalized.add(node);
+                if (node.equals(finalNode)) {
+                    break;
+                }
+            }
+            return normalized;
         }
     };
 
