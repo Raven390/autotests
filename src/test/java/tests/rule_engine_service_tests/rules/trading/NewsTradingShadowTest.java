@@ -59,7 +59,6 @@ class NewsTradingShadowTest extends ShadowTestBase {
         @Override
         public List<String> normalizeCamundaPath(List<String> camundaPath) {
             List<String> normalized = camundaPath.stream()
-                .filter(id -> !id.startsWith("Gateway_"))
                 .map(id -> id.equals("get_verify_trading_account") ? "get_verify_account" : id)
                 .collect(Collectors.toList());
 
@@ -74,10 +73,7 @@ class NewsTradingShadowTest extends ShadowTestBase {
 
         @Override
         public List<String> normalizeNewEnginePath(List<String> newEnginePath) {
-            // The new engine seems to append rule names at the end for exits
-            return newEnginePath.stream()
-                .filter(id -> !id.startsWith("Gateway_"))
-                .collect(Collectors.toList());
+            return newEnginePath;
         }
     };
 
