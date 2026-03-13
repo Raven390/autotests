@@ -26,8 +26,8 @@ custom_engine_executions AS (
         JSONExtractString(variables, 'event', 'id') AS event_id,
         ruleName AS rule_name,
         instanceId AS instance_id,
-        -- Восстанавливаем цепочку переходов (fromId -> toId)
-        arrayConcat([any(fromId)], groupArray(toId)) AS path
+        -- Восстанавливаем цепочку переходов (fromId -> toId). Используем argMin для надежного получения самого первого fromId, а затем чистим массив от вхождений rule_name
+        arrayFilter(x -> x != ruleName, arrayConcat([argMin(fromId, ts)], groupArray(toId))) AS path
     FROM (
         SELECT *
         FROM reporting.tre___audit_raw
